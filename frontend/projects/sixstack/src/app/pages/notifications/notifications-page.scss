@@ -39,3 +39,9 @@
   flex: 1;
   gap: var(--spacingHorizontalS);
 }
+
+.notif-settings {
+  margin-top: var(--spacingHorizontalXL);
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}

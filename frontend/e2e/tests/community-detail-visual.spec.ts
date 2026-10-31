@@ -7,7 +7,7 @@ test.describe('Community page visuals', () => {
   test('default', async ({ page }) => {
     const community = new CommunityDetailPage(page);
     await community.open('gta-azure-community');
-    await expect(community.organizers).toHaveCount(2);
+    await expect(community.organizers).toHaveCount(3);
     await page.mouse.move(0, 0);
     await expect(page).toHaveScreenshot('community-detail-default-light.png', { fullPage: true });
   });
@@ -41,7 +41,7 @@ test.describe('Community page visuals', () => {
     await page.emulateMedia({ colorScheme: 'dark' });
     const community = new CommunityDetailPage(page);
     await community.open('gta-azure-community');
-    await expect(community.organizers).toHaveCount(2);
+    await expect(community.organizers).toHaveCount(3);
     await page.mouse.move(0, 0);
     await expect(page).toHaveScreenshot('community-detail-default-dark.png');
   });
@@ -50,7 +50,7 @@ test.describe('Community page visuals', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     const community = new CommunityDetailPage(page);
     await community.open('gta-azure-community');
-    await expect(community.organizers).toHaveCount(2);
+    await expect(community.organizers).toHaveCount(3);
     await expect(page).toHaveScreenshot('community-detail-default-phone.png');
   });
 });

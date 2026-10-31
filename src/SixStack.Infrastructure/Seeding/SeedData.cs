@@ -80,6 +80,7 @@ internal static class SeedData
     ];
 
     public const string CoOrganizerEmail = "marcus@gtaazure.ca";
+    public const string VolunteerEmail = "nadia@gtaazure.ca";
 
     /// <summary>Marcus's notifications, as the notifications mock shows them: three unread, two read (L2-065).</summary>
     public static IEnumerable<Notification> CoOrganizerNotifications(DateTimeOffset now)

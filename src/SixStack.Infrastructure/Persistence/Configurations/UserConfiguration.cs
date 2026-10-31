@@ -12,6 +12,8 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Email).HasMaxLength(254).IsRequired();
         builder.HasIndex(u => u.Email).IsUnique();
         builder.Property(u => u.Name).HasMaxLength(120);
+        builder.Property(u => u.WebsiteUrl).HasMaxLength(300);
+        builder.Property(u => u.PendingEmail).HasMaxLength(254);
         builder.Ignore(u => u.Initials);
         builder.OwnsOne(u => u.EmailPreferences, prefs =>
         {

@@ -1,0 +1,69 @@
+@use 'breakpoints' as bp;
+
+// Local layout, ported from docs/mocks/assets/ui.css (.settings-layout, form-card, form-grid).
+:host {
+  display: block;
+}
+.settings-layout {
+  display: grid;
+  gap: var(--spacingHorizontalXXXL);
+}
+@media (min-width: 64rem) {
+  .settings-layout {
+    grid-template-columns: 13rem minmax(0, 1fr);
+  }
+}
+.settings-main {
+  display: grid;
+  gap: var(--spacingHorizontalXXL);
+  min-width: 0;
+  align-content: start;
+}
+.form-card {
+  padding: var(--spacingHorizontalXXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadius2XLarge);
+  background: var(--colorNeutralBackground1);
+}
+@include bp.media-up(md) {
+  .form-card {
+    padding: var(--spacingHorizontalXXXL);
+  }
+}
+sx-form-section + sx-form-section {
+  display: block;
+  margin-top: var(--spacingHorizontalXXXL);
+  padding-top: var(--spacingHorizontalXXXL);
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+.form-grid {
+  display: grid;
+  gap: var(--spacingHorizontalXL);
+}
+@include bp.media-up(sm) {
+  .form-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.switches {
+  display: grid;
+  gap: var(--spacingHorizontalXS);
+  margin-top: var(--spacingHorizontalL);
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--spacingHorizontalXXXL);
+}
+.section-title {
+  margin: 0 0 var(--spacingHorizontalS);
+  font: var(--sx-text-h4);
+}
+.settings-community {
+  margin: 0;
+  color: var(--colorNeutralForeground2);
+}
+.settings-skeleton {
+  display: grid;
+  gap: var(--spacingHorizontalL);
+}

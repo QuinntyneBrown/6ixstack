@@ -7,6 +7,12 @@ public class User
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Email { get; set; } = string.Empty;
     public string? Name { get; set; }
+
+    /// <summary>The organizer's website, shown to moderators (L2-068).</summary>
+    public string? WebsiteUrl { get; set; }
+
+    /// <summary>A new address waiting for its confirmation link; sign-in keeps the current one until then (L2-068).</summary>
+    public string? PendingEmail { get; set; }
     public UserRole Role { get; set; }
     public DateTimeOffset CreatedAtUtc { get; set; }
 

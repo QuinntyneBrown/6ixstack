@@ -34,7 +34,7 @@ test.describe('Community page', () => {
       'href',
       'https://www.meetup.com/gta-azure',
     );
-    await expect(community.organizers).toHaveCount(2);
+    await expect(community.organizers).toHaveCount(3);
     await expect(community.organizers.first().getByRole('link')).toHaveAttribute(
       'href',
       '/speakers/priya-natarajan',

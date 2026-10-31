@@ -27,6 +27,7 @@ export class NotificationsPage {
   readonly skeletonRows: Locator;
   readonly empty: Locator;
   readonly failure: Locator;
+  readonly settingsLink: Locator;
 
   constructor(private readonly page: Page) {
     this.shell = new AppShell(page);
@@ -38,6 +39,7 @@ export class NotificationsPage {
     this.skeletonRows = page.locator('.notif-skeleton');
     this.empty = page.locator('sx-empty-state').filter({ hasText: 'No notifications yet' });
     this.failure = page.locator('sx-empty-state').filter({ hasText: 'We couldn’t load notifications' });
+    this.settingsLink = page.getByRole('link', { name: 'settings', exact: true });
   }
 
   async open(): Promise<void> {

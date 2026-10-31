@@ -1,0 +1,46 @@
+// Ported from docs/mocks/assets/ui.css (.switch). Unencapsulated, scoped to label[sx-switch].
+label[sx-switch] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalM);
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+label[sx-switch] input {
+  appearance: none;
+  margin: 0;
+  flex: none;
+  position: relative;
+  width: 2.75rem;
+  height: 1.5rem;
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralStroke1);
+  cursor: pointer;
+  transition: background-color var(--durationNormal) var(--curveEasyEase);
+}
+label[sx-switch] input::before {
+  content: '';
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--colorNeutralBackground1);
+  box-shadow: var(--shadow2);
+  transition: translate var(--durationNormal) var(--curveEasyEase);
+}
+label[sx-switch] input:checked {
+  background: var(--colorBrandBackground);
+}
+label[sx-switch] input:checked::before {
+  translate: 1.25rem 0;
+}
+label[sx-switch] input:focus-visible {
+  outline: var(--sx-focus-ring-width) solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}
+label[sx-switch] input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
