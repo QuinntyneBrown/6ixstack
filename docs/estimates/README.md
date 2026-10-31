@@ -1,7 +1,7 @@
 # Estimates
 
 - Overall effort: 157 days
-- Complete: 62%
+- Complete: 65%
 
 | Subsystem | Effort | Complete |
 |---|---|---|
@@ -14,7 +14,7 @@
 | [moderation](moderation.md) | 18 days | 92% |
 | [organizer](organizer.md) | 10 days | 84% |
 | [directory](directory.md) | 11 days | 48% |
-| [notifications](notifications.md) | 10 days | 35% |
+| [notifications](notifications.md) | 10 days | 75% |
 
 ## Roadmap
 
