@@ -346,3 +346,14 @@ export async function failDashboard(page: Page): Promise<() => Promise<void>> {
   await page.route('**/api/organizer/events', handler);
   return () => page.unroute('**/api/organizer/events', handler);
 }
+
+/** Answers GET /api/organizer/events with the real dashboard but this banner, for stable banner screenshots. */
+export async function withDashboardBanner(page: Page, banner: Record<string, unknown>): Promise<void> {
+  await page.route(
+    '**/api/organizer/events',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await route.fulfill({ response, json: { ...(await response.json()), banner } });
+    }),
+  );
+}
