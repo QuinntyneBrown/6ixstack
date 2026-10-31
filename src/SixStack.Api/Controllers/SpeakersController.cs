@@ -19,4 +19,9 @@ public sealed class SpeakersController(ISender sender) : ControllerBase
         [FromQuery] int page = 1,
         CancellationToken cancellationToken = default) =>
         sender.Send(new GetSpeakersQuery(q, topic, period ?? "any", page), cancellationToken);
+
+    /// <summary>A speaker's page (L2-033); 404 for an unknown slug.</summary>
+    [HttpGet("{slug}")]
+    public Task<SpeakerDetailDto> Get(string slug, CancellationToken cancellationToken) =>
+        sender.Send(new GetSpeakerQuery(slug), cancellationToken);
 }

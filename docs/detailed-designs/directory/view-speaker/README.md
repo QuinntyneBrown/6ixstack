@@ -192,3 +192,20 @@ instant. "Invite to speak" appears only when `ContactEmail` is present. A
 failure shows "This profile didn't load" with a retry.
 
 ![Sequence diagram for loading the speaker page](diagrams/sequence-load-speaker.png)
+
+## Decisions (journey 24)
+
+- **Talk count**: `Speaker.EarlierTalkCount` (talks before 6ixstack recorded them) plus the published talks it knows
+  about. "Since {year}" comes from `SpeakingSinceYear`. Both are seed-filled for now.
+- **Affiliation**: the role and company line as stored. When the speaker organizes a community (via
+  `CommunityOrganizer.SpeakerId`), the page adds "{role} of {community}" linking to it.
+- **Upcoming talk rows** reuse the event row: the talk title, the time from the agenda item that starts with the talk
+  title (else the event's start), and the event and its organizer.
+- **Past talks**: the five most recent, newest first. "Recording" shows only when the event has a recording.
+- **Facts**: talk count, home city with `TravelNote`, and an owned JSON list of `Links`.
+- **Invite to speak** is a `mailto:` link, offered only when `PublicContactEmail` is set.
+- **No upcoming talks**: "{first name} isn't scheduled to speak anywhere right now.", plus "Organizers can send an
+  invitation." and the invite button when there is a contact address.
+- **Not found**: the API answers 404 and the app shows its not-found page.
+- The seed adds Priya's past talk at Bicep for app developers, with a recording.
+

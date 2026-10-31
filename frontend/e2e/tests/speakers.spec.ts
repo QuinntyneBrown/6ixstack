@@ -48,7 +48,7 @@ test.describe('Speakers directory', () => {
     await speakers.period.selectOption({ label: 'Spoke this year' });
 
     await expect(speakers.card('Hannah Wright').root).toBeVisible();
-    await expect(speakers.card('Priya Natarajan').root).toHaveCount(0);
+    await expect(speakers.card('Kenji Watanabe').root).toHaveCount(0);
     expect(speakers.url().searchParams.get('period')).toBe('year');
   });
 

@@ -36,6 +36,7 @@ public sealed class DatabaseSeeder(AppDbContext db, IClock clock, IOutbox outbox
                 Slug = seed.Slug, Name = seed.Name, Initials = seed.Initials, Role = seed.Role,
                 Affiliation = seed.Affiliation, Topics = seed.Topics, HomeCity = seed.HomeCity,
             };
+            SeedData.SpeakerProfiles.GetValueOrDefault(seed.Slug)?.Invoke(speaker);
             db.Speakers.Add(speaker);
             speakers[seed.Slug] = speaker;
         }

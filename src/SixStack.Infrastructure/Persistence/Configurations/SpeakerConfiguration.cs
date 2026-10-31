@@ -18,6 +18,8 @@ public sealed class SpeakerConfiguration : IEntityTypeConfiguration<Speaker>
         builder.Property(s => s.Bio).HasMaxLength(2000);
         builder.Property(s => s.HomeCity).HasMaxLength(100);
         builder.Property(s => s.PublicContactEmail).HasMaxLength(254);
+        builder.Property(s => s.TravelNote).HasMaxLength(120);
+        builder.OwnsMany(s => s.Links, links => links.ToJson());
     }
 }
 
