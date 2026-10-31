@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="64" viewBox="0 0 280 64" role="img" aria-labelledby="title">
+  <title id="title">6ixstack</title>
+  <g font-family="Geist, Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" letter-spacing="-1.2">
+    <rect x="0" y="0" width="64" height="64" rx="16" fill="#f3f2ee"/>
+    <text x="32" y="45" text-anchor="middle" font-size="40" font-weight="700" fill="#111318" letter-spacing="0">6</text>
+    <text x="80" y="45" font-size="44"><tspan font-weight="700" fill="#f3f2ee">6ix</tspan><tspan font-weight="500" fill="#bdbab3">stack</tspan></text>
+  </g>
+</svg>

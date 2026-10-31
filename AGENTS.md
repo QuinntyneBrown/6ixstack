@@ -2,6 +2,40 @@
 
 6ixstack is an event calendar for events in Toronto and the Greater Toronto Area (GTA), as well as online events. The .NET backend owns event data, persistence, and authentication; the Angular frontend provides the app, and Playwright covers behavior and visual parity with the design reference.
 
+## Folder structure - mandatory
+
+```text
+SixStack.sln
+README.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, SUPPORT.md
+src/
+  SixStack.Domain/            entities and enums; no dependencies
+  SixStack.Application/       MediatR handlers, validators, DTOs, IAppDbContext
+  SixStack.Infrastructure/    AppDbContext, migrations, external clients, auth, seeder
+  SixStack.Api/               controllers, Program.cs, DI, middleware, Swagger
+  SixStack.Cli/               migrate, seed, and reset commands
+tests/
+  SixStack.<Layer>.Tests/     one test project per src project, same name + .Tests
+frontend/                     Angular workspace (package.json, angular.json, lint/format config)
+  projects/
+    sixstack/                 the app; pages under src/app/, dialogs under src/app/dialogs/
+    api/                      API service contracts, injection tokens, implementations
+    components/               sx-* component library; tokens in src/lib/tokens/, stories/ for Storybook
+    perf-test/                perf scenarios in src/scenarios/
+  e2e/                        Playwright: tests/, pages/ (one page object per screen), visual baselines
+docs/
+  assets/                     repository assets, such as the logo the README shows
+  specs/                      L1 and L2 requirements
+  detailed-designs/           detailed designs, one folder per subsystem
+  mocks/                      static HTML mocks (design artifact)
+  design-system/              design system extracted from mocks (design artifact)
+  journey.md                  planned user journeys, in value order
+  prompts/                    ordered implementation prompts: 00 scaffold, then one per journey in journey.md
+.claude/skills/, .agents/skills/  agent skills; keep both copies in sync
+.github/                      CI workflows and copilot-instructions.md
+```
+
+New code goes in the folder that owns it; don't add top-level folders or new projects without updating this tree.
+
 ## Backend architecture
 
 Layer dependency direction (strict):
