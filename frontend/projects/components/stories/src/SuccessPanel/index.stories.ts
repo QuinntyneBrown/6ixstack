@@ -14,3 +14,4 @@ const meta: Meta<SuccessPanel> = {
 export default meta;
 
 export { Default } from './SuccessPanelDefault.stories';
+export { PageHeading } from './SuccessPanelPageHeading.stories';

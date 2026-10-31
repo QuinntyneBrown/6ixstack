@@ -1,10 +1,9 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SixStack.Application.Common.Interfaces;
+using MediatR;
+using SixStack.Application.Identity;
 
 namespace SixStack.Api.Controllers;
 
@@ -20,29 +19,18 @@ public sealed record TestSignInRequest(string Email);
 [AllowAnonymous]
 [IgnoreAntiforgeryToken]
 [ApiExplorerSettings(IgnoreApi = true)]
-public sealed class TestSignInController(IAppDbContext db, Auth.XsrfTokenService xsrf) : ControllerBase
+public sealed class TestSignInController(ISender sender, Auth.SessionSignIn sessions) : ControllerBase
 {
     [HttpPost("sign-in")]
     public async Task<IActionResult> SignIn(TestSignInRequest request, CancellationToken cancellationToken)
     {
-        var user = await db.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
-        if (user is null)
+        var signedIn = await sender.Send(new StartSessionCommand(request.Email), cancellationToken);
+        if (signedIn is null)
         {
             return NotFound();
         }
 
-        var identity = new ClaimsIdentity(
-            [
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.Name ?? user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString()),
-            ],
-            CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-        HttpContext.User = principal;
-        xsrf.Issue(HttpContext);
+        await sessions.SignInAsync(HttpContext, signedIn);
         return NoContent();
     }
 

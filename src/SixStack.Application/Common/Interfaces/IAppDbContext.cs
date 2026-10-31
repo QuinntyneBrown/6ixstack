@@ -14,6 +14,7 @@ public interface IAppDbContext
     DbSet<OutboxMessage> OutboxMessages { get; }
     DbSet<SecurityToken> SecurityTokens { get; }
     DbSet<VerifiedEmail> VerifiedEmails { get; }
+    DbSet<Session> Sessions { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

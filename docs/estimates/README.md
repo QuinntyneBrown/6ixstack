@@ -1,7 +1,7 @@
 # Estimates
 
 - Overall effort: 157 days
-- Complete: 22%
+- Complete: 26%
 
 | Subsystem | Effort | Complete |
 |---|---|---|
@@ -10,7 +10,7 @@
 | [discovery](discovery.md) | 20 days | 43% |
 | [feeds-and-sharing](feeds-and-sharing.md) | 17 days | 18% |
 | [submissions](submissions.md) | 9 days | 57% |
-| [identity](identity.md) | 15 days | 0% |
+| [identity](identity.md) | 15 days | 48% |
 | [moderation](moderation.md) | 18 days | 0% |
 | [organizer](organizer.md) | 10 days | 0% |
 | [directory](directory.md) | 11 days | 0% |

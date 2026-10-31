@@ -1,0 +1,49 @@
+// Local auth layout, ported from docs/mocks/assets/ui.css (auth-layout, auth-card, form-card).
+:host {
+  display: block;
+}
+.auth-layout {
+  display: grid;
+  place-items: center;
+  padding-block: var(--sx-space-16);
+}
+.auth-card {
+  width: 100%;
+  max-width: 26rem;
+}
+.form-card {
+  display: block;
+  padding: var(--spacingHorizontalXXXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadius2XLarge);
+  background: var(--colorNeutralBackground1);
+}
+h1 {
+  font: var(--sx-text-h2);
+}
+.lead {
+  margin: var(--spacingHorizontalS) 0 var(--spacingHorizontalXXL);
+  color: var(--colorNeutralForeground2);
+}
+.stack {
+  display: grid;
+  gap: var(--spacingHorizontalL);
+}
+.auth-alert,
+.auth-summary {
+  display: block;
+  margin-bottom: var(--spacingHorizontalXXL);
+}
+.text-muted {
+  color: var(--colorNeutralForeground2);
+}
+.text-caption {
+  font: var(--sx-text-caption);
+  color: var(--colorNeutralForeground2);
+}
+.auth-note {
+  margin-top: var(--spacingHorizontalL);
+  text-align: center;
+  font: var(--sx-text-caption);
+  color: var(--colorNeutralForeground2);
+}

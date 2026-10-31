@@ -12,6 +12,10 @@ public class User
 
     public List<CommunityOrganizer> Communities { get; set; } = [];
 
+    /// <summary>The account a first sign-in creates: an organizer with no community yet (L2-047).</summary>
+    public static User CreateOrganizer(string email, DateTimeOffset now) =>
+        new() { Email = email, Role = UserRole.Organizer, CreatedAtUtc = now };
+
     public string Initials =>
         string.IsNullOrWhiteSpace(Name)
             ? Email[..1].ToUpperInvariant()

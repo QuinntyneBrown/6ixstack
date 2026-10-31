@@ -43,3 +43,4 @@ export * from './lib/form/error-summary';
 export * from './lib/form/form-section';
 export * from './lib/success-panel/success-panel';
 export * from './lib/next-steps/next-steps';
+export * from './lib/tooltip/tooltip';

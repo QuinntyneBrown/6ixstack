@@ -102,7 +102,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 |---|---|---|
 | Skip link | `SkipLink` | — |
 | Site header (signed out) | `SiteHeader`, `Button` (Submit event, menu button), `Icon` | — |
-| Site header (signed in: notifications, account) | `SiteHeader` actions slot: `Button` (icon), `Badge` (count), `Tooltip`, `Avatar` | — |
+| Site header (signed in: notifications, account) | `SiteHeader` actions slot: `Button` (icon link), `Badge` (count), `Tooltip`, `Avatar` (inside the account link) | `AccountControls` (`shell/account-controls`) |
 | Site banner (`notifications/site-banner`) | `Alert` | `SiteBannerOutlet` (between header and `main`) |
 | Main region | — | `AppShell` (`<main id="main" class="page">`, route focus) |
 | Site footer | `SiteFooter` | — |
@@ -182,8 +182,8 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 
 #### Organizer sign in — `/sign-in` — `pages/sign-in`: default, invalid, submitting, success, error
 
-- Library: `FormLayout` (form-card), `FormField`, `TextField`, `Button` (lg, block, busy when submitting); invalid `ErrorSummary` + `Alert`; error `Alert`; success `EmptyState` (success panel).
-- Local: auth layout (`auth-layout`, `auth-card`).
+- Library: `FormField`, `Input` (design system: text field), `Button` (lg, block, busy when submitting); invalid `ErrorSummary`; error `Alert`; success `SuccessPanel` (design system: empty state, success panel) with `Button` (Resend link with countdown, Use a different email).
+- Local: auth layout (`auth-layout`, `auth-card`), the "No account needed" footnote.
 
 #### Status pages — `pages/not-found` (`*`), `pages/forbidden` (`/organize/events/:id/edit`), `pages/server-error` (`*`), `pages/offline` (`*`): default
 

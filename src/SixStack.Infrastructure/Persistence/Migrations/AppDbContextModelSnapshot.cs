@@ -328,6 +328,10 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Property<int>("Purpose")
                         .HasColumnType("int");
 
+                    b.Property<string>("ReturnUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<string>("TokenHash")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -344,6 +348,31 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.HasIndex("Email", "Purpose", "CreatedAtUtc");
 
                     b.ToTable("SecurityTokens");
+                });
+
+            modelBuilder.Entity("SixStack.Domain.Entities.Session", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("LastSeenAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("RevokedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("SixStack.Domain.Entities.Speaker", b =>
@@ -561,6 +590,17 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Navigation("Event");
 
                     b.Navigation("Speaker");
+                });
+
+            modelBuilder.Entity("SixStack.Domain.Entities.Session", b =>
+                {
+                    b.HasOne("SixStack.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SixStack.Domain.Entities.Community", b =>

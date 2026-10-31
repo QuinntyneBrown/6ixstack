@@ -12,7 +12,11 @@ import { IconName } from '../icon/icons';
   template: `
     <div class="success-panel" role="status">
       <span class="success-panel__icon"><sx-icon [name]="icon()" size="lg" /></span>
-      <h2>{{ title() }}</h2>
+      @if (headingLevel() === 1) {
+        <h1 class="success-panel__title">{{ title() }}</h1>
+      } @else {
+        <h2 class="success-panel__title">{{ title() }}</h2>
+      }
       <ng-content />
       <div class="cluster"><ng-content select="[slot=actions]" /></div>
     </div>
@@ -27,8 +31,11 @@ import { IconName } from '../icon/icons';
       align-items: flex-start;
       gap: var(--spacingHorizontalL);
     }
-    h2 {
+    .success-panel__title {
       font: var(--sx-text-h3);
+    }
+    h1.success-panel__title {
+      font: var(--sx-text-h2);
     }
     .success-panel__icon {
       display: grid;
@@ -50,4 +57,6 @@ import { IconName } from '../icon/icons';
 export class SuccessPanel {
   readonly title = input.required<string>();
   readonly icon = input<IconName>('check-circle');
+  /** 1 when the panel is the whole page (sign-in), 2 when it replaces a form under the page title. */
+  readonly headingLevel = input<1 | 2>(2);
 }

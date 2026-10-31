@@ -10,7 +10,7 @@ namespace SixStack.Infrastructure.Identity;
 /// <summary>32 random bytes as Base64Url for the link; the database keeps only the SHA-256 hash (L2-084).</summary>
 public sealed class SecurityTokenService(IAppDbContext db, IClock clock) : ISecurityTokenService
 {
-    public string Issue(string email, SecurityTokenPurpose purpose, TimeSpan lifetime)
+    public string Issue(string email, SecurityTokenPurpose purpose, TimeSpan lifetime, string? returnUrl = null)
     {
         var token = WebEncoders.Base64UrlEncode(RandomNumberGenerator.GetBytes(32));
         var now = clock.UtcNow;
@@ -21,6 +21,7 @@ public sealed class SecurityTokenService(IAppDbContext db, IClock clock) : ISecu
             Purpose = purpose,
             CreatedAtUtc = now,
             ExpiresAtUtc = now + lifetime,
+            ReturnUrl = returnUrl,
         });
         return token;
     }

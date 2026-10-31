@@ -40,8 +40,8 @@ header in the web app, and the sign-out command.
 - **`SessionStore`** — shared app service. It loads the current user from
   `GET /api/auth/me` when the app starts and exposes `user` and `unreadCount`
   signals. A 401 response sets `user` to `null`. The refresh cadence of the
-  unread count is `<TO SUPPLY>` and is shared with
-  `notifications/in-app-notifications`.
+  unread count is decided with `notifications/in-app-notifications` (journey 21); until then
+  `UnreadNotificationCount` is 0.
 - **`authGuard`** — functional `CanMatch` guard on protected routes. When
   `SessionStore.user` is `null`, it redirects to `/sign-in?returnUrl=<path>`
   (`L2-048`). The moderator routes also check `role` (`L2-080`).
@@ -80,7 +80,8 @@ header in the web app, and the sign-out command.
   within the last 14 days (`L2-048`). Otherwise the request is anonymous. On an
   accepted request it advances `LastSeenAtUtc` and re-issues the cookie with a
   14-day sliding expiry. To limit writes, it advances `LastSeenAtUtc` at most
-  once per `<TO SUPPLY>` minutes.
+  once every 5 minutes. Implemented as `SessionValidator` on the cookie scheme's
+  `OnValidatePrincipal` (ADR 0009).
 - **Anti-forgery** — every state-changing, cookie-authenticated request carries
   the Angular `X-XSRF-TOKEN` header, checked by ASP.NET Core antiforgery
   (`L2-083`).
@@ -110,7 +111,10 @@ them:
 - Whether moderators reach `/settings` and the sign-out dialog. The mock opens
   sign-out from settings only, and `L2-068` describes settings for organizers:
   `<TO SUPPLY>`.
-- An absolute maximum session lifetime regardless of activity: `<TO SUPPLY>`.
+- An absolute maximum session lifetime regardless of activity: none for now (ADR 0009).
+- Built in journey 05: `SessionStore`, `authGuard` (as `CanActivate`; it waits for `/api/auth/me`), the account
+  controls in the header, and the session checks. The `unauthorizedInterceptor` arrives with the first organizer
+  API call (journey 15), the role check with the review queue (journey 06), and sign-out with journey 27.
 
 ## Requirements
 

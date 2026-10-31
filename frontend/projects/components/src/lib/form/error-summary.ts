@@ -38,7 +38,11 @@ export class ErrorSummary {
   private readonly document = inject(DOCUMENT);
 
   readonly errors = input.required<FieldErrorItem[]>();
+  /** Replaces the default "Fix N things before you continue", e.g. "Check your email address" on a one-field form. */
+  readonly heading = input<string | null>(null);
   protected readonly title = computed(() => {
+    const heading = this.heading();
+    if (heading) return heading;
     const n = this.errors().length;
     return `Fix ${n} ${n === 1 ? 'thing' : 'things'} before you continue`;
   });

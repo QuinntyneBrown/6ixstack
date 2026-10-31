@@ -11,3 +11,4 @@ and `credits.md`. Build one with `npm run demo -- <nn>-<slug>` from `frontend/`;
 | 02 · View event detail | [demo.mp4](02-view-event-detail/demo.mp4) |
 | 03 · Add to calendar | [demo.mp4](03-add-to-calendar/demo.mp4) |
 | 04 · Submit an event | [demo.mp4](04-submit-event/demo.mp4) |
+| 05 · Sign in with magic link | [demo.mp4](05-sign-in-with-magic-link/demo.mp4) |

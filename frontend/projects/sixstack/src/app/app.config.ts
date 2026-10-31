@@ -10,6 +10,8 @@ import { provideSixstackOverlays } from 'components';
 import {
   apiErrorInterceptor,
   EVENTS_API,
+  AUTH_API,
+  HttpAuthApi,
   HttpEventsApi,
   HttpReferenceDataApi,
   HttpSubmissionsApi,
@@ -45,6 +47,7 @@ export const appConfig: ApplicationConfig = {
       },
     },
     { provide: SITE_API, useClass: HttpSiteApi },
+    { provide: AUTH_API, useClass: HttpAuthApi },
     { provide: EVENTS_API, useClass: HttpEventsApi },
     { provide: REFERENCE_DATA_API, useClass: HttpReferenceDataApi },
     { provide: SUBMISSIONS_API, useClass: HttpSubmissionsApi },
