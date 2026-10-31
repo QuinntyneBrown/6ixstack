@@ -197,9 +197,9 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 - Library: `FormSection` (design system: form layout), `FormField`, `Input` (design system: text field incl. `$` addon, textarea, select), `FieldSet` + `Choice` + `Check` (design system: checkbox for topics, radio group with cards for format and price), `Button` (busy when submitting); loading `Skeleton`; error `Alert`; invalid `ErrorSummary` + `Alert`; success `SuccessPanel` (design system: empty state, success panel) + `NextSteps` (design system: stepper, steps-next).
 - Local: page title, event form (`shared/event-form`: form-card frame, grids, topic dots, price addon).
 
-#### Edit event — `/organize/events/:id/edit` — `pages/edit-event`: default, loading, error, invalid, submitting, success, failed, read-only, forbidden
+#### Edit event — `/organize/events/:id/edit` — `pages/edit-event`: default, loading, error, invalid, submitting, success, failed, read-only, cancelled, forbidden
 
-- Library: as Submit an event, plus `BackLink` (design system: link, back variant) and `InlineStatus` (design system: inline message, status line); loading `Skeleton`; error `EmptyState` (error); invalid `ErrorSummary`; failed `Alert`; read-only `Alert` (info, Duplicate as a new event; inputs disabled, no actions); success `Alert` (dismissible); forbidden `StatusPage` (see `forbidden`).
+- Library: as Submit an event, plus `BackLink` (design system: link, back variant) and `InlineStatus` (design system: inline message, status line); loading `Skeleton`; error `EmptyState` (error); invalid `ErrorSummary`; failed `Alert`; read-only `Alert` (info, Duplicate as a new event; inputs disabled, no actions); cancelled `Alert` (info, the reason; inputs disabled); Cancel event `Button` (ghost, danger, opens `CancelEventDialog`); success `Alert` (dismissible); forbidden `StatusPage` (see `forbidden`).
 - Local: page title, event form fields (`EventFormFields`, shared with Submit an event).
 
 #### Your events — `/organize` — `pages/organizer-dashboard`: default, loading, empty, error
@@ -236,7 +236,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 | Add to my calendar (`add-to-calendar`: default, busy, failed) | CDK `Dialog` + `DialogShell` | `DialogShell`, `OptionButton` (the design system's List option button; busy option); failed `Alert`; success `Toast` | `AddToCalendarDialog`, option list layout, `CalendarLinkBuilder`, `FileDownloader` |
 | Share event (`share-event`: default, success) | CDK `Dialog` + `DialogShell` | `DialogShell`, `FormField`, `Input` (read-only copy field), `Button` (Copy / Copied), `OptionButton` (LinkedIn, Bluesky, Email) | `ShareEventDialog`, `ShareLauncher` |
 | Report a problem (`report-event`: default, busy, invalid, failed, success) | CDK `Dialog` + `DialogShell` | `DialogShell`, `RadioGroup`, `FormField`, `Textarea`, `TextField` (email), `Button` (busy); invalid `FormField` error; failed `Alert`; success `EmptyState` (success panel) | `ReportProblemDialog` |
-| Cancel event (`cancel-event`: default, busy, invalid, failed, confirm) | CDK `Dialog` + `DialogShell` (danger icon) | `DialogShell`, `FormField`, `Textarea`, `Checkbox`, `Button` (danger, busy); confirm `TextField`; failed `Alert` | `CancelEventDialog` |
+| Cancel event (`cancel-event`: default, busy, invalid, failed, confirm, no-email) | CDK `Dialog` + `DialogShell` (danger icon) | `DialogShell`, `FormField`, `Textarea`, `Checkbox`, `Button` (danger, busy); confirm `TextField`; failed `Alert` | `CancelEventDialog` |
 | Reject submission (`reject-submission`: default, busy, invalid, failed) | CDK `Dialog` + `DialogShell` (danger icon) | `DialogShell`, `FieldSet` + `Choice` + `Check` (design system: radio group), `FormField`, `Input` (textarea), `Button` (danger, busy); failed `Alert` | `RejectSubmissionDialog` |
 | Sent email (`sent-email`: default) | CDK `Dialog` + `DialogShell` | `DialogShell`, `Button` (Close) | `SentEmailDialog` |
 | Sign out (`sign-out`: default, busy) | CDK `Dialog` + `DialogShell` | `DialogShell`, `Button` (busy) | `SignOutDialog` |
@@ -247,6 +247,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 | Notification (mock folder: states) | Surface | Library components | Local UI |
 |---|---|---|---|
 | Toast (`app-toast`: info, success, warning, danger, with-action, stacked) | `ToastRegion` via `ToastService` | `ToastRegion`, `Toast` (action, dismiss, progress) | — |
+| Cancelled toast (`cancel-toast`: success) | `ToastRegion` via `ToastService` (on the dashboard and edit page) | `ToastRegion`, `Toast` | — |
 | Moderation toast (`moderation-toast`: info, success, warning, danger, conflict, too-late, with-action, needs-changes, stacked) | `ToastRegion` via `ToastService` (on review queue) | `ToastRegion`, `Toast` (Undo action) | — |
 | Event status alert (`event-alert`: info, success, warning, danger) | inline on event detail | `Alert` | — |
 | Site banner (`site-banner`: info, success, warning, danger, persistent) | between header and `main` | `Alert` (`site-banner`, dismiss unless persistent) | `SiteBannerOutlet` |

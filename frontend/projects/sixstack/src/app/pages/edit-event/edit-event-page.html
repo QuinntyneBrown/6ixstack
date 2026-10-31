@@ -65,7 +65,11 @@
         <h1>{{ e.isReadOnly ? e.title : 'Edit event' }}</h1>
         <p class="lead">{{ e.isReadOnly ? e.readOnlyLead : editLead }}</p>
       </div>
-      @if (e.isReadOnly) {
+      @if (e.status === 'cancelled') {
+        <sx-alert class="edit-top" kind="info" title="This event is cancelled, so it can’t be edited"
+          >Cancelled {{ e.cancelledOnLabel }}: “{{ e.cancellationReason }}”</sx-alert
+        >
+      } @else if (e.isReadOnly) {
         <sx-alert
           class="edit-top"
           kind="info"
@@ -106,6 +110,18 @@
         />
         @if (!e.isReadOnly) {
           <div class="form-actions">
+            @if (e.status === 'published' || e.status === 'inReview') {
+              <button
+                class="cancel-event"
+                sx-button
+                appearance="ghost-danger"
+                type="button"
+                [disabled]="saving()"
+                (click)="cancelEvent(e, $event.currentTarget)"
+              >
+                <sx-icon name="trash" size="sm" />Cancel event
+              </button>
+            }
             <a sx-button [routerLink]="back">Discard changes</a>
             <button sx-button appearance="primary" type="submit" [busy]="saving()">
               {{ saving() ? 'Saving…' : 'Save changes' }}

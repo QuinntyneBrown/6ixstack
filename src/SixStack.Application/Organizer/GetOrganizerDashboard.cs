@@ -20,7 +20,10 @@ public sealed record OrganizerEventRowDto(
     string StatusLabel,
     int? Going,
     string? NeedsChangesReason,
-    string? PublicUrl);
+    string? PublicUrl,
+    bool IsPaid,
+    int GoingCount,
+    int EmailableAttendees);
 
 /// <summary>The newest review outcome for the organizer (L2-053); <c>Key</c> changes with each new outcome.</summary>
 public sealed record SubmissionBannerDto(string Kind, string Key, Guid? EventId, string Title, string Text, string? EventSlug, bool Dismissible);
@@ -39,7 +42,7 @@ public sealed record GetOrganizerDashboardQuery : IRequest<OrganizerDashboardDto
 /// The organizer's community's events and any they submitted by email, never another community's; stats; and the
 /// banner for the newest outcome, after the unverified-email warning (organizer-dashboard design).
 /// </summary>
-public sealed class GetOrganizerDashboardQueryHandler(IAppDbContext db, IClock clock, ICurrentUser current)
+public sealed class GetOrganizerDashboardQueryHandler(IAppDbContext db, IClock clock, ICurrentUser current, IAttendeeDirectory attendees)
     : IRequestHandler<GetOrganizerDashboardQuery, OrganizerDashboardDto>
 {
     private static readonly CultureInfo En = CultureInfo.GetCultureInfo("en-US");
@@ -64,11 +67,17 @@ public sealed class GetOrganizerDashboardQueryHandler(IAppDbContext db, IClock c
             .ToListAsync(cancellationToken);
         var newestDecision = decisions.ToLookup(d => d.EventId);
 
-        var rows = events.Select(e => Row(e, now, newestDecision[e.Id].OrderByDescending(d => d.DecidedAtUtc).FirstOrDefault())).ToList();
+        var rows = new List<OrganizerEventRowDto>();
+        foreach (var e in events)
+        {
+            var emailable = (await attendees.EmailsGoingToAsync(e.Id, cancellationToken)).Count;
+            rows.Add(Row(e, now, newestDecision[e.Id].OrderByDescending(d => d.DecidedAtUtc).FirstOrDefault(), emailable));
+        }
+
         var upcoming = events.Where(e => e.Status == EventStatus.Published && e.CancelledAtUtc == null && e.StartsAtUtc > now).ToList();
         var stats = new DashboardStatsDto(
             upcoming.Count,
-            events.Count(e => e.Status == EventStatus.InReview),
+            events.Count(e => e.Status == EventStatus.InReview && e.CancelledAtUtc == null),
             upcoming.Sum(e => e.GoingCount),
             community?.FeedSubscriberCount ?? 0);
         var verified = await db.VerifiedEmails.AnyAsync(v => v.NormalizedEmail == user.Email, cancellationToken);
@@ -76,11 +85,11 @@ public sealed class GetOrganizerDashboardQueryHandler(IAppDbContext db, IClock c
         return new OrganizerDashboardDto(community?.Name, user.Email, stats, rows, banner);
     }
 
-    private static OrganizerEventRowDto Row(Event e, DateTimeOffset now, ModerationDecision? decision)
+    private static OrganizerEventRowDto Row(Event e, DateTimeOffset now, ModerationDecision? decision, int emailable)
     {
         var (status, label) = e.Status switch
         {
-            EventStatus.Published when e.CancelledAtUtc is not null => ("cancelled", "Cancelled"),
+            _ when e.CancelledAtUtc is not null => ("cancelled", "Cancelled"),
             EventStatus.Published when e.EndsAtUtc < now => ("past", "Past"),
             EventStatus.Published => ("published", "Published"),
             EventStatus.InReview => ("inReview", "In review"),
@@ -99,7 +108,10 @@ public sealed class GetOrganizerDashboardQueryHandler(IAppDbContext db, IClock c
             label,
             isPublic ? e.GoingCount : null,
             e.Status == EventStatus.NeedsChanges && decision?.Reason is { } reason ? Fixes.GetValueOrDefault(reason) : null,
-            isPublic ? $"/events/{e.Slug}" : null);
+            isPublic ? $"/events/{e.Slug}" : null,
+            e.PriceCents > 0,
+            e.GoingCount,
+            emailable);
     }
 
     private static SubmissionBannerDto Unverified(string email) => new(
@@ -115,7 +127,7 @@ public sealed class GetOrganizerDashboardQueryHandler(IAppDbContext db, IClock c
     private async Task<SubmissionBannerDto?> OutcomeBannerAsync(List<Event> events, List<ModerationDecision> decisions, CancellationToken cancellationToken)
     {
         var decision = decisions.OrderByDescending(d => d.DecidedAtUtc).FirstOrDefault();
-        var waiting = events.Where(e => e.Status == EventStatus.InReview && e.ApprovedAtUtc == null && e.SubmittedAtUtc != null)
+        var waiting = events.Where(e => e.Status == EventStatus.InReview && e.ApprovedAtUtc == null && e.SubmittedAtUtc != null && e.CancelledAtUtc == null)
             .OrderByDescending(e => e.SubmittedAtUtc).FirstOrDefault();
         if (waiting is not null && (decision is null || waiting.SubmittedAtUtc > decision.DecidedAtUtc))
         {

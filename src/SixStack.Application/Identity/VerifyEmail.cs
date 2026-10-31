@@ -32,7 +32,7 @@ public sealed class VerifyEmailCommandHandler(IAppDbContext db, IClock clock, IS
         }
 
         var approved = await db.Events
-            .Where(e => e.SubmitterEmail == token.Email && e.Status == EventStatus.InReview && e.ApprovedAtUtc != null)
+            .Where(e => e.SubmitterEmail == token.Email && e.Status == EventStatus.InReview && e.ApprovedAtUtc != null && e.CancelledAtUtc == null)
             .ToListAsync(cancellationToken);
         foreach (var e in approved)
         {

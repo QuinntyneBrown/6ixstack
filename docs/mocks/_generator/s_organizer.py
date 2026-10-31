@@ -358,6 +358,12 @@ def _():
     return edit_page(event_form(DAY, include_email=False), top)
 
 
+@state("edit-event", "cancelled", "A cancelled event: details are locked and the reason is shown.")
+def _():
+    top = alert("info", "This event is cancelled, so it can’t be edited", "Cancelled Oct 31: “Our venue double-booked Hall B. We’re moving to January and will post the new date here.”") + '<div style="height: var(--space-6);"></div>'
+    return edit_page(event_form(DAY, disabled=True, include_email=False), top, title="Azure Data & AI Day GTA", lead="Thursday, November 5, 2026 · 318 going", actions=False)
+
+
 @state("edit-event", "read-only", "A past event: details are locked, the reason is shown, and a duplicate action is offered.")
 def _():
     v = dict(DAY, title="Azure meetup: October social", date="2026-10-15", start="18:30", end="21:00", fmt="in-person", venue="Spaces", address="1 University Ave, 3rd floor",
@@ -612,11 +618,12 @@ screen("cancel-event", "dialog", "Cancel event", opens_from="organizer-dashboard
 CANCEL_REASON = "Our venue double-booked Hall B. We’re moving to January and will post the new date here."
 
 
-def cancel_body(reason="", invalid=False, disabled=False, confirm=False, typed=""):
+def cancel_body(reason="", invalid=False, disabled=False, confirm=False, typed="", email=True):
     dis = " disabled" if disabled else ""
-    err = "Tell attendees why, in a sentence or two. It’s shown on the listing and in the email." if invalid else ""
-    f = field("Reason for attendees", txt("cancel-reason", reason, 3, invalid=invalid, help=True), "Shown on the listing and emailed to everyone going.", err, fid="cancel-reason")
-    n = (f'<label class="choice"><input type="checkbox" checked{dis}><span class="choice__text">Email the 318 people going<small>Sent from 6ixstack on your behalf</small></span></label>')
+    err = "Tell attendees why, in a sentence or two." if invalid else ""
+    hint = "Shown on the listing and emailed to everyone going." if email else "Shown on the listing."
+    f = field("Reason for attendees", txt("cancel-reason", reason, 3, invalid=invalid, help=True), hint, err, fid="cancel-reason")
+    n = (f'<label class="choice"><input type="checkbox" checked{dis}><span class="choice__text">Email the 318 people going<small>Sent from 6ixstack on your behalf</small></span></label>') if email else ""
     c = ""
     if confirm:
         c = field("Type the event name to confirm", inp("confirm-name", typed, help=True, extra=' autocomplete="off"' + (" autofocus" if not typed else "")),
@@ -660,6 +667,19 @@ def _():
 def _():
     return dash_behind() + dialog(CANCEL_TITLE, cancel_body(CANCEL_REASON, confirm=True, typed="Azure Data & AI"), cancel_footer(danger_disabled=True), CANCEL_DESC, DANGER_ICON) + note(
         "Cancel event stays disabled until the typed name matches exactly (case-insensitive).", "top: 1rem; left: 1rem;")
+
+
+@state("cancel-event", "no-email", "6ixstack holds no addresses for the people going (tickets are sold elsewhere): no email option, the reason shows on the listing.")
+def _():
+    return dash_behind() + dialog("Cancel “Fabric for Power BI developers”?", cancel_body(email=False), cancel_footer(), CANCEL_DESC, DANGER_ICON)
+
+
+screen("cancel-toast", "notification", "Cancelled toast", opens_from="organizer-dashboard")
+
+
+@state("cancel-toast", "success", "Cancelled: the row shows Cancelled and the toast says where people will see it.")
+def _():
+    return dash_behind() + toast_region(toast("success", "Cancelled “Azure Data & AI Day GTA”", "It’s marked cancelled on 6ixstack and in calendar feeds. 318 people were emailed."))
 
 
 # ---- reject submission

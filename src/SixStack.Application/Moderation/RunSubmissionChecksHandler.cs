@@ -96,7 +96,7 @@ public sealed partial class RunSubmissionChecksHandler(
         var from = TorontoTime.StartOf(day);
         var to = TorontoTime.StartOf(day.AddDays(1));
         var sameDay = await db.Events.AsNoTracking()
-            .Where(x => x.Id != e.Id && (x.Status == EventStatus.Published || x.Status == EventStatus.InReview))
+            .Where(x => x.Id != e.Id && x.CancelledAtUtc == null && (x.Status == EventStatus.Published || x.Status == EventStatus.InReview))
             .Where(x => x.StartsAtUtc >= from && x.StartsAtUtc < to)
             .ToListAsync(cancellationToken);
         var match = sameDay.FirstOrDefault(x =>

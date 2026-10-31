@@ -24,6 +24,8 @@ export class EditEventPage {
   readonly loadFailed: Locator;
   readonly skeleton: Locator;
   readonly forbidden: Locator;
+  readonly cancelEvent: Locator;
+  readonly cancelled: Locator;
 
   constructor(private readonly page: Page) {
     this.shell = new AppShell(page);
@@ -49,6 +51,10 @@ export class EditEventPage {
     this.loadFailed = page.locator('sx-empty-state').filter({ hasText: 'We couldn’t open this event' });
     this.skeleton = page.locator('.form-skeleton');
     this.forbidden = page.locator('sx-status-page');
+    this.cancelEvent = page.getByRole('button', { name: 'Cancel event' });
+    this.cancelled = page
+      .locator('sx-alert')
+      .filter({ hasText: 'This event is cancelled, so it can’t be edited' });
   }
 
   async open(id: string): Promise<void> {

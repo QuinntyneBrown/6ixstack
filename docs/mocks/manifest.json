@@ -402,6 +402,7 @@
         "submitting",
         "success",
         "failed",
+        "cancelled",
         "read-only"
       ],
       "not_applicable": {
@@ -475,7 +476,17 @@
         "busy",
         "invalid",
         "failed",
-        "confirm"
+        "confirm",
+        "no-email"
+      ]
+    },
+    {
+      "id": "cancel-toast",
+      "kind": "notification",
+      "title": "Cancelled toast",
+      "opens_from": "organizer-dashboard",
+      "states": [
+        "success"
       ]
     },
     {

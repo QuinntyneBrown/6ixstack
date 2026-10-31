@@ -37,7 +37,7 @@ public sealed class GetReviewQueueQueryHandler(IAppDbContext db, IClock clock) :
     {
         var now = clock.UtcNow;
         var events = await db.Events.AsNoTracking().Include(e => e.Community)
-            .Where(e => e.Status == EventStatus.InReview && e.ApprovedAtUtc == null)
+            .Where(e => e.Status == EventStatus.InReview && e.ApprovedAtUtc == null && e.CancelledAtUtc == null)
             .ToListAsync(cancellationToken);
         events = [.. events.OrderBy(e => e.SubmittedAtUtc)];
         var ids = events.Select(e => e.Id).ToList();

@@ -17,6 +17,10 @@ export interface OrganizerEventRow {
   going: number | null;
   needsChangesReason: string | null;
   publicUrl: string | null;
+  isPaid: boolean;
+  goingCount: number;
+  /** People going whose email 6ixstack holds; the cancel dialog offers email only above 0. */
+  emailableAttendees: number;
 }
 
 export interface SubmissionBanner {
@@ -67,6 +71,23 @@ export interface EventEdit {
   readOnlyLead: string | null;
   goingCount: number;
   details: EventDetailsForm;
+  isPaid: boolean;
+  emailableAttendees: number;
+  cancellationReason: string | null;
+  cancelledOnLabel: string | null;
+}
+
+export interface CancelEventRequest {
+  reason: string;
+  notifyAttendees: boolean;
+  confirmationName: string | null;
+}
+
+export interface EventCancelled {
+  title: string;
+  status: 'cancelled';
+  cancelledAtUtc: string;
+  emailsQueued: number;
 }
 
 export interface EventSaved {
@@ -82,6 +103,8 @@ export interface OrganizerEventsApi {
   /** An event for the edit page; 403 carries communityName, eventTitle, signedInEmail and signedInCommunity. */
   getEvent(id: string): Observable<EventEdit>;
   updateEvent(id: string, details: EventDetailsForm): Observable<EventSaved>;
+  /** Cancels an event (L2-056); 400 carries field errors for `reason` and `confirmationName`. */
+  cancelEvent(id: string, request: CancelEventRequest): Observable<EventCancelled>;
   /** Sends a new verification link to the signed-in organizer. */
   resendVerification(): Observable<void>;
 }
@@ -105,6 +128,13 @@ export class HttpOrganizerEventsApi implements OrganizerEventsApi {
     return this.http.put<EventSaved>(
       `${this.baseUrl}/api/organizer/events/${encodeURIComponent(id)}`,
       details,
+    );
+  }
+
+  cancelEvent(id: string, request: CancelEventRequest): Observable<EventCancelled> {
+    return this.http.post<EventCancelled>(
+      `${this.baseUrl}/api/organizer/events/${encodeURIComponent(id)}/cancel`,
+      request,
     );
   }
 

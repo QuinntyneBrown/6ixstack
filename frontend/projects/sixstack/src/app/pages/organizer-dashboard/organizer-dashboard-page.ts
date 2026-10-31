@@ -18,6 +18,7 @@ import {
   ToastService,
 } from 'components';
 import { catchError, map, of, switchMap, timer } from 'rxjs';
+import { CancelEventLauncher } from '../../shared/cancel/cancel-event-launcher';
 import { ShareLauncher } from '../../shared/share/share-launcher';
 import { failed, loaded, loading, LoadState, SKELETON_DELAY_MS } from '../../shared/load-state';
 import { SubmissionBannerDismissals } from './submission-banner-dismissals';
@@ -54,6 +55,7 @@ export class OrganizerDashboardPage {
   private readonly api = inject(ORGANIZER_EVENTS_API);
   private readonly dismissals = inject(SubmissionBannerDismissals);
   private readonly shareLauncher = inject(ShareLauncher);
+  private readonly cancelLauncher = inject(CancelEventLauncher);
   private readonly toasts = inject(ToastService);
 
   private readonly attempt = signal(0);
@@ -134,6 +136,21 @@ export class OrganizerDashboardPage {
   protected dismiss(banner: SubmissionBanner): void {
     this.dismissals.dismiss(banner.key);
     this.dismissedNow.set(banner.key);
+  }
+
+  /** Opens Cancel “{title}”? and reloads the table once it is cancelled (L2-056). */
+  protected cancel(row: OrganizerEventRow, trigger: EventTarget | null): void {
+    this.cancelLauncher.open(
+      {
+        id: row.id,
+        title: row.title,
+        isPaid: row.isPaid,
+        goingCount: row.goingCount,
+        emailableAttendees: row.emailableAttendees,
+      },
+      trigger,
+      () => this.attempt.update((n) => n + 1),
+    );
   }
 
   protected toggleSort(): void {
