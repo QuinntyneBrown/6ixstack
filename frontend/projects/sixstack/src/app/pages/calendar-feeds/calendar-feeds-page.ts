@@ -9,8 +9,21 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { FEEDS_API, ReadyMadeFeedCounts } from 'api';
-import { Alert, AlertAction, Button, Icon, List, ListItem, LogoTile, NextSteps, Skeleton } from 'components';
+import { CreatedFeed, FEEDS_API, ReadyMadeFeedCounts } from 'api';
+import {
+  Alert,
+  AlertAction,
+  Button,
+  Icon,
+  List,
+  ListItem,
+  LogoTile,
+  NextSteps,
+  Skeleton,
+  SuccessPanel,
+} from 'components';
+import { FeedBuilder } from '../../shared/feeds/feed-builder';
+import { FeedLinkPanel } from '../../shared/feeds/feed-link-panel';
 import { catchError, map, of, switchMap, timer } from 'rxjs';
 import { FeedLinkCopier, feedLink } from '../../shared/feeds/feed-link-copier';
 import { failed, loaded, loading, LoadState, SKELETON_DELAY_MS } from '../../shared/load-state';
@@ -19,7 +32,19 @@ import { READY_MADE_FEEDS, ReadyMadeFeed } from './ready-made-feeds';
 /** Calendar feeds (`/feeds`): the ready-made feeds and how subscribing works (feeds-and-sharing designs). */
 @Component({
   selector: 'sx-calendar-feeds-page',
-  imports: [Alert, Button, Icon, List, ListItem, LogoTile, NextSteps, Skeleton],
+  imports: [
+    Alert,
+    Button,
+    FeedBuilder,
+    FeedLinkPanel,
+    Icon,
+    List,
+    ListItem,
+    LogoTile,
+    NextSteps,
+    Skeleton,
+    SuccessPanel,
+  ],
   templateUrl: './calendar-feeds-page.html',
   styleUrl: './calendar-feeds-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +54,12 @@ export class CalendarFeedsPage {
   private readonly copier = inject(FeedLinkCopier);
   private readonly host = inject(DOCUMENT).location.host;
   private readonly howItWorks = viewChild<ElementRef<HTMLElement>>('howItWorks');
+  private readonly builder = viewChild(FeedBuilder);
+
+  protected readonly creating = signal(false);
+  protected readonly createFailed = signal(false);
+  protected readonly created = signal<CreatedFeed | null>(null);
+  protected readonly showHowItWorks = () => this.scrollToHowItWorks();
 
   protected readonly feeds = READY_MADE_FEEDS;
   protected readonly steps = [
@@ -65,10 +96,34 @@ export class CalendarFeedsPage {
   }
 
   protected copy(feed: ReadyMadeFeed): void {
-    this.copier.copy(feedLink(feed.slug, this.host), () => {
-      const heading = this.howItWorks()?.nativeElement;
-      heading?.scrollIntoView({ block: 'start' });
-      heading?.focus();
+    this.copier.copy(feedLink(feed.slug, this.host), this.showHowItWorks);
+  }
+
+  /** Creates the custom feed (L2-035) and shows it in place of the form. */
+  protected create(): void {
+    const choice = this.builder()?.choice();
+    if (!choice) return;
+    this.creating.set(true);
+    this.createFailed.set(false);
+    this.api.createFeed(choice).subscribe({
+      next: (feed) => {
+        this.creating.set(false);
+        this.created.set(feed);
+      },
+      error: () => {
+        this.creating.set(false);
+        this.createFailed.set(true);
+      },
     });
+  }
+
+  protected buildAnother(): void {
+    this.created.set(null);
+  }
+
+  private scrollToHowItWorks(): void {
+    const heading = this.howItWorks()?.nativeElement;
+    heading?.scrollIntoView({ block: 'start' });
+    heading?.focus();
   }
 }

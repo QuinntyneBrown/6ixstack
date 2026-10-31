@@ -117,3 +117,22 @@
     </ul>
   }
 </div>
+
+<div class="cta-band">
+  <div class="cta-band__inner">
+    <section aria-labelledby="submit-title">
+      <h2 id="submit-title">Running a meetup or conference?</h2>
+      <p>List it free and put it on the map. Local events and global streams are reviewed within a day.</p>
+      <a sx-button appearance="primary" routerLink="/submit"
+        >Submit an event<sx-icon name="arrow-right" size="sm"
+      /></a>
+    </section>
+    <section aria-labelledby="subscribe-title">
+      <h2 id="subscribe-title">Never check back again</h2>
+      <p>Subscribe to a calendar feed that only shows the events you care about.</p>
+      <button class="arrow-link" type="button" (click)="openSubscribe($event.currentTarget)">
+        Get a calendar feed<sx-icon name="arrow-right" size="sm" />
+      </button>
+    </section>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { AppShell } from './app-shell';
+import { FeedBuilderPart, FeedLinkPart } from './feed-builder.part';
 
 /** The calendar feeds page (`/feeds`). */
 export class CalendarFeedsPage {
@@ -9,6 +10,10 @@ export class CalendarFeedsPage {
   readonly countSkeletons: Locator;
   readonly failure: Locator;
   readonly howItWorks: Locator;
+  readonly builder: FeedBuilderPart;
+  readonly ready: Locator;
+  readonly result: FeedLinkPart;
+  readonly buildAnother: Locator;
 
   constructor(private readonly page: Page) {
     this.shell = new AppShell(page);
@@ -17,6 +22,10 @@ export class CalendarFeedsPage {
     this.countSkeletons = page.locator('.ready-feeds sx-skeleton');
     this.failure = page.getByRole('alert').filter({ hasText: 'We couldn’t load the ready-made feeds' });
     this.howItWorks = page.getByRole('heading', { name: 'How it works' });
+    this.builder = new FeedBuilderPart(page.locator('.feed-builder'));
+    this.ready = page.locator('.feed-ready');
+    this.result = new FeedLinkPart(this.ready);
+    this.buildAnother = page.getByRole('button', { name: 'Build another feed' });
   }
 
   async open(): Promise<void> {

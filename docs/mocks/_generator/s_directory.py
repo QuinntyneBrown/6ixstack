@@ -318,7 +318,7 @@ def builder(done=False):
     if done:
         url = "webcal://6ixstack.dev/feeds/ai-azure-gta-stream.ics"
         inner = (f'<div class="success-panel"><div class="success-panel__icon">{icon("check-circle", "icon icon--lg")}</div>'
-                 f'<div><h3 style="font: var(--text-h4);">Your feed is ready</h3><p class="text-muted">AI and Azure events, in the GTA and streaming. 11 events right now; new ones appear on their own.</p></div>'
+                 f'<div><h3 style="font: var(--text-h4);">Your feed is ready</h3><p class="text-muted">AI and Azure events, in the GTA and streaming. 10 events right now; new ones appear on their own.</p></div>'
                  f'<div class="field" style="width: 100%;"><label class="field__label" for="feed-url">Feed link</label><div class="copy-field"><input class="input" id="feed-url" readonly value="{url}">'
                  f'<a class="btn" href="{N("app-toast", "success")}">{icon("copy")}Copy</a></div></div>'
                  f'<ul class="option-list" style="width: 100%;"><li><a class="option-btn" href="https://calendar.google.com/calendar/r?cid={url}">{icon("calendar")}<span>Google Calendar</span>{icon("external")}</a></li>'
@@ -327,7 +327,8 @@ def builder(done=False):
                  f'<a class="btn btn--ghost" href="{P("calendar-feeds")}">Build another feed</a></div>')
         return f'<div class="form-card" role="status">{inner}</div>'
     boxes = "".join(f'<label class="choice"><input type="checkbox" name="topic" value="{k}"{" checked" if k in ("ai", "azure") else ""}><span class="choice__text"><span class="topic-tag" style="color: var(--color-fg-default);"><span class="topic-dot topic-dot--{k}" aria-hidden="true"></span>{t}</span></span></label>' for k, t in TOPICS)
-    return (f'<form class="form-card" action="{P("calendar-feeds", "success")}"><fieldset><legend>Topics</legend><div class="form-grid form-grid--3" style="margin-top: 0; gap: var(--space-2);">{boxes}</div></fieldset>'
+    every = '<label class="choice" style="margin-bottom: var(--space-2);"><input type="checkbox" name="all-topics"><span class="choice__text">All topics</span></label>'
+    return (f'<form class="form-card" action="{P("calendar-feeds", "success")}"><fieldset><legend>Topics</legend>{every}<div class="form-grid form-grid--3" style="margin-top: 0; gap: var(--space-2);">{boxes}</div></fieldset>'
             f'<fieldset style="margin-top: var(--space-5);"><legend>Where</legend><div class="choice-row">'
             f'<label class="choice"><input type="radio" name="where" checked><span class="choice__text">GTA and streaming</span></label>'
             f'<label class="choice"><input type="radio" name="where"><span class="choice__text">GTA only</span></label>'

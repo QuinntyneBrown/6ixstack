@@ -434,7 +434,8 @@ def feed_form(invalid=False, disabled=False, checked=("ai", "azure")):
     d = ' aria-describedby="topics-error"' if invalid else ""
     iv = ' aria-invalid="true"' if invalid else ""
     boxes = "".join(f'<label class="choice"><input type="checkbox" name="topic" value="{k}"{" checked" if k in checked else ""}{iv}{d}><span class="choice__text"><span class="topic-tag" style="color: var(--color-fg-default);"><span class="topic-dot topic-dot--{k}" aria-hidden="true"></span>{t}</span></span></label>' for k, t in TOPICS)
-    return (f'<fieldset{" disabled" if disabled else ""}><legend>Topics</legend><div class="form-grid form-grid--3" style="margin-top: 0; gap: var(--space-2);">{boxes}</div>{err}</fieldset>'
+    every = f'<label class="choice" style="margin-bottom: var(--space-2);"><input type="checkbox" name="all-topics"{iv}><span class="choice__text">All topics</span></label>'
+    return (f'<fieldset{" disabled" if disabled else ""}><legend>Topics</legend>{every}<div class="form-grid form-grid--3" style="margin-top: 0; gap: var(--space-2);">{boxes}</div>{err}</fieldset>'
             f'<fieldset{" disabled" if disabled else ""}><legend>Where</legend><div class="choice-row">'
             f'<label class="choice"><input type="radio" name="where" checked><span class="choice__text">GTA and streaming</span></label>'
             f'<label class="choice"><input type="radio" name="where"><span class="choice__text">GTA only</span></label>'
@@ -473,7 +474,7 @@ def _():
 @state("subscribe-feed", "success", "Feed link ready: copy it or open it directly in Google, Outlook or Apple Calendar.")
 def _():
     url = "webcal://6ixstack.dev/feeds/ai-azure-gta-stream.ics"
-    body = (alert("success", "Your feed is ready", "AI and Azure events, in the GTA and streaming. 11 events right now.") +
+    body = (alert("success", "Your feed is ready", "AI and Azure events, in the GTA and streaming. 10 events right now.") +
             f'<div class="field"><label class="field__label" for="feed-url">Feed link</label><div class="copy-field"><input class="input" id="feed-url" readonly value="{url}">'
             f'<a class="btn" href="{N("app-toast", "success")}">{icon("copy")}Copy</a></div></div>'
             f'<ul class="option-list"><li><a class="option-btn" href="https://calendar.google.com/calendar/r?cid={url}">{icon("calendar")}<span>Google Calendar</span>{icon("external")}</a></li>'

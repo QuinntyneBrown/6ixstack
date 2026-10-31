@@ -271,6 +271,7 @@ export async function slowFeedCounts(page: Page, ms: number): Promise<void> {
   await page.route(
     '**/api/feeds',
     guarded(page, async (route) => {
+      if (route.request().method() !== 'GET') return route.fallback();
       const response = await route.fetch();
       await new Promise((resolve) => setTimeout(resolve, ms));
       await route.fulfill({ response });
@@ -280,12 +281,44 @@ export async function slowFeedCounts(page: Page, ms: number): Promise<void> {
 
 /** Makes GET /api/feeds fail with a 500 until the returned function is called. */
 export async function failFeedCounts(page: Page): Promise<() => Promise<void>> {
+  // Only the counts (GET) fail; creating a custom feed (POST) still reaches the API.
   const handler = (route: import('@playwright/test').Route) =>
-    route.fulfill({
-      status: 500,
-      contentType: 'application/problem+json',
-      body: '{"status":500,"referenceCode":"6F0A-12D4"}',
-    });
+    route.request().method() === 'GET'
+      ? route.fulfill({
+          status: 500,
+          contentType: 'application/problem+json',
+          body: '{"status":500,"referenceCode":"6F0A-12D4"}',
+        })
+      : route.fallback();
+  await page.route('**/api/feeds', handler);
+  return () => page.unroute('**/api/feeds', handler);
+}
+
+/** Holds POST /api/feeds until the returned function is called. */
+export async function holdFeedCreation(page: Page): Promise<() => void> {
+  let release!: () => void;
+  const released = new Promise<void>((resolve) => (release = resolve));
+  await page.route(
+    '**/api/feeds',
+    guarded(page, async (route) => {
+      if (route.request().method() !== 'POST') return route.fallback();
+      await released;
+      await route.continue();
+    }),
+  );
+  return release;
+}
+
+/** Makes POST /api/feeds fail with a 500 until the returned function is called. */
+export async function failFeedCreation(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.request().method() === 'POST'
+      ? route.fulfill({
+          status: 500,
+          contentType: 'application/problem+json',
+          body: '{"status":500,"referenceCode":"1D4B-88E0"}',
+        })
+      : route.fallback();
   await page.route('**/api/feeds', handler);
   return () => page.unroute('**/api/feeds', handler);
 }

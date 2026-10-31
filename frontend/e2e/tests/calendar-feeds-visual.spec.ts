@@ -1,6 +1,8 @@
 import { expect, test } from '../fixtures';
 import { CalendarFeedsPage } from '../pages/calendar-feeds.page';
-import { failFeedCounts, slowFeedCounts } from '../support/stub-api';
+import { EventsPage } from '../pages/events.page';
+import { SubscribeFeedDialog } from '../pages/subscribe-feed.dialog';
+import { failFeedCounts, failFeedCreation, slowFeedCounts } from '../support/stub-api';
 
 // Visual parity with docs/mocks/pages/calendar-feeds (the builder arrives with journey 11).
 test.describe('Calendar feeds visuals', () => {
@@ -54,5 +56,51 @@ test.describe('Calendar feeds visuals', () => {
     await feeds.open();
     await expect(feeds.meta('Azure')).toHaveText(/in the next two weeks/);
     await expect(page).toHaveScreenshot('calendar-feeds-default-phone.png', { fullPage: true });
+  });
+});
+
+test.describe('Custom feed visuals', () => {
+  test('builder invalid', async ({ page }) => {
+    const feeds = new CalendarFeedsPage(page);
+    await feeds.open();
+    await feeds.builder.create.click();
+    await expect(feeds.builder.topicError).toBeVisible();
+    await expect(page.locator('.feed-builder')).toHaveScreenshot('feed-builder-invalid-light.png');
+  });
+
+  test('builder success', async ({ page }) => {
+    const feeds = new CalendarFeedsPage(page);
+    await feeds.open();
+    await feeds.builder.choose(['AI', 'Azure']);
+    await feeds.builder.create.click();
+    await expect(feeds.ready).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(feeds.ready).toHaveScreenshot('calendar-feeds-success-light.png');
+  });
+
+  test('subscribe dialog default and success', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+    await events.getCalendarFeed.click();
+    const dialog = new SubscribeFeedDialog(page);
+    await dialog.builder.choose(['AI', 'Azure']);
+    await expect(dialog.panel).toHaveScreenshot('subscribe-feed-default-light.png');
+    await dialog.builder.create.click();
+    await expect(dialog.ready).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(dialog.panel).toHaveScreenshot('subscribe-feed-success-light.png');
+  });
+
+  test('subscribe dialog busy and failed', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+    await events.getCalendarFeed.click();
+    const dialog = new SubscribeFeedDialog(page);
+    await dialog.builder.choose(['AI', 'Azure']);
+    await failFeedCreation(page);
+    await dialog.builder.create.click();
+    await expect(dialog.failure).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(dialog.panel).toHaveScreenshot('subscribe-feed-failed-light.png');
   });
 });
