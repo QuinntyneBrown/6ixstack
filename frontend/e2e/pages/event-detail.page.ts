@@ -5,6 +5,7 @@ import { AppShell } from './app-shell';
 /** The event detail page (`/events/:slug`). */
 export class EventDetailPage {
   readonly shell: AppShell;
+  readonly share: Locator;
   readonly backLink: Locator;
   readonly title: Locator;
   readonly community: Locator;
@@ -20,6 +21,7 @@ export class EventDetailPage {
   readonly dockedBar: Locator;
 
   constructor(private readonly page: Page) {
+    this.share = page.getByRole('button', { name: 'Share', exact: true });
     this.shell = new AppShell(page);
     this.backLink = page.getByRole('link', { name: 'All events' });
     this.title = page.getByRole('heading', { level: 1 });

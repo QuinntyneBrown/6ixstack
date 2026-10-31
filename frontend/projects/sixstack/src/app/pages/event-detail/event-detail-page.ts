@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Dialog } from '@angular/cdk/dialog';
+import { ShareLauncher } from '../../shared/share/share-launcher';
 import { RouterLink } from '@angular/router';
 import { ApiError, EventAlert, EventDetail, EVENTS_API } from 'api';
 import {
@@ -62,6 +63,7 @@ import { NotFoundPage } from '../status/not-found-page';
 export class EventDetailPage {
   private readonly api = inject(EVENTS_API);
   private readonly dialog = inject(Dialog);
+  private readonly shareLauncher = inject(ShareLauncher);
 
   readonly slug = input.required<string>();
   protected readonly state = signal<LoadState<EventDetail>>(loading());
@@ -136,6 +138,14 @@ export class EventDetailPage {
   }
 
   /** Opens Add to my calendar, returning focus to `trigger` when it closes. */
+  /** Share (L2-038): the system sheet on phones with Web Share, otherwise the share dialog. */
+  protected share(event: EventDetail, trigger: EventTarget | null): void {
+    this.shareLauncher.share(
+      { slug: event.slug, title: event.title, summary: event.calendar.summary },
+      trigger as HTMLElement | null,
+    );
+  }
+
   protected openAddToCalendar(event: EventDetail, trigger: EventTarget | null): void {
     this.dialog.open(
       AddToCalendarDialog,

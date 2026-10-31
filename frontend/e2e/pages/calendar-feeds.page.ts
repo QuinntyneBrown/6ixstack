@@ -60,12 +60,4 @@ export class CalendarFeedsPage {
   async clipboardText(): Promise<string> {
     return this.page.evaluate(() => navigator.clipboard.readText());
   }
-
-  /** Makes copying fail, as it does when the browser refuses clipboard access. */
-  async blockCopying(): Promise<void> {
-    await this.page.addInitScript(() => {
-      document.execCommand = () => false;
-      Object.defineProperty(navigator, 'clipboard', { configurable: true, get: () => undefined });
-    });
-  }
 }
