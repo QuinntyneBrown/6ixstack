@@ -20,6 +20,11 @@ public sealed class ModerationController(ISender sender) : ControllerBase
     public Task<ApprovalResultDto> Approve(Guid id, CancellationToken cancellationToken) =>
         sender.Send(new ApproveSubmissionCommand(id), cancellationToken);
 
+    /// <summary>Rejects a submission with a reason (L2-061); 409 when someone already decided it (L2-063).</summary>
+    [HttpPost("submissions/{id:guid}/reject")]
+    public Task<RejectionResultDto> Reject(Guid id, RejectSubmissionRequest body, CancellationToken cancellationToken) =>
+        sender.Send(new RejectSubmissionCommand(id, body.Reason, body.Message), cancellationToken);
+
     /// <summary>Undoes an approval within 8 s (L2-060); 409 afterwards.</summary>
     [HttpPost("submissions/{id:guid}/undo-approval")]
     public async Task<IActionResult> UndoApproval(Guid id, CancellationToken cancellationToken)
@@ -33,3 +38,5 @@ public sealed class ModerationController(ISender sender) : ControllerBase
     public Task<ReviewPresenceDto> Presence(Guid id, CancellationToken cancellationToken) =>
         sender.Send(new RecordReviewPresenceCommand(id), cancellationToken);
 }
+
+public sealed record RejectSubmissionRequest(string? Reason, string? Message);

@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { AppShell } from './app-shell';
 
 /** One submission card in the review queue. */
@@ -16,9 +16,11 @@ export class ReviewCardPart {
     this.checks = root.getByRole('list', { name: 'Automatic checks' }).getByRole('listitem');
     this.submitted = root.locator('.review-card__submitted');
     this.approve = root.getByRole('button', { name: /^Approve/ });
+    this.reject = root.getByRole('button', { name: /^Reject/ });
   }
 
   readonly approve: Locator;
+  readonly reject: Locator;
 
   /** The check with this message; `outcome` reads its passed, warning or pending state. */
   check(message: string): Locator {
@@ -65,6 +67,12 @@ export class ReviewQueuePage {
 
   cardAt(index: number): ReviewCardPart {
     return new ReviewCardPart(this.cards.nth(index));
+  }
+
+  /** The "N waiting" count from the summary. */
+  async waitingCount(): Promise<number> {
+    await expect(this.summary).toHaveText(/^\d+ waiting/);
+    return Number((await this.summary.innerText()).match(/^(\d+) waiting/)?.[1] ?? NaN);
   }
 
   async titles(): Promise<string[]> {

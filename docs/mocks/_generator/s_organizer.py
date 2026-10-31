@@ -701,6 +701,20 @@ def _():
     return queue_behind() + dialog(R_TITLE, body, reject_footer(label="Try again"), R_DESC, DANGER_ICON)
 
 
+# ---- sent email (opened by View email on the rejection toast)
+screen("sent-email", "dialog", "Sent email", opens_from="review-queue", na={"invalid": "Read-only.", "busy": "Nothing to submit."})
+
+
+@state("sent-email", "default", "The rejection email exactly as sent: subject, recipient and text; Close has focus.")
+def _():
+    body = ('<p class="text-muted">To promo@wealthfast.biz</p>'
+            '<pre class="email-body" style="white-space: pre-wrap; font: var(--text-body-sm); margin: 0; padding: var(--space-4); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); background: var(--color-bg-subtle);">'
+            'A moderator reviewed “Free crypto trading masterclass”.\n\nReason: spam or advertising.\n\n'
+            '“This is advertising for a trading course, not a developer event.”\n\nWe won’t list it on 6ixstack.</pre>')
+    foot = f'<a class="btn" href="{P("review-queue")}" autofocus>Close</a>'
+    return inert(queue_page('<ul class="review-list">' + "".join(review_card(q) for q in QUEUE[:3]) + '</ul>')) + dialog("“Free crypto trading masterclass” wasn’t approved", body, foot)
+
+
 # ---- sign out
 screen("sign-out", "dialog", "Sign out", opens_from="settings", na={"invalid": "No inputs; a single confirmation."})
 
@@ -841,6 +855,11 @@ def _():
 @state("moderation-toast", "with-action", "Rejected, with View to open the sent email.")
 def _():
     return queue_under(3) + toast_region(toast("info", "Rejected “Free crypto trading masterclass”", "WealthFast Academy was emailed your reason.", "View email"))
+
+
+@state("moderation-toast", "needs-changes", "Sent back for a missing venue address: the organizer was emailed what to fix.")
+def _():
+    return queue_under(3) + toast_region(toast("info", "Sent “Free crypto trading masterclass” back for changes", "WealthFast Academy was emailed what to fix.", "View email"))
 
 
 @state("moderation-toast", "stacked", "Three toasts after quick decisions: newest at the bottom.")

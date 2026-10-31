@@ -10,9 +10,10 @@ test.describe('Review queue', () => {
     const queue = new ReviewQueuePage(page);
     await queue.open();
 
-    // Other specs add submissions to the shared database; theirs are newer, so the seeded four always come first.
+    // Other specs add submissions and decisions to the shared database; theirs are newer, so the seeded four always
+    // come first. The exact summary is proven by the API tests on a fresh database.
     await expect(queue.summary).toHaveText(
-      /^\d+ waiting · oldest submitted yesterday · median review time 3 h$/,
+      /^\d+ waiting · oldest submitted yesterday · median review time \d+ (h|min)$/,
     );
     expect((await queue.titles()).slice(0, 4)).toEqual([
       'Free crypto trading masterclass',
@@ -139,7 +140,7 @@ test.describe('Review queue shortcuts', () => {
     await queue.press('Shift+Slash');
 
     await expect(queue.shortcutsDialog).toBeVisible();
-    await expect(queue.shortcutRows()).toHaveText(['J', 'K', 'A', '?']);
+    await expect(queue.shortcutRows()).toHaveText(['J', 'K', 'A', 'R', '?']);
     await queue.press('Escape');
     await expect(queue.shortcutsDialog).toBeHidden();
   });

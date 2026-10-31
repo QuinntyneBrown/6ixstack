@@ -1,0 +1,51 @@
+<sx-dialog-shell [title]="'Reject “' + data.title + '”?'" [titleId]="titleId" [closable]="!busy()">
+  <p slot="description" id="reject-description">
+    Submitted by {{ data.organizerName }} ({{ data.submitterEmail }}). They get an email with your reason.
+  </p>
+  <div class="reject-body">
+    @if (failed()) {
+      <sx-alert class="reject-failure" kind="danger" announce="alert" title="The submission wasn’t rejected">
+        It’s still in the queue and nobody was emailed. Try again.
+      </sx-alert>
+    }
+    <sx-field-set legend="Reason" controlId="reason" [error]="reasonError()">
+      <div class="reasons">
+        @for (option of reasons; track option.value; let i = $index) {
+          <label sx-choice>
+            <input
+              sx-check
+              type="radio"
+              name="reason"
+              [id]="'reason-' + i"
+              [value]="option.value"
+              [formControl]="reason"
+              [attr.aria-invalid]="reasonError() ? 'true' : null"
+              [attr.aria-describedby]="reasonError() ? 'reason-error' : null"
+            />{{ option.label }}
+          </label>
+        }
+      </div>
+    </sx-field-set>
+    <sx-form-field
+      label="Message to the organizer"
+      controlId="reject-message"
+      optional
+      hint="Say what would make it acceptable, if anything."
+    >
+      <textarea
+        sx-input
+        id="reject-message"
+        rows="3"
+        maxlength="1000"
+        [formControl]="message"
+        [attr.aria-describedby]="describedBy('reject-message', true, false)"
+      ></textarea>
+    </sx-form-field>
+  </div>
+  <button slot="footer" sx-button type="button" cdkFocusInitial [disabled]="busy()" (click)="cancel()">
+    Cancel
+  </button>
+  <button slot="footer" sx-button appearance="danger" type="button" [busy]="busy()" (click)="submit()">
+    {{ busy() ? 'Rejecting…' : failed() ? 'Try again' : 'Reject submission' }}
+  </button>
+</sx-dialog-shell>

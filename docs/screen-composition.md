@@ -237,7 +237,8 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 | Share event (`share-event`: default, success) | CDK `Dialog` + `DialogShell` | `DialogShell`, `FormField`, `TextField` (copy-field), `Button` (Copy / Copied), `List` (option-list) | `ShareEventDialog` |
 | Report a problem (`report-event`: default, busy, invalid, failed, success) | CDK `Dialog` + `DialogShell` | `DialogShell`, `RadioGroup`, `FormField`, `Textarea`, `TextField` (email), `Button` (busy); invalid `FormField` error; failed `Alert`; success `EmptyState` (success panel) | `ReportProblemDialog` |
 | Cancel event (`cancel-event`: default, busy, invalid, failed, confirm) | CDK `Dialog` + `DialogShell` (danger icon) | `DialogShell`, `FormField`, `Textarea`, `Checkbox`, `Button` (danger, busy); confirm `TextField`; failed `Alert` | `CancelEventDialog` |
-| Reject submission (`reject-submission`: default, busy, invalid, failed) | CDK `Dialog` + `DialogShell` (danger icon) | `DialogShell`, `RadioGroup`, `FormField`, `Textarea`, `Button` (danger, busy); failed `Alert` | `RejectSubmissionDialog` |
+| Reject submission (`reject-submission`: default, busy, invalid, failed) | CDK `Dialog` + `DialogShell` (danger icon) | `DialogShell`, `FieldSet` + `Choice` + `Check` (design system: radio group), `FormField`, `Input` (textarea), `Button` (danger, busy); failed `Alert` | `RejectSubmissionDialog` |
+| Sent email (`sent-email`: default) | CDK `Dialog` + `DialogShell` | `DialogShell`, `Button` (Close) | `SentEmailDialog` |
 | Sign out (`sign-out`: default, busy) | CDK `Dialog` + `DialogShell` | `DialogShell`, `Button` (busy) | `SignOutDialog` |
 | Delete account (`delete-account`: default, busy, invalid, failed, confirm) | CDK `Dialog` + `DialogShell` (danger icon) | `DialogShell`, `FormField`, `TextField` (confirm), `Button` (danger, busy); failed `Alert` | `DeleteAccountDialog` |
 
@@ -246,7 +247,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 | Notification (mock folder: states) | Surface | Library components | Local UI |
 |---|---|---|---|
 | Toast (`app-toast`: info, success, warning, danger, with-action, stacked) | `ToastRegion` via `ToastService` | `ToastRegion`, `Toast` (action, dismiss, progress) | — |
-| Moderation toast (`moderation-toast`: info, success, warning, danger, conflict, too-late, with-action, stacked) | `ToastRegion` via `ToastService` (on review queue) | `ToastRegion`, `Toast` (Undo action) | — |
+| Moderation toast (`moderation-toast`: info, success, warning, danger, conflict, too-late, with-action, needs-changes, stacked) | `ToastRegion` via `ToastService` (on review queue) | `ToastRegion`, `Toast` (Undo action) | — |
 | Event status alert (`event-alert`: info, success, warning, danger) | inline on event detail | `Alert` | — |
 | Site banner (`site-banner`: info, success, warning, danger, persistent) | between header and `main` | `Alert` (`site-banner`, dismiss unless persistent) | `SiteBannerOutlet` |
 | Submission status banner (`submission-banner`: info, success, warning, danger, persistent) | inline on organizer dashboard | `Alert` (dismiss on info and success) | — |

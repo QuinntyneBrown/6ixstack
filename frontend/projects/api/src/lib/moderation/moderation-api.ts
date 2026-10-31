@@ -38,6 +38,17 @@ export interface ApprovalResult {
   possibleDuplicate: { eventId: string; slug: string; dateLabel: string } | null;
 }
 
+export type RejectionReason =
+  'missingVenueAddress' | 'notDeveloperEvent' | 'duplicate' | 'spamOrAdvertising' | 'codeOfConduct';
+
+export interface RejectionResult {
+  eventId: string;
+  title: string;
+  organizerName: string;
+  status: 'rejected' | 'needsChanges';
+  emailPreview: { to: string; subject: string; body: string };
+}
+
 export interface ModerationApi {
   /** Fails with `ApiError` kind `Forbidden` for a signed-in non-moderator. */
   getQueue(): Observable<ReviewQueue>;
@@ -47,6 +58,8 @@ export interface ModerationApi {
   undoApproval(id: string): Observable<void>;
   /** Records that the caller is looking at a submission; names the other moderators who are. */
   recordPresence(id: string): Observable<{ others: string[] }>;
+  /** Fails with kind `Conflict` when someone already decided it. */
+  reject(id: string, reason: RejectionReason, message: string | null): Observable<RejectionResult>;
 }
 
 export const MODERATION_API = new InjectionToken<ModerationApi>('MODERATION_API');
@@ -66,6 +79,13 @@ export class HttpModerationApi implements ModerationApi {
 
   undoApproval(id: string): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/api/moderation/submissions/${id}/undo-approval`, null);
+  }
+
+  reject(id: string, reason: RejectionReason, message: string | null): Observable<RejectionResult> {
+    return this.http.post<RejectionResult>(`${this.baseUrl}/api/moderation/submissions/${id}/reject`, {
+      reason,
+      message,
+    });
   }
 
   recordPresence(id: string): Observable<{ others: string[] }> {

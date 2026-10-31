@@ -56,7 +56,7 @@ export class KeyboardShortcutsDialog {
     { key: 'J', action: 'Next submission' },
     { key: 'K', action: 'Previous submission' },
     { key: 'A', action: 'Approve the focused submission' },
-    // R (reject) joins this list with journey 08.
+    { key: 'R', action: 'Reject the focused submission' },
     { key: '?', action: 'Show these shortcuts' },
   ];
 

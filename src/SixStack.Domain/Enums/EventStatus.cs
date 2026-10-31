@@ -7,4 +7,5 @@ public enum EventStatus
     Published = 2,
     Rejected = 3,
     Deleted = 4,
+    NeedsChanges = 5,
 }
