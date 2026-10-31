@@ -1,0 +1,116 @@
+<div class="page-title">
+  <h1>Communities</h1>
+  <p class="lead">{{ lead() }}</p>
+</div>
+
+<div class="toolbar">
+  <sx-search-field
+    class="toolbar__search"
+    label="Search communities"
+    placeholder="Search groups by name or topic"
+    [value]="filters().q"
+    (searched)="setFilter({ q: $event.trim() })"
+  />
+  <label class="visually-hidden" for="comm-topic">Topic</label>
+  <select
+    sx-input
+    id="comm-topic"
+    [value]="filters().topic ?? ''"
+    (change)="onTopic($any($event.target).value)"
+  >
+    <option value="">All topics</option>
+    @for (topic of topics; track topic) {
+      <option [value]="topic" [selected]="filters().topic === topic">{{ topicLabels[topic] }}</option>
+    }
+  </select>
+  <label class="visually-hidden" for="comm-city">City</label>
+  <select sx-input id="comm-city" (change)="onCity($any($event.target).value)">
+    <option value="" [selected]="!filters().city">All of the GTA</option>
+    @for (city of cities; track city) {
+      <option [value]="city" [selected]="filters().city === city">{{ city }}</option>
+    }
+  </select>
+  <label class="visually-hidden" for="comm-sort">Sort by</label>
+  <select sx-input id="comm-sort" (change)="onSort($any($event.target).value)">
+    @for (sort of sorts; track sort.value) {
+      <option [value]="sort.value" [selected]="filters().sort === sort.value">{{ sort.label }}</option>
+    }
+  </select>
+</div>
+
+@if (state().status === 'failed') {
+  <sx-alert
+    class="communities-error"
+    kind="danger"
+    announce="alert"
+    title="We couldn't load communities"
+    [actions]="errorActions"
+  >
+    6ixstack didn't respond in time. Your search and filters are kept.
+  </sx-alert>
+} @else if (data(); as d) {
+  @if (d.matchCount === 0 && filters().q) {
+    <sx-empty-state icon="search-x" [title]="'No communities match “' + filters().q + '”'">
+      <span slot="text">Try a broader search, or clear the topic and city filters.</span>
+      <ng-container slot="actions">
+        <button sx-button appearance="primary" type="button" (click)="setFilter({ q: '' })">
+          Clear search
+        </button>
+        <a sx-button routerLink="/submit">List a {{ filters().q }} meetup</a>
+      </ng-container>
+    </sx-empty-state>
+  } @else if (d.matchCount === 0) {
+    <sx-empty-state icon="users" [title]="'No communities in ' + (filters().city ?? 'the GTA') + ' yet'">
+      <span slot="text"
+        >Nobody has listed {{ filters().city ? 'an ' + filters().city : 'a' }} meetup. If you run one, add
+        your next event and your group gets a page here.</span
+      >
+      <ng-container slot="actions">
+        <a sx-button appearance="primary" routerLink="/submit">List your community</a>
+        <button sx-button type="button" (click)="setFilter({ city: null, topic: null })">
+          See all of the GTA
+        </button>
+      </ng-container>
+    </sx-empty-state>
+  } @else {
+    <ul class="card-grid">
+      @for (c of d.items; track c.slug) {
+        @let view = card(c);
+        <li>
+          <sx-directory-card
+            [initials]="c.initials"
+            [name]="c.name"
+            [link]="'/communities/' + c.slug"
+            [sub]="view.sub"
+            [description]="c.description"
+            [meta]="view.meta"
+            [topics]="view.topics"
+          />
+        </li>
+      }
+    </ul>
+    @if (d.hasMore) {
+      <div class="load-more">
+        <p class="text-caption">Showing {{ d.items.length }} of {{ d.matchCount }} communities</p>
+        <button sx-button type="button" [busy]="loadingMore()" (click)="showMore()">Show 20 more</button>
+      </div>
+    }
+  }
+} @else if (slow()) {
+  <p class="visually-hidden" role="status">Loading communities…</p>
+  <ul class="card-grid" aria-hidden="true">
+    @for (n of skeletons; track n) {
+      <li class="skeleton-card">
+        <div class="skeleton-card__head">
+          <sx-skeleton variant="rect" width="2.75rem" height="2.75rem" />
+          <div class="skeleton-card__lines">
+            <sx-skeleton variant="title" width="70%" />
+            <sx-skeleton width="50%" />
+          </div>
+        </div>
+        <sx-skeleton width="100%" />
+        <sx-skeleton width="80%" />
+      </li>
+    }
+  </ul>
+}
