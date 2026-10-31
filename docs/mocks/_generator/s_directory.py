@@ -318,7 +318,7 @@ def builder(done=False):
     if done:
         url = "webcal://6ixstack.dev/feeds/ai-azure-gta-stream.ics"
         inner = (f'<div class="success-panel"><div class="success-panel__icon">{icon("check-circle", "icon icon--lg")}</div>'
-                 f'<div><h3 style="font: var(--text-h4);">Your feed is ready</h3><p class="text-muted">AI and Azure events, in the GTA and streaming. 11 events right now; new ones appear on their own.</p></div>'
+                 f'<div><h3 style="font: var(--text-h4);">Your feed is ready</h3><p class="text-muted">AI and Azure events, in the GTA and streaming. 10 events right now; new ones appear on their own.</p></div>'
                  f'<div class="field" style="width: 100%;"><label class="field__label" for="feed-url">Feed link</label><div class="copy-field"><input class="input" id="feed-url" readonly value="{url}">'
                  f'<a class="btn" href="{N("app-toast", "success")}">{icon("copy")}Copy</a></div></div>'
                  f'<ul class="option-list" style="width: 100%;"><li><a class="option-btn" href="https://calendar.google.com/calendar/r?cid={url}">{icon("calendar")}<span>Google Calendar</span>{icon("external")}</a></li>'

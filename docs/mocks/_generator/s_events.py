@@ -473,7 +473,7 @@ def _():
 @state("subscribe-feed", "success", "Feed link ready: copy it or open it directly in Google, Outlook or Apple Calendar.")
 def _():
     url = "webcal://6ixstack.dev/feeds/ai-azure-gta-stream.ics"
-    body = (alert("success", "Your feed is ready", "AI and Azure events, in the GTA and streaming. 11 events right now.") +
+    body = (alert("success", "Your feed is ready", "AI and Azure events, in the GTA and streaming. 10 events right now.") +
             f'<div class="field"><label class="field__label" for="feed-url">Feed link</label><div class="copy-field"><input class="input" id="feed-url" readonly value="{url}">'
             f'<a class="btn" href="{N("app-toast", "success")}">{icon("copy")}Copy</a></div></div>'
             f'<ul class="option-list"><li><a class="option-btn" href="https://calendar.google.com/calendar/r?cid={url}">{icon("calendar")}<span>Google Calendar</span>{icon("external")}</a></li>'

@@ -118,8 +118,8 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 | Filter bar (`filter-bar`, `filter-row`) | events, calendar | Composes `TextField` (search), `SegmentedControl`, `TopicChip` row; shares `FilterStateStore` |
 | Result line (`result-line`) | events, communities, speakers | `aria-live="polite"` count text (`ResultLine` in `platform/accessibility`) |
 | Directory toolbar (`toolbar`) | communities, speakers | `TextField` (search) + `Select` (topic) |
-| Feed choice form (`FeedBuilder`) | calendar-feeds, subscribe-feed | Topics `Checkbox` group + scope `RadioGroup`; app component per `build-custom-feed` |
-| Feed link panel (`FeedLinkPanel`) | calendar-feeds (success), subscribe-feed (success) | `FormField` + `TextField` (copy-field) + `Button` (Copy) + `List` (option-list) |
+| Feed choice form (`FeedBuilder`) | calendar-feeds, subscribe-feed | `FieldSet` + `Choice` + `Check` (topics with "All topics", and the scope radios), `TopicTag`; app component per `build-custom-feed` |
+| Feed link panel (`FeedLinkPanel`) | calendar-feeds (success), subscribe-feed (success) | `FormField` + `Input` (read-only copy field) + `Button` (Copy) + `List`/`ListItem` (calendar options) |
 | Event form (sections Event basics, When, Where, Tickets) | submit-event, edit-event | `FormSection`, `FormField`, `Input`, `FieldSet`, `Choice`, `Check`; build once |
 
 ## Pages
@@ -232,7 +232,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 | Dialog (mock folder: states) | Overlay surface | Library components | Local UI |
 |---|---|---|---|
 | Mobile menu (`mobile-nav`: default) | CDK `Dialog` + `DialogShell` (bottom sheet) | `DialogShell`, `Divider`, `Button` (Submit event, block, lg) | `MobileMenuDialog`, `mobile-nav` link lists (`NAV_ITEMS`) |
-| Subscribe to a feed (`subscribe-feed`: default, busy, invalid, failed, success) | CDK `Dialog` + `DialogShell` | `DialogShell`, `Checkbox`, `RadioGroup`, `Button` (busy); invalid `FormField` error; failed `Alert`; success `Alert`, `FormField`, `TextField` (copy-field), `List` (option-list) | `SubscribeFeedDialog`, `FeedBuilder`, `FeedLinkPanel` |
+| Subscribe to a feed (`subscribe-feed`: default, busy, invalid, failed, success) | CDK `Dialog` + `DialogShell` | `DialogShell`, `FieldSet`, `Choice`, `Check`, `Button` (busy); invalid `FieldSet` error; failed `Alert`; success `Alert`, `FormField`, `Input` (copy field), `List`/`ListItem` (calendar options) | `SubscribeFeedDialog`, `FeedBuilder`, `FeedLinkPanel` |
 | Add to my calendar (`add-to-calendar`: default, busy, failed) | CDK `Dialog` + `DialogShell` | `DialogShell`, `OptionButton` (the design system's List option button; busy option); failed `Alert`; success `Toast` | `AddToCalendarDialog`, option list layout, `CalendarLinkBuilder`, `FileDownloader` |
 | Share event (`share-event`: default, success) | CDK `Dialog` + `DialogShell` | `DialogShell`, `FormField`, `TextField` (copy-field), `Button` (Copy / Copied), `List` (option-list) | `ShareEventDialog` |
 | Report a problem (`report-event`: default, busy, invalid, failed, success) | CDK `Dialog` + `DialogShell` | `DialogShell`, `RadioGroup`, `FormField`, `Textarea`, `TextField` (email), `Button` (busy); invalid `FormField` error; failed `Alert`; success `EmptyState` (success panel) | `ReportProblemDialog` |

@@ -184,3 +184,18 @@ The created slug carries the community, so the feed holds only that
 community's events (`L2-031`).
 
 ![Sequence diagram for subscribing to a community feed](diagrams/sequence-subscribe-community.png)
+
+## Decisions (journey 11)
+
+- "N events right now" counts the upcoming (not yet ended), published, not cancelled events that match; `L2-035`
+  criterion 1 uses the seed's 10.
+- `POST /api/feeds` returns the slug, the summary, the count and links built from `Site:PublicBaseUrl`. The web
+  app builds the links it shows and copies on the host it is served from, as for ready-made feeds, so local and
+  staging links work.
+- The events page gains the mock's CTA band; its "Get a calendar feed" opens `SubscribeFeedDialog`. The calendar
+  feeds page hosts the builder inline, and its error state again says "You can still build your own feed below."
+- The command accepts a `CommunitySlug` now; "Subscribe to this group" on community pages arrives with journey 19.
+- The goal's "live preview" is not in `L2-035` or the mocks, so the success panel's count is the preview.
+- The `FeedCreation` limit (30 an hour per IP) is configurable (`Feeds:CreatePerIpPerHour`); Playwright and demos
+  raise it, as for sign-in links.
+
