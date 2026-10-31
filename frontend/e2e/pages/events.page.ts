@@ -14,6 +14,7 @@ export class EventsPage {
   readonly formatSwitch: Locator;
   readonly topicChips: Locator;
   readonly emptyState: Locator;
+  readonly loadMore: Locator;
   readonly loadMoreCaption: Locator;
   readonly showMore: Locator;
   readonly errorAlert: Locator;
@@ -28,6 +29,7 @@ export class EventsPage {
     this.formatSwitch = page.getByRole('group', { name: 'Where' });
     this.topicChips = page.getByRole('group', { name: 'Topics' }).getByRole('button');
     this.emptyState = page.locator('.empty');
+    this.loadMore = page.locator('.load-more');
     this.loadMoreCaption = page.locator('.load-more .text-caption');
     this.showMore = page.getByRole('button', { name: 'Show 20 more' });
     this.errorAlert = page.getByRole('alert').filter({ hasText: "We couldn't load events" });

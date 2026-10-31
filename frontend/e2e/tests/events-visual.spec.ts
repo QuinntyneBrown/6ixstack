@@ -42,8 +42,7 @@ test.describe('Events page visuals', () => {
   test('long list with Show 20 more', async ({ page }) => {
     const events = new EventsPage(page);
     await events.open();
-    await events.showMore.scrollIntoViewIfNeeded();
-    await expect(page).toHaveScreenshot('events-long-light.png');
+    await expect(events.loadMore).toHaveScreenshot('events-long-light.png');
   });
 
   test('dark theme', async ({ page }) => {
