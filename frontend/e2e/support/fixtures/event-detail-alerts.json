@@ -1,0 +1,151 @@
+{
+  "slug": "azure-data-ai-day-gta",
+  "title": "Azure Data & AI Day GTA",
+  "description": "A full day of Fabric, Azure OpenAI and data platform sessions from local MVPs, with a hands-on lab track. Bring a laptop with an Azure subscription for the labs; trial credits are available at the door.\n\n- Two tracks: talks on the main stage, labs in Hall B\n- Lunch and coffee included; vegetarian, vegan and halal options\n- Step-free access from the Square One transit terminal",
+  "state": "upcoming",
+  "format": "hybrid",
+  "community": {
+    "slug": "gta-azure-community",
+    "name": "GTA Azure Community"
+  },
+  "topics": ["ai", "azure"],
+  "dateTile": {
+    "month": "Nov",
+    "day": "5"
+  },
+  "facts": {
+    "when": {
+      "dateLabel": "Thursday, November 5, 2026",
+      "timeRange": "9:00 AM \u2013 5:00 PM ET",
+      "sourceTime": null,
+      "suffix": null
+    },
+    "venue": {
+      "name": "Living Arts Centre",
+      "address": "4141 Living Arts Dr, Mississauga",
+      "directionsUrl": "https://www.google.com/maps/search/?api=1&query=Living%20Arts%20Centre%2C%204141%20Living%20Arts%20Dr%2C%20Mississauga",
+      "travelNotes": "Step-free access from the Square One transit terminal"
+    },
+    "stream": {
+      "label": "Livestream available",
+      "note": "Keynote and main-stage sessions; labs are in person only"
+    },
+    "price": {
+      "label": "$49 \u00b7 includes lunch",
+      "note": "Student tickets $15 with a valid ID"
+    },
+    "attendance": {
+      "label": "318 going",
+      "note": "Capacity 400"
+    }
+  },
+  "agenda": [
+    {
+      "time": "9:00 AM",
+      "title": "Registration and coffee"
+    },
+    {
+      "time": "9:30 AM",
+      "title": "Keynote: Fabric one year later \u2014 Priya Natarajan"
+    },
+    {
+      "time": "11:00 AM",
+      "title": "Grounding Azure OpenAI on your lakehouse \u2014 Aisha Rahman"
+    },
+    {
+      "time": "12:30 PM",
+      "title": "Lunch"
+    },
+    {
+      "time": "1:30 PM",
+      "title": "Lab: build a real-time dashboard with Eventstream"
+    },
+    {
+      "time": "4:15 PM",
+      "title": "Panel: data teams in Canadian banks \u2014 Marcus Bell, Kenji Watanabe"
+    }
+  ],
+  "speakers": [
+    {
+      "slug": "priya-natarajan",
+      "name": "Priya Natarajan",
+      "initials": "PN",
+      "role": "Azure MVP \u00b7 Cloud architect, Rogers"
+    },
+    {
+      "slug": "marcus-bell",
+      "name": "Marcus Bell",
+      "initials": "MB",
+      "role": "Data platform lead, Scotiabank"
+    },
+    {
+      "slug": "aisha-rahman",
+      "name": "Aisha Rahman",
+      "initials": "AR",
+      "role": "Senior PM, Microsoft Fabric"
+    },
+    {
+      "slug": "kenji-watanabe",
+      "name": "Kenji Watanabe",
+      "initials": "KW",
+      "role": "Solutions architect, Shopify"
+    }
+  ],
+  "actions": {
+    "primary": {
+      "label": "Get tickets \u00b7 $49",
+      "url": "https://tickets.example.com/azure-data-ai-day-gta"
+    },
+    "join": null,
+    "addToCalendar": true,
+    "share": true,
+    "report": true,
+    "caption": "Tickets are sold by the organizer. 6ixstack never charges attendees.",
+    "recordingUrl": null,
+    "slidesUrl": null,
+    "findAnother": null,
+    "follow": null
+  },
+  "alerts": [
+    {
+      "kind": "warning",
+      "title": "Start time changed to 9:30 AM",
+      "text": "Updated by GTA Azure Community 2 hours ago. Calendar feeds update automatically; re-add it if you saved a file.",
+      "action": {
+        "label": "Update my calendar",
+        "href": null,
+        "kind": "add-to-calendar"
+      }
+    },
+    {
+      "kind": "danger",
+      "title": "Sold out",
+      "text": "All 400 tickets are gone. Join the waitlist on the ticket page; the livestream is still free.",
+      "action": {
+        "label": "Join the waitlist",
+        "href": "https://tickets.example.com/azure-data-ai-day-gta",
+        "kind": null
+      }
+    },
+    {
+      "kind": "success",
+      "title": "Confirmed by the organizer",
+      "text": "GTA Azure Community confirmed the date, venue and livestream on November 1.",
+      "action": null
+    },
+    {
+      "kind": "info",
+      "title": "Lab seats are first come, first served",
+      "text": "Hall B fits 60. Arrive by 1:15 PM to get a seat for the Eventstream lab.",
+      "action": null
+    }
+  ],
+  "dockedBar": {
+    "when": "Thu, Nov 5 \u00b7 9:00 AM",
+    "summary": "$49 \u00b7 318 going",
+    "action": {
+      "label": "Get tickets",
+      "url": "https://tickets.example.com/azure-data-ai-day-gta"
+    }
+  }
+}

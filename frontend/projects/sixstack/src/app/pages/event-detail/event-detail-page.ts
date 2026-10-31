@@ -104,7 +104,7 @@ export class EventDetailPage {
       return [{ label, link: href }];
     }
     if (href) {
-      return [{ label, run: () => window.open(href, '_blank', 'noopener,noreferrer') }];
+      return [{ label, href }];
     }
     return [{ label, run: () => undefined }];
   }
