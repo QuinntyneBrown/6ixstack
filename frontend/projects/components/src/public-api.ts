@@ -10,3 +10,4 @@ export * from './lib/button/button';
 export * from './lib/skip-link/skip-link';
 export * from './lib/site-header/site-header';
 export * from './lib/site-footer/site-footer';
+export * from './lib/status-page/status-page';

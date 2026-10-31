@@ -1,0 +1,31 @@
+// Ported from docs/mocks/assets/ui.css (.status-page, .empty__actions).
+.status-page {
+  min-height: calc(100dvh - 14rem);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding-block: var(--sx-space-16);
+}
+.status-page__code {
+  font: var(--fontWeightBold) var(--fontSizeHero1000) / 1 var(--fontFamilyMonospace);
+  letter-spacing: -0.04em;
+}
+.status-page__code span {
+  color: var(--sx-color-brand);
+}
+.status-page h1 {
+  margin-top: var(--spacingHorizontalL);
+  font: var(--sx-text-h2);
+}
+.status-page__message {
+  max-width: var(--sx-measure);
+  margin: var(--spacingHorizontalM) auto 0;
+  color: var(--colorNeutralForeground2);
+}
+.empty__actions {
+  display: flex;
+  gap: var(--spacingHorizontalM);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--spacingHorizontalXXL);
+}
