@@ -162,7 +162,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 
 #### Calendar feeds — `/feeds` — `pages/calendar-feeds`: default, loading, error, success
 
-- Library: `List` (ready-made feeds) with `LogoTile`, `Button`; `FormLayout`, `Checkbox`, `RadioGroup`, `TopicTag`, `Stepper` (steps-next); loading `Skeleton`; error `Alert`; success `EmptyState` (success panel), `FormField`, `TextField` (copy-field), `List` (option-list).
+- Library: `List` + `ListItem` (ready-made feeds) with `LogoTile`, `Button` (Copy link); `NextSteps` (How it works); loading `Skeleton` (counts); error `Alert`. From journey 11: `FieldSet`, `Choice`, `Check`, `TopicTag` (builder); success `SuccessPanel`, `FormField`, `Input` (copy-field), `List` (option-list).
 - Local: page title, `FeedBuilder`, `FeedLinkPanel`.
 
 #### About — `/about` — `pages/about`: default
