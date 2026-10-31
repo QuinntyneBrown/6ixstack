@@ -64,7 +64,7 @@ public sealed class SpeakersTests(ApiFactory factory) : IClassFixture<ApiFactory
         Assert.DoesNotContain("Hannah Wright", month);
         var year = Names(await Get("?period=year"));
         Assert.Contains("Hannah Wright", year);
-        Assert.DoesNotContain("Priya Natarajan", year);
+        Assert.DoesNotContain("Kenji Watanabe", year);
         Assert.Equal(0, (await Get("?topic=aws&period=month&q=nobody")).GetProperty("matchCount").GetInt32());
     }
 

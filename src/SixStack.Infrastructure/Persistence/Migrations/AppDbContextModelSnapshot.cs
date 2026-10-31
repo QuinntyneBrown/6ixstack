@@ -604,6 +604,9 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<int>("EarlierTalkCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("HomeCity")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -632,8 +635,15 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
 
+                    b.Property<int?>("SpeakingSinceYear")
+                        .HasColumnType("int");
+
                     b.Property<int>("Topics")
                         .HasColumnType("int");
+
+                    b.Property<string>("TravelNote")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.HasKey("Id");
 
@@ -910,6 +920,36 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SixStack.Domain.Entities.Speaker", b =>
+                {
+                    b.OwnsMany("SixStack.Domain.Entities.SpeakerLink", "Links", b1 =>
+                        {
+                            b1.Property<Guid>("SpeakerId");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAddOrUpdate();
+
+                            b1.Property<string>("Label")
+                                .IsRequired();
+
+                            b1.Property<string>("Url")
+                                .IsRequired();
+
+                            b1.HasKey("SpeakerId", "__synthesizedOrdinal");
+
+                            b1.ToTable("Speakers");
+
+                            b1
+                                .ToJson("Links")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SpeakerId");
+                        });
+
+                    b.Navigation("Links");
                 });
 
             modelBuilder.Entity("SixStack.Domain.Entities.SubmissionCheck", b =>

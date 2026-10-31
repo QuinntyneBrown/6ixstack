@@ -97,6 +97,25 @@ internal static class SeedData
         yield return Make("“Azure AI Search hands-on” is live", "Approved by a moderator. It’s in the list, the calendar and every matching feed.", "/events/azure-ai-search-hands-on", "success", TimeSpan.FromDays(28), true);
     }
 
+    /// <summary>Speaker page profiles (L2-033); other speakers show what the directory knows.</summary>
+    public static readonly IReadOnlyDictionary<string, Action<Speaker>> SpeakerProfiles = new Dictionary<string, Action<Speaker>>
+    {
+        ["priya-natarajan"] = s =>
+        {
+            s.Bio = "Priya designs data platforms on Azure for Rogers and has spoken at more than forty GTA meetups since 2019. She runs GTA Azure Community and mentors first-time speakers.\n\nTalks usually cover Microsoft Fabric, Azure OpenAI and keeping cloud bills sane.";
+            s.SpeakingSinceYear = 2019;
+            s.EarlierTalkCount = 41;
+            s.TravelNote = "Speaks in person across the GTA";
+            s.PublicContactEmail = "priya@gtaazure.ca";
+            s.Links =
+            [
+                new SpeakerLink { Label = "priya.dev", Url = "https://priya.dev" },
+                new SpeakerLink { Label = "LinkedIn", Url = "https://www.linkedin.com/in/priyanatarajan" },
+                new SpeakerLink { Label = "GitHub", Url = "https://github.com/priyan" },
+            ];
+        },
+    };
+
     /// <summary>Community page profiles (L2-031); other communities fall back to their description.</summary>
     public static readonly IReadOnlyDictionary<string, Action<Community>> Profiles = new Dictionary<string, Action<Community>>
     {
@@ -227,7 +246,7 @@ internal static class SeedData
         new("cost-aware-autoscaling", "Cost-aware autoscaling", "cloud-native-toronto", "Scaling clusters on price as well as load.", Topics.Aws, EventFormat.InPerson, "2026-10-22", "18:30", "20:30", Spaces, null, 0, 58, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 3, Speakers: [("ben-okoro", "Autoscaling on price")]),
         new("cloud-native-toronto-october-meetup", "Cloud Native Toronto: October meetup", "cloud-native-toronto", "Platform teams compare notes.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-10-27", "18:30", "20:30", Spaces, null, 0, 66, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 5),
         new("azure-functions-deep-dive", "Azure Functions deep dive", "gta-azure-community", "Isolated workers, Flex Consumption and cold starts.", Topics.Azure, EventFormat.InPerson, "2026-10-13", "18:30", "20:30", MicrosoftCanada, null, 0, 88, SubmitterEmail: OrganizerEmail, ReviewHours: 2, Speakers: [("hannah-wright", "Flex Consumption in production")]),
-        new("bicep-for-app-developers", "Bicep for app developers", "gta-azure-community", "Infrastructure as code without the YAML.", Topics.Azure, EventFormat.InPerson, "2026-10-19", "18:30", "20:30", MicrosoftCanada, null, 0, 74, SubmitterEmail: OrganizerEmail, ReviewHours: 3),
+        new("bicep-for-app-developers", "Bicep for app developers", "gta-azure-community", "Infrastructure as code without the YAML.", Topics.Azure, EventFormat.InPerson, "2026-10-19", "18:30", "20:30", MicrosoftCanada, null, 0, 74, SubmitterEmail: OrganizerEmail, ReviewHours: 3, Speakers: [("priya-natarajan", "Bicep modules that scale")], Details: e => e.RecordingUrl = "https://www.youtube.com/watch?v=gta-azure-bicep-modules"),
         new("azure-ai-search-hands-on", "Azure AI Search hands-on", "gta-azure-community", "Hybrid retrieval for your own data.", Topics.Azure | Topics.AI, EventFormat.InPerson, "2026-10-26", "18:30", "20:30", MicrosoftCanada, null, 0, 95, SubmitterEmail: OrganizerEmail, ReviewHours: 3, Speakers: [("ana-petrova", "Hybrid retrieval that holds up")]),
         new("copilot-studio-for-developers", "Copilot Studio for developers", "gta-azure-community", "Extending agents with your own APIs.", Topics.Azure | Topics.AI, EventFormat.InPerson, "2026-10-29", "18:30", "20:30", MicrosoftCanada, null, 0, 81, SubmitterEmail: OrganizerEmail, ReviewHours: 6, Speakers: [("mateo-silva", "Plugins for Copilot Studio")]),
     ];

@@ -531,3 +531,24 @@ export async function slowSpeakers(page: Page, ms: number): Promise<void> {
     }),
   );
 }
+
+/** Makes GET /api/speakers/{slug} fail until the returned function is called. */
+export async function failSpeaker(page: Page): Promise<() => Promise<void>> {
+  const pattern = /\/api\/speakers\/[a-z0-9-]+$/;
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+  await page.route(pattern, handler);
+  return () => page.unroute(pattern, handler);
+}
+
+/** Delays GET /api/speakers/{slug} by `ms`. */
+export async function slowSpeaker(page: Page, ms: number): Promise<void> {
+  await page.route(
+    /\/api\/speakers\/[a-z0-9-]+$/,
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
+}
