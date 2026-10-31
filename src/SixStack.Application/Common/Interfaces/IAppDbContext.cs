@@ -20,6 +20,8 @@ public interface IAppDbContext
     DbSet<Notification> Notifications { get; }
 
     DbSet<ProblemReport> ProblemReports { get; }
+
+    DbSet<ContactMessage> ContactMessages { get; }
     DbSet<AuditEntry> AuditEntries { get; }
     DbSet<ReviewPresence> ReviewPresences { get; }
 

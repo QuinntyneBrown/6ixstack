@@ -22,6 +22,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Notification> Notifications => Set<Notification>();
 
     public DbSet<ProblemReport> ProblemReports => Set<ProblemReport>();
+
+    public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
     public DbSet<AuditEntry> AuditEntries => Set<AuditEntry>();
     public DbSet<ReviewPresence> ReviewPresences => Set<ReviewPresence>();
 
