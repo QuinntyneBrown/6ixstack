@@ -69,15 +69,14 @@
 .brand:hover {
   color: var(--colorNeutralForeground1);
 }
+// The official logo artwork keeps its own colours; in dark a hairline ring keeps the ink tile off the canvas.
 .brand__mark {
-  display: inline-grid;
-  place-items: center;
+  display: block;
+  flex: none;
   width: 2rem;
   height: 2rem;
-  border-radius: var(--borderRadiusXLarge);
-  background: var(--colorBrandBackground);
-  color: var(--colorNeutralForegroundOnBrand);
-  font: var(--fontWeightBold) var(--sx-font-size-lead) / 1 var(--fontFamilyBase);
+  border-radius: 25%;
+  box-shadow: 0 0 0 1px var(--sx-brand-mark-ring);
 }
 .brand__six {
   font-weight: var(--fontWeightBold);

@@ -17,6 +17,17 @@ test.describe('App shell', () => {
     await expect(events.shell.menuButton).toBeHidden();
   });
 
+  // L2-104 AC1: the official Magic Patterns logo mark sits beside the wordmark.
+  test('the brand shows the official 6ixstack logo mark beside the wordmark', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+
+    await expect(events.shell.brand).toHaveAccessibleName('6ixstack home');
+    await expect(events.shell.brandMark).toBeVisible();
+    await expect(events.shell.brandMark).toHaveAttribute('aria-hidden', 'true');
+    expect(await events.shell.brandMarkDifferenceFromOfficialLogo()).toBeLessThan(0.02);
+  });
+
   test('the header stays at the top while the page scrolls', async ({ page }) => {
     const events = new EventsPage(page);
     await events.open();

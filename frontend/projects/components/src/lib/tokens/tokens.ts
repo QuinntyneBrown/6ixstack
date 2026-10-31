@@ -208,6 +208,7 @@ export const tokens = {
   sxMapTopicAws: 'var(--sx-map-topic-aws)',
   sxColorBrand: 'var(--sx-color-brand)',
   sxHeaderBackground: 'var(--sx-header-background)',
+  sxBrandMarkRing: 'var(--sx-brand-mark-ring)',
   sxFeatureCardBackground: 'var(--sx-feature-card-background)',
   sxFeatureCardBorder: 'var(--sx-feature-card-border)',
   sxFeatureCardForeground: 'var(--sx-feature-card-foreground)',

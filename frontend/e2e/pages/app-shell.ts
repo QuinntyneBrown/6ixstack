@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { Locator, Page } from '@playwright/test';
 import { MobileMenuDialog } from './mobile-menu.dialog';
 
@@ -6,6 +8,7 @@ export class AppShell {
   readonly skipLink: Locator;
   readonly header: Locator;
   readonly brand: Locator;
+  readonly brandMark: Locator;
   readonly primaryNav: Locator;
   readonly submitEvent: Locator;
   readonly menuButton: Locator;
@@ -22,6 +25,7 @@ export class AppShell {
     this.skipLink = page.getByRole('link', { name: 'Skip to content' });
     this.header = page.locator('header.site-header');
     this.brand = this.header.getByRole('link', { name: '6ixstack home' });
+    this.brandMark = this.brand.locator('.brand__mark');
     this.primaryNav = page.getByRole('navigation', { name: 'Primary' });
     this.submitEvent = this.header.getByRole('link', { name: 'Submit event' });
     this.menuButton = this.header.getByRole('button', { name: 'Open menu' });
@@ -114,6 +118,53 @@ export class AppShell {
   async hasHorizontalScroll(): Promise<boolean> {
     return this.page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    );
+  }
+
+  /**
+   * Share of the brand mark's pixels that differ from the official Magic Patterns logo
+   * (docs/assets/6ixstack-mark.svg) drawn at the same size on the page background: 0 is identical.
+   */
+  async brandMarkDifferenceFromOfficialLogo(): Promise<number> {
+    const box = await this.brandMark.boundingBox();
+    if (!box) throw new Error('The brand mark is not rendered');
+    const shot = (await this.brandMark.screenshot({ animations: 'disabled' })).toString('base64');
+    const official = readFileSync(join(__dirname, '../../../docs/assets/6ixstack-mark.svg')).toString(
+      'base64',
+    );
+    return this.page.evaluate(
+      async ({ shot, official, width, height }) => {
+        const load = (src: string) =>
+          new Promise<HTMLImageElement>((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = src;
+          });
+        const pixels = async (src: string) => {
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d')!;
+          ctx.fillStyle = getComputedStyle(document.body).backgroundColor;
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(await load(src), 0, 0, width, height);
+          return ctx.getImageData(0, 0, width, height).data;
+        };
+        const actual = await pixels(`data:image/png;base64,${shot}`);
+        const expected = await pixels(`data:image/svg+xml;base64,${official}`);
+        let different = 0;
+        for (let i = 0; i < actual.length; i += 4) {
+          const delta = Math.max(
+            Math.abs(actual[i] - expected[i]),
+            Math.abs(actual[i + 1] - expected[i + 1]),
+            Math.abs(actual[i + 2] - expected[i + 2]),
+          );
+          if (delta > 64) different++;
+        }
+        return different / (width * height);
+      },
+      { shot, official, width: Math.round(box.width), height: Math.round(box.height) },
     );
   }
 
