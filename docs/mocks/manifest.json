@@ -401,6 +401,7 @@
         "invalid",
         "submitting",
         "success",
+        "failed",
         "read-only"
       ],
       "not_applicable": {

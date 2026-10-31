@@ -185,3 +185,32 @@ The validator rejects invalid fields with 400 before the handler runs
 status rule, records the audit entry and commits once.
 
 ![Sequence diagram for saving changes to an event](diagrams/sequence-save-changes.png)
+
+## Decisions (journey 14)
+
+- **Who may edit**: a community member, the address that submitted the event (a new organizer has no community
+  yet, as on the dashboard), or a moderator. Anyone else gets 403 with `communityName`, `eventTitle` and
+  `signedInEmail`; the page shows the forbidden state from `forbidden/default`.
+- **Status rule** (fills the `<TO SUPPLY>` row): an organizer's save of a Needs changes or Rejected event is a
+  resubmission. It returns to In review, keeps `SubmittedAtUtc` and schedules the automated checks again.
+  Published and In review keep their status, as `L2-054` asks; published changes apply at once rather than going
+  back to review. Cancelled and past events are read-only (409 if saved). A moderator's save never changes the
+  status (`L2-062`).
+- **Success copy**: published events say "The 318 people going and every calendar feed that includes it will see
+  the new details within an hour". Feeds are cached for 15 minutes, which is within the hour. Counting matching
+  feeds (`IFeedMatchCounter`) waits until feed requests are counted, as on the dashboard. Other statuses say
+  "Changes saved", and a resubmission says it is back in review.
+- **Failed save** (`edit-event/failed`): "We couldn’t save your changes", with every value kept.
+- **Races**: a save that loses a race with another save or a decision gets 409 "Someone else changed this event".
+  The page reloads the event and keeps nothing stale. No mock draws this state, so it is a toast with the same
+  words.
+- **Audit**: every save records `EventEdited` with the actor, time and changed field names. `AuditEntry` gains
+  `Details`.
+- **Status line**: "{status} · {n} going · last edited {Mon d}". Going appears only for published events, and the
+  last edit only once there is one. `Event.LastEditedAtUtc` is new (seeded Oct 28 for Azure Data & AI Day GTA).
+- **Reached from**: the dashboard's Edit (non-past rows) and View (past rows, read-only); the Needs changes
+  banner's "Add the address"; the Not approved banner's "Edit and resubmit"; the review queue card's Edit.
+- **Duplicate as a new event** writes the details, without the date or times, into the submit page's browser draft,
+  with the signed-in email as the contact.
+- Cancel event stays with journey 15, so the edit page has no Cancel button yet.
+

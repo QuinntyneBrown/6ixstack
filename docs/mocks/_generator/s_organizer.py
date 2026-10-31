@@ -347,8 +347,14 @@ def _():
 
 @state("edit-event", "success", "Saved: confirms the change and who gets told about it.")
 def _():
-    top = alert("success", "Changes saved", "The listing is updated. 318 people going and 41 feeds that include it will see the new details within an hour.",
+    top = alert("success", "Changes saved", "The listing is updated. The 318 people going and every calendar feed that includes it will see the new details within an hour.",
                 f'<a href="{P("event-detail")}">View the listing</a>', close=True, role="status") + '<div style="height: var(--space-6);"></div>'
+    return edit_page(event_form(DAY, include_email=False), top)
+
+
+@state("edit-event", "failed", "Saving failed on our side: everything entered stays, fields are editable again and Save retries.")
+def _():
+    top = alert("danger", "We couldn’t save your changes", "6ixstack didn’t respond. Everything you entered is still here; save again in a moment.", role="alert") + '<div style="height: var(--space-6);"></div>'
     return edit_page(event_form(DAY, include_email=False), top)
 
 

@@ -197,10 +197,10 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 - Library: `FormSection` (design system: form layout), `FormField`, `Input` (design system: text field incl. `$` addon, textarea, select), `FieldSet` + `Choice` + `Check` (design system: checkbox for topics, radio group with cards for format and price), `Button` (busy when submitting); loading `Skeleton`; error `Alert`; invalid `ErrorSummary` + `Alert`; success `SuccessPanel` (design system: empty state, success panel) + `NextSteps` (design system: stepper, steps-next).
 - Local: page title, event form (`shared/event-form`: form-card frame, grids, topic dots, price addon).
 
-#### Edit event — `/organize/events/:id/edit` — `pages/edit-event`: default, loading, error, invalid, submitting, success, read-only
+#### Edit event — `/organize/events/:id/edit` — `pages/edit-event`: default, loading, error, invalid, submitting, success, failed, read-only, forbidden
 
-- Library: as Submit an event, plus `Link` (back), `InlineMessage` ("Saved" status); loading `Skeleton`; error `EmptyState` (error); invalid `ErrorSummary` + `Alert`; read-only `Alert` (inputs disabled, no actions); success `Alert` (dismissible).
-- Local: page title, event form (shared).
+- Library: as Submit an event, plus `BackLink` (design system: link, back variant) and `InlineStatus` (design system: inline message, status line); loading `Skeleton`; error `EmptyState` (error); invalid `ErrorSummary`; failed `Alert`; read-only `Alert` (info, Duplicate as a new event; inputs disabled, no actions); success `Alert` (dismissible); forbidden `StatusPage` (see `forbidden`).
+- Local: page title, event form fields (`EventFormFields`, shared with Submit an event).
 
 #### Your events — `/organize` — `pages/organizer-dashboard`: default, loading, empty, error
 
