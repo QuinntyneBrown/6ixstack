@@ -128,7 +128,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 
 #### Events — `/` — `pages/events`: default, hover, day-focus, playing, loading, empty, error, filtered, no-results, partial, long, edge
 
-- Library: `FeatureCard` (with `DateTile`, `Button` on-feature), `SegmentedControl`, `TopicChip`, `TextField` (search), `DayGroup`, `EventRow`, `TopicTag`, `EventMap`, `MapTimeline`, `Link` (arrow), `Button`; loading `Skeleton`; empty and no-results `EmptyState`; error `Alert` (list) + `Skeleton` (map waits); long `Pagination` (load more); edge `Badge` (Cancelled on `EventRow`).
+- Library: `FeatureCard` (with `DateTile`, `Button` on-feature; journey 17), `SegmentedControl` (design system: button group, segmented), `TopicChip`, `SearchField` (design system: text field, search), `DayGroup`, `EventRow` (with `TopicTag`, `Badge`), `EventMap`, `MapTimeline` (journey 16), `Link` (arrow), `Button`; loading `Skeleton`; empty and no-results `EmptyState`; error `Alert` (list, with Try again and a link action) + `Skeleton` (map waits); long load more (`Button`, busy while loading); edge `Badge` (Waitlist open, Cancelled on `EventRow`).
 - Local: hero (`hero`, `hero__stat`), filter bar, result line, `EventMapPanel` (map states), CTA band (`cta-band`: submit and subscribe sections). hover, day-focus, playing and partial change map/list state classes only (`is-dim`, `is-off`, `is-hot`).
 
 #### Event detail — `/events/:id` — `pages/event-detail`: default, loading, error, streaming, past, cancelled

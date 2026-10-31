@@ -103,6 +103,14 @@ its day groups (merging a day it already shows).
   with journeys 10 and 11.
 - The map and the featured card are left to journeys 16 and 17; until then the list takes the full width.
 - `LoadState<T>` and the inline failure pattern (`site/status-pages`, ADR 0008) are introduced here.
+  `DelayedSkeleton` is the page's `slow` signal: skeletons and "Loading events…" appear only when a load is still
+  pending after 300 ms (`SKELETON_DELAY_MS`). While a later load runs, the previous list stays on screen.
+- Topics are returned and shown in the fixed topic order (AI, .NET, Azure, Angular, React, AWS), not in the order
+  an organizer entered them.
+- The empty state's sentence is "It's a quiet stretch. Organizers post new meetups every week, so check back
+  soon." The `events/empty` mock's holiday wording only fits December.
+- The result line drops its "Clear filters" link when nothing matches, because the no-results state offers it.
+- When Show 20 more fails, a danger toast "We couldn't load more events" offers Try again and the list stays.
 
 ## Requirements
 
