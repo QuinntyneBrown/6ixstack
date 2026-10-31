@@ -12,8 +12,9 @@ import {
   TOPICS,
   ToastService,
 } from 'components';
-import { switchMap } from 'rxjs';
+import { skip, switchMap } from 'rxjs';
 import { EventFilters, FORMAT_LABELS, MAX_SEARCH_LENGTH, NO_FILTERS } from './event-filters';
+import { FilterStateStore } from './filter-state.store';
 
 /** The events page (`/`): upcoming events grouped by day, with filters (discovery/browse-events). */
 @Component({
@@ -21,17 +22,19 @@ import { EventFilters, FORMAT_LABELS, MAX_SEARCH_LENGTH, NO_FILTERS } from './ev
   imports: [DayGroup, SearchField, SegmentedControl, TopicChip],
   templateUrl: './events-page.html',
   styleUrl: './events-page.scss',
+  providers: [FilterStateStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsPage {
   private readonly api = inject(EVENTS_API);
   private readonly toasts = inject(ToastService);
+  private readonly store = inject(FilterStateStore);
 
   protected readonly topics = TOPICS;
   protected readonly topicLabels = TOPIC_LABELS;
   private undoFilters: EventFilters | null = null;
 
-  protected readonly filters = signal<EventFilters>(NO_FILTERS);
+  protected readonly filters = signal<EventFilters>(this.store.initial());
   protected readonly result = signal<UpcomingEvents | null>(null);
 
   protected readonly formatOptions = computed<SegmentedOption[]>(() => {
@@ -55,6 +58,9 @@ export class EventsPage {
   });
 
   constructor() {
+    toObservable(this.filters)
+      .pipe(skip(1), takeUntilDestroyed())
+      .subscribe((filters) => this.store.save(filters));
     toObservable(this.filters)
       .pipe(
         switchMap((f) => this.api.upcoming({ format: f.format, topics: f.topics, q: f.q })),
