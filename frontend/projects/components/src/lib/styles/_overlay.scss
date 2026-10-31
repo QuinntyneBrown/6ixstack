@@ -1,0 +1,15 @@
+// Angular CDK overlay foundations and the 6ixstack dialog backdrop.
+@use '@angular/cdk/overlay-prebuilt.css';
+
+.sx-dialog-backdrop {
+  background: var(--colorBackgroundOverlay);
+  animation: sx-fade-in var(--durationNormal) var(--curveDecelerateMax);
+}
+.cdk-overlay-container {
+  z-index: var(--sx-z-modal);
+}
+@keyframes sx-fade-in {
+  from {
+    opacity: 0;
+  }
+}

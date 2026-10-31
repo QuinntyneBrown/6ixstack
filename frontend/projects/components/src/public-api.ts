@@ -11,3 +11,6 @@ export * from './lib/skip-link/skip-link';
 export * from './lib/site-header/site-header';
 export * from './lib/site-footer/site-footer';
 export * from './lib/status-page/status-page';
+export * from './lib/dialog-shell/dialog-shell';
+export * from './lib/dialog-shell/dialog-config';
+export * from './lib/divider/divider';

@@ -1,4 +1,5 @@
 import { Locator, Page } from '@playwright/test';
+import { MobileMenuDialog } from './mobile-menu.dialog';
 
 /** The frame every screen sits in: skip link, site header, main region and footer. */
 export class AppShell {
@@ -8,6 +9,8 @@ export class AppShell {
   readonly primaryNav: Locator;
   readonly submitEvent: Locator;
   readonly menuButton: Locator;
+  /** The menu button by class; while a modal is open the page behind it is hidden from the accessibility tree. */
+  readonly menuButtonBehindModal: Locator;
   readonly main: Locator;
   readonly footer: Locator;
   readonly footerNav: Locator;
@@ -19,6 +22,7 @@ export class AppShell {
     this.primaryNav = page.getByRole('navigation', { name: 'Primary' });
     this.submitEvent = this.header.getByRole('link', { name: 'Submit event' });
     this.menuButton = this.header.getByRole('button', { name: 'Open menu' });
+    this.menuButtonBehindModal = this.header.locator('.site-header__menu');
     this.main = page.locator('main#main');
     this.footer = page.locator('footer.site-footer');
     this.footerNav = page.getByRole('navigation', { name: 'Footer' });
@@ -47,6 +51,13 @@ export class AppShell {
 
   async useSkipLink(): Promise<void> {
     await this.skipLink.press('Enter');
+  }
+
+  async openMenu(): Promise<MobileMenuDialog> {
+    await this.menuButton.click();
+    const menu = new MobileMenuDialog(this.page);
+    await menu.dialog.waitFor();
+    return menu;
   }
 
   async hasHorizontalScroll(): Promise<boolean> {
