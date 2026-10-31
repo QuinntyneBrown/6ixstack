@@ -72,6 +72,11 @@ export class EventDetailPage {
     return this.aside.locator('.text-caption');
   }
 
+  /** The struck-through time range of a cancelled event. */
+  get struckTime(): Locator {
+    return this.facts.first().locator('s');
+  }
+
   alert(title: string): Locator {
     return this.alerts.filter({ has: this.page.locator('.alert__title', { hasText: title }) });
   }

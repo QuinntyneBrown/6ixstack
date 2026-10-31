@@ -86,6 +86,15 @@ export class EventDetailPage {
     this.joinTimer = setTimeout(() => this.reload.update((n) => n + 1), wait);
   }
 
+  /** Splits an app link such as "/?topics=dotnet,angular" for routerLink and queryParams. */
+  protected findAnotherPath(href: string): string {
+    return href.split('?')[0];
+  }
+
+  protected findAnotherQuery(href: string): Record<string, string> {
+    return Object.fromEntries(new URLSearchParams(href.split('?')[1] ?? ''));
+  }
+
   protected alertActions(alert: EventAlert): AlertAction[] {
     if (!alert.action) {
       return [];

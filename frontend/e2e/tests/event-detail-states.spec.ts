@@ -61,3 +61,28 @@ test.describe('Past event detail', () => {
     await expect(detail.action('Add to my calendar')).toHaveCount(0);
   });
 });
+
+test.describe('Cancelled event detail', () => {
+  test('puts the cancellation first and offers other events instead of tickets', async ({ page }) => {
+    const detail = new EventDetailPage(page);
+    await detail.open('brampton-dev-night-november-social');
+
+    await expect(detail.alerts.first()).toContainText('Cancelled by the organizer on November 1');
+    await expect(detail.alerts.first()).toContainText(
+      "“Our venue had a scheduling conflict. We're rebooking for January and will post the new date here.” — Brampton Dev Night",
+    );
+    await expect(detail.struckTime).toHaveText('6:30 PM – 9:00 PM ET');
+    expect((await detail.factTexts())[0]).toContain('· cancelled');
+    await expect(detail.action('Find another .NET or Angular event')).toHaveAttribute(
+      'href',
+      '/?topics=dotnet,angular',
+    );
+    await expect(detail.action('Follow Brampton Dev Night')).toHaveAttribute(
+      'href',
+      '/communities/brampton-dev-night',
+    );
+    await expect(detail.action(/Get tickets|Register|Join the stream/)).toHaveCount(0);
+    await expect(detail.action('Add to my calendar')).toHaveCount(0);
+    await expect(detail.action('Share')).toHaveCount(0);
+  });
+});
