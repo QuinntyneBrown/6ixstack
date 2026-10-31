@@ -21,7 +21,8 @@ frontend/                     Angular workspace (package.json, angular.json, lin
     api/                      API service contracts, injection tokens, implementations
     components/               sx-* component library; tokens in src/lib/tokens/, stories/ for Storybook
     perf-test/                perf scenarios in src/scenarios/
-  e2e/                        Playwright: tests/, pages/ (one page object per screen), visual baselines
+  e2e/                        Playwright: tests/, pages/ (one page object per screen), visual baselines,
+                              demo/ (demo-video tooling and journeys/<nn>-<slug>.ts)
 docs/
   assets/                     repository assets, such as the logo the README shows
   specs/                      L1 and L2 requirements
@@ -30,6 +31,8 @@ docs/
   design-system/              design system extracted from mocks (design artifact)
   journey.md                  planned user journeys, in value order
   prompts/                    ordered implementation prompts: 00 scaffold, then one per journey in journey.md
+  adr/                        architecture decision records for choices the designs leave open
+  demos/                      one folder per journey: narrated demo.mp4 (Git LFS), screenshots, narration, credits
 .claude/skills/, .agents/skills/  agent skills; keep both copies in sync
 .github/                      CI workflows and copilot-instructions.md
 ```
@@ -77,6 +80,22 @@ Angular workspace in `frontend/` with projects `sixstack` (the app), `api`, `com
 - Use Angular CDK Dialog/Overlay for modal behavior; don't hand-roll modals.
 - Every component has a story folder `frontend/projects/components/stories/src/<Name>/`: `index.stories.ts` (meta + re-exports; the only file Storybook globs), one `<Name><Story>.stories.ts` per example (`Default` first), and `<Name>Description.md` + `<Name>BestPractices.md`, laid out like the Fluent UI v9 docsite. Run `npm run build-storybook` from `frontend/` after changing a component's API; CI builds it on every PR.
 - New components also get a perf-test scenario in `frontend/projects/perf-test/src/scenarios/`, modelled on Fluent UI's `apps/perf-test`; see that project's README for running it.
+
+## Components library is mandatory (CRITICAL)
+
+- The `sixstack` application MUST be built from the `components` library
+  (`frontend/projects/components`, `sx-*`). Never hand-write markup, CSS, icons,
+  overlays or toasts the library already provides. Use the library component,
+  Angular CDK `Dialog` with `DialogShell`, and `ToastService` with
+  `ToastRegion`/`Toast`.
+- `docs/screen-composition.md` is binding. Before implementing any page,
+  dialog, notification or shell part, read its entry and use exactly the
+  components it lists. Build locally only the UI it marks as local.
+- If the library lacks something the entry needs, STOP. Update the design
+  system catalogue (`docs/design-system/`) and the library first. Do not work
+  around it in the app.
+- Keep `docs/screen-composition.md` aligned with the mocks and the design
+  system catalogue.
 
 ## E2E architecture (Playwright)
 

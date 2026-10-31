@@ -1,0 +1,26 @@
+// Breakpoints from L2-095. CSS custom properties cannot appear in media queries, so these are SCSS
+// values; BREAKPOINTS in layout/breakpoints.ts mirrors them for CDK BreakpointObserver.
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+);
+
+@mixin media-up($name) {
+  $min: map-get($breakpoints, $name);
+  @if $min == 0 {
+    @content;
+  } @else {
+    @media (min-width: $min) {
+      @content;
+    }
+  }
+}
+
+@mixin media-down($name) {
+  @media (max-width: calc(#{map-get($breakpoints, $name)} - 0.02px)) {
+    @content;
+  }
+}

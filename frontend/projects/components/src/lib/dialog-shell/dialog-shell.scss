@@ -1,0 +1,70 @@
+@use 'breakpoints' as bp;
+
+// Ported from docs/mocks/assets/ui.css (.dialog__*). CDK Dialog supplies the backdrop and the pane.
+:host {
+  display: block;
+}
+.dialog__panel {
+  width: 100%;
+  max-height: calc(100dvh - var(--sx-space-12));
+  overflow: auto;
+  background: var(--colorNeutralBackground4);
+  color: var(--colorNeutralForeground1);
+  border-radius: var(--borderRadius2XLarge);
+  box-shadow: var(--shadow28);
+  animation: scale-in var(--durationSlow) var(--curveDecelerateMax);
+  display: flex;
+  flex-direction: column;
+}
+.dialog__panel--sheet {
+  border-radius: var(--borderRadius3XLarge) var(--borderRadius3XLarge) 0 0;
+  animation-name: slide-up;
+}
+@include bp.media-up(sm) {
+  .dialog__panel--sheet {
+    border-radius: var(--borderRadius2XLarge);
+    animation-name: scale-in;
+  }
+}
+.dialog__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacingHorizontalL);
+  padding: var(--spacingHorizontalXXL) var(--spacingHorizontalXXL) 0;
+}
+.dialog__heading {
+  flex: 1;
+}
+.dialog__title {
+  font: var(--sx-text-h4);
+}
+.dialog__body {
+  padding: var(--spacingHorizontalL) var(--spacingHorizontalXXL);
+  flex: 1;
+}
+.dialog__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalM);
+  justify-content: flex-end;
+  padding: var(--spacingHorizontalL) var(--spacingHorizontalXXL) var(--spacingHorizontalXXL);
+  border-top: 1px solid var(--colorNeutralStroke2);
+  position: sticky;
+  bottom: 0;
+  background: var(--colorNeutralBackground4);
+}
+.dialog__footer:empty {
+  display: none;
+}
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    translate: 0 var(--spacingHorizontalL);
+  }
+}
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}

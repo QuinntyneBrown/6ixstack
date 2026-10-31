@@ -1,0 +1,1 @@
+The site footer closes every page with the tagline "Made in Toronto, for the people building in the 6ix." and the Footer navigation (About, Code of conduct, Contact, Calendar feeds, Organizer sign in).

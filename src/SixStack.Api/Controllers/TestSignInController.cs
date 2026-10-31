@@ -18,8 +18,9 @@ public sealed record TestSignInRequest(string Email);
 [ApiController]
 [Route("api/test")]
 [AllowAnonymous]
+[IgnoreAntiforgeryToken]
 [ApiExplorerSettings(IgnoreApi = true)]
-public sealed class TestSignInController(IAppDbContext db) : ControllerBase
+public sealed class TestSignInController(IAppDbContext db, Auth.XsrfTokenService xsrf) : ControllerBase
 {
     [HttpPost("sign-in")]
     public async Task<IActionResult> SignIn(TestSignInRequest request, CancellationToken cancellationToken)
@@ -38,7 +39,10 @@ public sealed class TestSignInController(IAppDbContext db) : ControllerBase
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
             ],
             CookieAuthenticationDefaults.AuthenticationScheme);
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+        var principal = new ClaimsPrincipal(identity);
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+        HttpContext.User = principal;
+        xsrf.Issue(HttpContext);
         return NoContent();
     }
 

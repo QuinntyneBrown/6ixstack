@@ -38,6 +38,16 @@ public static class AuthenticationSetup
                 };
             });
 
+        services.AddAntiforgery(options =>
+        {
+            options.HeaderName = XsrfTokenService.HeaderName;
+            options.Cookie.Name = "sixstack.antiforgery";
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.SameSite = SameSiteMode.Strict;
+            options.Cookie.HttpOnly = true;
+        });
+        services.AddScoped<XsrfTokenService>();
+
         services.AddAuthorizationBuilder()
             .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())
             .AddPolicy(AuthPolicies.Organizer, policy => policy.RequireRole(nameof(UserRole.Organizer)))

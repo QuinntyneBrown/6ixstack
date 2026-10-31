@@ -1,0 +1,32 @@
+// Ported from docs/mocks/assets/ui.css (.site-footer).
+.site-footer {
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+.site-footer__inner {
+  max-width: var(--sx-content-max-width);
+  margin-inline: auto;
+  padding: var(--sx-space-10) var(--sx-layout-margin) var(--sx-space-16);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalL) var(--spacingHorizontalXXXL);
+  align-items: center;
+  justify-content: space-between;
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}
+.site-footer nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS) var(--spacingHorizontalXXL);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.site-footer a {
+  color: var(--colorNeutralForeground2);
+  text-decoration: none;
+}
+.site-footer a:hover {
+  color: var(--colorNeutralForeground1);
+  text-decoration: underline;
+}

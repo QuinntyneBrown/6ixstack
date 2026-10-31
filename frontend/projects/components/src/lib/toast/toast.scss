@@ -1,0 +1,100 @@
+// Ported from docs/mocks/assets/ui.css (.toast*).
+.toast {
+  position: relative;
+  overflow: hidden;
+  pointer-events: auto;
+  display: flex;
+  gap: var(--spacingHorizontalM);
+  align-items: flex-start;
+  padding: var(--spacingHorizontalL);
+  background: var(--colorNeutralBackgroundInverted);
+  color: var(--colorNeutralForegroundInverted);
+  border-radius: var(--borderRadiusXLarge);
+  box-shadow: var(--shadow16);
+  animation: toast-in var(--durationNormal) var(--curveDecelerateMax);
+}
+.toast > sx-icon:first-child {
+  --sx-icon-size: 1.25rem;
+}
+.toast--info sx-icon {
+  color: var(--colorPaletteRoyalBlueForeground2);
+}
+.toast--success sx-icon {
+  color: var(--colorStatusSuccessForeground3);
+}
+.toast--warning sx-icon {
+  color: var(--colorStatusWarningForeground3);
+}
+.toast--danger sx-icon {
+  color: var(--colorStatusDangerForeground3);
+}
+.toast__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalXXS);
+}
+.toast__title {
+  font: var(--sx-text-label);
+}
+.toast__text {
+  font: var(--sx-text-body-sm);
+  opacity: 0.9;
+}
+.toast__action {
+  align-self: flex-start;
+  font: var(--sx-text-label);
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: var(--spacingHorizontalXS) 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.close {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  width: var(--sx-target-min);
+  height: var(--sx-target-min);
+  display: grid;
+  place-items: center;
+  border-radius: var(--borderRadiusMedium);
+  opacity: 0.8;
+}
+.close:hover {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+.toast__progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  opacity: 0.4;
+  transform-origin: left;
+  animation: toast-countdown linear forwards;
+}
+.toast__progress--paused {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast__progress {
+    animation: none;
+    width: 60%;
+  }
+}
+@keyframes toast-countdown {
+  to {
+    transform: scaleX(0);
+  }
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--spacingHorizontalL);
+  }
+}

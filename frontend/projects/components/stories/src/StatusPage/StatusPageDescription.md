@@ -1,0 +1,1 @@
+A status page fills the main region when a whole page can't be shown: not found (404), forbidden (403), server error (500) or offline. The large code is decorative and hidden from assistive technology; the `<h1>` carries the meaning. Supply the message in `[slot=message]` and one or two actions in `[slot=actions]`.

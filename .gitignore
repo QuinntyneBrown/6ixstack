@@ -431,7 +431,8 @@ test-results/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+# macOS folder icon files (Icon\r); anchored so it does not match icon/ source folders
+/Icon
 
 
 # Thumbnails
@@ -480,3 +481,17 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# 6ixstack
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/playwright-report/
+frontend/test-results/
+frontend/e2e/.data/
+frontend/e2e/demo/.venv/
+frontend/e2e/demo/.cache/
+*.db
+*.db-shm
+*.db-wal
+docs/mocks/.cache/

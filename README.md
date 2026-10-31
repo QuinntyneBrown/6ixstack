@@ -109,6 +109,15 @@ dotnet run --project src/SixStack.Cli -- seed
 
 Seeding is idempotent and safe to re-run. `reset` drops and recreates the database.
 
+To try the app without SQL Server, use SQLite, as the end-to-end tests do
+([ADR 0001](docs/adr/0001-sqlite-for-tests-and-demos.md)):
+
+```bash
+export Database__Provider=Sqlite
+export ConnectionStrings__Default="Data Source=sixstack.db"
+dotnet run --project src/SixStack.Cli -- reset
+```
+
 ### Run the app
 
 ```bash
@@ -143,6 +152,7 @@ Run these from `frontend/`:
 | `npm run storybook` / `npm run build-storybook` | Component library docs                                     |
 | `npm run perf-test`                             | Component performance scenarios                            |
 | `npm run demo -- <nn>-<journey>`                | Record a journey's narrated demo video into `docs/demos/`  |
+| `npm run e2e:serve`                             | Run the API on seeded SQLite and the app, for manual checks |
 
 A husky pre-commit hook formats and lints staged frontend files. CI runs every check above on each pull request.
 

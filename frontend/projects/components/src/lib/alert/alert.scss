@@ -1,0 +1,98 @@
+// Ported from docs/mocks/assets/ui.css (.alert*, .site-banner).
+:host {
+  display: block;
+}
+.alert {
+  --alert-bg: var(--colorPaletteBlueBackground2);
+  --alert-fg: var(--colorPaletteBlueForeground2);
+  --alert-border: var(--colorPaletteBlueBorderActive);
+  --alert-icon: var(--colorPaletteRoyalBlueForeground2);
+  display: flex;
+  gap: var(--spacingHorizontalM);
+  padding: var(--spacingHorizontalL);
+  border: 1px solid var(--alert-border);
+  border-left-width: 4px;
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--alert-bg);
+  color: var(--alert-fg);
+}
+.alert--success {
+  --alert-bg: var(--colorStatusSuccessBackground1);
+  --alert-fg: var(--colorStatusSuccessForeground1);
+  --alert-border: var(--colorStatusSuccessBorder1);
+  --alert-icon: var(--colorStatusSuccessForeground3);
+}
+.alert--warning {
+  --alert-bg: var(--colorStatusWarningBackground1);
+  --alert-fg: var(--colorStatusWarningForeground1);
+  --alert-border: var(--colorStatusWarningBorder1);
+  --alert-icon: var(--colorStatusWarningForeground3);
+}
+.alert--danger {
+  --alert-bg: var(--colorStatusDangerBackground1);
+  --alert-fg: var(--colorStatusDangerForeground1);
+  --alert-border: var(--colorStatusDangerBorder1);
+  --alert-icon: var(--colorStatusDangerForeground3);
+}
+.alert > sx-icon:first-child {
+  color: var(--alert-icon);
+  margin-top: 0.1rem;
+}
+.alert__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalXS);
+}
+.alert__title {
+  font: var(--sx-text-label);
+  max-width: none;
+}
+.alert__actions {
+  display: flex;
+  gap: var(--spacingHorizontalM);
+  margin-top: var(--spacingHorizontalXS);
+}
+.alert__actions button {
+  color: inherit;
+  font: var(--sx-text-label);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusSmall);
+  padding: 1px var(--spacingHorizontalSNudge);
+  cursor: pointer;
+}
+.alert__actions button:hover {
+  background: var(--colorSubtleBackgroundHover);
+}
+.close {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  width: var(--sx-target-min);
+  height: var(--sx-target-min);
+  display: grid;
+  place-items: center;
+  border-radius: var(--borderRadiusMedium);
+  margin: calc(-1 * var(--spacingHorizontalXS)) calc(-1 * var(--spacingHorizontalXS)) 0 0;
+}
+.close:hover {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+.site-banner {
+  border-radius: 0;
+  border-inline: 0;
+  border-top: 0;
+  justify-content: center;
+}
+.site-banner .alert__body {
+  flex: 0 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacingHorizontalXS) var(--spacingHorizontalL);
+}
+.site-banner .alert__actions {
+  margin-top: 0;
+}

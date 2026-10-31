@@ -1,0 +1,108 @@
+@use 'breakpoints' as bp;
+
+// Ported from docs/mocks/assets/ui.css (.site-header, .brand, .nav-link); breakpoints per ADR 0004.
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--sx-z-sticky);
+  background: var(--sx-header-background);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+}
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacingHorizontalL);
+  min-height: 4rem;
+  max-width: var(--sx-content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--sx-layout-margin);
+}
+.site-header__nav {
+  display: none;
+  flex: 1;
+  justify-content: center;
+  gap: var(--spacingHorizontalXS);
+}
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacingHorizontalS);
+  margin-left: auto;
+}
+.site-header__submit-label {
+  display: none;
+}
+.site-header__menu {
+  display: inline-flex;
+}
+@include bp.media-up(sm) {
+  .site-header__submit-label {
+    display: inline;
+  }
+}
+@include bp.media-up(lg) {
+  .site-header__nav {
+    display: flex;
+  }
+  .site-header__menu {
+    display: none;
+  }
+  .site-header__actions {
+    margin-left: 0;
+  }
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalS);
+  font: var(--fontWeightSemibold) var(--fontSizeBase500) / 1 var(--fontFamilyBase);
+  letter-spacing: -0.02em;
+  color: var(--colorNeutralForeground1);
+  text-decoration: none;
+}
+.brand:hover {
+  color: var(--colorNeutralForeground1);
+}
+.brand__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--colorBrandBackground);
+  color: var(--colorNeutralForegroundOnBrand);
+  font: var(--fontWeightBold) var(--sx-font-size-lead) / 1 var(--fontFamilyBase);
+}
+.brand__six {
+  font-weight: var(--fontWeightBold);
+}
+.brand__stack {
+  color: var(--colorNeutralForeground2);
+  font-weight: var(--fontWeightMedium);
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalS);
+  min-height: var(--sx-target-comfortable);
+  padding: 0 var(--spacingHorizontalM);
+  border-radius: var(--borderRadiusXLarge);
+  color: var(--colorNeutralForeground2);
+  text-decoration: none;
+  font: var(--sx-text-label);
+  transition:
+    background-color var(--durationFaster) var(--curveEasyEase),
+    color var(--durationFaster) var(--curveEasyEase);
+}
+.nav-link:hover {
+  background: var(--colorSubtleBackgroundHover);
+  color: var(--colorNeutralForeground1);
+}
+.nav-link[aria-current='page'] {
+  background: transparent;
+  color: var(--colorNeutralForeground1);
+  font-weight: var(--fontWeightSemibold);
+}

@@ -1,0 +1,131 @@
+// Ported from docs/mocks/assets/ui.css (.btn).
+:host {
+  --btn-bg: var(--colorNeutralBackground1);
+  --btn-fg: var(--colorNeutralForeground1);
+  --btn-border: var(--colorNeutralStroke1);
+  --btn-bg-hover: var(--colorSubtleBackgroundHover);
+  --btn-bg-active: var(--colorSubtleBackgroundPressed);
+  --sx-icon-size: 1.25em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacingHorizontalS);
+  min-height: var(--sx-control-height-md);
+  padding: 0 var(--spacingHorizontalL);
+  font: var(--sx-text-label);
+  font-size: var(--fontSizeBase400);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--btn-fg);
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: var(--borderRadiusXLarge);
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  position: relative;
+  transition:
+    background-color var(--durationFaster) var(--curveEasyEase),
+    border-color var(--durationFaster) var(--curveEasyEase),
+    transform var(--durationFaster) var(--curveEasyEase),
+    box-shadow var(--durationFaster) var(--curveEasyEase);
+}
+:host(:hover) {
+  background: var(--btn-bg-hover);
+  color: var(--btn-fg);
+}
+:host(:active) {
+  background: var(--btn-bg-active);
+  transform: translateY(1px);
+}
+:host(:disabled),
+:host([aria-disabled='true']) {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+:host(.btn--primary) {
+  --btn-bg: var(--colorBrandBackground);
+  --btn-fg: var(--colorNeutralForegroundOnBrand);
+  --btn-border: var(--colorBrandBackground);
+  --btn-bg-hover: var(--colorBrandBackgroundHover);
+  --btn-bg-active: var(--colorBrandBackgroundPressed);
+}
+:host(.btn--primary:hover) {
+  border-color: var(--colorBrandBackgroundHover);
+  box-shadow: var(--shadow2);
+}
+:host(.btn--danger) {
+  --btn-bg: var(--colorStatusDangerBackground3);
+  --btn-fg: var(--colorStatusDangerForegroundInverted);
+  --btn-border: var(--colorStatusDangerBackground3);
+  --btn-bg-hover: var(--colorStatusDangerBackground3Hover);
+  --btn-bg-active: var(--colorStatusDangerBackground3Hover);
+}
+:host(.btn--ghost) {
+  --btn-bg: transparent;
+  --btn-border: transparent;
+  --btn-fg: var(--colorNeutralForeground1);
+}
+:host(.btn--link) {
+  --btn-bg: transparent;
+  --btn-border: transparent;
+  --btn-fg: var(--colorBrandForegroundLink);
+  --btn-bg-hover: var(--colorBrandBackground2);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+:host(.btn--on-feature) {
+  --btn-bg: var(--sx-feature-card-foreground);
+  --btn-fg: var(--sx-feature-card-background);
+  --btn-border: var(--sx-feature-card-foreground);
+  --btn-bg-hover: var(--colorNeutralBackground2);
+  --btn-bg-active: var(--colorSubtleBackgroundPressed);
+}
+:host(.btn--sm) {
+  min-height: var(--sx-control-height-sm);
+  padding-inline: var(--spacingHorizontalM);
+  font-size: var(--fontSizeBase300);
+}
+:host(.btn--lg) {
+  min-height: var(--sx-control-height-lg);
+  padding-inline: var(--spacingHorizontalXXL);
+  font-size: var(--sx-font-size-lead);
+}
+:host(.btn--block) {
+  display: flex;
+  width: 100%;
+}
+:host(.btn--icon) {
+  padding: 0;
+  width: var(--sx-control-height-md);
+}
+:host(.btn--icon.btn--sm) {
+  width: var(--sx-control-height-sm);
+}
+:host([aria-busy='true']) {
+  color: transparent;
+  pointer-events: none;
+}
+:host([aria-busy='true'])::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 1.1em;
+  height: 1.1em;
+  border: 2px solid var(--btn-fg);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@media (forced-colors: active) {
+  :host {
+    forced-color-adjust: none;
+    border: 1px solid CanvasText;
+  }
+  :host(.btn--primary) {
+    background: Highlight;
+    color: HighlightText;
+  }
+}

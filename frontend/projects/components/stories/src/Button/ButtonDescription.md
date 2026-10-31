@@ -1,0 +1,1 @@
+A button triggers an action (`<button>`) or navigates (`<a>`). Add `sx-button` to the native element so it keeps its semantics, focus and keyboard behaviour, and pick an `appearance`: primary (one per view), secondary (default), ghost, link or danger. It renders the mock's `btn btn--*` classes.
