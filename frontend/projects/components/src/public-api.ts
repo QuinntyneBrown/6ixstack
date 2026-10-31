@@ -51,3 +51,5 @@ export * from './lib/calendar/calendar-day-list';
 export * from './lib/button-group/button-group';
 export * from './lib/list/list';
 export * from './lib/logo-tile/logo-tile';
+export * from './lib/stat/stat';
+export * from './lib/table/table';

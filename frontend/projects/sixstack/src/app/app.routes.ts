@@ -41,7 +41,8 @@ export const routes: Routes = [
     title: 'Your events · 6ixstack',
     data: { hideSubmit: true },
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/organize/organize-page').then((m) => m.OrganizePage),
+    loadComponent: () =>
+      import('./pages/organizer-dashboard/organizer-dashboard-page').then((m) => m.OrganizerDashboardPage),
   },
   {
     path: 'admin/review',

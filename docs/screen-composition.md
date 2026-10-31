@@ -204,7 +204,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 
 #### Your events — `/organize` — `pages/organizer-dashboard`: default, loading, empty, error
 
-- Library: `Button` (New event, row actions), `StatsRow`, `Stat`, `Table` (status cell, row actions), `Badge`; loading `Skeleton`; empty `FormLayout` (form-card) + `EmptyState`; error `Alert`; submission status `Alert` (see `notifications/submission-banner`).
+- Library: `Button` (New event, row actions), `StatsRow`, `Stat`, `Table` (status cell, row actions), `Badge`; loading `Skeleton` (inside `Stat` and table rows); empty `EmptyState` in a local form card; error `Alert`; submission status `Alert` (see `notifications/submission-banner`).
 - Local: page title.
 
 #### Review queue — `/admin/review` — `pages/review-queue`: default, checking, loading, empty, error, forbidden
