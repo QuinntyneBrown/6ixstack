@@ -1,0 +1,53 @@
+// Local layout, ported from docs/mocks/assets/ui.css (.toolbar, .card-grid, .load-more).
+:host {
+  display: block;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalM);
+  align-items: center;
+}
+.toolbar__search {
+  flex: 1 1 16rem;
+}
+.toolbar select {
+  width: auto;
+}
+.card-grid {
+  display: grid;
+  gap: var(--spacingHorizontalL);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  margin: var(--spacingHorizontalXXL) 0 0;
+  list-style: none;
+  padding: 0;
+}
+.skeleton-card {
+  display: grid;
+  gap: var(--spacingHorizontalM);
+  padding: var(--spacingHorizontalXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--colorNeutralBackground1);
+}
+.skeleton-card__head {
+  display: flex;
+  gap: var(--spacingHorizontalM);
+  align-items: center;
+}
+.skeleton-card__lines {
+  display: grid;
+  flex: 1;
+  gap: var(--spacingHorizontalS);
+}
+.load-more {
+  display: grid;
+  justify-items: center;
+  gap: var(--spacingHorizontalM);
+  margin-top: var(--spacingHorizontalXXL);
+}
+.speakers-error,
+sx-empty-state {
+  display: block;
+  margin-top: var(--spacingHorizontalXXL);
+}

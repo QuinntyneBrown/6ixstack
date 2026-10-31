@@ -70,3 +70,9 @@
   color: var(--colorNeutralForeground2);
   font: var(--sx-text-body-sm);
 }
+
+.dir-card__topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS) var(--spacingHorizontalL);
+}

@@ -1,0 +1,102 @@
+<div class="page-title">
+  <h1>Speakers</h1>
+  <p class="lead">{{ lead() }}</p>
+</div>
+
+<div class="toolbar">
+  <sx-search-field
+    class="toolbar__search"
+    label="Search speakers"
+    placeholder="Search by name, company or talk"
+    [value]="filters().q"
+    (searched)="setFilter({ q: $event.trim() })"
+  />
+  <label class="visually-hidden" for="speaker-topic">Topic</label>
+  <select sx-input id="speaker-topic" (change)="onTopic($any($event.target).value)">
+    <option value="" [selected]="!filters().topic">All topics</option>
+    @for (topic of topics; track topic) {
+      <option [value]="topic" [selected]="filters().topic === topic">{{ topicLabels[topic] }}</option>
+    }
+  </select>
+  <label class="visually-hidden" for="speaker-period">Speaking</label>
+  <select sx-input id="speaker-period" (change)="onPeriod($any($event.target).value)">
+    @for (period of periods; track period.value) {
+      <option [value]="period.value" [selected]="filters().period === period.value">
+        {{ period.label }}
+      </option>
+    }
+  </select>
+</div>
+
+@if (state().status === 'failed') {
+  <sx-alert
+    class="speakers-error"
+    kind="danger"
+    announce="alert"
+    title="We couldn't load speakers"
+    [actions]="errorActions"
+  >
+    6ixstack didn't respond in time. Your search and filters are kept.
+  </sx-alert>
+} @else if (data(); as d) {
+  @if (d.matchCount === 0 && filters().q) {
+    <sx-empty-state icon="search-x" [title]="'No speakers match “' + filters().q + '”'">
+      <span slot="text">Check the spelling, or search by company or talk title instead.</span>
+      <button slot="actions" sx-button appearance="primary" type="button" (click)="setFilter({ q: '' })">
+        Clear search
+      </button>
+    </sx-empty-state>
+  } @else if (d.matchCount === 0) {
+    <sx-empty-state icon="mic" [title]="emptyTitle()">
+      <span slot="text"
+        >Nobody is listed to speak{{ filters().topic ? ' about ' + topicLabels[filters().topic!] : '' }}
+        {{ filters().period === 'year' ? 'yet this year.' : 'before ' + d.monthEndLabel + '.' }}</span
+      >
+      <ng-container slot="actions">
+        <button sx-button appearance="primary" type="button" (click)="setFilter({ period: 'any' })">
+          Show any time
+        </button>
+        <a sx-button routerLink="/submit">Pitch a talk</a>
+      </ng-container>
+    </sx-empty-state>
+  } @else {
+    <ul class="card-grid">
+      @for (s of d.items; track s.slug) {
+        @let view = card(s);
+        <li>
+          <sx-directory-card
+            variant="person"
+            [initials]="s.initials"
+            [name]="s.name"
+            [link]="'/speakers/' + s.slug"
+            [sub]="s.role"
+            [meta]="view.meta"
+            [topics]="view.topics"
+          />
+        </li>
+      }
+    </ul>
+    @if (d.hasMore) {
+      <div class="load-more">
+        <p class="text-caption">Showing {{ d.items.length }} of {{ d.matchCount }} speakers</p>
+        <button sx-button type="button" [busy]="loadingMore()" (click)="showMore()">Show 24 more</button>
+      </div>
+    }
+  }
+} @else if (slow()) {
+  <p class="visually-hidden" role="status">Loading speakers…</p>
+  <ul class="card-grid" aria-hidden="true">
+    @for (n of skeletons; track n) {
+      <li class="skeleton-card">
+        <div class="skeleton-card__head">
+          <sx-skeleton variant="rect" width="2.75rem" height="2.75rem" />
+          <div class="skeleton-card__lines">
+            <sx-skeleton variant="title" width="70%" />
+            <sx-skeleton width="50%" />
+          </div>
+        </div>
+        <sx-skeleton width="80%" />
+      </li>
+    }
+  </ul>
+}
