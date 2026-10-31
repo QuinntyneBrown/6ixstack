@@ -17,3 +17,4 @@ const meta: Meta<PersonLink> = {
 export default meta;
 
 export { Default } from './PersonLinkDefault.stories';
+export { WithoutProfile } from './PersonLinkWithoutProfile.stories';

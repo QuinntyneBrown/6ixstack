@@ -1,0 +1,147 @@
+@switch (state().status) {
+  @case ('notFound') {
+    <sx-not-found-page />
+  }
+  @case ('failed') {
+    <a sx-back-link routerLink="/communities">All communities</a>
+    <sx-empty-state
+      class="community-failed"
+      icon="alert"
+      title="This community didn't load"
+      error
+      [headingLevel]="1"
+    >
+      <span slot="text">We couldn't reach 6ixstack. Check your connection and try again.</span>
+      <ng-container slot="actions">
+        <button sx-button appearance="primary" type="button" (click)="retry()">
+          <sx-icon name="refresh" size="sm" />Try again
+        </button>
+        <a sx-button routerLink="/communities">Back to communities</a>
+      </ng-container>
+    </sx-empty-state>
+  }
+  @case ('loading') {
+    @if (slow()) {
+      <a sx-back-link routerLink="/communities">All communities</a>
+      <div class="community-skeleton" aria-busy="true" aria-label="Loading community">
+        <div class="community-hero">
+          <sx-skeleton variant="rect" width="4rem" height="4rem" />
+          <div class="community-skeleton__lines">
+            <sx-skeleton variant="title" width="50%" />
+            <sx-skeleton width="70%" />
+          </div>
+        </div>
+        <sx-skeleton variant="rect" height="12rem" />
+      </div>
+    }
+  }
+  @case ('loaded') {
+    @let c = data()!;
+    <a sx-back-link routerLink="/communities">All communities</a>
+    <div class="community-hero">
+      <sx-logo-tile [initials]="c.initials" size="lg" />
+      <div>
+        <h1>{{ c.name }}</h1>
+        <p class="community-hero__tagline">{{ c.tagline }}</p>
+        <div class="chip-row">
+          @for (topic of topics(); track topic) {
+            <sx-topic-tag [topic]="topic" />
+          }
+        </div>
+      </div>
+    </div>
+    <div class="page-grid">
+      <div class="stack-gap">
+        <section class="community-about" aria-labelledby="about-h">
+          <h2 id="about-h" class="section-title">About</h2>
+          <div class="prose">
+            @for (paragraph of c.about; track $index) {
+              <p>{{ paragraph }}</p>
+            }
+          </div>
+        </section>
+        <section class="community-upcoming" aria-labelledby="upcoming-h">
+          <h2 id="upcoming-h" class="section-title">Upcoming events</h2>
+          @if (c.upcoming.length) {
+            @for (day of c.upcoming; track day.date) {
+              <sx-day-group
+                [date]="day.date"
+                [weekday]="day.weekday"
+                [dateLabel]="day.dateLabel"
+                [events]="day.events"
+              />
+            }
+          } @else {
+            <sx-empty-state icon="calendar" title="Nothing scheduled right now" compact>
+              <span slot="text"
+                >{{ c.facts.postingLeadLabel }} Subscribe and it lands in your calendar as soon as it's
+                listed.</span
+              >
+              <button slot="actions" sx-button type="button" (click)="subscribe($event.currentTarget)">
+                Subscribe to this group
+              </button>
+            </sx-empty-state>
+          }
+        </section>
+        @if (c.past.length) {
+          <section aria-labelledby="past-h">
+            <h2 id="past-h" class="section-title">Past events</h2>
+            <ul sx-list class="community-past">
+              @for (event of c.past; track event.slug) {
+                <li
+                  sx-list-item
+                  [title]="event.title"
+                  [meta]="event.dateLabel + ' · ' + event.attendedCount + ' attended'"
+                >
+                  <a
+                    slot="actions"
+                    sx-button
+                    appearance="ghost"
+                    size="sm"
+                    [routerLink]="'/events/' + event.slug"
+                    >Recap<span class="visually-hidden"> {{ event.title }}</span></a
+                  >
+                </li>
+              }
+            </ul>
+          </section>
+        }
+      </div>
+      <aside class="stack-gap community-aside">
+        <div class="facts community-facts">
+          <sx-fact-item icon="users" [label]="c.facts.audienceLabel">{{ c.facts.cadenceLabel }}</sx-fact-item>
+          <sx-fact-item icon="pin" [label]="c.facts.placesLabel">{{ c.facts.placesDetail }}</sx-fact-item>
+          @if (c.facts.websiteLabel) {
+            <sx-fact-item icon="globe" [label]="c.facts.websiteLabel">
+              @for (link of c.facts.links; track link.url; let last = $last) {
+                <a [href]="link.url" rel="noopener" target="_blank">{{ link.label }}</a
+                >{{ last ? '' : ' · ' }}
+              }
+            </sx-fact-item>
+          }
+        </div>
+        <button sx-button appearance="primary" block type="button" (click)="subscribe($event.currentTarget)">
+          Subscribe to this group
+        </button>
+        @if (c.organizers.length) {
+          <section class="community-organizers" aria-labelledby="organizers-h">
+            <h2 id="organizers-h" class="section-title">Organizers</h2>
+            <ul class="people">
+              @for (person of c.organizers; track person.name) {
+                <li>
+                  <sx-person-link
+                    [name]="person.name"
+                    [initials]="person.initials"
+                    [role]="person.roleLabel"
+                    size="sm"
+                    [link]="person.speakerSlug ? '/speakers/' + person.speakerSlug : null"
+                  />
+                </li>
+              }
+            </ul>
+          </section>
+        }
+      </aside>
+    </div>
+  }
+}

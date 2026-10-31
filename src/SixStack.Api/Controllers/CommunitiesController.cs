@@ -20,4 +20,9 @@ public sealed class CommunitiesController(ISender sender) : ControllerBase
         [FromQuery] int page = 1,
         CancellationToken cancellationToken = default) =>
         sender.Send(new GetCommunitiesQuery(q, topic, city, sort ?? "members", page), cancellationToken);
+
+    /// <summary>A community's page (L2-031); 404 for an unknown slug.</summary>
+    [HttpGet("{slug}")]
+    public Task<CommunityDetailDto> Get(string slug, CancellationToken cancellationToken) =>
+        sender.Send(new GetCommunityQuery(slug), cancellationToken);
 }

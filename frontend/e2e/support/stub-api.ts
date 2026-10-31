@@ -409,3 +409,35 @@ export async function slowCommunities(page: Page, ms: number): Promise<void> {
     }),
   );
 }
+
+/** Makes GET /api/communities/{slug} fail until the returned function is called. */
+export async function failCommunity(page: Page): Promise<() => Promise<void>> {
+  const pattern = /\/api\/communities\/[a-z0-9-]+$/;
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+  await page.route(pattern, handler);
+  return () => page.unroute(pattern, handler);
+}
+
+/** Delays GET /api/communities/{slug} by `ms`. */
+export async function slowCommunity(page: Page, ms: number): Promise<void> {
+  await page.route(
+    /\/api\/communities\/[a-z0-9-]+$/,
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
+}
+
+/** Answers GET /api/communities/{slug} with nothing upcoming, keeping the rest of the real answer. */
+export async function nothingScheduled(page: Page): Promise<void> {
+  await page.route(
+    /\/api\/communities\/[a-z0-9-]+$/,
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await route.fulfill({ response, json: { ...(await response.json()), upcoming: [] } });
+    }),
+  );
+}

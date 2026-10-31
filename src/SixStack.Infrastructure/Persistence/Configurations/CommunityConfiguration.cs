@@ -15,6 +15,15 @@ public sealed class CommunityConfiguration : IEntityTypeConfiguration<Community>
         builder.Property(c => c.Initials).HasMaxLength(4);
         builder.Property(c => c.Description).HasMaxLength(1000);
         builder.Property(c => c.City).HasMaxLength(100);
+        builder.HasIndex(c => c.Name);
+        builder.HasIndex(c => c.City);
+        builder.Property(c => c.Tagline).HasMaxLength(200);
+        builder.Property(c => c.About).HasMaxLength(4000);
+        builder.Property(c => c.Cadence).HasMaxLength(60);
+        builder.Property(c => c.PlacesLabel).HasMaxLength(120);
+        builder.Property(c => c.PlacesDetail).HasMaxLength(200);
+        builder.Property(c => c.PostingLead).HasMaxLength(60);
+        builder.OwnsMany(c => c.Links, links => links.ToJson());
         builder.Property(c => c.WebsiteUrl).HasMaxLength(2048);
     }
 }

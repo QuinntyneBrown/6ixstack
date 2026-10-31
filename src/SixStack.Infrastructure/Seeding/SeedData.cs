@@ -72,6 +72,30 @@ internal static class SeedData
         new("nadia-chen", "Nadia Chen", "NC", "ML engineer, Cohere", "Cohere", Topics.AI, "Toronto"),
     ];
 
+    public const string CoOrganizerEmail = "marcus@gtaazure.ca";
+
+    /// <summary>Community page profiles (L2-031); other communities fall back to their description.</summary>
+    public static readonly IReadOnlyDictionary<string, Action<Community>> Profiles = new Dictionary<string, Action<Community>>
+    {
+        ["gta-azure-community"] = c =>
+        {
+            c.Tagline = "Azure, data and AI in Mississauga and Peel, run by local MVPs.";
+            c.About = "We meet on the third Wednesday of every month for two talks, food and a lot of questions. Once a year we run Azure Data & AI Day, a full day of sessions and labs at the Living Arts Centre.\n\nTalks are recorded and posted to our YouTube channel within a week. New speakers are welcome — we pair first-timers with a mentor.";
+            c.Cadence = "Monthly";
+            c.ActiveSinceYear = 2019;
+            c.PlacesLabel = "Mississauga and online";
+            c.PlacesDetail = "Living Arts Centre, Sheridan College";
+            c.PostingLead = "about three weeks";
+            c.WebsiteUrl = "https://gtaazure.ca";
+            c.Links =
+            [
+                new CommunityLink { Label = "Website", Url = "https://gtaazure.ca" },
+                new CommunityLink { Label = "Meetup", Url = "https://www.meetup.com/gta-azure" },
+                new CommunityLink { Label = "LinkedIn", Url = "https://www.linkedin.com/company/gtaazure" },
+            ];
+        },
+    };
+
     /// <summary>Where each streaming community broadcasts from, as the event map draws it.</summary>
     public static readonly IReadOnlyDictionary<string, string> StreamOrigins = new Dictionary<string, string>
     {

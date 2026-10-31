@@ -23,6 +23,7 @@ public sealed class DatabaseSeeder(AppDbContext db, IClock clock, IOutbox outbox
                 MemberCount = seed.Members, Topics = seed.Topics, Description = seed.Description,
                 FeedSubscriberCount = seed.Slug == "gta-azure-community" ? 1204 : 0,
             };
+            SeedData.Profiles.GetValueOrDefault(seed.Slug)?.Invoke(community);
             db.Communities.Add(community);
             communities[seed.Slug] = community;
         }
@@ -43,8 +44,21 @@ public sealed class DatabaseSeeder(AppDbContext db, IClock clock, IOutbox outbox
         if (!users.ContainsKey(SeedData.OrganizerEmail))
         {
             var priya = new User { Email = SeedData.OrganizerEmail, Name = "Priya Natarajan", Role = UserRole.Organizer, CreatedAtUtc = clock.UtcNow };
-            priya.Communities.Add(new CommunityOrganizer { Community = communities["gta-azure-community"], Role = "Organizer" });
+            priya.Communities.Add(new CommunityOrganizer
+            {
+                Community = communities["gta-azure-community"], Role = "Lead organizer", Speaker = speakers["priya-natarajan"], SortOrder = 0,
+            });
             db.Users.Add(priya);
+        }
+
+        if (!users.ContainsKey(SeedData.CoOrganizerEmail))
+        {
+            var marcus = new User { Email = SeedData.CoOrganizerEmail, Name = "Marcus Bell", Role = UserRole.Organizer, CreatedAtUtc = clock.UtcNow };
+            marcus.Communities.Add(new CommunityOrganizer
+            {
+                Community = communities["gta-azure-community"], Role = "Co-organizer", Speaker = speakers["marcus-bell"], SortOrder = 1,
+            });
+            db.Users.Add(marcus);
         }
 
         if (!users.TryGetValue(SeedData.ModeratorEmail, out var jordan))

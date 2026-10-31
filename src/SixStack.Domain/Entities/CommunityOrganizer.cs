@@ -8,4 +8,12 @@ public class CommunityOrganizer
     public Guid UserId { get; set; }
     public User? User { get; set; }
     public string Role { get; set; } = "Organizer";
+
+    /// <summary>The organizer's speaker profile, which the community page links to.</summary>
+    public Guid? SpeakerId { get; set; }
+
+    public Speaker? Speaker { get; set; }
+
+    /// <summary>Order on the community page, lead organizer first.</summary>
+    public int SortOrder { get; set; }
 }

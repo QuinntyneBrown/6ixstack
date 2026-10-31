@@ -11,6 +11,7 @@ export class SubscribeFeedDialog {
   readonly ready: Locator;
   readonly cancel: Locator;
   readonly done: Locator;
+  readonly create: Locator;
 
   constructor(page: Page) {
     this.panel = page.getByRole('dialog', { name: 'Subscribe to a calendar feed' });
@@ -21,5 +22,6 @@ export class SubscribeFeedDialog {
     this.ready = this.panel.locator('sx-alert').filter({ hasText: 'Your feed is ready' });
     this.cancel = this.panel.getByRole('button', { name: 'Cancel' });
     this.done = this.panel.getByRole('button', { name: 'Done' });
+    this.create = this.panel.getByRole('button', { name: /^(Create feed link|Try again)$/ });
   }
 }

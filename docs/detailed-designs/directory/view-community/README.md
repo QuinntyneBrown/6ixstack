@@ -200,3 +200,20 @@ The dialog creates a feed limited to that community. The visitor adds the link
 to a calendar app, which then receives only this community's events.
 
 ![Sequence diagram for subscribing to a community feed](diagrams/sequence-subscribe-to-group.png)
+
+## Decisions (journey 19)
+
+- **Profile fields** live on `Community` as the design lists them (`Cadence`, `ActiveSinceYear`, `PlacesLabel`,
+  `PlacesDetail`, `PostingLead`), plus `Tagline`, `About` and an owned JSON list of `Links`. The tagline and About
+  fall back to the description. Only seed data fills them for now; no screen edits them yet.
+- **Organizers** are `CommunityOrganizer` rows ordered by `SortOrder`. `Role` is free text ("Lead organizer"), and
+  `SpeakerId` links the speaker page. An organizer without a speaker profile shows their name without a link.
+- **Attended** is `AttendedCount`, falling back to the going count when none was recorded. Past lists the three most
+  recent events, with no paging. Upcoming has no limit.
+- **Unpublished events** (in review, needs changes) never appear on the public page. L2-031 criterion 1 follows the
+  seed, where Fabric for Power BI developers is still in review.
+- **Subscribe to this group** opens the subscribe dialog with the community preset, so the feed it creates holds only
+  that community's events.
+- **Not found**: the API answers 404, and the app shows its not-found page. A browser app cannot set the document's
+  HTTP status, so "status 404" applies to the API.
+

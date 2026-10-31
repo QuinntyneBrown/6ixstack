@@ -1,0 +1,93 @@
+@use 'breakpoints' as bp;
+
+// Local layout of the community page, ported from docs/mocks/assets/ui.css (detail hero, page grid, facts).
+:host {
+  display: block;
+}
+.community-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalL);
+  align-items: flex-start;
+  padding-block: var(--spacingHorizontalXXL) var(--spacingHorizontalXXXL);
+}
+@include bp.media-up(sm) {
+  .community-hero {
+    flex-direction: row;
+    gap: var(--spacingHorizontalXL);
+  }
+}
+.community-hero h1 {
+  font: var(--fontWeightBold) var(--fontSizeHero700) / var(--lineHeightHero700) var(--fontFamilyBase);
+  letter-spacing: -0.02em;
+}
+.community-hero__tagline {
+  margin-top: var(--spacingHorizontalS);
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-lg);
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS) var(--spacingHorizontalL);
+  margin-top: var(--spacingHorizontalL);
+}
+.page-grid {
+  display: grid;
+  gap: var(--sx-space-12);
+}
+@include bp.media-up(lg) {
+  .page-grid {
+    grid-template-columns: minmax(0, 1fr) 21.25rem;
+  }
+}
+.stack-gap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalXXXL);
+  min-width: 0;
+}
+.section-title {
+  margin-bottom: var(--spacingHorizontalL);
+  font: var(--sx-text-h4);
+}
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalL);
+  line-height: var(--sx-line-height-relaxed);
+}
+.facts {
+  display: grid;
+  gap: var(--spacingHorizontalL);
+  padding: var(--spacingHorizontalXXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadius2XLarge);
+  background: var(--colorNeutralBackground1);
+}
+.people {
+  display: grid;
+  gap: var(--spacingHorizontalL);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.community-past {
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--colorNeutralBackground1);
+}
+.community-failed {
+  display: block;
+  margin-top: var(--spacingHorizontalXXL);
+}
+.community-skeleton {
+  display: grid;
+  gap: var(--spacingHorizontalXL);
+}
+.community-skeleton__lines {
+  display: grid;
+  flex: 1;
+  gap: var(--spacingHorizontalS);
+  width: 100%;
+}
