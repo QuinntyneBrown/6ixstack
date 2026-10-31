@@ -21,6 +21,20 @@ public sealed class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.Property(e => e.RecordingUrl).HasMaxLength(2048);
         builder.Property(e => e.SubmitterEmail).HasMaxLength(254);
         builder.Property(e => e.CancellationReason).HasMaxLength(500);
+        builder.Property(e => e.PriceNote).HasMaxLength(120);
+        builder.Property(e => e.PriceDetail).HasMaxLength(200);
+        builder.Property(e => e.LivestreamNote).HasMaxLength(200);
+        builder.Property(e => e.SlidesUrl).HasMaxLength(2048);
+        builder.Property(e => e.NoteTitle).HasMaxLength(120);
+        builder.Property(e => e.NoteText).HasMaxLength(500);
+        builder.OwnsMany(e => e.AgendaItems, agenda =>
+        {
+            agenda.ToTable("EventAgendaItems");
+            agenda.WithOwner().HasForeignKey("EventId");
+            agenda.Property<int>("Id");
+            agenda.HasKey("Id");
+            agenda.Property(a => a.Title).HasMaxLength(200);
+        });
         builder.Ignore(e => e.IsCancelled);
         builder.HasOne(e => e.Community).WithMany().HasForeignKey(e => e.CommunityId).OnDelete(DeleteBehavior.Restrict);
         builder.OwnsOne(e => e.Venue, venue =>
@@ -28,6 +42,7 @@ public sealed class EventConfiguration : IEntityTypeConfiguration<Event>
             venue.Property(v => v.Name).HasMaxLength(200);
             venue.Property(v => v.Address).HasMaxLength(200);
             venue.Property(v => v.City).HasMaxLength(100);
+            venue.Property(v => v.TravelNotes).HasMaxLength(300);
         });
     }
 }

@@ -8,4 +8,7 @@ public class Venue
     public string City { get; set; } = string.Empty;
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
+
+    /// <summary>How to get there, e.g. "Step-free access from the Square One transit terminal".</summary>
+    public string? TravelNotes { get; set; }
 }

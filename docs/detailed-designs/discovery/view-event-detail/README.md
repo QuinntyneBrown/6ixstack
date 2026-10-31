@@ -144,7 +144,7 @@ The `Events` table has a unique index on `Slug` so the lookup meets the 200 ms
 
 - The open data points become fields on `Event`: `PriceNote` ("includes lunch"), `PriceDetail` ("Student
   tickets $15 with a valid ID"), `LivestreamNote` (also used as the streaming platform line), `Capacity`,
-  `AttendedCount`, `SlidesUrl`, `PreviousStartsAtUtc` and `TimeChangedAtUtc`, `IsConfirmed`, `NoteTitle` and
+  `AttendedCount`, `SlidesUrl`, `PreviousStartsAtUtc` and `TimeChangedAtUtc`, `ConfirmedAtUtc`, `NoteTitle` and
   `NoteText`, an ordered `AgendaItems` collection (`StartsAtLocal`, `Title`), and `Venue.TravelNotes`. The submit and
   edit forms (journeys 04 and 14) decide how organizers fill them; until then the seed holds them.
 - Alerts show in this order: cancelled, ended, countdown, time change, sold out, confirmed, organizer note.

@@ -18,5 +18,16 @@ public static class TopicKeys
     /// <summary>The keys of the topics set in <paramref name="topics"/>, in the fixed topic order.</summary>
     public static IReadOnlyList<string> Of(Topics topics) => [.. ByKey.Where(kv => topics.HasFlag(kv.Value)).Select(kv => kv.Key)];
 
+    public static string Label(string key) => key switch
+    {
+        "ai" => "AI",
+        "dotnet" => ".NET",
+        "azure" => "Azure",
+        "angular" => "Angular",
+        "react" => "React",
+        "aws" => "AWS",
+        _ => key,
+    };
+
     public static Topics Parse(IEnumerable<string> keys) => keys.Aggregate(Topics.None, (mask, key) => mask | ByKey[key]);
 }

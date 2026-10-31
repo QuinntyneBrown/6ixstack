@@ -96,7 +96,8 @@ its day groups (merging a day it already shows).
   every loaded event. This design follows `L2-007` (hero counts the upcoming window) and `L2-009` (the load-more
   caption carries the total): the hero and the format counts stay on the window, and the caption reads
   "Showing 14 of 61 events through December 31".
-- `LocationLabel` is the venue's display name and city ("Microsoft Canada, 81 Bay St, Toronto"); a hybrid
+- `LocationLabel` is the venue name and city, as `L2-001` states ("Microsoft Canada, Toronto"); the street address
+  appears on the detail page (some list rows in the mocks include it, others don't); a hybrid
   event adds a "+ stream" item; a streaming event reads "Streaming online". `SourceTime` uses the source zone's
   short name (PT, MT, GMT, CET) for the event date.
 - "Get a feed for Kubernetes" in the no-results state links to `/feeds?q=Kubernetes`; the feed builder arrives
