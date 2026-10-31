@@ -11,3 +11,4 @@ export * from './lib/events/event-detail';
 export * from './lib/submissions/submissions-api';
 export * from './lib/auth/auth-api';
 export * from './lib/moderation/moderation-api';
+export * from './lib/feeds/feeds-api';

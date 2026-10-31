@@ -1,0 +1,1 @@
+A list groups related items in one bordered surface; each `li[sx-list-item]` has a leading visual, a title, a meta line and trailing actions. The calendar feeds page lists the ready-made feeds this way.

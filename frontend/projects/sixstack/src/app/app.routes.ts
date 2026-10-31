@@ -19,6 +19,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/calendar/calendar-page').then((m) => m.CalendarPage),
   },
   {
+    path: 'feeds',
+    title: 'Calendar feeds · 6ixstack',
+    loadComponent: () =>
+      import('./pages/calendar-feeds/calendar-feeds-page').then((m) => m.CalendarFeedsPage),
+  },
+  {
     path: 'submit',
     title: 'Submit an event · 6ixstack',
     data: { hideSubmit: true },
