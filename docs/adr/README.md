@@ -11,3 +11,4 @@ Short records of choices the requirements and designs left open. One file per de
 | [0005](0005-self-hosted-geist.md) | Geist and Geist Mono are self-hosted |
 | [0006](0006-security-headers-and-csrf.md) | Security headers, HSTS and CSRF with ASP.NET Core Antiforgery |
 | [0007](0007-toasts-and-banners.md) | Toast and banner choices, and what waits for the offline cache |
+| [0008](0008-status-page-wiring-with-first-consumers.md) | Forbidden and server-error wiring arrive with their first consumers |
