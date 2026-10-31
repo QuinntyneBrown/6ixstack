@@ -8,6 +8,6 @@ cd "$(dirname "$0")/../.."
 version=$(node -p "require('@playwright/test/package.json').version")
 docker run --rm --ipc=host --add-host=host.docker.internal:host-gateway \
   -v "$PWD":/work -w /work \
-  -e PW_BASE_URL=http://host.docker.internal:4200 -e PW_STORYBOOK_URL=http://host.docker.internal:6007 -e CI= \
+  -e PW_BASE_URL=http://localhost:4200 -e PW_STORYBOOK_URL=http://localhost:6007 -e CI= \
   "mcr.microsoft.com/playwright:v${version}-noble" \
-  npx playwright test --update-snapshots=all "$@"
+  bash -c 'node e2e/support/forward-to-host.mjs & sleep 1; npx playwright test --update-snapshots=all "$@"' -- "$@"
