@@ -1,0 +1,17 @@
+{
+  "heroCounts": {
+    "gta": 0,
+    "streamable": 0
+  },
+  "formatCounts": {
+    "all": 0,
+    "gta": 0,
+    "streaming": 0
+  },
+  "days": [],
+  "shown": 0,
+  "total": 0,
+  "throughLabel": null,
+  "hasMore": false,
+  "search": ""
+}

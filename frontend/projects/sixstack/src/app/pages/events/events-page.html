@@ -5,6 +5,12 @@
       Meetups and conferences across Toronto and the GTA, plus global talks you can stream. All in one
       calendar, in Toronto time.
     </p>
+    @if (result(); as r) {
+      <p class="hero__stat">
+        <strong>{{ r.heroCounts.gta }} in the GTA</strong> and
+        <strong>{{ r.heroCounts.streamable }} streamable</strong> over the next two weeks.
+      </p>
+    }
   </div>
 </section>
 <div id="events">
