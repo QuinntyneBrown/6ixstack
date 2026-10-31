@@ -94,3 +94,50 @@
   gap: var(--spacingHorizontalM);
   margin-top: var(--spacingHorizontalXXXL);
 }
+
+// CTA band, ported from docs/mocks/assets/ui.css (.cta-band): full width under the list.
+.cta-band {
+  margin-top: var(--sx-space-16);
+  margin-inline: calc(50% - 50vw);
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+.cta-band__inner {
+  display: grid;
+  gap: var(--sx-space-10);
+  max-width: var(--sx-content-max-width);
+  margin-inline: auto;
+  padding: var(--sx-space-14) var(--sx-layout-margin);
+}
+@include bp.media-up(md) {
+  .cta-band__inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sx-space-16);
+  }
+}
+.cta-band h2 {
+  font: var(--fontWeightSemibold) var(--fontSizeBase600) / var(--lineHeightBase600) var(--fontFamilyBase);
+  letter-spacing: -0.02em;
+}
+.cta-band p {
+  margin-top: var(--spacingHorizontalM);
+  max-width: 28rem;
+  color: var(--colorNeutralForeground2);
+}
+.cta-band [sx-button],
+.cta-band .arrow-link {
+  margin-top: var(--spacingHorizontalXL);
+}
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalXS);
+  padding: 0;
+  border: 0;
+  background: none;
+  font: var(--sx-text-label);
+  color: var(--colorBrandForeground1);
+  cursor: pointer;
+}
+.arrow-link:hover {
+  text-decoration: underline;
+}

@@ -29,3 +29,24 @@
   color: var(--colorNeutralForeground2);
   font: var(--sx-text-body-sm);
 }
+
+.stack-gap {
+  display: grid;
+  gap: var(--sx-space-12);
+  min-width: 0;
+}
+.form-card {
+  display: grid;
+  gap: var(--spacingHorizontalXL);
+  padding: var(--spacingHorizontalXXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadius2XLarge);
+  background: var(--colorNeutralBackground1);
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.text-muted {
+  color: var(--colorNeutralForeground2);
+}

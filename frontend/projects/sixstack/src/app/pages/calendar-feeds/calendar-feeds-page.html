@@ -14,7 +14,7 @@
           title="We couldn’t load the ready-made feeds"
           [actions]="retryActions"
         >
-          Try again in a moment.
+          You can still build your own feed below.
         </sx-alert>
       } @else {
         <ul sx-list class="ready-feeds">
@@ -44,6 +44,35 @@
             </li>
           }
         </ul>
+      }
+    </section>
+
+    <section aria-labelledby="build-h">
+      <h2 id="build-h" class="section-heading">Build your own</h2>
+      @if (created(); as feed) {
+        <sx-success-panel class="form-card feed-ready" title="Your feed is ready">
+          <p class="text-muted">
+            {{ feed.summary }} {{ feed.matchingEventCount }} events right now; new ones appear on their own.
+          </p>
+          <sx-feed-link-panel [slug]="feed.feedSlug" [howToSubscribe]="showHowItWorks" />
+          <button slot="actions" sx-button appearance="ghost" type="button" (click)="buildAnother()">
+            Build another feed
+          </button>
+        </sx-success-panel>
+      } @else {
+        <form class="form-card feed-builder" novalidate (submit)="$event.preventDefault(); create()">
+          @if (createFailed()) {
+            <sx-alert kind="danger" announce="alert" title="We couldn’t create your feed">
+              Your choices are saved. Try again, or use the Everything feed above.
+            </sx-alert>
+          }
+          <sx-feed-builder [busy]="creating()" />
+          <div class="form-actions">
+            <button sx-button appearance="primary" type="submit" [busy]="creating()">
+              {{ creating() ? 'Creating feed…' : createFailed() ? 'Try again' : 'Create feed link' }}
+            </button>
+          </div>
+        </form>
       }
     </section>
   </div>

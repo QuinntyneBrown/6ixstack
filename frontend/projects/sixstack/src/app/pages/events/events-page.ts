@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { EventFormatFilter, EVENTS_API, UpcomingEvents } from 'api';
@@ -7,6 +8,8 @@ import {
   Button,
   DayGroup,
   EmptyState,
+  Icon,
+  modalDialogConfig,
   SearchField,
   SegmentedControl,
   SegmentedOption,
@@ -27,6 +30,10 @@ import {
   NO_FILTERS,
 } from '../../shared/filters/event-filters';
 import { FilterStateStore } from '../../shared/filters/filter-state.store';
+import {
+  SUBSCRIBE_FEED_TITLE_ID,
+  SubscribeFeedDialog,
+} from '../../dialogs/subscribe-feed/subscribe-feed-dialog';
 
 /** The events page (`/`): upcoming events grouped by day, with filters (discovery/browse-events). */
 @Component({
@@ -36,6 +43,7 @@ import { FilterStateStore } from '../../shared/filters/filter-state.store';
     Button,
     DayGroup,
     EmptyState,
+    Icon,
     RouterLink,
     SearchField,
     SegmentedControl,
@@ -89,6 +97,20 @@ export class EventsPage {
     const topics = this.filters().topics;
     return topics.length ? ` about ${topics.map((t) => TOPIC_LABELS[t]).join(' or ')}` : '';
   });
+
+  private readonly dialog = inject(Dialog);
+
+  /** "Get a calendar feed" in the CTA band opens the subscribe dialog (L2-035). */
+  protected openSubscribe(trigger: EventTarget | null): void {
+    this.dialog.open(
+      SubscribeFeedDialog,
+      modalDialogConfig({
+        ariaLabelledBy: SUBSCRIBE_FEED_TITLE_ID,
+        ariaDescribedBy: 'subscribe-feed-description',
+        restoreFocus: (trigger as HTMLElement | null) ?? true,
+      }),
+    );
+  }
 
   constructor() {
     toObservable(this.filters)

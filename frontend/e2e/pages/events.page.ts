@@ -17,6 +17,7 @@ export class EventsPage {
   readonly loadMore: Locator;
   readonly loadMoreCaption: Locator;
   readonly showMore: Locator;
+  readonly getCalendarFeed: Locator;
   readonly errorAlert: Locator;
 
   constructor(private readonly page: Page) {
@@ -32,6 +33,7 @@ export class EventsPage {
     this.loadMore = page.locator('.load-more');
     this.loadMoreCaption = page.locator('.load-more .text-caption');
     this.showMore = page.getByRole('button', { name: 'Show 20 more' });
+    this.getCalendarFeed = page.getByRole('button', { name: 'Get a calendar feed' });
     this.errorAlert = page.getByRole('alert').filter({ hasText: "We couldn't load events" });
   }
 
