@@ -124,4 +124,6 @@ numbers. Any failure leaves the row out and shows no error.
   so no `DeletedAtUtc` filter is needed.
 - **Caching**: `Cache-Control: public, max-age=300`.
 - **Loading**: the row is not drawn until the stats arrive and is omitted if they fail. The prose renders at once.
+- **Report a problem** is named in plain text on the Code of Conduct page: the dialog reports a specific event, so
+  it opens from an event page, as the sentence says.
 

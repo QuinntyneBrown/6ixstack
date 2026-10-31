@@ -25,11 +25,22 @@ export interface ContactSent {
   replyTo: string;
 }
 
+/** The About page's live counts (L2-072). */
+export interface SiteStats {
+  year: number;
+  communities: number;
+  eventsListedThisYear: number;
+  feedSubscribers: number;
+  volunteerModerators: number;
+}
+
 export interface SiteApi {
   /** The announced maintenance window, or null when there is none. */
   maintenanceNotice(): Observable<MaintenanceNotice | null>;
   /** Sends a contact message (L2-073); 400 with field errors, 429 after five an hour. */
   contact(message: ContactMessage): Observable<ContactSent>;
+  /** The About page's live stats. */
+  stats(): Observable<SiteStats>;
 }
 
 export const SITE_API = new InjectionToken<SiteApi>('SITE_API');
@@ -41,6 +52,10 @@ export class HttpSiteApi implements SiteApi {
 
   contact(message: ContactMessage): Observable<ContactSent> {
     return this.http.post<ContactSent>(`${this.baseUrl}/api/contact`, message);
+  }
+
+  stats(): Observable<SiteStats> {
+    return this.http.get<SiteStats>(`${this.baseUrl}/api/site/stats`);
   }
 
   maintenanceNotice(): Observable<MaintenanceNotice | null> {

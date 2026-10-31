@@ -1,0 +1,8 @@
+@use '../../shared/prose/prose';
+
+:host {
+  display: block;
+}
+.about-stats {
+  margin-bottom: var(--sx-space-10);
+}
