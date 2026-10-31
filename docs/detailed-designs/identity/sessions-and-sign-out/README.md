@@ -112,6 +112,9 @@ them:
   sign-out from settings only, and `L2-068` describes settings for organizers:
   `<TO SUPPLY>`.
 - An absolute maximum session lifetime regardless of activity: none for now (ADR 0009).
+- Built in journey 05: `SessionStore`, `authGuard` (as `CanActivate`; it waits for `/api/auth/me`), the account
+  controls in the header, and the session checks. The `unauthorizedInterceptor` arrives with the first organizer
+  API call (journey 15), the role check with the review queue (journey 06), and sign-out with journey 27.
 
 ## Requirements
 
