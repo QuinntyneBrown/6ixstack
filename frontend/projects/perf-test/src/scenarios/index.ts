@@ -1,4 +1,5 @@
 import { Scenario } from './scenario';
+import { scenario as tooltip } from './Tooltip';
 import { scenario as nextSteps } from './NextSteps';
 import { scenario as successPanel } from './SuccessPanel';
 import { scenario as formSection } from './FormSection';
@@ -37,6 +38,7 @@ import { scenario as toast } from './Toast';
 /** Every scenario, by name. Add one file per component and register it here. */
 export const SCENARIOS: Record<string, Scenario> = Object.fromEntries(
   [
+    tooltip,
     nextSteps,
     successPanel,
     formSection,

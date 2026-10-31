@@ -113,13 +113,18 @@ The requirements leave the following points open. The design does not settle
 them:
 
 - The redemption is a `GET`, so mail-security scanners that prefetch links can
-  consume a token before the person opens it. Whether to add a confirm step:
-  `<TO SUPPLY>`.
+  consume a token before the person opens it. Decision (journey 05): no confirm step for now; revisit if
+  people report dead links.
 - The prefill after an expired link works only in the browser that requested
   the link. A link opened in another browser shows an empty form.
 - Whether a sign-in request for a deleted account's address creates a new
-  account on redemption: `<TO SUPPLY>`.
-- The sign-in email's subject and body: `<TO SUPPLY>`.
+  account on redemption: decided with delete account (journey 26).
+- The sign-in email (journey 05): subject "Your 6ixstack sign-in link"; body "Open this link to sign in to
+  6ixstack. It works once and expires in 15 minutes: {link}. If you didn't ask for it, ignore this email."
+- Sessions are server-side rows behind the data-protected cookie (ADR 0009) rather than a hashed cookie secret.
+- Rate limits: 5 link requests per hour per email answer 429 with `Retry-After` and send nothing. The per-IP
+  limit of 20 per hour uses ASP.NET Core rate limiting on the endpoint.
+- Until journeys 15 and 06, `/organize` and `/admin/review` are guarded placeholders (ADR 0009).
 
 ## Requirements
 

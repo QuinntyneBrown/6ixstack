@@ -85,7 +85,7 @@ def _():
              f'<h1 style="font: var(--text-h2);">Check your inbox</h1>'
              f'<p class="text-muted">We sent a sign-in link to <strong>{ME["email"]}</strong>. It works once and expires in 15 minutes.</p>'
              f'<p class="text-caption">Nothing there after a minute? Check spam, or ask for another link.</p>'
-             f'<div class="cluster"><button class="btn" type="button">Resend link</button><a class="btn btn--ghost" href="{P("sign-in")}">Use a different email</a></div></div>')
+             f'<div class="cluster"><button class="btn" type="button" disabled>Resend link in 30s</button><a class="btn btn--ghost" href="{P("sign-in")}">Use a different email</a></div></div>')
     return sign_in_page(inner) + note("Resend is disabled for 30 seconds after each send, with a countdown in the button.", "top: 6rem; right: 1rem;")
 
 
