@@ -1,3 +1,6 @@
+using SixStack.Application.Common.Messages;
+using SixStack.Application.Calendar;
+using Microsoft.Extensions.Options;
 using System.Globalization;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -136,7 +139,9 @@ public static class ModerationConflicts
     }
 }
 
-public sealed class SubmissionApprovedNotificationHandler(IAppDbContext db, IClock clock) : IOutboxMessageHandler<SubmissionApprovedNotification>
+/// <summary>After the undo window: the in-app notification, then the email when event decisions are on (L2-066, L2-067).</summary>
+public sealed class SubmissionApprovedNotificationHandler(IAppDbContext db, IClock clock, IOutbox outbox, Notifications.EmailPolicy emails, IOptions<SiteOptions> site)
+    : IOutboxMessageHandler<SubmissionApprovedNotification>
 {
     public async Task HandleAsync(SubmissionApprovedNotification message, CancellationToken cancellationToken)
     {
@@ -147,6 +152,15 @@ public sealed class SubmissionApprovedNotificationHandler(IAppDbContext db, IClo
         }
 
         db.Notifications.Add(LiveNotification.For(e, clock.UtcNow));
+        if (await emails.WantsAsync(e.SubmitterEmail, p => p.EventDecisions, cancellationToken))
+        {
+            // A separate outbox message, so a failed send is retried and never takes the notification with it.
+            outbox.Enqueue(new SendEmail(new EmailMessage(
+                e.SubmitterEmail,
+                $"“{e.Title}” is live",
+                $"Good news: a moderator approved “{e.Title}”. It’s in the 6ixstack list, the calendar and every matching feed.\n\nSee it: {site.Value.PublicBaseUrl.TrimEnd('/')}/events/{e.Slug}")));
+        }
+
         await db.SaveChangesAsync(cancellationToken);
     }
 }

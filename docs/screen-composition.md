@@ -247,6 +247,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 | Notification (mock folder: states) | Surface | Library components | Local UI |
 |---|---|---|---|
 | Toast (`app-toast`: info, success, warning, danger, with-action, stacked) | `ToastRegion` via `ToastService` | `ToastRegion`, `Toast` (action, dismiss, progress) | — |
+| Notification emails (`email`: approved, needs-changes, event-updated, weekly-summary) | sent by the API (`EmailTemplates`), not rendered by the app | — | — |
 | Cancelled toast (`cancel-toast`: success) | `ToastRegion` via `ToastService` (on the dashboard and edit page) | `ToastRegion`, `Toast` | — |
 | Moderation toast (`moderation-toast`: info, success, warning, danger, conflict, too-late, with-action, needs-changes, stacked) | `ToastRegion` via `ToastService` (on review queue) | `ToastRegion`, `Toast` (Undo action) | — |
 | Event status alert (`event-alert`: info, success, warning, danger) | inline on event detail | `Alert` | — |

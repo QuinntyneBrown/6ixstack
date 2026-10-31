@@ -47,13 +47,16 @@ public static class DependencyInjection
     {
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
         var fixedNow = configuration["Clock:FixedUtcNow"];
-        services.AddSingleton<IClock>(new SystemClock(string.IsNullOrWhiteSpace(fixedNow) ? null : DateTimeOffset.Parse(fixedNow, System.Globalization.CultureInfo.InvariantCulture)));
+        services.AddSingleton<IClock>(new SystemClock(
+            string.IsNullOrWhiteSpace(fixedNow) ? null : DateTimeOffset.Parse(fixedNow, System.Globalization.CultureInfo.InvariantCulture),
+            string.Equals(configuration["Clock:Ticking"], "true", StringComparison.OrdinalIgnoreCase)));
         services.AddSingleton<DevMailbox>();
         services.AddSingleton<IEmailSender, DevMailboxEmailSender>();
         services.Configure<OutboxOptions>(configuration.GetSection(OutboxOptions.Section));
         services.AddScoped<IOutbox, Outbox.Outbox>();
         services.AddScoped<Application.Organizer.IAttendeeDirectory, Organizer.NoAttendeeDirectory>();
         services.AddScoped<OutboxDispatcher>();
+        services.AddHostedService<Notifications.WeeklySummaryJob>();
         services.AddScoped<IOutboxMessageHandler<SendEmail>, SendEmailHandler>();
         services.Configure<SiteOptions>(configuration.GetSection(SiteOptions.Section));
         services.AddSingleton<IIcsWriter, IcsWriter>();

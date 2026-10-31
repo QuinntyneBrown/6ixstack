@@ -569,6 +569,23 @@
         "needs-changes",
         "stacked"
       ]
+    },
+    {
+      "id": "email",
+      "kind": "notification",
+      "title": "Notification emails",
+      "states": [
+        "approved",
+        "needs-changes",
+        "event-updated",
+        "weekly-summary"
+      ],
+      "not_applicable": {
+        "invalid": "Emails have no inputs.",
+        "busy": "Emails are sent in the background.",
+        "loading": "Emails arrive complete.",
+        "error": "A failed send is retried; nothing is shown."
+      }
     }
   ]
 }
