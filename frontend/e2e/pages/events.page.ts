@@ -78,6 +78,15 @@ export class EventsPage {
     await this.search.press('Enter');
   }
 
+  /** Searches and returns the `q` the page sent to the API. */
+  async searchAndCaptureQuery(text: string): Promise<string | null> {
+    const request = this.page.waitForRequest(
+      (r) => r.url().includes('/api/events') && r.url().includes('q='),
+    );
+    await this.searchFor(text);
+    return new URL((await request).url()).searchParams.get('q');
+  }
+
   clearFilters(): Locator {
     return this.page
       .getByRole('button', { name: 'Clear filters' })

@@ -1,0 +1,43 @@
+// Ported from docs/mocks/assets/ui.css (.search, .input, .filter-row .search).
+:host {
+  display: block;
+  min-width: 0;
+}
+.search {
+  position: relative;
+  min-width: 0;
+}
+.search sx-icon {
+  position: absolute;
+  left: var(--spacingHorizontalM);
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--colorNeutralForeground3);
+  pointer-events: none;
+  display: flex;
+}
+.input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: var(--spacingHorizontalS) var(--spacingHorizontalM) var(--spacingHorizontalS) var(--sx-space-10);
+  font: var(--sx-text-body);
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground1);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  transition:
+    border-color var(--durationFaster) var(--curveEasyEase),
+    box-shadow var(--durationFaster) var(--curveEasyEase);
+}
+.input::placeholder {
+  color: var(--colorNeutralForeground3);
+}
+.input:hover {
+  border-color: var(--colorNeutralForeground2);
+}
+.input:focus-visible {
+  outline: var(--sx-focus-ring-width) solid var(--colorStrokeFocus2);
+  outline-offset: 0;
+  border-color: var(--colorStrokeFocus2);
+}

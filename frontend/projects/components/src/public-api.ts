@@ -25,3 +25,4 @@ export * from './lib/event-row/event-row';
 export * from './lib/day-group/day-group';
 export * from './lib/segmented-control/segmented-control';
 export * from './lib/topics/topic-chip';
+export * from './lib/search-field/search-field';

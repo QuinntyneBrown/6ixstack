@@ -75,4 +75,25 @@ test.describe('Events filters', () => {
     await expect(events.topicChip('AI')).toHaveAttribute('aria-pressed', 'true');
     await expect(events.formatOption('In the GTA')).toHaveAttribute('aria-pressed', 'true');
   });
+
+  test('search matches titles and places case-insensitively', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+
+    await events.searchFor('signals');
+    await expect(events.rows).toHaveCount(1);
+    await expect(events.row('Signals all the way down').root).toBeVisible();
+
+    await events.searchFor('markham');
+    await expect(events.row('GTA AI Builders Hackathon').root).toBeVisible();
+  });
+
+  test('a search longer than 100 characters is sent truncated', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+
+    const sent = await events.searchAndCaptureQuery('x'.repeat(130));
+
+    expect(sent).toHaveLength(100);
+  });
 });

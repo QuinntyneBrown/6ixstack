@@ -1,0 +1,1 @@
+A search field is a `role="search"` form with a visually hidden label, the search icon and a `type="search"` input. It emits `searched` when the person presses Enter and `valueChange` as they type, so the page decides when to query.

@@ -10,6 +10,13 @@
 <div id="events">
   <div class="filter-bar">
     <div class="filter-row">
+      <sx-search-field
+        class="filter-row__search"
+        label="Search events"
+        placeholder="Search talks, groups, or neighbourhoods"
+        [value]="filters().q"
+        (searched)="searchFor($event)"
+      />
       <sx-segmented-control
         label="Where"
         [options]="formatOptions()"

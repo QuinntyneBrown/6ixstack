@@ -1,4 +1,5 @@
 import { Scenario } from './scenario';
+import { scenario as searchField } from './SearchField';
 import { scenario as topicChip } from './TopicChip';
 import { scenario as segmentedControl } from './SegmentedControl';
 import { scenario as dayGroup } from './DayGroup';
@@ -19,6 +20,7 @@ import { scenario as toast } from './Toast';
 /** Every scenario, by name. Add one file per component and register it here. */
 export const SCENARIOS: Record<string, Scenario> = Object.fromEntries(
   [
+    searchField,
     topicChip,
     segmentedControl,
     icon,

@@ -15,3 +15,5 @@ export const FORMAT_LABELS: Record<EventFormatFilter, string> = {
   gta: 'In the GTA',
   streaming: 'Streaming',
 };
+
+export const MAX_SEARCH_LENGTH = 100;

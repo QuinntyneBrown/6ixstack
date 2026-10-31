@@ -3,6 +3,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { EventFormatFilter, EVENTS_API, UpcomingEvents } from 'api';
 import {
   DayGroup,
+  SearchField,
   SegmentedControl,
   SegmentedOption,
   TOPIC_LABELS,
@@ -12,12 +13,12 @@ import {
   ToastService,
 } from 'components';
 import { switchMap } from 'rxjs';
-import { EventFilters, FORMAT_LABELS, NO_FILTERS } from './event-filters';
+import { EventFilters, FORMAT_LABELS, MAX_SEARCH_LENGTH, NO_FILTERS } from './event-filters';
 
 /** The events page (`/`): upcoming events grouped by day, with filters (discovery/browse-events). */
 @Component({
   selector: 'sx-events-page',
-  imports: [DayGroup, SegmentedControl, TopicChip],
+  imports: [DayGroup, SearchField, SegmentedControl, TopicChip],
   templateUrl: './events-page.html',
   styleUrl: './events-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,6 +68,12 @@ export class EventsPage {
 
   protected chooseFormat(format: string): void {
     this.filters.update((f) => ({ ...f, format: format as EventFormatFilter }));
+  }
+
+  /** Runs the search; the query is truncated to 100 characters before it is sent (L2-004). */
+  protected searchFor(text: string): void {
+    const q = text.trim().slice(0, MAX_SEARCH_LENGTH);
+    this.filters.update((f) => (f.q === q ? f : { ...f, q }));
   }
 
   protected isTopicSelected(topic: TopicKey): boolean {
