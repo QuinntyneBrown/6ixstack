@@ -93,16 +93,21 @@ The handler applies the reason rule:
 | Spam or advertising | Rejected | `Reject` |
 | Breaks the code of conduct | Rejected | `Reject` |
 
-These points are open:
+These points were open; journey 08 decided them:
 
-- `L2-067` lets an organizer turn off "event approved or needs changes" emails,
-  while `L2-061` requires emailing the submitter. Whether the preference
-  suppresses the rejection email is `<TO SUPPLY>`.
-- The `submission-banner/danger` mock shows "Edit and resubmit" for a rejected
-  event. Whether a Rejected event, as opposed to a Needs changes event, may be
-  resubmitted is `<TO SUPPLY>`.
-- The reject email is sent as soon as the decision commits; `L2-061` defines no
-  undo for rejection.
+- The rejection email is always sent: `L2-061` requires it, and the `L2-067` preference covers approval emails.
+  It goes through the outbox and `IEmailSender` like the submission confirmation; journey 20 adds templates.
+- Whether a Rejected (not Needs changes) event may be resubmitted is decided with editing (journey 14); this
+  journey sets the status and the dashboard banner arrives with journey 15.
+- The reject email is sent as soon as the decision commits; there is no undo for rejection.
+- `Message` is at most 1,000 characters ("Keep the message to 1,000 characters or fewer.").
+- `SentEmailDialog` follows the new `dialogs/sent-email` mock: the subject as the title, "To {email}" under it, the
+  body as preformatted text and a Close button.
+- Email subject "“{title}” needs changes" or "“{title}” wasn't approved"; the body names the reason, quotes the
+  message, and for Needs changes says to edit and resubmit. The in-app notification has the same title and
+  "Reason: {reason, lower case}." (`L2-066`), as in the notifications mock.
+- `EventStatus` gains `NeedsChanges`; `DecisionKind` gains `RequestChanges`; `ModerationDecision` gains `Reason`
+  and `Message`. A conflicting rejection gets the same 409 and toast as a conflicting approval.
 
 ## Requirements
 

@@ -490,6 +490,19 @@
       ]
     },
     {
+      "id": "sent-email",
+      "kind": "dialog",
+      "title": "Sent email",
+      "opens_from": "review-queue",
+      "states": [
+        "default"
+      ],
+      "not_applicable": {
+        "invalid": "Read-only.",
+        "busy": "Nothing to submit."
+      }
+    },
+    {
       "id": "sign-out",
       "kind": "dialog",
       "title": "Sign out",
