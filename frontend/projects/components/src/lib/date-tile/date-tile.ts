@@ -19,17 +19,18 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       width: 3.75rem;
       height: 3.75rem;
       border-radius: var(--borderRadiusXLarge);
-      background: var(--colorSubtleBackgroundHover);
+      background: var(--sx-date-tile-background, var(--colorSubtleBackgroundHover));
       text-align: center;
     }
     .date-tile__month {
       font: var(--sx-text-overline);
       letter-spacing: var(--sx-letter-spacing-wide);
       text-transform: uppercase;
-      color: var(--colorNeutralForeground2);
+      color: var(--sx-date-tile-month, var(--colorNeutralForeground2));
     }
     .date-tile__day {
       font: var(--fontWeightBold) var(--fontSizeBase600) / 1 var(--fontFamilyBase);
+      color: var(--sx-date-tile-day, inherit);
     }
     .date-tile--lg {
       width: 4.5rem;

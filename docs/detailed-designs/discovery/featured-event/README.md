@@ -140,3 +140,16 @@ order: a row exists, the event is published, and the event is not cancelled. Any
 failed check yields `204`, and the card switches to the invitation variant.
 
 ![Sequence diagram for showing the featured event](diagrams/sequence-show-featured.png)
+
+## Decisions (journey 17)
+
+- **Featured week**: Monday to Sunday in Toronto time. The featured event is the published, not cancelled event
+  marked `Event.IsFeatured` that starts in the current week, the soonest if several are marked. The existing flag
+  stands in for the design's `FeaturedEvent` table, which is not needed while one flag per event does the job.
+- **Marking an event featured**: no requirement or mock defines that action, so it stays a data change (the seed
+  features Azure Data & AI Day GTA). A moderator screen for it is deferred.
+- **Primary action**: always the event's page. A paid event reads "Get tickets · $49"; a free one reads "See the
+  event".
+- **Description**: the first paragraph only.
+- **Failure**: if the featured request fails, the card keeps its skeleton frame and the rest of the page goes on.
+

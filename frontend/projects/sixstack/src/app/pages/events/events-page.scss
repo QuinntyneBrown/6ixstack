@@ -7,6 +7,13 @@
   padding-block: var(--sx-space-12) var(--sx-space-10);
   align-items: end;
 }
+// The featured card sits beside the headline from 1024 px (L2-006).
+@media (min-width: 64rem) {
+  .hero {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    padding-block: var(--sx-space-16) var(--sx-space-12);
+  }
+}
 .hero__title {
   font: var(--fontWeightSemibold) var(--fontSizeHero1000) / 1.02 var(--fontFamilyBase);
   letter-spacing: -0.035em;

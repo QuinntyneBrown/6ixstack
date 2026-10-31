@@ -1,0 +1,1 @@
+The feature card puts this week's featured event beside the events headline: its date, title, organizer, where it happens and one primary action. With nothing featured it invites organizers to submit. It is an ink card in light theme and a raised surface in dark.

@@ -20,6 +20,7 @@ export class EventsPage {
   readonly getCalendarFeed: Locator;
   readonly errorAlert: Locator;
   readonly dimmedDays: Locator;
+  readonly featured: FeatureCardPart;
 
   constructor(private readonly page: Page) {
     this.shell = new AppShell(page);
@@ -37,6 +38,7 @@ export class EventsPage {
     this.getCalendarFeed = page.getByRole('button', { name: 'Get a calendar feed' });
     this.errorAlert = page.getByRole('alert').filter({ hasText: "We couldn't load events" });
     this.dimmedDays = page.locator('.day-group--dim');
+    this.featured = new FeatureCardPart(page.locator('.feature-card'));
   }
 
   async open(query = ''): Promise<void> {
@@ -179,5 +181,32 @@ export class EventRowPart {
   }
   badge(text: string): Locator {
     return this.root.locator('.badge', { hasText: text });
+  }
+}
+
+/** The featured card beside the hero headline (L2-006). */
+export class FeatureCardPart {
+  readonly label: Locator;
+  readonly month: Locator;
+  readonly day: Locator;
+  readonly title: Locator;
+  readonly organizer: Locator;
+  readonly description: Locator;
+  readonly meta: Locator;
+  readonly when: Locator;
+  readonly action: Locator;
+  readonly skeleton: Locator;
+
+  constructor(readonly root: Locator) {
+    this.label = root.locator('.feature-card__label');
+    this.month = root.locator('.date-tile__month');
+    this.day = root.locator('.date-tile__day');
+    this.title = root.locator('.feature-card__title');
+    this.organizer = root.locator('.feature-card__org');
+    this.description = root.locator('.feature-card__desc');
+    this.meta = root.locator('.feature-card__meta .meta-item');
+    this.when = root.locator('.feature-card__when');
+    this.action = root.locator('.feature-card__foot a');
+    this.skeleton = root.locator('sx-skeleton');
   }
 }

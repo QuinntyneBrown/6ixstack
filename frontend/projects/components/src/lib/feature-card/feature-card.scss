@@ -1,0 +1,90 @@
+// Ported from docs/mocks/assets/ui.css (.feature-card). An ink card in light, a raised surface in dark (L2-097).
+:host {
+  display: block;
+}
+.feature-card {
+  border-radius: var(--borderRadius2XLarge);
+  background: var(--sx-feature-card-background);
+  border: 1px solid var(--sx-feature-card-border);
+  color: var(--sx-feature-card-foreground);
+  padding: var(--spacingHorizontalXXL);
+}
+.feature-card__label {
+  margin: 0;
+  font: var(--sx-text-body-sm);
+  color: var(--sx-feature-card-foreground-muted);
+}
+.feature-card__head {
+  display: flex;
+  gap: var(--spacingHorizontalL);
+  align-items: flex-start;
+  margin-top: var(--spacingHorizontalXL);
+}
+.feature-card__lines {
+  display: grid;
+  flex: 1;
+  gap: var(--spacingHorizontalS);
+}
+.feature-card sx-date-tile {
+  --sx-date-tile-background: var(--sx-feature-card-tile);
+  --sx-date-tile-month: var(--sx-feature-card-foreground-muted);
+  --sx-date-tile-day: var(--sx-feature-card-foreground);
+}
+.feature-card__title {
+  margin: 0;
+  font: var(--fontWeightSemibold) var(--fontSizeBase600) / var(--lineHeightBase500) var(--fontFamilyBase);
+}
+.feature-card__title--invite {
+  margin-top: var(--spacingHorizontalXL);
+}
+.feature-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+.feature-card__title a:hover {
+  text-decoration: underline;
+}
+.feature-card__org {
+  margin: var(--spacingHorizontalXS) 0 0;
+  color: var(--sx-feature-card-foreground-muted);
+  font: var(--sx-text-body-sm);
+}
+.feature-card__desc {
+  margin: var(--spacingHorizontalXL) 0 0;
+  color: var(--sx-feature-card-foreground-muted);
+  font: var(--sx-text-body-sm);
+  line-height: 1.6;
+}
+.feature-card__meta {
+  margin-top: var(--spacingHorizontalXL);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalS);
+  font: var(--sx-text-body-sm);
+  color: var(--sx-feature-card-foreground-muted);
+}
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalSNudge);
+}
+.meta-item--stream sx-icon {
+  color: var(--colorBrandForeground1);
+}
+.feature-card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalM);
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--spacingHorizontalXXL);
+}
+.feature-card__when {
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeBase300);
+  color: var(--sx-feature-card-foreground-muted);
+}
+.feature-card :focus-visible {
+  outline: var(--sx-focus-ring-width) solid var(--sx-feature-card-foreground);
+  outline-offset: 2px;
+}
