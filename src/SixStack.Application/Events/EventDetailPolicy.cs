@@ -18,7 +18,7 @@ public static class EventDetailPolicy
 
     private static readonly CultureInfo En = CultureInfo.GetCultureInfo("en-US");
 
-    public static EventDetailDto Build(Event e, Event? nextEvent, DateTimeOffset now)
+    public static EventDetailDto Build(Event e, Event? nextEvent, DateTimeOffset now, string publicBaseUrl)
     {
         var community = e.Community!;
         var state = e.IsCancelled ? "cancelled" : e.IsPast(now) ? "past" : "upcoming";
@@ -65,6 +65,15 @@ public static class EventDetailPolicy
                 new PrimaryActionDto(e.PriceCents > 0 ? "Get tickets" : "Register", actions.Primary.Url))
             : null;
 
+        var place = e.Format == EventFormat.Streaming || e.Venue is null ? "Streaming online" : e.Venue.Name;
+        var url = $"{publicBaseUrl.TrimEnd('/')}/events/{e.Slug}";
+        var calendar = new CalendarDto(
+            $"{e.Title} · {startLocal.ToString("ddd, MMM d", En)}, {TorontoTime.Time(e.StartsAtUtc)} – {TorontoTime.Time(e.EndsAtUtc)} ET · {place}",
+            e.StartsAtUtc,
+            e.EndsAtUtc,
+            venue is null ? "Streaming online" : $"{venue.Name}, {venue.Address}",
+            $"{e.Description}\n\n{url}");
+
         return new EventDetailDto(
             e.Slug,
             e.Title,
@@ -79,7 +88,8 @@ public static class EventDetailPolicy
             [.. e.Speakers.OrderBy(s => s.Order).Select(s => new SpeakerSummaryDto(s.Speaker!.Slug, s.Speaker.Name, s.Speaker.Initials, s.Speaker.Role))],
             actions,
             alerts,
-            docked);
+            docked,
+            calendar);
     }
 
     private static EventActionsDto Actions(Event e, string state, string amount, DateTimeOffset now, Community community)

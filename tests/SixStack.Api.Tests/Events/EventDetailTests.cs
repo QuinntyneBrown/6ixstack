@@ -67,6 +67,21 @@ public sealed class EventDetailTests(ApiFactory factory) : IClassFixture<ApiFact
     }
 
     [Fact]
+    public async Task Carries_what_calendar_apps_need()
+    {
+        var calendar = (await Get("azure-data-ai-day-gta")).GetProperty("calendar");
+        var stream = (await Get("azure-ai-foundry-shipping-agents")).GetProperty("calendar");
+
+        Assert.Equal("Azure Data & AI Day GTA · Thu, Nov 5, 9:00 AM – 5:00 PM ET · Living Arts Centre", Str(calendar, "summary"));
+        Assert.Equal("2026-11-05T14:00:00+00:00", Str(calendar, "startsAtUtc"));
+        Assert.Equal("2026-11-05T22:00:00+00:00", Str(calendar, "endsAtUtc"));
+        Assert.Equal("Living Arts Centre, 4141 Living Arts Dr, Mississauga", Str(calendar, "location"));
+        Assert.EndsWith("https://6ixstack.dev/events/azure-data-ai-day-gta", Str(calendar, "details"));
+        Assert.EndsWith("· Streaming online", Str(stream, "summary"));
+        Assert.Equal("Streaming online", Str(stream, "location"));
+    }
+
+    [Fact]
     public async Task Free_event_offers_register()
     {
         var primary = (await Get("whats-new-in-dotnet-11-previews")).GetProperty("actions").GetProperty("primary");

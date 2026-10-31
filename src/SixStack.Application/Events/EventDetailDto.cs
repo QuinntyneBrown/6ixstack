@@ -14,7 +14,11 @@ public sealed record EventDetailDto(
     IReadOnlyList<SpeakerSummaryDto> Speakers,
     EventActionsDto Actions,
     IReadOnlyList<EventAlertDto> Alerts,
-    DockedBarDto? DockedBar);
+    DockedBarDto? DockedBar,
+    CalendarDto Calendar);
+
+/// <summary>What the Add to my calendar dialog needs: its summary line and the event for Google and Outlook links.</summary>
+public sealed record CalendarDto(string Summary, DateTimeOffset StartsAtUtc, DateTimeOffset EndsAtUtc, string Location, string Details);
 
 public sealed record CommunityLinkDto(string Slug, string Name);
 

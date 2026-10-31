@@ -1,5 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using SixStack.Application.Calendar;
 using SixStack.Application.Common.Exceptions;
 using SixStack.Application.Common.Interfaces;
 using SixStack.Domain.Enums;
@@ -9,7 +11,7 @@ namespace SixStack.Application.Events;
 public sealed record GetEventDetailQuery(string Slug) : IRequest<EventDetailDto>;
 
 /// <summary>One published event by slug; unknown or unpublished events are not found (L2-024).</summary>
-public sealed class GetEventDetailQueryHandler(IAppDbContext db, IClock clock) : IRequestHandler<GetEventDetailQuery, EventDetailDto>
+public sealed class GetEventDetailQueryHandler(IAppDbContext db, IClock clock, IOptions<SiteOptions> site) : IRequestHandler<GetEventDetailQuery, EventDetailDto>
 {
     public async Task<EventDetailDto> Handle(GetEventDetailQuery request, CancellationToken cancellationToken)
     {
@@ -27,6 +29,6 @@ public sealed class GetEventDetailQueryHandler(IAppDbContext db, IClock clock) :
                 .FirstOrDefaultAsync(cancellationToken)
             : null;
 
-        return EventDetailPolicy.Build(e, next, now);
+        return EventDetailPolicy.Build(e, next, now, site.Value.PublicBaseUrl);
     }
 }
