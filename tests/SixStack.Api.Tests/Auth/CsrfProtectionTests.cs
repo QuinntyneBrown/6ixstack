@@ -29,6 +29,7 @@ public sealed class CsrfProtectionTests(CsrfProtectionTests.Factory factory) : I
     {
         var client = factory.CreateHttpsClient();
         await client.SignInAsAsync(HttpClientExtensions.Organizer);
+        client.DefaultRequestHeaders.Remove("X-XSRF-TOKEN"); // the sign-in helper echoes the token; this write has none
         CsrfProbeController.Calls = 0;
 
         var response = await client.PostAsync("/api/csrf-probe", null);

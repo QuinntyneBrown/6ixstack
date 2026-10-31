@@ -22,6 +22,40 @@ namespace SixStack.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SixStack.Domain.Entities.AuditEntry", b =>
+                {
+                    b.Property<long>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Sequence"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<Guid?>("ActorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("OccurredAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("TargetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TargetType")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.HasKey("Sequence");
+
+                    b.HasIndex("TargetId");
+
+                    b.ToTable("AuditEntries");
+                });
+
             modelBuilder.Entity("SixStack.Domain.Entities.Community", b =>
                 {
                     b.Property<Guid>("Id")
@@ -226,6 +260,10 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Property<int>("Topics")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CommunityId");
@@ -292,6 +330,43 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.ToTable("ModerationDecisions");
                 });
 
+            modelBuilder.Entity("SixStack.Domain.Entities.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Link")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTimeOffset?>("ReadAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("RecipientEmail")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("nvarchar(254)");
+
+                    b.Property<string>("Text")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientEmail", "CreatedAtUtc");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("SixStack.Domain.Entities.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -336,6 +411,22 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.HasIndex("ProcessedAtUtc", "FailedAtUtc", "NextAttemptAtUtc");
 
                     b.ToTable("OutboxMessages");
+                });
+
+            modelBuilder.Entity("SixStack.Domain.Entities.ReviewPresence", b =>
+                {
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ModeratorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("LastSeenAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("EventId", "ModeratorId");
+
+                    b.ToTable("ReviewPresences");
                 });
 
             modelBuilder.Entity("SixStack.Domain.Entities.SecurityToken", b =>

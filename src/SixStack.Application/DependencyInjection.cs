@@ -19,6 +19,8 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(assembly);
         services.AddScoped<ISubmissionCheckScheduler, SubmissionCheckScheduler>();
         services.AddScoped<IOutboxMessageHandler<RunSubmissionChecks>, RunSubmissionChecksHandler>();
+        services.AddScoped<IOutboxMessageHandler<SubmissionApprovedNotification>, SubmissionApprovedNotificationHandler>();
+        services.AddScoped<IAuditLog, Common.AuditLog>();
         return services;
     }
 }

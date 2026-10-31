@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { DOCUMENT } from '@angular/common';
-import { Directive, ElementRef, inject } from '@angular/core';
+import { Directive, ElementRef, inject, output } from '@angular/core';
 import { modalDialogConfig } from 'components';
 import {
   KEYBOARD_SHORTCUTS_TITLE_ID,
@@ -8,8 +8,8 @@ import {
 } from '../../dialogs/keyboard-shortcuts/keyboard-shortcuts-dialog';
 
 /**
- * Review queue shortcuts (L2-064): J and K move between cards and ? lists the shortcuts. A and R arrive with approve
- * and reject. Keys are ignored while typing, with a modifier held, or while a dialog is open.
+ * Review queue shortcuts (L2-064): J and K move between cards, A approves the focused card and ? lists the
+ * shortcuts. R arrives with reject. Keys are ignored while typing, with a modifier held, or while a dialog is open.
  */
 @Directive({
   selector: '[sxReviewQueueShortcuts]',
@@ -19,6 +19,9 @@ export class ReviewQueueShortcuts {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly dialog = inject(Dialog);
   private readonly document = inject(DOCUMENT);
+
+  /** The focused card's element, when A is pressed on it. */
+  readonly approveRequested = output<HTMLElement>();
 
   protected onKey(event: KeyboardEvent): void {
     if (
@@ -35,6 +38,10 @@ export class ReviewQueueShortcuts {
       this.move(1);
     } else if (event.key === 'k' || event.key === 'K') {
       this.move(-1);
+    } else if (event.key === 'a' || event.key === 'A') {
+      const card = this.focusedCard();
+      if (!card) return;
+      this.approveRequested.emit(card);
     } else if (event.key === '?') {
       this.dialog.open(
         KeyboardShortcutsDialog,
@@ -44,6 +51,11 @@ export class ReviewQueueShortcuts {
       return;
     }
     event.preventDefault();
+  }
+
+  private focusedCard(): HTMLElement | null {
+    const active = this.document.activeElement;
+    return active instanceof HTMLElement ? active.closest<HTMLElement>('.review-card') : null;
   }
 
   private move(step: number): void {

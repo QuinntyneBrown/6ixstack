@@ -22,6 +22,7 @@ public sealed class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.Property(e => e.SubmitterEmail).HasMaxLength(254);
         builder.Property(e => e.CancellationReason).HasMaxLength(500);
         builder.Property(e => e.OrganizerName).HasMaxLength(120);
+        builder.Property(e => e.Version).IsConcurrencyToken();
         builder.HasIndex(e => e.SubmitterEmail);
         builder.Property(e => e.PriceNote).HasMaxLength(120);
         builder.Property(e => e.PriceDetail).HasMaxLength(200);

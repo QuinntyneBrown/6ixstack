@@ -1,5 +1,6 @@
 import { expect, test } from '../fixtures';
 import { ReviewQueuePage } from '../pages/review-queue.page';
+import { approvalsSucceed } from '../support/moderation';
 import { MODERATOR, ORGANIZER, signInAs } from '../support/session';
 import { emptyQueue, failQueue, slowQueue, stubQueue, withPendingChecks } from '../support/stub-api';
 
@@ -67,6 +68,38 @@ test.describe('Review queue visuals', () => {
     await queue.open();
     await expect(queue.cards).toHaveCount(4);
     await expect(page).toHaveScreenshot('review-queue-default-phone.png', { fullPage: true });
+  });
+
+  test('approved toast with Undo', async ({ page }) => {
+    await stubQueue(page, 'review-queue');
+    await approvalsSucceed(page, { title: 'Rust in production at scale', organizer: 'Toronto Rust Meetup' });
+    const queue = new ReviewQueuePage(page);
+    await queue.open();
+    await queue.card('Rust in production at scale').approve.click();
+    const toast = queue.toast('Approved “Rust in production at scale”');
+    await expect(toast).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(toast).toHaveScreenshot('moderation-toast-success-light.png', {
+      mask: [toast.locator('.toast__progress')],
+    });
+  });
+
+  test('approved with a possible duplicate toast', async ({ page }) => {
+    await stubQueue(page, 'review-queue');
+    await approvalsSucceed(page, {
+      title: 'Kubernetes on a budget',
+      organizer: 'Cloud Native Toronto',
+      duplicate: { slug: 'cloud-native-toronto-november-meetup', dateLabel: 'Nov 19' },
+    });
+    const queue = new ReviewQueuePage(page);
+    await queue.open();
+    await queue.card('Kubernetes on a budget').approve.click();
+    const toast = queue.toast('Approved with a possible duplicate');
+    await expect(toast).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(toast).toHaveScreenshot('moderation-toast-warning-light.png', {
+      mask: [toast.locator('.toast__progress')],
+    });
   });
 
   test('keyboard shortcuts dialog', async ({ page }) => {

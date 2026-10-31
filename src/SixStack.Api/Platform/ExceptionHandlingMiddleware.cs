@@ -53,6 +53,16 @@ public sealed class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Ex
             case AntiforgeryValidationException:
                 problem = new ProblemDetails { Status = StatusCodes.Status400BadRequest, Title = "Your session token is missing or out of date. Reload the page and try again." };
                 break;
+            case DecisionConflictException conflict:
+                problem = new ProblemDetails
+                {
+                    Status = StatusCodes.Status409Conflict,
+                    Title = conflict.Reason == "too-late" ? "It's too late to undo this." : "Someone already decided this.",
+                };
+                problem.Extensions["decision"] = conflict.Decision;
+                problem.Extensions["decidedBy"] = conflict.DecidedBy;
+                problem.Extensions["reason"] = conflict.Reason;
+                break;
             case NotFoundException:
                 problem = new ProblemDetails { Status = StatusCodes.Status404NotFound, Title = "Not found." };
                 break;

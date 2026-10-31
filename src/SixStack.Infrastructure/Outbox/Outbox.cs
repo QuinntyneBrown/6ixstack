@@ -7,13 +7,15 @@ namespace SixStack.Infrastructure.Outbox;
 
 public sealed class Outbox(IAppDbContext db, IClock clock) : IOutbox
 {
-    public void Enqueue<TMessage>(TMessage message) where TMessage : notnull
+    public void Enqueue<TMessage>(TMessage message) where TMessage : notnull => Enqueue(message, clock.UtcNow);
+
+    public void Enqueue<TMessage>(TMessage message, DateTimeOffset notBeforeUtc) where TMessage : notnull
     {
         db.OutboxMessages.Add(new OutboxMessage
         {
             Type = OutboxTypes.NameOf(typeof(TMessage)),
             Payload = JsonSerializer.Serialize(message),
-            NextAttemptAtUtc = clock.UtcNow,
+            NextAttemptAtUtc = notBeforeUtc,
             CorrelationId = Activity.Current?.TraceId.ToString() ?? string.Empty,
         });
     }

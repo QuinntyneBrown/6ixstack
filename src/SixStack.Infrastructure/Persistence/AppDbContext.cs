@@ -19,6 +19,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Session> Sessions => Set<Session>();
     public DbSet<SubmissionCheck> SubmissionChecks => Set<SubmissionCheck>();
     public DbSet<ModerationDecision> ModerationDecisions => Set<ModerationDecision>();
+    public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<AuditEntry> AuditEntries => Set<AuditEntry>();
+    public DbSet<ReviewPresence> ReviewPresences => Set<ReviewPresence>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

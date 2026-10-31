@@ -75,4 +75,39 @@ public class Event
     public bool IsCancelled => CancelledAtUtc is not null;
 
     public bool IsPast(DateTimeOffset now) => EndsAtUtc <= now;
+
+    /// <summary>Changes on every moderation decision, so racing decisions commit once (L2-063).</summary>
+    public Guid Version { get; set; } = Guid.NewGuid();
+
+    /// <summary>A moderator's approval: published now, or held until the sender verifies their email (L2-060, L2-085).</summary>
+    public void Approve(DateTimeOffset now, bool senderVerified)
+    {
+        if (Status != EventStatus.InReview || ApprovedAtUtc is not null)
+        {
+            throw new Exceptions.InvalidStatusTransitionException(Status, "approve");
+        }
+
+        ApprovedAtUtc = now;
+        if (senderVerified)
+        {
+            Status = EventStatus.Published;
+            PublishedAtUtc = now;
+        }
+
+        Version = Guid.NewGuid();
+    }
+
+    /// <summary>Undo within the window: back to In review, no longer public.</summary>
+    public void UndoApproval()
+    {
+        if (ApprovedAtUtc is null || Status is not (EventStatus.Published or EventStatus.InReview))
+        {
+            throw new Exceptions.InvalidStatusTransitionException(Status, "undo the approval of");
+        }
+
+        Status = EventStatus.InReview;
+        ApprovedAtUtc = null;
+        PublishedAtUtc = null;
+        Version = Guid.NewGuid();
+    }
 }

@@ -10,16 +10,17 @@ test.describe('Load more events', () => {
     const events = new EventsPage(page);
     await events.open();
 
-    await expect(events.loadMoreCaption).toHaveText('Showing 14 of 19 events through November 26');
+    await expect(events.loadMoreCaption).toHaveText('Showing 14 of 20 events through November 26');
 
     await events.showMore.click();
 
-    await expect(events.rows).toHaveCount(19);
+    await expect(events.rows).toHaveCount(20);
     expect(await events.dayHeadingTexts()).toContain('Tuesday November 17');
     expect((await events.rowTitles()).slice(14)).toEqual([
       'Vector search in Postgres',
       'Minimal APIs in practice',
       'Angular Toronto: lightning talks',
+      'Cloud Native Toronto: November meetup',
       're:Invent keynote watch party',
       'Testing React in 2027',
     ]);
