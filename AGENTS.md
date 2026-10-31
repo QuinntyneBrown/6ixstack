@@ -21,7 +21,8 @@ frontend/                     Angular workspace (package.json, angular.json, lin
     api/                      API service contracts, injection tokens, implementations
     components/               sx-* component library; tokens in src/lib/tokens/, stories/ for Storybook
     perf-test/                perf scenarios in src/scenarios/
-  e2e/                        Playwright: tests/, pages/ (one page object per screen), visual baselines
+  e2e/                        Playwright: tests/, pages/ (one page object per screen), visual baselines,
+                              demo/ (demo-video tooling and journeys/<nn>-<slug>.ts)
 docs/
   assets/                     repository assets, such as the logo the README shows
   specs/                      L1 and L2 requirements
@@ -30,6 +31,8 @@ docs/
   design-system/              design system extracted from mocks (design artifact)
   journey.md                  planned user journeys, in value order
   prompts/                    ordered implementation prompts: 00 scaffold, then one per journey in journey.md
+  adr/                        architecture decision records for choices the designs leave open
+  demos/                      one folder per journey: narrated demo.mp4 (Git LFS), screenshots, narration, credits
 .claude/skills/, .agents/skills/  agent skills; keep both copies in sync
 .github/                      CI workflows and copilot-instructions.md
 ```

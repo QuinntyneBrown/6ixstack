@@ -480,3 +480,17 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# 6ixstack
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/playwright-report/
+frontend/test-results/
+frontend/e2e/.data/
+frontend/e2e/demo/.venv/
+frontend/e2e/demo/.cache/
+*.db
+*.db-shm
+*.db-wal
+docs/mocks/.cache/

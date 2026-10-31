@@ -1,0 +1,16 @@
+dist
+node_modules
+.angular
+coverage
+playwright-report
+test-results
+storybook-static
+e2e/**/*-snapshots
+e2e/.auth
+package-lock.json
+projects/components/src/lib/styles/_tokens.scss
+projects/components/src/lib/tokens/tokens.ts
+*.png
+*.mp3
+*.mp4
+*.wav
