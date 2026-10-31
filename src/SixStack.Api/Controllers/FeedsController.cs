@@ -2,6 +2,8 @@ using System.Text;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using SixStack.Api.Auth;
 using SixStack.Application.Feeds;
 
 namespace SixStack.Api.Controllers;
@@ -13,6 +15,11 @@ public sealed class FeedsController(ISender sender) : ControllerBase
     /// <summary>The ready-made feeds with their upcoming counts (L2-034).</summary>
     [HttpGet("api/feeds")]
     public Task<ReadyMadeFeedsDto> ReadyMade(CancellationToken cancellationToken) => sender.Send(new GetReadyMadeFeedsQuery(), cancellationToken);
+
+    /// <summary>Creates a custom feed link (L2-035); 400 without a topic, 429 beyond 30 an hour per address.</summary>
+    [HttpPost("api/feeds")]
+    [EnableRateLimiting(SignInRateLimit.FeedCreationPolicy)]
+    public Task<FeedLinkDto> Create(CreateFeedCommand command, CancellationToken cancellationToken) => sender.Send(command, cancellationToken);
 
     /// <summary>A calendar feed as iCalendar text (L2-036): 304 for a matching ETag, 404 for an unknown feed.</summary>
     [HttpGet("feeds/{slug}.ics")]
