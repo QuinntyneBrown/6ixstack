@@ -1,10 +1,14 @@
 @use 'breakpoints' as bp;
 
 // Ported from docs/mocks/assets/ui.css (.site-header, .brand, .nav-link); breakpoints per ADR 0004.
-.site-header {
+// The host is the sticky box: a sticky element can only stick within its parent, so it cannot be the inner header.
+:host {
+  display: block;
   position: sticky;
   top: 0;
   z-index: var(--sx-z-sticky);
+}
+.site-header {
   background: var(--sx-header-background);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--colorNeutralStroke2);

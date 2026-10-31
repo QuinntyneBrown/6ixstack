@@ -17,6 +17,16 @@ test.describe('App shell', () => {
     await expect(events.shell.menuButton).toBeHidden();
   });
 
+  test('the header stays at the top while the page scrolls', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+
+    await events.shell.scrollDown(800);
+
+    await expect(events.shell.header).toBeInViewport();
+    expect(await events.shell.headerTop()).toBe(0);
+  });
+
   test('footer shows the tagline and footer navigation', async ({ page }) => {
     const events = new EventsPage(page);
     await events.open();

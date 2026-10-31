@@ -96,6 +96,15 @@ export class AppShell {
     });
   }
 
+  /** Distance of the header's top edge from the top of the viewport. */
+  async headerTop(): Promise<number> {
+    return (await this.header.boundingBox())?.y ?? Number.NaN;
+  }
+
+  async scrollDown(px: number): Promise<void> {
+    await this.page.evaluate((y) => window.scrollTo(0, y), px);
+  }
+
   async hasHorizontalScroll(): Promise<boolean> {
     return this.page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
