@@ -185,3 +185,18 @@ failure keeps the toolbar values and offers Try again. "Show 20 more" appends
 the next 20 cards and updates the caption.
 
 ![Sequence diagram for loading, paging and retrying the communities directory](diagrams/sequence-load-states.png)
+
+## Decisions (journey 18)
+
+- **Listed communities** are those with at least one published event. A submitter's placeholder community, such as
+  an unverified sender's, stays out of the directory. The seed lists 15 (L2-029 and L2-030 use that number); the
+  mocks keep 86 as their illustration.
+- **Query values**: `sort` is `members`, `next` or `name`; `topic` is a topic key; `city` is a community city,
+  including "Streaming". Unknown topic or sort values answer 400; the page ignores unknown values in its URL.
+- **Next event**: the soonest published, not cancelled event that has not started. Communities without one sort last
+  by next event and show no Next line.
+- **Search**: case-insensitive on the name and the topic names. It runs in memory over the listed communities, which
+  stay few. Move it to `LIKE` in the database when the directory grows past a few hundred.
+- `DirectoryCard` renders the next-event line and topics from inputs rather than projected content, so its styles
+  apply.
+

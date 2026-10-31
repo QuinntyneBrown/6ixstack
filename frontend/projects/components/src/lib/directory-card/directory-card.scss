@@ -1,0 +1,72 @@
+// Ported from docs/mocks/assets/ui.css (.dir-card).
+:host {
+  display: block;
+  height: 100%;
+}
+.dir-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalM);
+  height: 100%;
+  padding: var(--spacingHorizontalXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--colorNeutralBackground1);
+  transition:
+    border-color var(--durationFast) var(--curveEasyEase),
+    box-shadow var(--durationFast) var(--curveEasyEase);
+}
+.dir-card:hover {
+  border-color: var(--colorNeutralStroke1);
+  box-shadow: var(--shadow4);
+}
+.dir-card:has(a:focus-visible) {
+  outline: var(--sx-focus-ring-width) solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}
+.dir-card__head {
+  display: flex;
+  gap: var(--spacingHorizontalM);
+  align-items: center;
+  min-width: 0;
+}
+.dir-card__title {
+  margin: 0;
+  font: var(--fontWeightSemibold) var(--fontSizeBase400) / var(--lineHeightBase400) var(--fontFamilyBase);
+  overflow-wrap: anywhere;
+}
+.dir-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+.dir-card__title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.dir-card__title a:focus-visible {
+  outline: none;
+}
+.dir-card__sub,
+.dir-card__desc {
+  margin: 0;
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}
+.dir-card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS) var(--spacingHorizontalL);
+  margin-top: auto;
+  padding-top: var(--spacingHorizontalM);
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalSNudge);
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}

@@ -389,3 +389,23 @@ export async function failFeatured(page: Page): Promise<void> {
     route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' }),
   );
 }
+
+/** Makes GET /api/communities fail until the returned function is called. */
+export async function failCommunities(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+  await page.route('**/api/communities*', handler);
+  return () => page.unroute('**/api/communities*', handler);
+}
+
+/** Delays GET /api/communities by `ms`. */
+export async function slowCommunities(page: Page, ms: number): Promise<void> {
+  await page.route(
+    '**/api/communities*',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
+}

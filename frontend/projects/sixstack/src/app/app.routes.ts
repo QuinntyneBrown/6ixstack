@@ -37,6 +37,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/sign-in/sign-in-page').then((m) => m.SignInPage),
   },
   {
+    path: 'communities',
+    title: 'Communities · 6ixstack',
+    loadComponent: () => import('./pages/communities/communities-page').then((m) => m.CommunitiesPage),
+  },
+  {
     path: 'organize',
     title: 'Your events · 6ixstack',
     data: { hideSubmit: true },

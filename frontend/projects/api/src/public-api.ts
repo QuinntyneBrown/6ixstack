@@ -13,3 +13,4 @@ export * from './lib/auth/auth-api';
 export * from './lib/moderation/moderation-api';
 export * from './lib/feeds/feeds-api';
 export * from './lib/organizer/organizer-events-api';
+export * from './lib/directory/communities-api';

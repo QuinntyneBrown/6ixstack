@@ -1,0 +1,1 @@
+A directory card shows one community or speaker in a grid: logo tile, name, a sub line, a short description, a meta line such as the next event, and topics. The name is the card's only link, and activating anywhere on the card opens it, so the card has one tab stop.
