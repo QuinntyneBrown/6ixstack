@@ -37,4 +37,22 @@ test.describe('Add to my calendar states', () => {
     const file = await dialog.download('Apple Calendar');
     expect(file.suggestedFilename()).toBe('azure-data-ai-day-gta.ics');
   });
+
+  test('a toast raised while the dialog is open shows above its backdrop', async ({ page }) => {
+    const detail = new EventDetailPage(page);
+    await detail.open('azure-data-ai-day-gta');
+    const dialog = await detail.openAddToCalendar();
+    await dialog.download('Apple Calendar');
+    const again = await detail.openAddToCalendar();
+
+    const toast = page.locator('.toast').first();
+    await expect(toast).toBeVisible();
+    const box = (await toast.boundingBox())!;
+    const topmost = await page.evaluate(
+      ([x, y]) => document.elementFromPoint(x, y)?.closest('.toast') !== null,
+      [box.x + box.width / 2, box.y + box.height / 2],
+    );
+    expect(topmost).toBe(true);
+    await expect(again.dialog).toBeVisible();
+  });
 });

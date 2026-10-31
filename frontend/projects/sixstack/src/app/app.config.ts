@@ -6,6 +6,7 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
+import { provideSixstackOverlays } from 'components';
 import {
   apiErrorInterceptor,
   EVENTS_API,
@@ -21,6 +22,7 @@ import { MaintenanceNoticeSource } from './shell/banners/maintenance-notice-sour
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideSixstackOverlays(),
     provideRouter(
       routes,
       withComponentInputBinding(),
