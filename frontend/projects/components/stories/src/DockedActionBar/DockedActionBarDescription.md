@@ -1,0 +1,1 @@
+A docked action bar sticks to the bottom of the screen on phones (below 768 px) with a short summary — day, time, price and going count on an event — and the primary action in `[slot=action]`, so it stays in reach while reading (L2-023). From 768 px it is hidden, because the action sits in the page's side panel.

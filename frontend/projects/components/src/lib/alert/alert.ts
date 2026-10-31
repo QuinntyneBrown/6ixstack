@@ -5,11 +5,12 @@ import { IconName } from '../icon/icons';
 
 export type AlertKind = 'info' | 'success' | 'warning' | 'danger';
 
-/** A button that runs `run`, or a link to `link` (an app route). */
+/** A button that runs `run`, a link to `link` (an app route), or `href` (another site, opened in a new tab). */
 export interface AlertAction {
   label: string;
   run?: () => void;
   link?: string;
+  href?: string;
 }
 
 const ICONS: Record<AlertKind, IconName> = {
@@ -35,7 +36,9 @@ const ICONS: Record<AlertKind, IconName> = {
         @if (actions().length) {
           <div class="alert__actions">
             @for (action of actions(); track action.label) {
-              @if (action.link) {
+              @if (action.href) {
+                <a [href]="action.href" target="_blank" rel="noopener noreferrer">{{ action.label }}</a>
+              } @else if (action.link) {
                 <a [routerLink]="action.link">{{ action.label }}</a>
               } @else {
                 <button type="button" (click)="action.run?.()">{{ action.label }}</button>

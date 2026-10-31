@@ -8,6 +8,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/events/events-page').then((m) => m.EventsPage),
   },
   {
+    path: 'events/:slug',
+    title: 'Event · 6ixstack',
+    loadComponent: () => import('./pages/event-detail/event-detail-page').then((m) => m.EventDetailPage),
+  },
+  {
     path: '**',
     title: 'Page not found · 6ixstack',
     loadComponent: () => import('./pages/status/not-found-page').then((m) => m.NotFoundPage),

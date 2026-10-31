@@ -43,3 +43,32 @@ export async function stubEventPages(page: Page, first: string, second: string):
     }),
   );
 }
+
+/** Answers GET /api/events/{slug} with each fixture in turn (the last one repeats). */
+export async function stubEventDetail(page: Page, slug: string, ...fixtures: string[]): Promise<void> {
+  let call = 0;
+  await page.route(`**/api/events/${slug}`, (route) => {
+    const name = fixtures[Math.min(call++, fixtures.length - 1)];
+    return route.fulfill({
+      contentType: 'application/json',
+      body: readFileSync(resolve(__dirname, 'fixtures', `${name}.json`), 'utf8'),
+    });
+  });
+}
+
+/** Delays GET /api/events/{slug} by `ms`. */
+export async function slowEventDetail(page: Page, slug: string, ms: number): Promise<void> {
+  await page.route(`**/api/events/${slug}`, async (route) => {
+    const response = await route.fetch();
+    await new Promise((r) => setTimeout(r, ms));
+    await route.fulfill({ response });
+  });
+}
+
+/** Makes GET /api/events/{slug} fail with 500 until the returned function is called. */
+export async function failEventDetail(page: Page, slug: string): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+  await page.route(`**/api/events/${slug}`, handler);
+  return () => page.unroute(`**/api/events/${slug}`, handler);
+}

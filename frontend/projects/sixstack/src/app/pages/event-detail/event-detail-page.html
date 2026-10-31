@@ -1,0 +1,236 @@
+@if (isNotFound(state())) {
+  <sx-not-found-page />
+} @else if (state().status === 'failed') {
+  <sx-empty-state class="detail-error" icon="alert" title="This event didn't load" error>
+    <span slot="text">6ixstack didn't respond in time. Check your connection and try again.</span>
+    <ng-container slot="actions">
+      <button sx-button appearance="primary" type="button" (click)="retry()">Try again</button>
+      <a sx-button routerLink="/">Back to all events</a>
+    </ng-container>
+  </sx-empty-state>
+} @else if (state().data; as e) {
+  <a class="back-link" routerLink="/"><sx-icon name="arrow-left" size="sm" />All events</a>
+  <div class="page-grid">
+    <div class="detail-main">
+      <div class="detail-hero">
+        <sx-date-tile [month]="e.dateTile.month" [day]="e.dateTile.day" size="lg" />
+        <div>
+          <h1>{{ e.title }}</h1>
+          <p class="lead">
+            by <a [routerLink]="['/communities', e.community.slug]">{{ e.community.name }}</a>
+          </p>
+          <div class="chip-row">
+            @for (topic of topics(e); track topic) {
+              <sx-topic-tag [topic]="topic" />
+            }
+          </div>
+        </div>
+      </div>
+      @if (e.alerts.length) {
+        <div class="detail-alerts stack">
+          @for (alert of e.alerts; track alert.title) {
+            <sx-alert
+              [kind]="alert.kind"
+              [title]="alert.title"
+              [announce]="alert.kind === 'danger' ? 'alert' : null"
+              [actions]="alertActions(alert)"
+              >{{ alert.text }}</sx-alert
+            >
+          }
+        </div>
+      }
+      <div class="stack-gap">
+        <section class="prose" aria-labelledby="about-h">
+          <h2 id="about-h">About this event</h2>
+          <sx-description [text]="e.description" />
+        </section>
+        @if (e.agenda.length) {
+          <section aria-labelledby="agenda-h">
+            <h2 id="agenda-h" class="section-title">Agenda</h2>
+            <ol class="agenda">
+              @for (item of e.agenda; track $index) {
+                <li>
+                  <span class="agenda__time">{{ item.time }}</span
+                  ><span>{{ item.title }}</span>
+                </li>
+              }
+            </ol>
+          </section>
+        }
+        @if (e.speakers.length) {
+          <section aria-labelledby="spk-h">
+            <h2 id="spk-h" class="section-title">Speakers</h2>
+            <ul class="people">
+              @for (speaker of e.speakers; track speaker.slug) {
+                <li>
+                  <sx-person-link
+                    [name]="speaker.name"
+                    [role]="speaker.role"
+                    [initials]="speaker.initials"
+                    [link]="'/speakers/' + speaker.slug"
+                  />
+                </li>
+              }
+            </ul>
+          </section>
+        }
+        @if (e.format === 'streaming' && e.facts.stream; as stream) {
+          <section aria-labelledby="origin-h">
+            <h2 id="origin-h" class="section-title">Where it streams from</h2>
+            <div class="facts">
+              <sx-fact-item icon="radio" [label]="stream.label">{{ stream.note }}</sx-fact-item>
+            </div>
+          </section>
+        }
+        @if (e.facts.venue; as venue) {
+          <section aria-labelledby="venue-h">
+            <h2 id="venue-h" class="section-title">Venue</h2>
+            <div class="facts">
+              <sx-fact-item icon="pin" [label]="venue.name">{{ venue.address }}</sx-fact-item>
+              @if (venue.travelNotes) {
+                <sx-fact-item icon="compass" label="Getting there">{{ venue.travelNotes }}</sx-fact-item>
+              }
+            </div>
+          </section>
+        }
+      </div>
+    </div>
+    <aside class="stack" aria-label="Event details">
+      <div class="facts">
+        <sx-fact-item icon="calendar" [label]="e.facts.when.dateLabel">
+          @if (e.facts.when.suffix === 'cancelled') {
+            <s>{{ e.facts.when.timeRange }}</s> · cancelled
+          } @else {
+            {{ e.facts.when.timeRange }}
+            @if (e.facts.when.sourceTime) {
+              · {{ e.facts.when.sourceTime }} where it's hosted
+            }
+            @if (e.facts.when.suffix === 'ended') {
+              · ended
+            }
+          }
+        </sx-fact-item>
+        @if (e.facts.venue; as venue) {
+          <sx-fact-item icon="pin" [label]="venue.name">
+            {{ venue.address }} ·
+            <a [href]="venue.directionsUrl" target="_blank" rel="noopener noreferrer">Directions</a>
+          </sx-fact-item>
+        }
+        @if (e.facts.stream; as stream) {
+          <sx-fact-item icon="radio" [label]="stream.label">{{ stream.note }}</sx-fact-item>
+        }
+        @if (e.facts.price; as price) {
+          <sx-fact-item icon="ticket" [label]="price.label">{{ price.note }}</sx-fact-item>
+        }
+        @if (e.facts.attendance; as attendance) {
+          <sx-fact-item icon="users" [label]="attendance.label">{{ attendance.note }}</sx-fact-item>
+        }
+      </div>
+      <div class="stack stack--sm detail-actions">
+        @if (e.actions.primary; as primary) {
+          <a
+            sx-button
+            appearance="primary"
+            size="lg"
+            block
+            [href]="primary.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            >{{ primary.label }}<sx-icon name="external" size="sm"
+          /></a>
+        }
+        @if (e.actions.join?.url; as joinUrl) {
+          <a
+            sx-button
+            appearance="primary"
+            size="lg"
+            block
+            [href]="joinUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><sx-icon name="video" />{{ e.actions.join!.label }}</a
+          >
+        }
+        @if (e.actions.recordingUrl; as recording) {
+          <a sx-button appearance="primary" block [href]="recording" target="_blank" rel="noopener noreferrer"
+            ><sx-icon name="video" />Watch the recording</a
+          >
+        }
+        @if (e.actions.slidesUrl; as slides) {
+          <a sx-button block [href]="slides" target="_blank" rel="noopener noreferrer"
+            ><sx-icon name="download" />Slides and code</a
+          >
+        }
+        @if (e.actions.findAnother; as findAnother) {
+          <a
+            sx-button
+            appearance="primary"
+            block
+            [routerLink]="findAnotherPath(findAnother.href)"
+            [queryParams]="findAnotherQuery(findAnother.href)"
+            >{{ findAnother.label }}</a
+          >
+        }
+        @if (e.actions.follow; as follow) {
+          <a sx-button block [routerLink]="follow.href">{{ follow.label }}</a>
+        }
+        @if (e.actions.addToCalendar) {
+          <button sx-button block type="button"><sx-icon name="calendar-plus" />Add to my calendar</button>
+        }
+        @if (e.actions.share || e.actions.report) {
+          <div class="cluster detail-actions__secondary">
+            @if (e.actions.share) {
+              <button sx-button appearance="ghost" size="sm" type="button">
+                <sx-icon name="share" />Share
+              </button>
+            }
+            @if (e.actions.report) {
+              <button sx-button appearance="ghost" size="sm" type="button">
+                <sx-icon name="flag" />Report a problem
+              </button>
+            }
+          </div>
+        }
+        @if (e.actions.caption) {
+          <p class="text-caption">{{ e.actions.caption }}</p>
+        }
+      </div>
+    </aside>
+  </div>
+  @if (e.dockedBar; as bar) {
+    <sx-docked-action-bar [title]="bar.when" [summary]="bar.summary">
+      <a
+        slot="action"
+        sx-button
+        appearance="primary"
+        [href]="bar.action.url"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ bar.action.label }}</a
+      >
+    </sx-docked-action-bar>
+  }
+} @else if (slow()) {
+  <div class="page-grid detail-loading" aria-label="Loading the event">
+    <div class="detail-main">
+      <div class="detail-hero">
+        <sx-skeleton variant="rect" width="4.5rem" height="4.5rem" />
+        <div class="detail-loading__hero">
+          <sx-skeleton variant="title" width="70%" />
+          <sx-skeleton width="40%" />
+        </div>
+      </div>
+      <sx-skeleton width="90%" />
+      <sx-skeleton width="85%" />
+      <sx-skeleton width="60%" />
+    </div>
+    <aside class="stack" aria-label="Event details" aria-busy="true">
+      <div class="facts">
+        @for (row of [0, 1, 2, 3]; track row) {
+          <sx-skeleton width="80%" />
+        }
+      </div>
+      <sx-skeleton variant="rect" height="3rem" />
+    </aside>
+  </div>
+}

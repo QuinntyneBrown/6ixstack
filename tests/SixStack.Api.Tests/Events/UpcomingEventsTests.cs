@@ -44,7 +44,7 @@ public sealed class UpcomingEventsTests(ApiFactory factory) : IClassFixture<ApiF
         var dotnet = Row("whats-new-in-dotnet-11-previews");
         Assert.Equal("6:00 PM", dotnet.GetProperty("startTimeEt").GetString());
         Assert.Equal("Toronto .NET User Group", dotnet.GetProperty("organizer").GetString());
-        Assert.Equal("Microsoft Canada, 81 Bay St, Toronto", dotnet.GetProperty("locationLabel").GetString());
+        Assert.Equal("Microsoft Canada, Toronto", dotnet.GetProperty("locationLabel").GetString());
         Assert.Equal("Free", dotnet.GetProperty("priceLabel").GetString());
         Assert.Equal(142, dotnet.GetProperty("goingCount").GetInt32());
         Assert.Equal(["dotnet"], dotnet.GetProperty("topics").EnumerateArray().Select(t => t.GetString()));

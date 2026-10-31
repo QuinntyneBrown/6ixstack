@@ -1,0 +1,127 @@
+@use 'breakpoints' as bp;
+
+// Local layout of the event detail page, ported from docs/mocks/assets/ui.css.
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalXS);
+  margin-top: var(--spacingHorizontalXXL);
+  color: var(--colorNeutralForeground2);
+  text-decoration: none;
+  font: var(--sx-text-label);
+}
+.back-link:hover {
+  color: var(--colorNeutralForeground1);
+}
+.page-grid {
+  display: grid;
+  gap: var(--sx-space-12);
+}
+@include bp.media-up(lg) {
+  .page-grid {
+    grid-template-columns: minmax(0, 1fr) 21.25rem;
+  }
+}
+.detail-main {
+  min-width: 0;
+}
+.detail-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalL);
+  align-items: flex-start;
+  padding-block: var(--spacingHorizontalXXL) var(--spacingHorizontalXXXL);
+}
+@include bp.media-up(sm) {
+  .detail-hero {
+    flex-direction: row;
+    gap: var(--spacingHorizontalXL);
+  }
+}
+.detail-hero h1 {
+  font: var(--fontWeightBold) var(--fontSizeHero700) / var(--lineHeightHero700) var(--fontFamilyBase);
+  letter-spacing: -0.02em;
+}
+@include bp.media-up(sm) {
+  .detail-hero h1 {
+    font-size: var(--fontSizeHero800);
+  }
+}
+.detail-hero .lead {
+  margin-top: var(--spacingHorizontalS);
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-lg);
+}
+.detail-hero .lead a {
+  color: inherit;
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS) var(--spacingHorizontalL);
+  margin-top: var(--spacingHorizontalL);
+}
+.stack-gap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalXXXL);
+}
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalL);
+  line-height: var(--sx-line-height-relaxed);
+}
+.prose h2,
+.section-title {
+  font: var(--sx-text-h4);
+}
+.section-title {
+  margin-bottom: var(--spacingHorizontalL);
+}
+.agenda {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-left: 2px solid var(--colorNeutralStroke2);
+}
+.agenda li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: var(--spacingHorizontalL);
+  padding: var(--spacingHorizontalM) 0 var(--spacingHorizontalM) var(--spacingHorizontalXL);
+}
+.agenda__time {
+  font-family: var(--fontFamilyMonospace);
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+}
+.people {
+  display: grid;
+  gap: var(--spacingHorizontalL);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.facts {
+  display: grid;
+  gap: var(--spacingHorizontalL);
+  padding: var(--spacingHorizontalXXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadius2XLarge);
+  background: var(--colorNeutralBackground1);
+}
+.detail-actions__secondary {
+  justify-content: space-between;
+}
+.detail-loading {
+  margin-top: var(--sx-space-12);
+}
+.detail-loading__hero {
+  flex: 1;
+  width: 100%;
+}
+.detail-alerts {
+  margin-bottom: var(--spacingHorizontalXXL);
+}

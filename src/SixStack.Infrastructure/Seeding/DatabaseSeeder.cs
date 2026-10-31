@@ -85,6 +85,7 @@ public sealed class DatabaseSeeder(AppDbContext db, IClock clock)
                 item.Speakers.Add(new EventSpeaker { Speaker = speakers[speakerSlug], TalkTitle = talk, Order = item.Speakers.Count });
             }
 
+            seed.Details?.Invoke(item);
             db.Events.Add(item);
         }
 

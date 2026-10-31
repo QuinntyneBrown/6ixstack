@@ -8,3 +8,4 @@ and `credits.md`. Build one with `npm run demo -- <nn>-<slug>` from `frontend/`;
 |---------|-------|
 | 00 · App shell (scaffold) | [demo.mp4](00-scaffold/demo.mp4) |
 | 01 · Browse events | [demo.mp4](01-browse-events/demo.mp4) |
+| 02 · View event detail | [demo.mp4](02-view-event-detail/demo.mp4) |

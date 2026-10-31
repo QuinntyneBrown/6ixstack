@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../core/api-config';
+import { EventDetail } from './event-detail';
 
 export type EventFormatFilter = 'all' | 'gta' | 'streaming';
 
@@ -48,6 +49,8 @@ export interface UpcomingEvents {
 export interface EventsApi {
   /** Upcoming published events: page 1 is the two-week window, later pages hold 20 more each. */
   upcoming(query: UpcomingEventsQuery): Observable<UpcomingEvents>;
+  /** One published event; fails with `ApiError` kind `NotFound` for an unknown or unpublished slug. */
+  detail(slug: string): Observable<EventDetail>;
 }
 
 export const EVENTS_API = new InjectionToken<EventsApi>('EVENTS_API');
@@ -64,5 +67,9 @@ export class HttpEventsApi implements EventsApi {
     if (query.q) params = params.set('q', query.q);
     if (query.page && query.page > 1) params = params.set('page', query.page);
     return this.http.get<UpcomingEvents>(`${this.baseUrl}/api/events`, { params });
+  }
+
+  detail(slug: string): Observable<EventDetail> {
+    return this.http.get<EventDetail>(`${this.baseUrl}/api/events/${encodeURIComponent(slug)}`);
   }
 }

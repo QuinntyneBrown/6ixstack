@@ -1,0 +1,40 @@
+@use 'breakpoints' as bp;
+
+// Ported from docs/mocks/assets/ui.css (.sticky-cta); shown below 768 px as L2-023 states.
+:host {
+  display: block;
+  position: sticky;
+  bottom: 0;
+  z-index: var(--sx-z-sticky);
+  margin-inline: calc(-1 * var(--sx-layout-margin));
+}
+@include bp.media-up(md) {
+  :host {
+    display: none;
+  }
+}
+.sticky-cta {
+  display: flex;
+  gap: var(--spacingHorizontalM);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacingHorizontalM) var(--sx-layout-margin);
+  background: var(--colorNeutralBackground1);
+  border-top: 1px solid var(--colorNeutralStroke2);
+  box-shadow: var(--shadow16);
+}
+.sticky-cta__text {
+  min-width: 0;
+}
+.sticky-cta__title {
+  font: var(--sx-text-label);
+}
+.sticky-cta__summary {
+  font: var(--sx-text-body-sm);
+  color: var(--colorNeutralForeground2);
+}
+@media print {
+  :host {
+    display: none;
+  }
+}

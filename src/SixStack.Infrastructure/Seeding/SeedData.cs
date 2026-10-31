@@ -1,3 +1,4 @@
+using SixStack.Domain.Entities;
 using SixStack.Domain.Enums;
 
 namespace SixStack.Infrastructure.Seeding;
@@ -28,7 +29,8 @@ internal static class SeedData
         EventStatus Status = EventStatus.Published,
         bool Featured = false,
         string? SubmitterEmail = null,
-        (string Speaker, string Talk)[]? Speakers = null);
+        (string Speaker, string Talk)[]? Speakers = null,
+        Action<Event>? Details = null);
 
     public static readonly CommunitySeed[] Communities =
     [
@@ -64,25 +66,48 @@ internal static class SeedData
         new("nadia-chen", "Nadia Chen", "NC", "ML engineer, Cohere", "Cohere", Topics.AI, "Toronto"),
     ];
 
-    private static readonly VenueSeed MicrosoftCanada = new("Microsoft Canada, 81 Bay St", "81 Bay St", "Toronto", 43.6440, -79.3770);
+    private static readonly VenueSeed MicrosoftCanada = new("Microsoft Canada", "81 Bay St", "Toronto", 43.6440, -79.3770);
     private static readonly VenueSeed Mars = new("MaRS Discovery District", "101 College St", "Toronto", 43.6598, -79.3881);
     private static readonly VenueSeed LivingArts = new("Living Arts Centre", "4141 Living Arts Dr", "Mississauga", 43.5912, -79.6441);
     private static readonly VenueSeed Bremner = new("120 Bremner Blvd", "120 Bremner Blvd", "Toronto", 43.6418, -79.3818);
     private static readonly VenueSeed VentureLab = new("ventureLAB", "3600 Steeles Ave E", "Markham", 43.8480, -79.3370);
-    private static readonly VenueSeed Csi = new("Centre for Social Innovation, 192 Spadina Ave", "192 Spadina Ave", "Toronto", 43.6488, -79.3963);
+    private static readonly VenueSeed Csi = new("Centre for Social Innovation", "192 Spadina Ave", "Toronto", 43.6488, -79.3963);
     private static readonly VenueSeed Vector = new("Vector Institute", "661 University Ave", "Toronto", 43.6596, -79.3889);
-    private static readonly VenueSeed Spaces = new("Spaces, 1 University Ave", "1 University Ave", "Toronto", 43.6455, -79.3790);
+    private static readonly VenueSeed Spaces = new("Spaces", "1 University Ave", "Toronto", 43.6455, -79.3790);
     private static readonly VenueSeed Brampton = new("Brampton Innovation District", "8 Nelson St W", "Brampton", 43.6858, -79.7599);
 
     public static readonly EventSeed[] Events =
     [
         new("whats-new-in-dotnet-11-previews", "What's new in the .NET 11 previews", "toronto-dotnet-user-group", "A walkthrough of runtime, C# and ASP.NET Core changes, with live demos and pizza after.", Topics.DotNet, EventFormat.InPerson, "2026-11-03", "18:00", "20:30", MicrosoftCanada, null, 0, 142),
         new("azure-ai-foundry-shipping-agents", "Azure AI Foundry: shipping agents to production", "microsoft-reactor", "Evaluation, tracing and safe rollout patterns for agentic apps on Azure.", Topics.AI | Topics.Azure, EventFormat.Streaming, "2026-11-04", "12:00", "13:30", null, "America/Los_Angeles", 0, 2310,
-            Speakers: [("sofia-marchetti", "Shipping agents safely"), ("daniel-okafor", "What's next in Foundry")]),
+            Speakers: [("sofia-marchetti", "Shipping agents safely"), ("daniel-okafor", "What's next in Foundry")],
+            Details: e =>
+            {
+                e.Description = "Evaluation, tracing and safe rollout patterns for agentic apps on Azure. Live demos of the Foundry evaluation SDK, tracing with OpenTelemetry and staged rollouts with feature flags.\n\nQuestions are taken in the chat; the session is recorded and posted on Microsoft Learn within a day.";
+                e.LivestreamNote = "YouTube and Microsoft Learn; the link opens 15 minutes before start";
+            }),
         new("signals-all-the-way-down", "Signals all the way down", "angular-toronto", "Migrating a large app from RxJS-heavy state to signals, and what broke along the way.", Topics.Angular, EventFormat.InPerson, "2026-11-04", "18:30", "21:00", Mars, null, 0, 87,
             Speakers: [("leila-haddad", "Signals all the way down")]),
         new("azure-data-ai-day-gta", "Azure Data & AI Day GTA", "gta-azure-community", "A full day of Fabric, Azure OpenAI and data platform sessions from local MVPs, with a hands-on lab track.", Topics.Azure | Topics.AI, EventFormat.Hybrid, "2026-11-05", "09:00", "17:00", LivingArts, null, 4900, 318, Featured: true,
-            Speakers: [("priya-natarajan", "Keynote: Fabric one year later"), ("aisha-rahman", "Grounding Azure OpenAI on your lakehouse"), ("marcus-bell", "Panel: data teams in Canadian banks"), ("kenji-watanabe", "Panel: data teams in Canadian banks")]),
+            Speakers: [("priya-natarajan", "Keynote: Fabric one year later"), ("marcus-bell", "Panel: data teams in Canadian banks"), ("aisha-rahman", "Grounding Azure OpenAI on your lakehouse"), ("kenji-watanabe", "Panel: data teams in Canadian banks")],
+            Details: e =>
+            {
+                e.Description = "A full day of Fabric, Azure OpenAI and data platform sessions from local MVPs, with a hands-on lab track. Bring a laptop with an Azure subscription for the labs; trial credits are available at the door.\n\n- Two tracks: talks on the main stage, labs in Hall B\n- Lunch and coffee included; vegetarian, vegan and halal options\n- Step-free access from the Square One transit terminal";
+                e.PriceNote = "includes lunch";
+                e.PriceDetail = "Student tickets $15 with a valid ID";
+                e.LivestreamNote = "Keynote and main-stage sessions; labs are in person only";
+                e.Capacity = 400;
+                e.Venue!.TravelNotes = "Step-free access from the Square One transit terminal";
+                e.AgendaItems =
+                [
+                    new() { Order = 0, StartsAtLocal = new TimeOnly(9, 0), Title = "Registration and coffee" },
+                    new() { Order = 1, StartsAtLocal = new TimeOnly(9, 30), Title = "Keynote: Fabric one year later — Priya Natarajan" },
+                    new() { Order = 2, StartsAtLocal = new TimeOnly(11, 0), Title = "Grounding Azure OpenAI on your lakehouse — Aisha Rahman" },
+                    new() { Order = 3, StartsAtLocal = new TimeOnly(12, 30), Title = "Lunch" },
+                    new() { Order = 4, StartsAtLocal = new TimeOnly(13, 30), Title = "Lab: build a real-time dashboard with Eventstream" },
+                    new() { Order = 5, StartsAtLocal = new TimeOnly(16, 15), Title = "Panel: data teams in Canadian banks — Marcus Bell, Kenji Watanabe" },
+                ];
+            }),
         new("bedrock-in-the-real-world", "Bedrock in the real world", "aws-user-group-toronto", "Three short talks from local teams running generative AI workloads on AWS.", Topics.Aws | Topics.AI, EventFormat.InPerson, "2026-11-05", "18:00", "20:30", Bremner, null, 0, 128),
         new("dotnet-aspire-deep-dive", ".NET Aspire deep dive", "dotnet-conf-community", "Orchestration, service defaults and deploying Aspire apps to Azure Container Apps.", Topics.DotNet | Topics.Azure, EventFormat.Streaming, "2026-11-06", "11:00", "12:30", null, "Europe/London", 0, 1480),
         new("gta-ai-builders-hackathon", "GTA AI Builders Hackathon", "ai-builders-gta", "Build with open models in 10 hours. Teams of up to four, mentors on site.", Topics.AI, EventFormat.InPerson, "2026-11-07", "10:00", "20:00", VentureLab, null, 0, 164),
@@ -103,6 +128,21 @@ internal static class SeedData
         new("minimal-apis-in-practice", "Minimal APIs in practice", "toronto-dotnet-user-group", "Structuring, testing and versioning minimal API projects that grow.", Topics.DotNet, EventFormat.InPerson, "2026-11-19", "18:00", "20:30", MicrosoftCanada, null, 0, 97),
         new("reinvent-keynote-watch-party", "re:Invent keynote watch party", "aws-user-group-toronto", "Watch the keynote together, then talk through the launches.", Topics.Aws, EventFormat.InPerson, "2026-11-24", "11:00", "13:30", Bremner, null, 0, 45),
         new("testing-react-in-2027", "Testing React in 2027", "react-toronto", "What a modern React testing stack looks like, from components to end to end.", Topics.React, EventFormat.InPerson, "2026-11-26", "18:30", "21:00", Csi, null, 0, 81),
+
+        // A past event and a cancelled one, for the event detail states (journey 02).
+        new("minimal-apis-in-practice-october", "Minimal APIs in practice", "toronto-dotnet-user-group", "Structuring, testing and versioning minimal API projects that grow.", Topics.DotNet, EventFormat.InPerson, "2026-10-20", "18:00", "20:30", MicrosoftCanada, null, 0, 140,
+            Details: e =>
+            {
+                e.AttendedCount = 131;
+                e.RecordingUrl = "https://www.youtube.com/watch?v=sixstack-minimal-apis";
+                e.SlidesUrl = "https://github.com/torontodotnet/minimal-apis-in-practice";
+            }),
+        new("brampton-dev-night-november-social", "Brampton Dev Night: November social", "brampton-dev-night", "Lightning demos and a friendly Q&A for .NET and Angular developers in Peel.", Topics.DotNet | Topics.Angular, EventFormat.InPerson, "2026-11-19", "18:30", "21:00", Brampton, null, 0, 52,
+            Details: e =>
+            {
+                e.CancelledAtUtc = new DateTimeOffset(2026, 11, 1, 15, 0, 0, TimeSpan.Zero);
+                e.CancellationReason = "Our venue had a scheduling conflict. We're rebooking for January and will post the new date here.";
+            }),
 
         // Pending submissions in the review queue.
         new("rust-in-production-at-scale", "Rust in production at scale", "toronto-rust-meetup", "Three teams on running Rust services in production.", Topics.None, EventFormat.InPerson, "2026-11-16", "18:30", "20:30", Csi, null, 0, 0, EventStatus.InReview, SubmitterEmail: "hello@torontorust.dev"),

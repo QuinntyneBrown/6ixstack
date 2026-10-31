@@ -39,6 +39,30 @@ public class Event
     public DateTimeOffset? CancelledAtUtc { get; set; }
     public string? CancellationReason { get; set; }
 
+    /// <summary>Short note after the price, e.g. "includes lunch".</summary>
+    public string? PriceNote { get; set; }
+
+    /// <summary>More price detail, e.g. "Student tickets $15 with a valid ID".</summary>
+    public string? PriceDetail { get; set; }
+
+    /// <summary>What the stream covers or where it streams, e.g. "YouTube and Microsoft Learn".</summary>
+    public string? LivestreamNote { get; set; }
+
+    public int? Capacity { get; set; }
+    public int? AttendedCount { get; set; }
+    public string? SlidesUrl { get; set; }
+
+    /// <summary>The start before the organizer last changed it.</summary>
+    public DateTimeOffset? PreviousStartsAtUtc { get; set; }
+
+    public DateTimeOffset? TimeChangedAtUtc { get; set; }
+    /// <summary>When the organizer confirmed the date, venue and stream.</summary>
+    public DateTimeOffset? ConfirmedAtUtc { get; set; }
+    public string? NoteTitle { get; set; }
+    public string? NoteText { get; set; }
+
+    public List<AgendaItem> AgendaItems { get; set; } = [];
+
     public List<EventSpeaker> Speakers { get; set; } = [];
 
     public bool IsCancelled => CancelledAtUtc is not null;

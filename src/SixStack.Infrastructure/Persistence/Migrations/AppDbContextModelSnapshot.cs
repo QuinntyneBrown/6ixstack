@@ -97,6 +97,9 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("AttendedCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("CancellationReason")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -104,8 +107,14 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset?>("CancelledAtUtc")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int?>("Capacity")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("CommunityId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ConfirmedAtUtc")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -127,13 +136,40 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsSoldOut")
                         .HasColumnType("bit");
 
+                    b.Property<string>("LivestreamNote")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NoteText")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("NoteTitle")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<DateTimeOffset?>("PreviousStartsAtUtc")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<int>("PriceCents")
                         .HasColumnType("int");
+
+                    b.Property<string>("PriceDetail")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PriceNote")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.Property<DateTimeOffset?>("PublishedAtUtc")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("RecordingUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<string>("SlidesUrl")
                         .HasMaxLength(2048)
                         .HasColumnType("nvarchar(2048)");
 
@@ -166,6 +202,9 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Property<string>("TicketUrl")
                         .HasMaxLength(2048)
                         .HasColumnType("nvarchar(2048)");
+
+                    b.Property<DateTimeOffset?>("TimeChangedAtUtc")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("TimeZoneId")
                         .IsRequired()
@@ -369,6 +408,38 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.OwnsMany("SixStack.Domain.Entities.AgendaItem", "AgendaItems", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("EventId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Order")
+                                .HasColumnType("int");
+
+                            b1.Property<TimeOnly>("StartsAtLocal")
+                                .HasColumnType("time");
+
+                            b1.Property<string>("Title")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("nvarchar(200)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("EventId");
+
+                            b1.ToTable("EventAgendaItems", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("EventId");
+                        });
+
                     b.OwnsOne("SixStack.Domain.Entities.Venue", "Venue", b1 =>
                         {
                             b1.Property<Guid>("EventId")
@@ -394,6 +465,10 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                                 .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)");
 
+                            b1.Property<string>("TravelNotes")
+                                .HasMaxLength(300)
+                                .HasColumnType("nvarchar(300)");
+
                             b1.HasKey("EventId");
 
                             b1.ToTable("Events");
@@ -401,6 +476,8 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("EventId");
                         });
+
+                    b.Navigation("AgendaItems");
 
                     b.Navigation("Community");
 

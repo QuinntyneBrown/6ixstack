@@ -19,4 +19,9 @@ public sealed class EventsController(ISender sender) : ControllerBase
         [FromQuery] int page = 1,
         CancellationToken cancellationToken = default) =>
         sender.Send(new GetUpcomingEventsQuery(format ?? "all", topics ?? [], q, page), cancellationToken);
+
+    /// <summary>One published event with its facts, actions and alerts (L2-017 to L2-024); 404 when unknown or unpublished.</summary>
+    [HttpGet("{slug}")]
+    public Task<EventDetailDto> GetDetail(string slug, CancellationToken cancellationToken) =>
+        sender.Send(new GetEventDetailQuery(slug), cancellationToken);
 }
