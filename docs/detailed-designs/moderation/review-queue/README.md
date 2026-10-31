@@ -99,7 +99,8 @@ moderators appear, is described in `moderation/approve-submission`.
 
 Decisions in journey 06:
 
-- The page and API deliver the queue, its states, the checks and the J, K and ? shortcuts. Approve (A), Reject
+- The page and API deliver the queue, its states, the checks and the J, K and ? shortcuts. The shortcuts
+  dialog lists only the shortcuts that work; A and R join it with journeys 07 and 08 (the mock shows the end state). Approve (A), Reject
   (R), Edit and the card actions arrive with journeys 07, 08 and 14, so no card shows a button that does nothing.
 - Review presence and the 409 conflict (`L2-063`) arrive with journey 07, where `moderation/approve-submission`
   designs them.

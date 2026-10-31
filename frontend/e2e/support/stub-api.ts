@@ -200,3 +200,11 @@ export async function emptyQueue(page: Page): Promise<void> {
     }),
   );
 }
+
+/** Answers GET /api/moderation/queue with a fixture (the seeded four submissions), for stable screenshots. */
+export async function stubQueue(page: Page, fixture: string): Promise<void> {
+  const body = readFileSync(resolve(__dirname, 'fixtures', `${fixture}.json`), 'utf8');
+  await page.route('**/api/moderation/queue', (route) =>
+    route.fulfill({ contentType: 'application/json', body }),
+  );
+}

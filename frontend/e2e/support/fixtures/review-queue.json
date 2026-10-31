@@ -1,0 +1,158 @@
+{
+  "summary": "4 waiting · oldest submitted yesterday · median review time 3 h",
+  "waitingCount": 4,
+  "cards": [
+    {
+      "id": "92771703-f5fc-4571-bf02-3a99c83e21ab",
+      "slug": "free-crypto-trading-masterclass",
+      "title": "Free crypto trading masterclass",
+      "organizer": "WealthFast Academy",
+      "whenLabel": "Sat, Nov 14 · 2:00 PM",
+      "whereLabel": "Address not given",
+      "topics": [],
+      "submittedLabel": "Yesterday",
+      "submitterEmail": "promo@wealthfast.biz",
+      "checks": [
+        {
+          "kind": "VenueAddress",
+          "outcome": "warning",
+          "message": "No venue address"
+        },
+        {
+          "kind": "TicketLink",
+          "outcome": "passed",
+          "message": "Link reachable"
+        },
+        {
+          "kind": "Duplicate",
+          "outcome": "passed",
+          "message": "No duplicates"
+        },
+        {
+          "kind": "OrganizerHistory",
+          "outcome": "warning",
+          "message": "First submission from this sender"
+        },
+        {
+          "kind": "DeveloperRelevance",
+          "outcome": "warning",
+          "message": "Not a developer topic"
+        }
+      ]
+    },
+    {
+      "id": "620a6e44-831e-4fdf-9a6e-6f9690cf62c5",
+      "slug": "fabric-for-power-bi-developers",
+      "title": "Fabric for Power BI developers",
+      "organizer": "GTA Azure Community",
+      "whenLabel": "Wed, Nov 18 · 6:30 PM",
+      "whereLabel": "Microsoft Canada, 81 Bay St, Toronto",
+      "topics": ["ai", "azure"],
+      "submittedLabel": "Yesterday",
+      "submitterEmail": "priya@gtaazure.ca",
+      "checks": [
+        {
+          "kind": "VenueAddress",
+          "outcome": "passed",
+          "message": "Venue address found"
+        },
+        {
+          "kind": "TicketLink",
+          "outcome": "passed",
+          "message": "Link reachable"
+        },
+        {
+          "kind": "StreamLink",
+          "outcome": "passed",
+          "message": "Stream link reachable"
+        },
+        {
+          "kind": "Duplicate",
+          "outcome": "passed",
+          "message": "No duplicates"
+        },
+        {
+          "kind": "OrganizerHistory",
+          "outcome": "passed",
+          "message": "Trusted organizer"
+        },
+        {
+          "kind": "DeveloperRelevance",
+          "outcome": "passed",
+          "message": "Developer topic"
+        }
+      ]
+    },
+    {
+      "id": "0c299872-a82a-44bb-b2c8-bfac6b84b054",
+      "slug": "kubernetes-on-a-budget",
+      "title": "Kubernetes on a budget",
+      "organizer": "Cloud Native Toronto",
+      "whenLabel": "Thu, Nov 19 · 6:00 PM",
+      "whereLabel": "Streaming online",
+      "topics": ["azure", "aws"],
+      "submittedLabel": "5 hours ago",
+      "submitterEmail": "hello@cloudnativeto.ca",
+      "checks": [
+        {
+          "kind": "StreamLink",
+          "outcome": "passed",
+          "message": "Stream link reachable"
+        },
+        {
+          "kind": "Duplicate",
+          "outcome": "warning",
+          "message": "Possible duplicate of a Nov 19 listing"
+        },
+        {
+          "kind": "OrganizerHistory",
+          "outcome": "passed",
+          "message": "Organizer has 4 approved events"
+        },
+        {
+          "kind": "DeveloperRelevance",
+          "outcome": "passed",
+          "message": "Developer topic"
+        }
+      ]
+    },
+    {
+      "id": "2babb8a0-5c28-498c-8b2d-acb1653db0f2",
+      "slug": "rust-in-production-at-scale",
+      "title": "Rust in production at scale",
+      "organizer": "Toronto Rust Meetup",
+      "whenLabel": "Tue, Nov 17 · 6:30 PM",
+      "whereLabel": "Shopify, 620 King St W, Toronto",
+      "topics": [],
+      "submittedLabel": "2 hours ago",
+      "submitterEmail": "organizers@torontorust.ca",
+      "checks": [
+        {
+          "kind": "VenueAddress",
+          "outcome": "passed",
+          "message": "Venue address found"
+        },
+        {
+          "kind": "TicketLink",
+          "outcome": "passed",
+          "message": "Link reachable"
+        },
+        {
+          "kind": "Duplicate",
+          "outcome": "passed",
+          "message": "No duplicates"
+        },
+        {
+          "kind": "OrganizerHistory",
+          "outcome": "warning",
+          "message": "First submission from this sender"
+        },
+        {
+          "kind": "DeveloperRelevance",
+          "outcome": "passed",
+          "message": "Developer topic"
+        }
+      ]
+    }
+  ]
+}
