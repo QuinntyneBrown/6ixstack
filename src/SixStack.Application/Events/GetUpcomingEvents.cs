@@ -147,11 +147,11 @@ public sealed class GetUpcomingEventsQueryHandler(IAppDbContext db, IClock clock
         e.IsSoldOut,
         e.IsCancelled);
 
-    private static bool IsGta(EventFormat f) => f is EventFormat.InPerson or EventFormat.Hybrid;
+    internal static bool IsGta(EventFormat f) => f is EventFormat.InPerson or EventFormat.Hybrid;
 
-    private static bool IsStreamable(EventFormat f) => f is EventFormat.Streaming or EventFormat.Hybrid;
+    internal static bool IsStreamable(EventFormat f) => f is EventFormat.Streaming or EventFormat.Hybrid;
 
-    private static bool MatchesFormat(EventFormat f, string format) => format switch
+    internal static bool MatchesFormat(EventFormat f, string format) => format switch
     {
         "gta" => IsGta(f),
         "streaming" => IsStreamable(f),
