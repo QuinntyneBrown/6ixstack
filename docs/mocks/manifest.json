@@ -538,6 +538,8 @@
         "success",
         "warning",
         "danger",
+        "conflict",
+        "too-late",
         "with-action",
         "stacked"
       ]

@@ -814,7 +814,7 @@ def _():
 
 @state("moderation-toast", "success", "Approved, with Undo for the life of the toast.")
 def _():
-    return queue_under(3) + toast_region(toast("success", "Approved “Rust in production at scale”", "It’s live and Toronto Rust Meetup has been emailed.", "Undo")) + note(
+    return queue_under(3) + toast_region(toast("success", "Approved “Rust in production at scale”", "It’s live and Toronto Rust Meetup will be notified.", "Undo")) + note(
         "Undo is available for 8 s; the organizer email is held until the toast closes.", "bottom: 10rem; right: 1rem;")
 
 
@@ -826,6 +826,16 @@ def _():
 @state("moderation-toast", "danger", "Approval failed: persistent error toast with retry.")
 def _():
     return queue_under(4) + toast_region(toast("danger", "Couldn’t approve “Rust in production at scale”", "It’s still in the queue. Try again.", "Try again", role="alert"))
+
+
+@state("moderation-toast", "conflict", "Someone else decided first: the card leaves the queue and says who.")
+def _():
+    return queue_under(3) + toast_region(toast("info", "Sam already approved “Kubernetes on a budget”", "It’s no longer in the queue."))
+
+
+@state("moderation-toast", "too-late", "Undo pressed after the 8 s window: the approval stands.")
+def _():
+    return queue_under(3) + toast_region(toast("info", "Too late to undo “Rust in production at scale”", "It’s live and Toronto Rust Meetup will be notified."))
 
 
 @state("moderation-toast", "with-action", "Rejected, with View to open the sent email.")

@@ -109,18 +109,23 @@ check in the handler and the `Event` row version. Two approvals or an approval
 and a rejection that race therefore commit once; the loser receives 409
 (`L2-063`).
 
-These points are open:
+These points were open; journey 07 decided them:
 
-| Point | Gap |
-|-------|-----|
-| Undo window and hover | `L2-074` pauses a toast while hovered or focused, so Undo may stay visible after 8 s. The server enforces `DecidedAtUtc` + 8 s; whether it allows a grace period is `<TO SUPPLY>`. |
-| Toast copy | The success toast text "It's live and Toronto Rust Meetup has been emailed." precedes the held email. The copy for a pending approval (unverified submitter) is also `<TO SUPPLY>`. |
-| Undo by another moderator | Whether only the approving moderator may undo is `<TO SUPPLY>`. |
-| Compare | No mock draws what Compare opens. The design links to the duplicate's public page; a side-by-side view is `<TO SUPPLY>`. |
-| "Opened" | `L2-063` speaks of viewing a submission, but every card is visible on the queue. Which interaction counts as opening (focus, Edit, Reject dialog) is `<TO SUPPLY>`. |
-| Queue refresh | `L2-063` refers to the queue updating. The refresh mechanism (polling interval or push) is `<TO SUPPLY>`. |
-| Conflict message | The copy and toast kind for a refused conflicting decision are `<TO SUPPLY>`. |
-| Feed freshness | Feeds may be cached (`feeds-and-sharing/serve-calendar-feed`); the delay before an approved event reaches a feed is `<TO SUPPLY>`. |
+| Point | Decision |
+|-------|----------|
+| Undo window and hover | The server allows undo until `DecidedAtUtc` + 8 s, with no grace. A toast paused by hover can still show Undo; a late Undo gets the info toast "Too late to undo “{title}”" — "It’s live and {organizer} will be notified." (`moderation-toast/too-late`). |
+| Toast copy | Until approval emails arrive (journey 20) the success text reads "It’s live and {organizer} will be notified." For an unverified submitter: "It goes live when {organizer} verifies their email." |
+| Undo by another moderator | Any moderator may undo within the window. |
+| Compare | Opens the duplicate's public event page in a new tab. The seed's Nov 19 Cloud Native Toronto listing is published for this. |
+| "Opened" | A card counts as opened while it holds focus (click, Tab, J or K). The page posts presence every 20 s while it does; presence older than 45 s is ignored and deleted on the next write. |
+| Queue refresh | The queue loads on open and on Try again; a decision someone else already made surfaces as a 409 when acting. No polling yet. |
+| Conflict message | Info toast "{first name} already approved “{title}”" — "It’s no longer in the queue." and the card leaves the queue (`moderation-toast/conflict`). |
+| Feed freshness | Decided with the calendar feeds (journey 10). |
+
+Also decided in journey 07: approving creates the organizer's in-app notification "“{title}” is live" after the undo
+window (`L2-066` criterion 1); its display arrives with journey 21 and the email with journey 20. The other
+`L2-066` triggers arrive with the features that cause them. `Event` gains a `Version` concurrency token so racing
+decisions commit once. Senders with published history are seeded as verified.
 
 ## Requirements
 
