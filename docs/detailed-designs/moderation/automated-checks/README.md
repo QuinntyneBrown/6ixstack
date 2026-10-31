@@ -86,8 +86,9 @@ through the outbox, to the external services and back to the database.
   **`HttpLinkChecker`** — ports in `SixStack.Application` and their adapters in
   `SixStack.Infrastructure`. No geocoding provider is chosen yet:
   `LocalGeocoder` resolves an address that has a street number and street name in a GTA city from the reference
-  list; a hosted provider can replace it behind `IGeocoder`. In Development, `SubmissionChecks:LinkChecker`
-  set to `AssumeReachable` keeps Playwright and demos off the network; elsewhere it is `Http`.
+  list; a hosted provider can replace it behind `IGeocoder`. `SubmissionChecks:LinkChecker` set to
+  `AssumeReachable` keeps API tests, Playwright and demos off the network; everywhere else it is `Http`. The
+  seeder schedules checks for its seeded submissions through the outbox, like a real submission.
 
 The requirements and mocks left these points open; journey 06 decided them:
 

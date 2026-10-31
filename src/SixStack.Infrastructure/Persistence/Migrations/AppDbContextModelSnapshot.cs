@@ -262,6 +262,36 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.ToTable("EventSpeakers");
                 });
 
+            modelBuilder.Entity("SixStack.Domain.Entities.ModerationDecision", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("DecidedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ModeratorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("UndoneAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DecidedAtUtc");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("ModerationDecisions");
+                });
+
             modelBuilder.Entity("SixStack.Domain.Entities.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -428,6 +458,42 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.ToTable("Speakers");
                 });
 
+            modelBuilder.Entity("SixStack.Domain.Entities.SubmissionCheck", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("CompletedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Outcome")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("RelatedEventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("SubmissionChecks");
+                });
+
             modelBuilder.Entity("SixStack.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -592,6 +658,17 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Navigation("Speaker");
                 });
 
+            modelBuilder.Entity("SixStack.Domain.Entities.ModerationDecision", b =>
+                {
+                    b.HasOne("SixStack.Domain.Entities.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
             modelBuilder.Entity("SixStack.Domain.Entities.Session", b =>
                 {
                     b.HasOne("SixStack.Domain.Entities.User", "User")
@@ -601,6 +678,15 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SixStack.Domain.Entities.SubmissionCheck", b =>
+                {
+                    b.HasOne("SixStack.Domain.Entities.Event", null)
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SixStack.Domain.Entities.Community", b =>

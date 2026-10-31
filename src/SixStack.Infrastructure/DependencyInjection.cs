@@ -7,6 +7,8 @@ using SixStack.Application.Common.Messages;
 using SixStack.Infrastructure.Calendar;
 using SixStack.Infrastructure.Email;
 using SixStack.Infrastructure.Identity;
+using SixStack.Infrastructure.Checks;
+using SixStack.Application.Moderation;
 using SixStack.Infrastructure.Outbox;
 using SixStack.Infrastructure.Persistence;
 using SixStack.Infrastructure.Seeding;
@@ -55,6 +57,18 @@ public static class DependencyInjection
         services.Configure<SiteOptions>(configuration.GetSection(SiteOptions.Section));
         services.AddSingleton<IIcsWriter, IcsWriter>();
         services.AddScoped<ISecurityTokenService, SecurityTokenService>();
+        services.Configure<SubmissionChecksOptions>(configuration.GetSection(SubmissionChecksOptions.Section));
+        services.AddSingleton<IGeocoder, LocalGeocoder>();
+        if (configuration.GetValue<string>($"{SubmissionChecksOptions.Section}:LinkChecker") == "AssumeReachable")
+        {
+            services.AddSingleton<ILinkChecker, AssumeReachableLinkChecker>();
+        }
+        else
+        {
+            services.AddHttpClient<ILinkChecker, HttpLinkChecker>(client => client.Timeout = HttpLinkChecker.Timeout)
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
+        }
+
         services.AddScoped<DatabaseSeeder>();
         services.AddScoped<DatabaseMaintenance>();
         return services;

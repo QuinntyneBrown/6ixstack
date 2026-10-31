@@ -11,6 +11,7 @@ using SixStack.Application.Common.Interfaces;
 using SixStack.Application.Common.Messages;
 using SixStack.Application.Common.Time;
 using SixStack.Application.Common.Validation;
+using SixStack.Application.Moderation;
 using SixStack.Application.ReferenceData;
 using SixStack.Domain.Entities;
 using SixStack.Domain.Enums;
@@ -119,6 +120,7 @@ public sealed partial class SubmitEventCommandHandler(
     IClock clock,
     IOutbox outbox,
     ISecurityTokenService tokens,
+    ISubmissionCheckScheduler checks,
     IOptions<SiteOptions> site) : IRequestHandler<SubmitEventCommand, SubmissionReceivedDto>
 {
     public const int DailyLimitPerEmail = 10;
@@ -142,6 +144,7 @@ public sealed partial class SubmitEventCommandHandler(
 
         var e = await NewEvent(c, email, now, cancellationToken);
         db.Events.Add(e);
+        await checks.ScheduleAsync(e, cancellationToken);
 
         var baseUrl = site.Value.PublicBaseUrl.TrimEnd('/');
         outbox.Enqueue(new SendEmail(new EmailMessage(

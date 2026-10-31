@@ -30,6 +30,7 @@ public class ApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Outbox:Enabled", "false");
         builder.UseSetting("Swagger:Enabled", "true");
         builder.UseSetting("DevMailbox:Expose", "true");
+        builder.UseSetting("SubmissionChecks:LinkChecker", "AssumeReachable");
         builder.ConfigureServices(ConfigureTestServices);
     }
 
