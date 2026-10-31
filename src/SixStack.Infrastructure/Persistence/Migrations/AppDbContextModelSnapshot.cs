@@ -65,6 +65,17 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("About")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<int?>("ActiveSinceYear")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Cadence")
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -91,10 +102,26 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
 
+                    b.Property<string>("PlacesDetail")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PlacesLabel")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("PostingLead")
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("Tagline")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("Topics")
                         .HasColumnType("int");
@@ -104,6 +131,10 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(2048)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("City");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("Slug")
                         .IsUnique();
@@ -124,7 +155,15 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("SpeakerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("CommunityId", "UserId");
+
+                    b.HasIndex("SpeakerId");
 
                     b.HasIndex("UserId");
 
@@ -649,6 +688,36 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.ToTable("VerifiedEmails");
                 });
 
+            modelBuilder.Entity("SixStack.Domain.Entities.Community", b =>
+                {
+                    b.OwnsMany("SixStack.Domain.Entities.CommunityLink", "Links", b1 =>
+                        {
+                            b1.Property<Guid>("CommunityId");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAddOrUpdate();
+
+                            b1.Property<string>("Label")
+                                .IsRequired();
+
+                            b1.Property<string>("Url")
+                                .IsRequired();
+
+                            b1.HasKey("CommunityId", "__synthesizedOrdinal");
+
+                            b1.ToTable("Communities");
+
+                            b1
+                                .ToJson("Links")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CommunityId");
+                        });
+
+                    b.Navigation("Links");
+                });
+
             modelBuilder.Entity("SixStack.Domain.Entities.CommunityOrganizer", b =>
                 {
                     b.HasOne("SixStack.Domain.Entities.Community", "Community")
@@ -657,6 +726,10 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SixStack.Domain.Entities.Speaker", "Speaker")
+                        .WithMany()
+                        .HasForeignKey("SpeakerId");
+
                     b.HasOne("SixStack.Domain.Entities.User", "User")
                         .WithMany("Communities")
                         .HasForeignKey("UserId")
@@ -664,6 +737,8 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Community");
+
+                    b.Navigation("Speaker");
 
                     b.Navigation("User");
                 });
