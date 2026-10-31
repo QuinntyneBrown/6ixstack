@@ -70,18 +70,15 @@ short link touches the API, when someone opens it.
   reveals an unpublished event.
 - **`ShortLinkTargetDto`** — `Path` of the event detail page.
 
-Open points in the requirement and mocks:
+Decided in journey 12:
 
-- The share-sheet text beyond title and URL (for example the summary line) is
-  `<TO SUPPLY>`.
-- The behaviour when `navigator.share` fails with an error other than the
-  visitor dismissing it is `<TO SUPPLY>`; opening the dialog as a fallback is
-  one option.
-- Whether the Bluesky compose text includes the title as well as the link is
-  `<TO SUPPLY>`; the mock passes the link only.
-- The not-found response for an unknown short link is a 404 from the API. How
-  the public site host renders that 404 as the not-found page (`L2-076`), and
-  the reverse-proxy rule that sends `/e/*` to the API, are `<TO SUPPLY>`.
+- The share sheet gets the title and the short link only.
+- When `navigator.share` fails for any reason other than the visitor dismissing it, the dialog opens instead.
+- Bluesky gets the link only, as in the mock.
+- The web app builds the short link on the host it is served from (`{origin}/e/{slug}`), like feed links, so local
+  and staging links work; production serves `6ixstack.dev`. The dev server proxies `/e/` to the API; production
+  routes it at the reverse proxy. An unknown short link answers the API's 404.
+- `L2-038` criterion 2 and the mocks use the seed's slug, `azure-data-ai-day-gta`.
 
 ## Requirements
 

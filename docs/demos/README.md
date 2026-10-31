@@ -18,3 +18,4 @@ and `credits.md`. Build one with `npm run demo -- <nn>-<slug>` from `frontend/`;
 | 09 · Browse month calendar | [demo.mp4](09-browse-month-calendar/demo.mp4) |
 | 10 · Subscribe to ready-made feed | [demo.mp4](10-subscribe-to-ready-made-feed/demo.mp4) |
 | 11 · Build custom feed | [demo.mp4](11-build-custom-feed/demo.mp4) |
+| 12 · Share event | [demo.mp4](12-share-event/demo.mp4) |

@@ -14,5 +14,9 @@
   "/feeds/": {
     "target": "http://localhost:5100",
     "secure": false
+  },
+  "/e/": {
+    "target": "http://localhost:5100",
+    "secure": false
   }
 }

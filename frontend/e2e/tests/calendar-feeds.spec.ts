@@ -1,5 +1,6 @@
 import { expect, test } from '../fixtures';
 import { CalendarFeedsPage } from '../pages/calendar-feeds.page';
+import { blockCopying } from '../support/clipboard';
 import { failFeedCounts, slowFeedCounts } from '../support/stub-api';
 
 // L2-034 ready-made feeds and L2-036 feed content; designs: feeds-and-sharing/ready-made-feeds, serve-calendar-feed.
@@ -47,7 +48,7 @@ test.describe('Ready-made calendar feeds', () => {
 
   test('a failed copy says so, offers Try again and stays', async ({ page }) => {
     const feeds = new CalendarFeedsPage(page);
-    await feeds.blockCopying();
+    await blockCopying(page);
     await feeds.open();
 
     await feeds.copy('AI').click();
