@@ -1,0 +1,1 @@
+A segmented control picks exactly one of a few options, such as All / In the GTA / Streaming on the events page. Each option is a toggle button with `aria-pressed`, and can show a count that updates with the other filters (L2-002); show "–" when counts are unavailable.

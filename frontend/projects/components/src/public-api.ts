@@ -23,3 +23,4 @@ export * from './lib/topics/topic-tag';
 export * from './lib/badge/badge';
 export * from './lib/event-row/event-row';
 export * from './lib/day-group/day-group';
+export * from './lib/segmented-control/segmented-control';

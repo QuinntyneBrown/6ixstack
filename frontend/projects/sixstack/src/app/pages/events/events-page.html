@@ -8,8 +8,18 @@
   </div>
 </section>
 <div id="events">
+  <div class="filter-bar">
+    <div class="filter-row">
+      <sx-segmented-control
+        label="Where"
+        [options]="formatOptions()"
+        [value]="filters().format"
+        (valueChange)="chooseFormat($event)"
+      />
+    </div>
+  </div>
   @if (result(); as r) {
-    <p class="result-line" aria-live="polite">{{ r.formatCounts.all }} events · times in ET</p>
+    <p class="result-line" aria-live="polite">{{ r.shown }} events · times in ET</p>
     @for (day of r.days; track day.date) {
       <sx-day-group
         [date]="day.date"

@@ -1,0 +1,46 @@
+// Ported from docs/mocks/assets/ui.css (.segmented).
+:host {
+  display: inline-flex;
+  max-width: 100%;
+}
+.segmented {
+  display: inline-flex;
+  gap: var(--spacingHorizontalXXS);
+  padding: var(--spacingHorizontalXS);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadius2XLarge);
+  background: var(--colorNeutralBackground1);
+  max-width: 100%;
+  overflow-x: auto;
+}
+.segmented__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalS);
+  min-height: var(--sx-control-height-md);
+  padding: 0 var(--spacingHorizontalL);
+  border: 0;
+  border-radius: var(--borderRadiusXLarge);
+  background: transparent;
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-label);
+  font-size: var(--fontSizeBase400);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color var(--durationFaster) var(--curveEasyEase),
+    color var(--durationFaster) var(--curveEasyEase);
+}
+.segmented__item:hover {
+  color: var(--colorNeutralForeground1);
+  background: var(--colorSubtleBackgroundHover);
+}
+.segmented__item[aria-pressed='true'] {
+  background: var(--colorBrandBackground);
+  color: var(--colorNeutralForegroundOnBrand);
+}
+.segmented__count {
+  font: var(--sx-text-caption);
+  font-family: var(--fontFamilyMonospace);
+  opacity: 0.8;
+}

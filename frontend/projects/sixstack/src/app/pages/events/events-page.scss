@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 // Local UI of the events page (hero, filter bar, result line), ported from docs/mocks/assets/ui.css.
 .hero {
   display: grid;
@@ -33,4 +35,22 @@
   color: var(--colorNeutralForeground2);
   font: var(--sx-text-body-sm);
   margin-top: var(--spacingHorizontalXXL);
+}
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacingHorizontalL);
+}
+.filter-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalM);
+  align-self: stretch;
+}
+@include bp.media-up(sm) {
+  .filter-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 }
