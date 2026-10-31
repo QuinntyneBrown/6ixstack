@@ -14,3 +14,6 @@ projects/components/src/lib/tokens/tokens.ts
 *.mp3
 *.mp4
 *.wav
+e2e/demo/.cache
+e2e/demo/.venv
+e2e/.data

@@ -7,3 +7,4 @@ and `credits.md`. Build one with `npm run demo -- <nn>-<slug>` from `frontend/`;
 | Journey | Video |
 |---------|-------|
 | 00 · App shell (scaffold) | [demo.mp4](00-scaffold/demo.mp4) |
+| 01 · Browse events | [demo.mp4](01-browse-events/demo.mp4) |

@@ -102,6 +102,8 @@ export async function runJourney(journey: string): Promise<string[]> {
       shot: async (beat, options) => {
         index++;
         const target = options?.page ?? page;
+        // Park the pointer in the left margin so no row or link shows a hover state.
+        await target.mouse.move(4, (target.viewportSize()?.height ?? 720) - 4);
         await target.waitForTimeout(400);
         const file = resolve(paths.screenshots, `${String(index).padStart(2, '0')}-${beat}.png`);
         if (options?.phone) {
