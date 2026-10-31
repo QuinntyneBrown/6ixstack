@@ -67,6 +67,12 @@
   --btn-border: transparent;
   --btn-fg: var(--colorNeutralForeground1);
 }
+:host(.btn--ghost-danger) {
+  --btn-bg: transparent;
+  --btn-border: transparent;
+  --btn-fg: var(--colorStatusDangerForeground1);
+  --btn-bg-hover: var(--colorStatusDangerBackground1);
+}
 :host(.btn--link) {
   --btn-bg: transparent;
   --btn-border: transparent;

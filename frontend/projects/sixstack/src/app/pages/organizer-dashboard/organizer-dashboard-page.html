@@ -82,6 +82,17 @@
                     ></a
                   >
                 }
+                @if (row.status === 'published' || row.status === 'inReview') {
+                  <button
+                    sx-button
+                    appearance="ghost"
+                    size="sm"
+                    type="button"
+                    (click)="cancel(row, $event.currentTarget)"
+                  >
+                    Cancel<span class="visually-hidden"> {{ row.title }}</span>
+                  </button>
+                }
               </td>
             </tr>
           }

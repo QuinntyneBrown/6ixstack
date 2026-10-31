@@ -46,7 +46,9 @@ test.describe('Edit event visuals', () => {
     await edit.saveChanges();
     await expect(edit.save).toHaveText('Saving…');
     await page.mouse.move(0, 0);
-    await expect(page.locator('form.form-card')).toHaveScreenshot('edit-event-submitting-light.png');
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    // A full-page shot from the top: an element taller than the viewport would be captured under the sticky header.
+    await expect(page).toHaveScreenshot('edit-event-submitting-light.png', { fullPage: true });
     await release();
   });
 

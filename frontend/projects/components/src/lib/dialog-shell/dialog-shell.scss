@@ -68,3 +68,16 @@
     scale: 0.96;
   }
 }
+
+.dialog__icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--borderRadiusCircular);
+  flex: none;
+}
+.dialog__icon--danger {
+  background: var(--colorStatusDangerBackground1);
+  color: var(--colorStatusDangerForeground3);
+}

@@ -1,0 +1,64 @@
+<sx-dialog-shell [title]="'Cancel “' + data.title + '”?'" [titleId]="titleId" tone="danger">
+  <p slot="description" id="cancel-description">
+    It stays on 6ixstack marked as cancelled, ticket links are removed and feeds update. This can’t be undone.
+  </p>
+  <div class="cancel-body">
+    @if (failed()) {
+      <sx-alert class="cancel-failure" kind="danger" announce="alert" title="The event wasn’t cancelled">
+        It’s still published and nobody was emailed. Try again.
+      </sx-alert>
+    }
+    <sx-form-field
+      label="Reason for attendees"
+      controlId="cancel-reason"
+      [hint]="canEmail ? 'Shown on the listing and emailed to everyone going.' : 'Shown on the listing.'"
+      [error]="reasonError()"
+    >
+      <textarea
+        sx-input
+        id="cancel-reason"
+        rows="3"
+        maxlength="500"
+        [formControl]="reason"
+        [attr.aria-invalid]="reasonError() ? 'true' : null"
+        [attr.aria-describedby]="describedBy('cancel-reason', true, !!reasonError())"
+      ></textarea>
+    </sx-form-field>
+    @if (canEmail) {
+      <label sx-choice hint="Sent from 6ixstack on your behalf">
+        <input sx-check type="checkbox" [formControl]="notify" />Email the
+        {{ data.emailableAttendees.toLocaleString('en-CA') }} people going
+      </label>
+    }
+    @if (needsName) {
+      <sx-form-field
+        label="Type the event name to confirm"
+        controlId="confirm-name"
+        [hint]="data.title"
+        [error]="confirmError()"
+      >
+        <input
+          sx-input
+          id="confirm-name"
+          type="text"
+          autocomplete="off"
+          [formControl]="confirmName"
+          [attr.aria-invalid]="confirmError() ? 'true' : null"
+          [attr.aria-describedby]="describedBy('confirm-name', true, !!confirmError())"
+        />
+      </sx-form-field>
+    }
+  </div>
+  <button slot="footer" sx-button type="button" cdkFocusInitial (click)="keep()">Keep event</button>
+  <button
+    slot="footer"
+    sx-button
+    appearance="danger"
+    type="button"
+    [busy]="busy()"
+    [disabled]="!nameMatches()"
+    (click)="submit()"
+  >
+    {{ busy() ? 'Cancelling…' : failed() ? 'Try again' : 'Cancel event' }}
+  </button>
+</sx-dialog-shell>

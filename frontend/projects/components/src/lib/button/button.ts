@@ -1,6 +1,8 @@
 import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-export type ButtonAppearance = 'secondary' | 'primary' | 'ghost' | 'link' | 'danger' | 'on-feature';
+/** `ghost-danger` is a quiet destructive action beside the main ones, such as Cancel event on the edit page. */
+export type ButtonAppearance =
+  'secondary' | 'primary' | 'ghost' | 'ghost-danger' | 'link' | 'danger' | 'on-feature';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 /**

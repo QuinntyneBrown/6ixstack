@@ -15,3 +15,4 @@ export default meta;
 
 export { Default } from './DialogShellDefault.stories';
 export { Sheet } from './DialogShellSheet.stories';
+export { Danger } from './DialogShellDanger.stories';

@@ -40,7 +40,7 @@ export async function ownEvent(
   page: Page,
   baseURL: string,
   title: string,
-  outcome: 'published' | 'sentBack',
+  outcome: 'published' | 'sentBack' | 'waiting',
 ): Promise<OwnEvent> {
   const email = `owner-${Date.now()}-${Math.round(Math.random() * 1e6)}@example.com`;
   const submitted = await page.request.post('/api/submissions', {
@@ -89,6 +89,11 @@ export async function ownEvent(
   const { api, headers } = await jordan(baseURL);
   try {
     const queue = await (await api.get('/api/moderation/queue')).json();
+    if (outcome === 'waiting') {
+      const waiting = queue.cards.find((c: { title: string }) => c.title === title);
+      await signInWithLink(page, email);
+      return { id: waiting.id, slug: waiting.slug, title, email };
+    }
     const card = queue.cards.find((c: { title: string }) => c.title === title);
     if (!card) throw new Error(`${title} is not waiting in the queue`);
     const decided =
@@ -187,4 +192,68 @@ export async function failEventLoad(page: Page): Promise<() => Promise<void>> {
       : route.fallback();
   await page.route(pattern, handler);
   return () => page.unroute(pattern, handler);
+}
+
+/** Holds POST /api/organizer/events/{id}/cancel until the returned function answers it with a 500. */
+export async function holdCancels(page: Page): Promise<() => Promise<void>> {
+  let held: Route | null = null;
+  await page.route('**/api/organizer/events/*/cancel', async (route) => {
+    held = route;
+  });
+  return async () => {
+    await held!.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+  };
+}
+
+/** Answers POST /api/organizer/events/{id}/cancel with a 500 until the returned function is called. */
+export async function failCancels(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: Route) =>
+    route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+  await page.route('**/api/organizer/events/*/cancel', handler);
+  return () => page.unroute('**/api/organizer/events/*/cancel', handler);
+}
+
+/** Answers the dashboard as if 6ixstack knew `count` people going to every event, so the email option shows. */
+export async function withKnownAttendees(page: Page, count: number): Promise<void> {
+  await page.route(
+    '**/api/organizer/events',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      const body = (await response.json()) as { rows: { emailableAttendees: number }[] };
+      for (const row of body.rows) row.emailableAttendees = count;
+      await route.fulfill({ response, json: body });
+    }),
+  );
+}
+
+/** Answers POST /api/organizer/events/{id}/cancel with a success, without cancelling anything. */
+export async function cancelsSucceed(page: Page, title: string, emailsQueued = 0): Promise<void> {
+  await page.route('**/api/organizer/events/*/cancel', (route) =>
+    route.fulfill({
+      json: { title, status: 'cancelled', cancelledAtUtc: new Date().toISOString(), emailsQueued },
+    }),
+  );
+}
+
+/** Answers GET /api/organizer/events/{id} as if the event had been cancelled with `reason`. */
+export async function asCancelled(page: Page, reason: string): Promise<void> {
+  await page.route(
+    /\/api\/organizer\/events\/[0-9a-f-]{36}$/,
+    guarded(page, async (route) => {
+      if (route.request().method() !== 'GET') return route.fallback();
+      const response = await route.fetch();
+      const body = await response.json();
+      await route.fulfill({
+        response,
+        json: {
+          ...body,
+          status: 'cancelled',
+          isReadOnly: true,
+          readOnlyLead: 'Thursday, November 5, 2026 · 318 going',
+          cancellationReason: reason,
+          cancelledOnLabel: 'Oct 31',
+        },
+      });
+    }),
+  );
 }

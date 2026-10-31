@@ -20,6 +20,9 @@ let nextId = 0;
       [class]="'dialog__panel--' + size()"
     >
       <div class="dialog__header">
+        @if (tone() === 'danger') {
+          <div class="dialog__icon dialog__icon--danger" aria-hidden="true"><sx-icon name="warning" /></div>
+        }
         <div class="dialog__heading">
           <h2 class="dialog__title" [id]="titleId()">{{ title() }}</h2>
           <ng-content select="[slot=description]" />
@@ -45,6 +48,8 @@ export class DialogShell {
   readonly variant = input<'modal' | 'sheet'>('modal');
   readonly size = input<'sm' | 'md' | 'lg'>('md');
   readonly closable = input(true, { transform: booleanAttribute });
+  /** `danger` adds the warning icon for destructive confirmations, such as cancelling an event. */
+  readonly tone = input<'default' | 'danger'>('default');
 
   close(): void {
     this.dialogRef?.close();

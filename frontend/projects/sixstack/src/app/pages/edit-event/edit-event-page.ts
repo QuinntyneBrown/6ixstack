@@ -38,6 +38,7 @@ import {
   ToastService,
 } from 'components';
 import { finalize, forkJoin, map, merge, startWith, timer } from 'rxjs';
+import { CancelEventLauncher } from '../../shared/cancel/cancel-event-launcher';
 import { DraftStore, SUBMIT_DRAFT_KEY } from '../../shared/draft-store';
 import {
   applyFormat,
@@ -102,6 +103,7 @@ export class EditEventPage implements OnInit {
   private readonly api = inject(ORGANIZER_EVENTS_API);
   private readonly referenceApi = inject(REFERENCE_DATA_API);
   private readonly drafts = inject(DraftStore);
+  private readonly cancelLauncher = inject(CancelEventLauncher);
   private readonly router = inject(Router);
   private readonly toasts = inject(ToastService);
   private readonly injector = inject(Injector);
@@ -258,6 +260,24 @@ export class EditEventPage implements OnInit {
       contactEmail: this.session.user()?.email ?? '',
     });
     void this.router.navigateByUrl('/submit');
+  }
+
+  /** Opens Cancel “{title}”?; once cancelled, the page reloads read-only with the reason (edit-event/cancelled). */
+  protected cancelEvent(event: EventEdit, trigger: EventTarget | null): void {
+    this.cancelLauncher.open(
+      {
+        id: event.id,
+        title: event.title,
+        isPaid: event.isPaid,
+        goingCount: event.goingCount,
+        emailableAttendees: event.emailableAttendees,
+      },
+      trigger,
+      () => {
+        this.saved.set(null);
+        this.load();
+      },
+    );
   }
 
   protected readOnlyActions(): AlertAction[] {
