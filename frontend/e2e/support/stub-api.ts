@@ -511,3 +511,23 @@ export async function reportsAnswer(page: Page, status: number): Promise<() => P
   await page.route('**/api/events/*/reports', handler);
   return () => page.unroute('**/api/events/*/reports', handler);
 }
+
+/** Makes GET /api/speakers fail until the returned function is called. */
+export async function failSpeakers(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+  await page.route('**/api/speakers*', handler);
+  return () => page.unroute('**/api/speakers*', handler);
+}
+
+/** Delays GET /api/speakers by `ms`. */
+export async function slowSpeakers(page: Page, ms: number): Promise<void> {
+  await page.route(
+    '**/api/speakers*',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
+}

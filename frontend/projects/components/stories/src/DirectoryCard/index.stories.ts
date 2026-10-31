@@ -15,3 +15,4 @@ export default meta;
 
 export { Default } from './DirectoryCardDefault.stories';
 export { NoNextEvent } from './DirectoryCardNoNextEvent.stories';
+export { Person } from './DirectoryCardPerson.stories';

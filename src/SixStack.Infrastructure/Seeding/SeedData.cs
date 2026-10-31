@@ -70,6 +70,13 @@ internal static class SeedData
         new("leila-haddad", "Leila Haddad", "LH", "Staff engineer, Wealthsimple", "Wealthsimple", Topics.Angular, "Toronto"),
         new("tomas-rivera", "Tomás Rivera", "TR", "Frontend lead, Ada Support", "Ada Support", Topics.React, "Toronto"),
         new("nadia-chen", "Nadia Chen", "NC", "ML engineer, Cohere", "Cohere", Topics.AI, "Toronto"),
+
+        // Speakers whose talks this year are behind them (speakers directory: "Spoke this year").
+        new("hannah-wright", "Hannah Wright", "HW", "Azure engineer, Manulife", "Manulife", Topics.Azure, "Toronto"),
+        new("grace-liu", "Grace Liu", "GL", "Platform engineer, Wealthsimple", "Wealthsimple", Topics.Aws | Topics.Azure, "Toronto"),
+        new("ben-okoro", "Ben Okoro", "BO", "Site reliability engineer, Shopify", "Shopify", Topics.Aws, "Toronto"),
+        new("mateo-silva", "Mateo Silva", "MS", "Cloud architect, TD", "TD", Topics.Azure | Topics.AI, "Toronto"),
+        new("ana-petrova", "Ana Petrova", "AP", "Engineering manager, Wealthsimple", "Wealthsimple", Topics.AI | Topics.Azure, "Toronto"),
     ];
 
     public const string CoOrganizerEmail = "marcus@gtaazure.ca";
@@ -216,13 +223,13 @@ internal static class SeedData
 
         // Past events that give senders an approval history and the queue its median review time (3 h).
         new("service-meshes-without-tears", "Service meshes without tears", "cloud-native-toronto", "What a mesh buys you, and what it costs.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-10-12", "18:30", "20:30", Spaces, null, 0, 64, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 1),
-        new("gitops-with-flux", "GitOps with Flux", "cloud-native-toronto", "Shipping to Kubernetes from a pull request.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-10-15", "18:30", "20:30", Spaces, null, 0, 71, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 3),
-        new("cost-aware-autoscaling", "Cost-aware autoscaling", "cloud-native-toronto", "Scaling clusters on price as well as load.", Topics.Aws, EventFormat.InPerson, "2026-10-22", "18:30", "20:30", Spaces, null, 0, 58, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 3),
+        new("gitops-with-flux", "GitOps with Flux", "cloud-native-toronto", "Shipping to Kubernetes from a pull request.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-10-15", "18:30", "20:30", Spaces, null, 0, 71, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 3, Speakers: [("grace-liu", "GitOps with Flux in practice")]),
+        new("cost-aware-autoscaling", "Cost-aware autoscaling", "cloud-native-toronto", "Scaling clusters on price as well as load.", Topics.Aws, EventFormat.InPerson, "2026-10-22", "18:30", "20:30", Spaces, null, 0, 58, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 3, Speakers: [("ben-okoro", "Autoscaling on price")]),
         new("cloud-native-toronto-october-meetup", "Cloud Native Toronto: October meetup", "cloud-native-toronto", "Platform teams compare notes.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-10-27", "18:30", "20:30", Spaces, null, 0, 66, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 5),
-        new("azure-functions-deep-dive", "Azure Functions deep dive", "gta-azure-community", "Isolated workers, Flex Consumption and cold starts.", Topics.Azure, EventFormat.InPerson, "2026-10-13", "18:30", "20:30", MicrosoftCanada, null, 0, 88, SubmitterEmail: OrganizerEmail, ReviewHours: 2),
+        new("azure-functions-deep-dive", "Azure Functions deep dive", "gta-azure-community", "Isolated workers, Flex Consumption and cold starts.", Topics.Azure, EventFormat.InPerson, "2026-10-13", "18:30", "20:30", MicrosoftCanada, null, 0, 88, SubmitterEmail: OrganizerEmail, ReviewHours: 2, Speakers: [("hannah-wright", "Flex Consumption in production")]),
         new("bicep-for-app-developers", "Bicep for app developers", "gta-azure-community", "Infrastructure as code without the YAML.", Topics.Azure, EventFormat.InPerson, "2026-10-19", "18:30", "20:30", MicrosoftCanada, null, 0, 74, SubmitterEmail: OrganizerEmail, ReviewHours: 3),
-        new("azure-ai-search-hands-on", "Azure AI Search hands-on", "gta-azure-community", "Hybrid retrieval for your own data.", Topics.Azure | Topics.AI, EventFormat.InPerson, "2026-10-26", "18:30", "20:30", MicrosoftCanada, null, 0, 95, SubmitterEmail: OrganizerEmail, ReviewHours: 3),
-        new("copilot-studio-for-developers", "Copilot Studio for developers", "gta-azure-community", "Extending agents with your own APIs.", Topics.Azure | Topics.AI, EventFormat.InPerson, "2026-10-29", "18:30", "20:30", MicrosoftCanada, null, 0, 81, SubmitterEmail: OrganizerEmail, ReviewHours: 6),
+        new("azure-ai-search-hands-on", "Azure AI Search hands-on", "gta-azure-community", "Hybrid retrieval for your own data.", Topics.Azure | Topics.AI, EventFormat.InPerson, "2026-10-26", "18:30", "20:30", MicrosoftCanada, null, 0, 95, SubmitterEmail: OrganizerEmail, ReviewHours: 3, Speakers: [("ana-petrova", "Hybrid retrieval that holds up")]),
+        new("copilot-studio-for-developers", "Copilot Studio for developers", "gta-azure-community", "Extending agents with your own APIs.", Topics.Azure | Topics.AI, EventFormat.InPerson, "2026-10-29", "18:30", "20:30", MicrosoftCanada, null, 0, 81, SubmitterEmail: OrganizerEmail, ReviewHours: 6, Speakers: [("mateo-silva", "Plugins for Copilot Studio")]),
     ];
 
     public const string OrganizerEmail = "priya@gtaazure.ca";

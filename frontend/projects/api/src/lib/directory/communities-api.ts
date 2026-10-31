@@ -83,3 +83,52 @@ export class HttpCommunitiesApi implements CommunitiesApi {
     return this.http.get<CommunityDirectory>(`${this.baseUrl}/api/communities`, { params });
   }
 }
+
+export type SpeakingPeriod = 'any' | 'month' | 'year';
+
+export interface SpeakersQuery {
+  q?: string;
+  topic?: string | null;
+  period?: SpeakingPeriod;
+  page?: number;
+}
+
+export interface SpeakerCard {
+  slug: string;
+  name: string;
+  initials: string;
+  role: string;
+  topics: string[];
+  nextTalk: { title: string; dateLabel: string; eventSlug: string } | null;
+}
+
+export interface SpeakerDirectory {
+  listedTotal: number;
+  matchCount: number;
+  items: SpeakerCard[];
+  hasMore: boolean;
+  /** The last day of the Toronto month, such as "November 30". */
+  monthEndLabel: string;
+}
+
+export interface SpeakersApi {
+  /** The speakers directory: 9 on page 1, 24 on each later page (L2-032). */
+  list(query: SpeakersQuery): Observable<SpeakerDirectory>;
+}
+
+export const SPEAKERS_API = new InjectionToken<SpeakersApi>('SPEAKERS_API');
+
+@Injectable()
+export class HttpSpeakersApi implements SpeakersApi {
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = inject(API_BASE_URL);
+
+  list(query: SpeakersQuery): Observable<SpeakerDirectory> {
+    let params = new HttpParams();
+    if (query.q) params = params.set('q', query.q);
+    if (query.topic) params = params.set('topic', query.topic);
+    if (query.period && query.period !== 'any') params = params.set('period', query.period);
+    if (query.page && query.page > 1) params = params.set('page', query.page);
+    return this.http.get<SpeakerDirectory>(`${this.baseUrl}/api/speakers`, { params });
+  }
+}
