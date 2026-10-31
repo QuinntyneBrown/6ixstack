@@ -8,7 +8,10 @@ const dataDir = resolve(__dirname, '../.data');
 export const API_URL = 'http://localhost:5100';
 export const TODAY = '2026-11-02T14:00:00Z';
 
-/** Environment shared by the CLI and the API: seeded SQLite, fixed clock, test sign-in seam. */
+/**
+ * Environment shared by the CLI and the API: seeded SQLite, fixed clock, test sign-in seam. Demos let the clock tick
+ * from the fixed instant, so emails held for the undo window go out.
+ */
 export function apiEnvironment(databaseName = 'e2e'): NodeJS.ProcessEnv {
   return {
     ...process.env,
@@ -17,6 +20,7 @@ export function apiEnvironment(databaseName = 'e2e'): NodeJS.ProcessEnv {
     Database__Provider: 'Sqlite',
     ConnectionStrings__Default: `Data Source=${resolve(dataDir, `${databaseName}.db`)}`,
     Clock__FixedUtcNow: TODAY,
+    Clock__Ticking: databaseName === 'demo' ? 'true' : 'false',
     Auth__TestSignIn__Enabled: 'true',
     Outbox__PollInterval: '00:00:01',
     // Long-running servers would otherwise hit the per-IP sign-in limit across runs; API tests prove the limit.

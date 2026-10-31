@@ -1,7 +1,7 @@
 # Estimates
 
 - Overall effort: 157 days
-- Complete: 60%
+- Complete: 62%
 
 | Subsystem | Effort | Complete |
 |---|---|---|
@@ -11,10 +11,10 @@
 | [feeds-and-sharing](feeds-and-sharing.md) | 17 days | 92% |
 | [submissions](submissions.md) | 9 days | 57% |
 | [identity](identity.md) | 15 days | 48% |
-| [moderation](moderation.md) | 18 days | 91% |
+| [moderation](moderation.md) | 18 days | 92% |
 | [organizer](organizer.md) | 10 days | 84% |
 | [directory](directory.md) | 11 days | 48% |
-| [notifications](notifications.md) | 10 days | 0% |
+| [notifications](notifications.md) | 10 days | 35% |
 
 ## Roadmap
 
