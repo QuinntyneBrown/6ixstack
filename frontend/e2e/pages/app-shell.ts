@@ -129,29 +129,81 @@ export class AppShell {
     const box = await this.brandMark.boundingBox();
     if (!box) throw new Error('The brand mark is not rendered');
     const shot = (await this.brandMark.screenshot({ animations: 'disabled' })).toString('base64');
+    return this.differenceFromOfficialLogo(
+      `data:image/png;base64,${shot}`,
+      Math.round(box.width),
+      Math.round(box.height),
+    );
+  }
+
+  /** The tab icons the page declares, as written in `<link rel="icon">`. */
+  async tabIcons(): Promise<{ href: string; type: string }[]> {
+    return this.page.locator('link[rel~="icon"]').evaluateAll((links) =>
+      links.map((link) => ({
+        href: link.getAttribute('href') ?? '',
+        type: link.getAttribute('type') ?? '',
+      })),
+    );
+  }
+
+  /** Fetches a declared tab icon the way the browser would. */
+  async fetchTabIcon(href: string): Promise<{ status: number; contentType: string; body: Buffer }> {
+    const response = await this.page.request.get(new URL(href, this.page.url()).toString());
+    return {
+      status: response.status(),
+      contentType: response.headers()['content-type'] ?? '',
+      body: await response.body(),
+    };
+  }
+
+  /** The square sizes, in px, of the images inside an ICO tab icon, smallest first. */
+  async tabIconIcoSizes(href: string): Promise<number[]> {
+    const { body } = await this.fetchTabIcon(href);
+    const count = body.readUInt16LE(4);
+    const sizes: number[] = [];
+    for (let i = 0; i < count; i++) {
+      const width = body.readUInt8(6 + i * 16) || 256;
+      const height = body.readUInt8(7 + i * 16) || 256;
+      if (width !== height) throw new Error(`Icon image ${i} is not square: ${width}x${height}`);
+      sizes.push(width);
+    }
+    return sizes.sort((a, b) => a - b);
+  }
+
+  /** Share of a tab icon's pixels, drawn at `size` px, that differ from the official logo at that size. */
+  async tabIconDifferenceFromOfficialLogo(href: string, size: number): Promise<number> {
+    const { contentType, body } = await this.fetchTabIcon(href);
+    return this.differenceFromOfficialLogo(
+      `data:${contentType};base64,${body.toString('base64')}`,
+      size,
+      size,
+    );
+  }
+
+  private async differenceFromOfficialLogo(src: string, width: number, height: number): Promise<number> {
     const official = readFileSync(join(__dirname, '../../../docs/assets/6ixstack-mark.svg')).toString(
       'base64',
     );
     return this.page.evaluate(
-      async ({ shot, official, width, height }) => {
-        const load = (src: string) =>
+      async ({ src, official, width, height }) => {
+        const load = (url: string) =>
           new Promise<HTMLImageElement>((resolve, reject) => {
             const img = new Image();
             img.onload = () => resolve(img);
             img.onerror = reject;
-            img.src = src;
+            img.src = url;
           });
-        const pixels = async (src: string) => {
+        const pixels = async (url: string) => {
           const canvas = document.createElement('canvas');
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d')!;
           ctx.fillStyle = getComputedStyle(document.body).backgroundColor;
           ctx.fillRect(0, 0, width, height);
-          ctx.drawImage(await load(src), 0, 0, width, height);
+          ctx.drawImage(await load(url), 0, 0, width, height);
           return ctx.getImageData(0, 0, width, height).data;
         };
-        const actual = await pixels(`data:image/png;base64,${shot}`);
+        const actual = await pixels(src);
         const expected = await pixels(`data:image/svg+xml;base64,${official}`);
         let different = 0;
         for (let i = 0; i < actual.length; i += 4) {
@@ -164,7 +216,7 @@ export class AppShell {
         }
         return different / (width * height);
       },
-      { shot, official, width: Math.round(box.width), height: Math.round(box.height) },
+      { src, official, width, height },
     );
   }
 

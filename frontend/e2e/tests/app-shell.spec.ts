@@ -28,6 +28,28 @@ test.describe('App shell', () => {
     expect(await events.shell.brandMarkDifferenceFromOfficialLogo()).toBeLessThan(0.02);
   });
 
+  // L2-104 AC2: the official mark is the tab icon, as SVG with an ICO fallback.
+  test('the tab icon is the official 6ixstack logo mark, as SVG with an ICO fallback', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+
+    expect(await events.shell.tabIcons()).toEqual([
+      { href: 'favicon.svg', type: 'image/svg+xml' },
+      { href: 'favicon.ico', type: 'image/x-icon' },
+    ]);
+
+    const svg = await events.shell.fetchTabIcon('favicon.svg');
+    expect(svg.status).toBe(200);
+    expect(svg.contentType).toContain('image/svg+xml');
+    expect(await events.shell.tabIconDifferenceFromOfficialLogo('favicon.svg', 32)).toBeLessThan(0.02);
+
+    const ico = await events.shell.fetchTabIcon('favicon.ico');
+    expect(ico.status).toBe(200);
+    expect(ico.contentType).toMatch(/image\/(x-icon|vnd\.microsoft\.icon)/);
+    expect(await events.shell.tabIconIcoSizes('favicon.ico')).toEqual([16, 32, 48]);
+    expect(await events.shell.tabIconDifferenceFromOfficialLogo('favicon.ico', 48)).toBeLessThan(0.05);
+  });
+
   test('the header stays at the top while the page scrolls', async ({ page }) => {
     const events = new EventsPage(page);
     await events.open();
