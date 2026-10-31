@@ -122,23 +122,21 @@ In every state the grid frame, the filters and the navigation stay in place
 The query uses the `(Status, StartsAtUtc)` index on `Events` to meet the
 300 ms 95th-percentile target for public lists in `L2-087`.
 
-Open points:
+These points were open; journey 09 decided them:
 
-- Whether cancelled events appear in the grid, and how, is `<TO SUPPLY>`. The
-  events list excludes them (`L2-001`).
-- `L2-005` lists search state for the calendar page, but `L2-027` and the
-  calendar mocks offer only format and topic filters. Whether the calendar
-  honours `q` is `<TO SUPPLY>`. The design ignores `q` on this page.
-- The behaviour for an invalid or out-of-range `month` value, and the earliest
-  and latest navigable months, are `<TO SUPPLY>`.
-- Whether "+N more" on wide screens opens the day list or stays plain text, as
-  in the mock, is `<TO SUPPLY>`.
-- The presentation of the small-screen day list (inline panel under the grid,
-  CDK dialog or bottom sheet) and the maximum number of topic dots per cell are
-  `<TO SUPPLY>`.
-- The wording of the filtered-results alert when the format is Streaming or
-  All ("Include streaming to see 1 more" covers In the GTA only) is
-  `<TO SUPPLY>`.
+- Cancelled events are left out of the grid and the totals, as the events list leaves them out (`L2-001`).
+- The calendar ignores `q`; only format and topics are shared with the events list.
+- `month` must be `YYYY-MM` between 2000-01 and 2100-12. The API answers 400 otherwise; the page falls back to the
+  current Toronto month for a missing or malformed value. Navigation has no other bounds.
+- "+N more" stays plain text on wide screens, as in the mock.
+- On small screens the picked day's list is an inline `CalendarDayList` panel under the grid (no dialog), and a cell
+  shows at most three topic dots.
+- The filtered alert names the other format: "Include streaming to see N more" for In the GTA, "Include in-person
+  events to see N more" for Streaming, and no such line for All. Clear filters always shows.
+- `FilterStateStore` moves to `shared/filters/` and merges its parameters into the URL, so the calendar keeps
+  `month`.
+- `L2-025` criterion 1 now uses the seed's November totals (the mock's 21 did not match its own grid).
+- The library gains `MonthGrid`, `CalendarDayList` and `ButtonGroup` (List / Month switch).
 
 ## Requirements
 
