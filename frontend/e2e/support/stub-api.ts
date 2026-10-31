@@ -611,3 +611,14 @@ export async function holdAccountDeletion(page: Page): Promise<(status: number) 
     });
   };
 }
+
+/** Holds POST /auth/sign-out until the returned function lets it through. */
+export async function holdSignOut(page: Page): Promise<() => Promise<void>> {
+  let held: import('@playwright/test').Route | null = null;
+  await page.route('**/auth/sign-out', async (route) => {
+    held = route;
+  });
+  return async () => {
+    await held!.continue();
+  };
+}
