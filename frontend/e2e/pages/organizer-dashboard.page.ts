@@ -8,6 +8,7 @@ export class DashboardRowPart {
   readonly reason: Locator;
   readonly going: Locator;
   readonly view: Locator;
+  readonly edit: Locator;
   readonly actions: Locator;
 
   constructor(readonly root: Locator) {
@@ -16,6 +17,7 @@ export class DashboardRowPart {
     this.reason = root.locator('.dash-row__reason');
     this.going = root.locator('td.num');
     this.view = root.getByRole('link', { name: /^View/ });
+    this.edit = root.getByRole('link', { name: /^Edit/ });
     this.actions = root.locator('td:last-child').getByRole('button');
   }
 }

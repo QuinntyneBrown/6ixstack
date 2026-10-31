@@ -16,10 +16,12 @@ export class ReviewCardPart {
     this.checks = root.getByRole('list', { name: 'Automatic checks' }).getByRole('listitem');
     this.submitted = root.locator('.review-card__submitted');
     this.approve = root.getByRole('button', { name: /^Approve/ });
+    this.edit = root.getByRole('link', { name: /^Edit/ });
     this.reject = root.getByRole('button', { name: /^Reject/ });
   }
 
   readonly approve: Locator;
+  readonly edit: Locator;
   readonly reject: Locator;
 
   /** The check with this message; `outcome` reads its passed, warning or pending state. */

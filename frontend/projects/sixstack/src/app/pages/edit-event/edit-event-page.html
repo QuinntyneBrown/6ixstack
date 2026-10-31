@@ -1,0 +1,118 @@
+@let back = isModerator() ? '/admin/review' : '/organize';
+@let backLabel = isModerator() ? 'Review queue' : 'Your events';
+@switch (state().status) {
+  @case ('forbidden') {
+    @let f = $any(state()).forbidden;
+    <sx-status-page code="403" heading="You can't edit this event">
+      <p slot="message">
+        “{{ f.eventTitle }}” is managed by {{ f.communityName }}. You're signed in as {{ f.signedInEmail
+        }}{{ f.signedInCommunity ? ' for ' + f.signedInCommunity : '' }}. Ask {{ f.communityName }} to add
+        you, or sign in with another account.
+      </p>
+      <ng-container slot="actions">
+        <a sx-button appearance="primary" routerLink="/organize">Back to your events</a>
+        <a sx-button routerLink="/sign-in">Use another account</a>
+        <a sx-button appearance="ghost" [href]="contact">Contact us</a>
+      </ng-container>
+    </sx-status-page>
+  }
+  @case ('failed') {
+    <a sx-back-link [routerLink]="back">{{ backLabel }}</a>
+    <sx-empty-state
+      class="load-failed"
+      icon="alert"
+      title="We couldn’t open this event"
+      error
+      [headingLevel]="1"
+    >
+      <span slot="text">The listing is safe. Try again in a moment.</span>
+      <ng-container slot="actions">
+        <button sx-button appearance="primary" type="button" (click)="load()">
+          <sx-icon name="refresh" size="sm" />Try again
+        </button>
+        <a sx-button [routerLink]="back">Back to your events</a>
+      </ng-container>
+    </sx-empty-state>
+  }
+  @case ('loading') {
+    @if (slow()) {
+      <a sx-back-link [routerLink]="back">{{ backLabel }}</a>
+      <div class="edit-column">
+        <div class="page-title">
+          <h1>Edit event</h1>
+          <p class="lead">Loading the event…</p>
+        </div>
+        <div class="form-card" aria-busy="true" aria-label="Loading the event">
+          @for (fields of skeletonSections; track $index) {
+            <div class="form-skeleton">
+              <sx-skeleton variant="title" width="30%" />
+              @for (n of fields; track n) {
+                <sx-skeleton width="25%" />
+                <sx-skeleton variant="rect" height="2.5rem" />
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+  @case ('loaded') {
+    @let e = event()!;
+    @let s = $any(state());
+    <a sx-back-link [routerLink]="back">{{ backLabel }}</a>
+    <div class="edit-column">
+      <div class="page-title">
+        <h1>{{ e.isReadOnly ? e.title : 'Edit event' }}</h1>
+        <p class="lead">{{ e.isReadOnly ? e.readOnlyLead : editLead }}</p>
+      </div>
+      @if (e.isReadOnly) {
+        <sx-alert
+          class="edit-top"
+          kind="info"
+          title="This event has ended, so it can’t be edited"
+          [actions]="readOnlyActions()"
+          >Past events stay on 6ixstack as a record. Want to run it again?</sx-alert
+        >
+      } @else {
+        <sx-inline-status class="edit-status" [kind]="statusKind(e)">{{ e.statusLine }}</sx-inline-status>
+        @if (saved()) {
+          <sx-alert
+            class="edit-top"
+            kind="success"
+            title="Changes saved"
+            announce="status"
+            dismissible
+            [actions]="savedActions()"
+            (dismissed)="saved.set(null)"
+            >{{ savedText() }}</sx-alert
+          >
+        }
+        @if (saveFailed()) {
+          <sx-alert class="edit-top" kind="danger" announce="alert" title="We couldn’t save your changes">
+            6ixstack didn’t respond. Everything you entered is still here; save again in a moment.
+          </sx-alert>
+        }
+        @if (errors().length) {
+          <sx-error-summary class="edit-top" [errors]="errors()" />
+        }
+      }
+      <form class="form-card" [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <sx-event-form-fields
+          [form]="form"
+          [reference]="s.reference"
+          [error]="error"
+          [busy]="saving() || e.isReadOnly"
+          [showContact]="false"
+        />
+        @if (!e.isReadOnly) {
+          <div class="form-actions">
+            <a sx-button [routerLink]="back">Discard changes</a>
+            <button sx-button appearance="primary" type="submit" [busy]="saving()">
+              {{ saving() ? 'Saving…' : 'Save changes' }}
+            </button>
+          </div>
+        }
+      </form>
+    </div>
+  }
+}

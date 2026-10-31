@@ -30,7 +30,9 @@ test.describe('Organizer dashboard', () => {
     await expect(bicep.reason).toHaveText('Add the venue address');
     const past = dashboard.row('Copilot Studio for developers');
     await expect(past.status).toHaveText('Past');
-    await expect(past.view).toHaveAttribute('href', '/events/copilot-studio-for-developers');
+    await expect(past.view).toHaveAttribute('href', /^\/organize\/events\/[0-9a-f-]{36}\/edit$/);
+    await expect(day.edit).toHaveAttribute('href', /^\/organize\/events\/[0-9a-f-]{36}\/edit$/);
+    await expect(past.edit).toHaveCount(0);
     expect(await dashboard.titles()).not.toContain('Vector search in Postgres');
   });
 

@@ -15,7 +15,7 @@ import { ApiError, REFERENCE_DATA_API, ReferenceData, SUBMISSIONS_API, Submissio
 import { Alert, Button, ErrorSummary, FieldErrorItem, NextSteps, Skeleton, SuccessPanel } from 'components';
 import { catchError, debounceTime, finalize, map, merge, of, startWith, switchMap, timer } from 'rxjs';
 import { EventFormFields } from '../../shared/event-form/event-form-fields';
-import { DraftStore } from '../../shared/draft-store';
+import { DraftStore, SUBMIT_DRAFT_KEY } from '../../shared/draft-store';
 import {
   applyFormat,
   createEventForm,
@@ -91,7 +91,7 @@ export class SubmitEventPage {
       .map((e) => ({ controlId: e.name, message: e.message }));
   });
 
-  static readonly DRAFT_KEY = 'sx.draft.submit-event';
+  static readonly DRAFT_KEY = SUBMIT_DRAFT_KEY;
 
   constructor() {
     const draft = this.drafts.read<ReturnType<typeof this.form.getRawValue>>(SubmitEventPage.DRAFT_KEY);

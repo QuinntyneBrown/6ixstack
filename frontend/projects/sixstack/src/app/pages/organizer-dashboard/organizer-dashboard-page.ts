@@ -105,7 +105,7 @@ export class OrganizerDashboardPage {
     return BANNER_KINDS[banner.kind];
   }
 
-  /** Actions that work today; Edit and resubmit and Add the address join with editing (journey 14). */
+  /** The banner's actions; editing opens the edit page (organizer/edit-event). */
   protected bannerActions(banner: SubmissionBanner): AlertAction[] {
     switch (banner.kind) {
       case 'live':
@@ -113,8 +113,13 @@ export class OrganizerDashboardPage {
           { label: 'View the listing', link: `/events/${banner.eventSlug}` },
           { label: 'Share it', run: () => this.share(banner) },
         ];
+      case 'needsChanges':
+        return [{ label: 'Add the address', link: `/organize/events/${banner.eventId}/edit` }];
       case 'notApproved':
-        return [{ label: 'Ask a question', href: CONTACT }];
+        return [
+          { label: 'Edit and resubmit', link: `/organize/events/${banner.eventId}/edit` },
+          { label: 'Ask a question', href: CONTACT },
+        ];
       case 'unverified':
         return [{ label: 'Resend verification email', run: () => this.resend() }];
       default:

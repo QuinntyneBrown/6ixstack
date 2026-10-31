@@ -33,10 +33,19 @@ export const apiErrorInterceptor: HttpInterceptorFn = (request, next) => {
         onNetworkError?.();
       }
       const body = (typeof error.error === 'object' && error.error) || {};
-      const { errors, referenceCode, ownerName, resourceTitle, decision, decidedBy, reason } = body as Record<
-        string,
-        unknown
-      >;
+      const {
+        errors,
+        referenceCode,
+        ownerName,
+        resourceTitle,
+        decision,
+        decidedBy,
+        reason,
+        communityName,
+        eventTitle,
+        signedInEmail,
+        signedInCommunity,
+      } = body as Record<string, unknown>;
       return throwError(
         () =>
           new ApiError(
@@ -44,7 +53,17 @@ export const apiErrorInterceptor: HttpInterceptorFn = (request, next) => {
             error.status,
             (errors as Record<string, string[]>) ?? {},
             typeof referenceCode === 'string' ? referenceCode : null,
-            { ownerName, resourceTitle, decision, decidedBy, reason },
+            {
+              ownerName,
+              resourceTitle,
+              decision,
+              decidedBy,
+              reason,
+              communityName,
+              eventTitle,
+              signedInEmail,
+              signedInCommunity,
+            },
           ),
       );
     }),
