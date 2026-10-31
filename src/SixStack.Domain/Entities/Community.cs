@@ -15,4 +15,7 @@ public class Community
     public string? WebsiteUrl { get; set; }
 
     public List<CommunityOrganizer> Organizers { get; set; } = [];
+
+    /// <summary>People following the community's events in a calendar feed; a stored figure until feed requests are counted.</summary>
+    public int FeedSubscriberCount { get; set; }
 }

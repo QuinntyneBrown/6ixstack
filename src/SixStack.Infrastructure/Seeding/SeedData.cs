@@ -35,7 +35,8 @@ internal static class SeedData
         double? ReviewHours = null,
         double? DecidedMinutesAgo = null,
         bool ApprovedAwaitingVerification = false,
-        string? OrganizerEmail = null);
+        string? OrganizerEmail = null,
+        double? SentBackHoursAgo = null);
 
     public static readonly CommunitySeed[] Communities =
     [
@@ -158,6 +159,9 @@ internal static class SeedData
 
         // The listing the Kubernetes submission duplicates (same community, same day); Compare opens it.
         new("cloud-native-toronto-november-meetup", "Cloud Native Toronto: November meetup", "cloud-native-toronto", "Lightning talks on platform engineering, then pizza.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-11-19", "19:00", "21:00", Spaces, null, 0, 0, SubmitterEmail: "events@cloudnativeto.ca"),
+
+        // Sent back to Priya for a missing venue address (organizer dashboard, needs changes).
+        new("azure-bicep-clinic", "Azure Bicep clinic", "gta-azure-community", "Bring your templates; we review them together.", Topics.Azure, EventFormat.InPerson, "2026-11-24", "18:00", "20:00", new VenueSeed("To be confirmed", null, "Toronto", 43.6532, -79.3832), null, 0, 0, EventStatus.NeedsChanges, SubmitterEmail: OrganizerEmail, SentBackHoursAgo: 72),
 
         // Past events that give senders an approval history and the queue its median review time (3 h).
         new("service-meshes-without-tears", "Service meshes without tears", "cloud-native-toronto", "What a mesh buys you, and what it costs.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-10-12", "18:30", "20:30", Spaces, null, 0, 64, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 1),

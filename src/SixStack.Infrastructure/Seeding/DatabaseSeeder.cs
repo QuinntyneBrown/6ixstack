@@ -21,6 +21,7 @@ public sealed class DatabaseSeeder(AppDbContext db, IClock clock, IOutbox outbox
             {
                 Slug = seed.Slug, Name = seed.Name, Initials = seed.Initials, City = seed.City,
                 MemberCount = seed.Members, Topics = seed.Topics, Description = seed.Description,
+                FeedSubscriberCount = seed.Slug == "gta-azure-community" ? 1204 : 0,
             };
             db.Communities.Add(community);
             communities[seed.Slug] = community;
@@ -109,6 +110,21 @@ public sealed class DatabaseSeeder(AppDbContext db, IClock clock, IOutbox outbox
                 item.SubmittedAtUtc = decided.AddHours(-review);
                 item.PublishedAtUtc = decided;
                 db.ModerationDecisions.Add(new ModerationDecision { Event = item, ModeratorId = jordan.Id, Kind = DecisionKind.Approved, DecidedAtUtc = decided });
+            }
+
+            if (seed.SentBackHoursAgo is { } sentBack)
+            {
+                var decided = now.AddHours(-sentBack);
+                item.SubmittedAtUtc = decided.AddHours(-5);
+                db.ModerationDecisions.Add(new ModerationDecision
+                {
+                    Event = item,
+                    ModeratorId = jordan.Id,
+                    Kind = DecisionKind.RequestChanges,
+                    Reason = RejectionReason.MissingVenueAddress,
+                    Message = "We couldn’t confirm where this happens. Add the venue address and submit again.",
+                    DecidedAtUtc = decided,
+                });
             }
 
             seed.Details?.Invoke(item);
