@@ -1,0 +1,52 @@
+<div class="cal" role="grid" [attr.aria-label]="label()" [attr.aria-busy]="loading() ? 'true' : null">
+  @for (weekday of weekdays; track weekday) {
+    <div class="cal__dow" role="columnheader">
+      <abbr [title]="weekday">{{ weekday.slice(0, 3) }}</abbr>
+    </div>
+  }
+  @for (cell of cells(); track cell.date) {
+    @if (cell.outside) {
+      <div class="cal__day cal__day--outside" role="gridcell" [attr.aria-label]="cellLabel(cell.date, false)">
+        <span class="cal__num" aria-hidden="true">{{ cell.day }}</span>
+      </div>
+    } @else {
+      <div
+        class="cal__day"
+        role="gridcell"
+        [class.cal__day--today]="cell.today"
+        [attr.aria-label]="cellLabel(cell.date, cell.today)"
+      >
+        <span class="cal__num" aria-hidden="true">{{ cell.day }}</span>
+        @if (loading()) {
+          <sx-skeleton class="cal__chip" variant="rect" height="1.25rem" />
+        } @else {
+          @let events = eventsOf(cell.date);
+          <div class="cal__events">
+            @for (event of events.slice(0, max); track $index) {
+              <a class="cal__event" [routerLink]="event.link"
+                ><span [class]="'topic-dot topic-dot--' + (event.topic ?? 'none')" aria-hidden="true"></span
+                ><span>{{ event.title }}</span></a
+              >
+            }
+            @if (events.length > max) {
+              <span class="cal__more">+{{ events.length - max }} more</span>
+            }
+          </div>
+          @if (events.length) {
+            <span class="cal__dots" aria-hidden="true">
+              @for (event of events.slice(0, max); track $index) {
+                <span [class]="'topic-dot topic-dot--' + (event.topic ?? 'none')"></span>
+              }
+            </span>
+            <button
+              class="cal__pick"
+              type="button"
+              [attr.aria-label]="cellLabel(cell.date, cell.today) + ', show them'"
+              (click)="dayPicked.emit(cell.date)"
+            ></button>
+          }
+        }
+      </div>
+    }
+  }
+</div>

@@ -353,7 +353,7 @@ def default_month():
     return m
 
 
-def calendar_page(grid, month="November 2026", sub="21 events this month · 12 in the GTA · 9 streamable", fmt="all", pressed=(), counts=(21, 12, 9), extra=""):
+def calendar_page(grid, month="November 2026", sub="20 events this month · 15 in the GTA · 7 streamable", fmt="all", pressed=(), counts=(20, 15, 7), extra=""):
     main = (f'<div class="page-title"><h1>Calendar</h1><p class="lead">{sub}</p></div>'
             f'{filters(fmt, pressed, counts)}<div style="margin-top: var(--space-6);">'
             f'<div class="cal-toolbar"><div class="cluster"><a class="btn btn--icon" href="{P("calendar")}" aria-label="Previous month, October 2026">{icon("chevron-left")}</a>'
@@ -397,7 +397,7 @@ def _():
 def _():
     m = {9: [("Server Components, one year in", "react", P("event-detail"))], 26: [("Testing React in 2027", "react", P("event-detail"))]}
     extra = '<div style="margin-bottom: var(--space-4);">' + alert("info", "2 events match React in the GTA", f'Include streaming to see 1 more. <a href="{P("calendar")}">Clear filters</a>') + "</div>"
-    return calendar_page(month_grid(events_by_day=m), sub="2 of 21 events this month match your filters", fmt="gta", pressed=("react",), counts=(3, 2, 1), extra=extra)
+    return calendar_page(month_grid(events_by_day=m), sub="2 of 20 events this month match your filters", fmt="gta", pressed=("react",), counts=(3, 2, 1), extra=extra)
 
 
 # ======================================================================= dialogs

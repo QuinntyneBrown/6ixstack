@@ -138,7 +138,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 
 #### Calendar — `/calendar` — `pages/calendar`: default, loading, empty, error, no-results
 
-- Library: `SegmentedControl`, `TopicChip`, `Button`, `ButtonGroup` (month nav), `MonthGrid` (with `TopicTag` legend), `CalendarDayList`; loading `Skeleton`; empty, error and no-results use `Alert` (not `EmptyState`).
+- Library: `SegmentedControl`, `TopicChip`, `Button` (previous, next, Today), `ButtonGroup` (List / Month view switch), `MonthGrid`, `TopicTag` (legend), `CalendarDayList` (small screens); loading `Skeleton` chips inside `MonthGrid`; empty, error and no-results use `Alert` (not `EmptyState`).
 - Local: page title, filter bar, calendar toolbar (`cal-toolbar`: month heading and actions).
 
 #### Communities — `/communities` — `pages/communities`: default, loading, empty, error, no-results

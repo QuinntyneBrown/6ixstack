@@ -1,0 +1,123 @@
+@use 'breakpoints' as bp;
+@use '../topics/topic-dot';
+
+// Ported from docs/mocks/assets/ui.css (.cal and its elements).
+:host {
+  display: block;
+}
+.cal {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  overflow: hidden;
+  background: var(--colorNeutralStroke2);
+  gap: 1px;
+}
+.cal__dow {
+  background: var(--colorNeutralBackground2);
+  padding: var(--spacingHorizontalS) var(--spacingHorizontalXS);
+  font: var(--sx-text-overline);
+  letter-spacing: var(--sx-letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--colorNeutralForeground2);
+  text-align: center;
+}
+.cal__dow abbr {
+  text-decoration: none;
+}
+.cal__day {
+  position: relative;
+  background: var(--colorNeutralBackground1);
+  min-height: 4.5rem;
+  padding: var(--spacingHorizontalXS);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalXS);
+  min-width: 0;
+}
+.cal__day--outside {
+  background: var(--colorNeutralBackground2);
+  color: var(--colorNeutralForeground3);
+}
+.cal__num {
+  font: var(--sx-text-label);
+  font-variant-numeric: tabular-nums;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+.cal__day--today .cal__num {
+  background: var(--colorBrandBackground);
+  color: var(--colorNeutralForegroundOnBrand);
+}
+.cal__events {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalXS);
+}
+.cal__event {
+  display: flex;
+  align-items: center;
+  gap: var(--spacingHorizontalXS);
+  padding: var(--spacingHorizontalXXS) var(--spacingHorizontalXS);
+  border-radius: var(--borderRadiusSmall);
+  background: var(--colorSubtleBackgroundHover);
+  color: var(--colorNeutralForeground1);
+  font: var(--sx-text-caption);
+  text-decoration: none;
+  min-width: 0;
+}
+.cal__event span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cal__event:hover {
+  background: var(--colorSubtleBackgroundPressed);
+}
+.cal__event:focus-visible {
+  outline: var(--sx-focus-ring-width) solid var(--colorStrokeFocus2);
+  outline-offset: 1px;
+}
+.cal__more {
+  font: var(--sx-text-caption);
+  color: var(--colorNeutralForeground2);
+  padding-left: var(--spacingHorizontalXS);
+}
+.cal__dots,
+.cal__pick {
+  display: none;
+}
+@include bp.media-up(md) {
+  .cal__day {
+    min-height: 7.5rem;
+    padding: var(--spacingHorizontalS);
+  }
+}
+// Below 768 px: topic dots instead of titles, and the day itself is the button (L2-028).
+@include bp.media-down(md) {
+  .cal__events {
+    display: none;
+  }
+  .cal__dots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1875rem;
+    padding-left: var(--spacingHorizontalXXS);
+  }
+  .cal__pick {
+    display: block;
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .cal__pick:focus-visible {
+    outline: var(--sx-focus-ring-width) solid var(--colorStrokeFocus2);
+    outline-offset: -2px;
+  }
+}

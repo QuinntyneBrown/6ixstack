@@ -22,6 +22,15 @@ public sealed class EventsController(ISender sender) : ControllerBase
         CancellationToken cancellationToken = default) =>
         sender.Send(new GetUpcomingEventsQuery(format ?? "all", topics ?? [], q, page), cancellationToken);
 
+    /// <summary>One Toronto month for the calendar grid (L2-025, L2-027); 400 for a malformed month.</summary>
+    [HttpGet("calendar")]
+    public Task<MonthCalendarDto> Calendar(
+        [FromQuery] string? month,
+        [FromQuery] string? format,
+        [FromQuery] string[]? topics,
+        CancellationToken cancellationToken = default) =>
+        sender.Send(new GetMonthCalendarQuery(month, format ?? "all", topics ?? []), cancellationToken);
+
     /// <summary>One published event with its facts, actions and alerts (L2-017 to L2-024); 404 when unknown or unpublished.</summary>
     [HttpGet("{slug}")]
     public Task<EventDetailDto> GetDetail(string slug, CancellationToken cancellationToken) =>

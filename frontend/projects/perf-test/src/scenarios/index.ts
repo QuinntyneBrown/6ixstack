@@ -1,4 +1,7 @@
 import { Scenario } from './scenario';
+import { scenario as buttonGroup } from './ButtonGroup';
+import { scenario as calendarDayList } from './CalendarDayList';
+import { scenario as monthGrid } from './MonthGrid';
 import { scenario as reviewCard } from './ReviewCard';
 import { scenario as tooltip } from './Tooltip';
 import { scenario as nextSteps } from './NextSteps';
@@ -39,6 +42,9 @@ import { scenario as toast } from './Toast';
 /** Every scenario, by name. Add one file per component and register it here. */
 export const SCENARIOS: Record<string, Scenario> = Object.fromEntries(
   [
+    buttonGroup,
+    calendarDayList,
+    monthGrid,
     reviewCard,
     tooltip,
     nextSteps,

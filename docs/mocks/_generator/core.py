@@ -132,9 +132,9 @@ EV = {e["id"]: e for e in EVENTS}
 # Later in November: only the calendar month view and community pages show these.
 LATER = [
     dict(day=17, title="Vector search in Postgres", topics=["ai"], org="AI Builders GTA"),
-    dict(day=18, title="Fabric for Power BI developers", topics=["azure"], org="GTA Azure Community"),
-    dict(day=19, title="Angular Toronto: lightning talks", topics=["angular"], org="Angular Toronto"),
     dict(day=19, title="Minimal APIs in practice", topics=["dotnet"], org="Toronto .NET User Group"),
+    dict(day=19, title="Angular Toronto: lightning talks", topics=["angular"], org="Angular Toronto"),
+    dict(day=19, title="Cloud Native Toronto: November meetup", topics=["aws"], org="Cloud Native Toronto"),
     dict(day=24, title="re:Invent keynote watch party", topics=["aws"], org="AWS User Group Toronto"),
     dict(day=26, title="Testing React in 2027", topics=["react"], org="React Toronto"),
 ]

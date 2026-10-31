@@ -20,8 +20,13 @@ import {
 import { RouterLink } from '@angular/router';
 import { catchError, finalize, map, of, skip, switchMap } from 'rxjs';
 import { failed, loaded, loading, LoadState, SKELETON_DELAY_MS } from '../../shared/load-state';
-import { EventFilters, FORMAT_LABELS, MAX_SEARCH_LENGTH, NO_FILTERS } from './event-filters';
-import { FilterStateStore } from './filter-state.store';
+import {
+  EventFilters,
+  FORMAT_LABELS,
+  MAX_SEARCH_LENGTH,
+  NO_FILTERS,
+} from '../../shared/filters/event-filters';
+import { FilterStateStore } from '../../shared/filters/filter-state.store';
 
 /** The events page (`/`): upcoming events grouped by day, with filters (discovery/browse-events). */
 @Component({
