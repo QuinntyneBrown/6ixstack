@@ -523,10 +523,10 @@ screen("share-event", "dialog", "Share event", opens_from="event-detail",
 
 def share_body(copied=False):
     btn = f'<button class="btn" type="button" aria-live="polite">{icon("check")}Copied</button>' if copied else f'<button class="btn" type="button" autofocus>{icon("copy")}Copy</button>'
-    return (f'<div class="field"><label class="field__label" for="share-url">Event link</label><div class="copy-field"><input class="input" id="share-url" readonly value="https://6ixstack.dev/e/azure-data-ai-day">{btn}</div></div>'
-            f'<ul class="option-list"><li><a class="option-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https://6ixstack.dev/e/azure-data-ai-day">{icon("share")}<span>LinkedIn</span>{icon("external")}</a></li>'
-            f'<li><a class="option-btn" href="https://bsky.app/intent/compose?text=https://6ixstack.dev/e/azure-data-ai-day">{icon("share")}<span>Bluesky</span>{icon("external")}</a></li>'
-            f'<li><a class="option-btn" href="mailto:?subject=Azure%20Data%20%26%20AI%20Day%20GTA&amp;body=https://6ixstack.dev/e/azure-data-ai-day">{icon("mail")}<span>Email</span>{icon("external")}</a></li></ul>')
+    return (f'<div class="field"><label class="field__label" for="share-url">Event link</label><div class="copy-field"><input class="input" id="share-url" readonly value="https://6ixstack.dev/e/azure-data-ai-day-gta">{btn}</div></div>'
+            f'<ul class="option-list"><li><a class="option-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https://6ixstack.dev/e/azure-data-ai-day-gta">{icon("share")}<span>LinkedIn</span>{icon("external")}</a></li>'
+            f'<li><a class="option-btn" href="https://bsky.app/intent/compose?text=https://6ixstack.dev/e/azure-data-ai-day-gta">{icon("share")}<span>Bluesky</span>{icon("external")}</a></li>'
+            f'<li><a class="option-btn" href="mailto:?subject=Azure%20Data%20%26%20AI%20Day%20GTA&amp;body=https://6ixstack.dev/e/azure-data-ai-day-gta">{icon("mail")}<span>Email</span>{icon("external")}</a></li></ul>')
 
 
 @state("share-event", "default", "Copy the short link or share to LinkedIn, Bluesky or email. Uses the native share sheet on phones.")
