@@ -88,7 +88,7 @@ public class Event
     /// <summary>A moderator's approval: published now, or held until the sender verifies their email (L2-060, L2-085).</summary>
     public void Approve(DateTimeOffset now, bool senderVerified)
     {
-        if (Status != EventStatus.InReview || ApprovedAtUtc is not null)
+        if (Status != EventStatus.InReview || ApprovedAtUtc is not null || IsCancelled)
         {
             throw new Exceptions.InvalidStatusTransitionException(Status, "approve");
         }
@@ -120,7 +120,7 @@ public class Event
     /// <summary>Turns a submission down: a missing venue address asks for changes, anything else rejects (L2-061).</summary>
     public void Decline(RejectionReason reason)
     {
-        if (Status != EventStatus.InReview || ApprovedAtUtc is not null)
+        if (Status != EventStatus.InReview || ApprovedAtUtc is not null || IsCancelled)
         {
             throw new Exceptions.InvalidStatusTransitionException(Status, "reject");
         }
@@ -217,6 +217,27 @@ public class Event
         }
 
         Status = EventStatus.InReview;
+        Version = Guid.NewGuid();
+    }
+
+    /// <summary>
+    /// Cancels a published or waiting event (L2-056): it stays listed, marked cancelled with the reason, and a
+    /// published event's SEQUENCE rises so calendar apps replace it. Past and cancelled events cannot be cancelled.
+    /// </summary>
+    public void Cancel(string reason, DateTimeOffset now)
+    {
+        if (IsPast(now) || IsCancelled || Status is not (EventStatus.Published or EventStatus.InReview))
+        {
+            throw new Exceptions.InvalidStatusTransitionException(Status, "cancel");
+        }
+
+        CancelledAtUtc = now;
+        CancellationReason = reason;
+        if (Status == EventStatus.Published)
+        {
+            Sequence++;
+        }
+
         Version = Guid.NewGuid();
     }
 }

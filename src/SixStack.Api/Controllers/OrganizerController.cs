@@ -27,6 +27,12 @@ public sealed class OrganizerController(ISender sender) : ControllerBase
     public Task<EventSavedDto> UpdateEvent(Guid id, UpdateOrganizerEventCommand command, CancellationToken cancellationToken) =>
         sender.Send(command with { Id = id }, cancellationToken);
 
+    /// <summary>Cancels an event (L2-056): 400 without a reason or the typed name, 403, or 409 when past or cancelled.</summary>
+    [HttpPost("events/{id:guid}/cancel")]
+    [Authorize(Policy = AuthPolicies.EventEditor)]
+    public Task<EventCancelledDto> CancelEvent(Guid id, CancelOrganizerEventCommand command, CancellationToken cancellationToken) =>
+        sender.Send(command with { Id = id }, cancellationToken);
+
     /// <summary>Sends a new verification link to the signed-in organizer (L2-053).</summary>
     [HttpPost("verification-email")]
     [Authorize(Policy = AuthPolicies.Organizer)]

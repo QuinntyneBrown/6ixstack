@@ -38,12 +38,16 @@ public sealed record EventEditDto(
     bool IsReadOnly,
     string? ReadOnlyLead,
     int GoingCount,
-    EventDetailsFormDto Details);
+    EventDetailsFormDto Details,
+    bool IsPaid,
+    int EmailableAttendees,
+    string? CancellationReason,
+    string? CancelledOnLabel);
 
 /// <summary>An event for the edit page (L2-054, L2-055).</summary>
 public sealed record GetOrganizerEventQuery(Guid Id) : IRequest<EventEditDto>;
 
-public sealed class GetOrganizerEventQueryHandler(IAppDbContext db, IClock clock, EventAccess access)
+public sealed class GetOrganizerEventQueryHandler(IAppDbContext db, IClock clock, EventAccess access, IAttendeeDirectory attendees)
     : IRequestHandler<GetOrganizerEventQuery, EventEditDto>
 {
     private static readonly CultureInfo En = CultureInfo.GetCultureInfo("en-US");
@@ -53,12 +57,12 @@ public sealed class GetOrganizerEventQueryHandler(IAppDbContext db, IClock clock
         var e = await db.Events.AsNoTracking().Include(x => x.Community).SingleOrDefaultAsync(x => x.Id == request.Id && x.Status != EventStatus.Deleted, cancellationToken)
             ?? throw new NotFoundException("Event not found.");
         await access.DemandAsync(e, cancellationToken);
-        return ToDto(e, clock.UtcNow);
+        return ToDto(e, clock.UtcNow, (await attendees.EmailsGoingToAsync(e.Id, cancellationToken)).Count);
     }
 
     public static string StatusName(Event e, DateTimeOffset now) => e.Status switch
     {
-        EventStatus.Published when e.IsCancelled => "cancelled",
+        _ when e.IsCancelled => "cancelled",
         EventStatus.Published when e.IsPast(now) => "past",
         EventStatus.Published => "published",
         EventStatus.InReview => "inReview",
@@ -67,7 +71,7 @@ public sealed class GetOrganizerEventQueryHandler(IAppDbContext db, IClock clock
         _ => "draft",
     };
 
-    public static EventEditDto ToDto(Event e, DateTimeOffset now)
+    public static EventEditDto ToDto(Event e, DateTimeOffset now, int emailableAttendees)
     {
         var status = StatusName(e, now);
         var label = status switch
@@ -123,6 +127,10 @@ public sealed class GetOrganizerEventQueryHandler(IAppDbContext db, IClock clock
             readOnly,
             readOnly ? $"{start.ToString("dddd, MMMM d, yyyy", En)} · {people}" : null,
             e.GoingCount,
-            details);
+            details,
+            e.PriceCents > 0,
+            emailableAttendees,
+            e.CancellationReason,
+            e.CancelledAtUtc is { } cancelled ? TorontoTime.ToLocal(cancelled).ToString("MMM d", En) : null);
     }
 }

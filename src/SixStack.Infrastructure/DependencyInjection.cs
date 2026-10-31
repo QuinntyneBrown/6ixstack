@@ -52,6 +52,7 @@ public static class DependencyInjection
         services.AddSingleton<IEmailSender, DevMailboxEmailSender>();
         services.Configure<OutboxOptions>(configuration.GetSection(OutboxOptions.Section));
         services.AddScoped<IOutbox, Outbox.Outbox>();
+        services.AddScoped<Application.Organizer.IAttendeeDirectory, Organizer.NoAttendeeDirectory>();
         services.AddScoped<OutboxDispatcher>();
         services.AddScoped<IOutboxMessageHandler<SendEmail>, SendEmailHandler>();
         services.Configure<SiteOptions>(configuration.GetSection(SiteOptions.Section));
