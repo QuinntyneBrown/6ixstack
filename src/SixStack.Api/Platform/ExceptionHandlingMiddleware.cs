@@ -63,6 +63,10 @@ public sealed class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Ex
                 problem.Extensions["decidedBy"] = conflict.DecidedBy;
                 problem.Extensions["reason"] = conflict.Reason;
                 break;
+            case EditConflictException edit:
+                problem = new ProblemDetails { Status = StatusCodes.Status409Conflict, Title = edit.Message };
+                problem.Extensions["reason"] = edit.Reason;
+                break;
             case NotFoundException:
                 problem = new ProblemDetails { Status = StatusCodes.Status404NotFound, Title = "Not found." };
                 break;

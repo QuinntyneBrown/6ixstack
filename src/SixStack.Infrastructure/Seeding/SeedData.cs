@@ -100,6 +100,7 @@ internal static class SeedData
             Speakers: [("priya-natarajan", "Keynote: Fabric one year later"), ("marcus-bell", "Panel: data teams in Canadian banks"), ("aisha-rahman", "Grounding Azure OpenAI on your lakehouse"), ("kenji-watanabe", "Panel: data teams in Canadian banks")],
             Details: e =>
             {
+                e.LastEditedAtUtc = new DateTimeOffset(2026, 10, 28, 15, 0, 0, TimeSpan.Zero);
                 e.Description = "A full day of Fabric, Azure OpenAI and data platform sessions from local MVPs, with a hands-on lab track. Bring a laptop with an Azure subscription for the labs; trial credits are available at the door.\n\n- Two tracks: talks on the main stage, labs in Hall B\n- Lunch and coffee included; vegetarian, vegan and halal options\n- Step-free access from the Square One transit terminal";
                 e.PriceNote = "includes lunch";
                 e.PriceDetail = "Student tickets $15 with a valid ID";

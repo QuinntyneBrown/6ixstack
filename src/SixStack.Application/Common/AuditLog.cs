@@ -5,7 +5,7 @@ namespace SixStack.Application.Common;
 
 public sealed class AuditLog(IAppDbContext db, IClock clock, ICurrentUser user) : IAuditLog
 {
-    public void Record(string action, string targetType, Guid targetId) =>
+    public void Record(string action, string targetType, Guid targetId, string? details = null) =>
         db.AuditEntries.Add(new AuditEntry
         {
             ActorId = user.UserId,
@@ -13,5 +13,6 @@ public sealed class AuditLog(IAppDbContext db, IClock clock, ICurrentUser user) 
             TargetType = targetType,
             TargetId = targetId,
             OccurredAtUtc = clock.UtcNow,
+            Details = details,
         });
 }

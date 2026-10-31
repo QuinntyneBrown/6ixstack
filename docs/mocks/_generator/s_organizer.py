@@ -336,7 +336,7 @@ def _():
 @state("edit-event", "invalid", "Saved with a broken ticket link and a blank address on a hybrid event: summary plus inline errors.")
 def _():
     v = dict(DAY, address="", ticket="tickets.example.org/azure-data-ai-day")
-    errs = {"address": "Enter the street address for the venue.", "ticket": "Enter a full link that starts with https://"}
+    errs = {"address": "Enter the street address.", "ticket": "Enter a full link that starts with https://"}
     return edit_page(event_form(v, errs, include_email=False), summary([("address", errs["address"]), ("ticket", errs["ticket"])]))
 
 

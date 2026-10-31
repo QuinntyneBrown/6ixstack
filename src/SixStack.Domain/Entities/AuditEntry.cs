@@ -9,4 +9,7 @@ public class AuditEntry
     public string TargetType { get; set; } = string.Empty;
     public Guid TargetId { get; set; }
     public DateTimeOffset OccurredAtUtc { get; set; }
+
+    /// <summary>What changed, such as the edited field names ("title, startTime").</summary>
+    public string? Details { get; set; }
 }
