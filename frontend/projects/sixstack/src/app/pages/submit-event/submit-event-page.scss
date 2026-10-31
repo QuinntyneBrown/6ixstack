@@ -3,7 +3,13 @@
 // Local layout of the submit page, ported from docs/mocks/assets/ui.css (form-card, form-grid, choice-cards…).
 :host {
   display: block;
-  max-width: 48rem;
+  max-width: 44rem;
+  margin-inline: auto;
+}
+.conduct-note {
+  margin-top: var(--spacingHorizontalL);
+  font: var(--sx-text-caption);
+  color: var(--colorNeutralForeground2);
 }
 .form-card {
   padding: var(--spacingHorizontalXXL);
@@ -47,21 +53,6 @@ sx-form-section + sx-form-section {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacingHorizontalS) var(--spacingHorizontalXL);
-}
-.topic-label {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacingHorizontalXS);
-}
-.topic-dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-}
-@each $topic in ai, dotnet, azure, angular, react, aws {
-  .topic-dot--#{$topic} {
-    background: var(--sx-topic-#{$topic});
-  }
 }
 .input-group {
   display: flex;

@@ -28,8 +28,8 @@ import {
   NextSteps,
   Skeleton,
   SuccessPanel,
-  TOPIC_LABELS,
   TopicKey,
+  TopicTag,
 } from 'components';
 import { catchError, debounceTime, finalize, map, merge, of, startWith, switchMap, timer } from 'rxjs';
 import { DraftStore } from '../../shared/draft-store';
@@ -61,6 +61,7 @@ import { failed, loaded, loading, LoadState, SKELETON_DELAY_MS } from '../../sha
     RouterLink,
     Skeleton,
     SuccessPanel,
+    TopicTag,
   ],
   templateUrl: './submit-event-page.html',
   styleUrl: './submit-event-page.scss',
@@ -75,7 +76,6 @@ export class SubmitEventPage {
 
   protected readonly form = createEventForm();
   protected readonly describedBy = describedBy;
-  protected readonly topicLabels = TOPIC_LABELS;
   protected readonly nextSteps = [
     'A moderator checks the details, usually within a day.',
     'We email you when it’s live, or what to fix if something is missing.',

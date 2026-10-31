@@ -96,10 +96,7 @@
                 [attr.aria-invalid]="!!error('topics')"
                 [attr.aria-describedby]="error('topics') ? 'topics-error' : null"
                 (change)="toggleTopic(topic, $any($event.target).checked)"
-              /><span class="topic-label"
-                ><span [class]="'topic-dot topic-dot--' + topic" aria-hidden="true"></span
-                >{{ topicLabels[topic] }}</span
-              >
+              /><sx-topic-tag [topic]="topic" />
             </label>
           }
         </div>
@@ -216,7 +213,7 @@
             id="streamUrl"
             type="url"
             formControlName="streamUrl"
-            placeholder="https://"
+            placeholder="https://youtube.com/live/…"
             [attr.aria-invalid]="!!error('streamUrl')"
             [attr.aria-describedby]="describedBy('streamUrl', true, !!error('streamUrl'))"
           />
@@ -271,15 +268,16 @@
     <sx-form-section
       title="Your contact email"
       sectionId="contact"
-      lead="Only moderators see it. We use it to confirm your event and tell you when it's live."
+      lead="Only moderators see it. We’ll tell you when the event is live."
     >
-      <sx-form-field label="Contact email" controlId="contactEmail" [error]="error('contactEmail')">
+      <sx-form-field label="Email" controlId="contactEmail" [error]="error('contactEmail')">
         <input
           sx-input
           id="contactEmail"
           type="email"
           formControlName="contactEmail"
           autocomplete="email"
+          placeholder="name@example.com"
           [attr.aria-invalid]="!!error('contactEmail')"
           [attr.aria-describedby]="describedBy('contactEmail', false, !!error('contactEmail'))"
         />
@@ -293,6 +291,9 @@
       </button>
     </div>
   </form>
+  <p class="conduct-note">
+    By submitting you agree that the event follows the <a routerLink="/code-of-conduct">code of conduct</a>.
+  </p>
 } @else if (slow()) {
   <div class="form-card" aria-label="Loading the form">
     @for (section of [0, 1, 2]; track section) {

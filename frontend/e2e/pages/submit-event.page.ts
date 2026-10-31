@@ -105,7 +105,7 @@ export class SubmitEventPage {
     if (input.paid) await this.priceOption('Paid').check();
     if (input.price !== undefined) await this.field('Price (CAD)').fill(input.price);
     if (input.ticketUrl !== undefined) await this.field('Registration or ticket link').fill(input.ticketUrl);
-    if (input.email !== undefined) await this.field('Contact email').fill(input.email);
+    if (input.email !== undefined) await this.field('Email').fill(input.email);
   }
 
   successTitle(): Locator {
@@ -126,6 +126,14 @@ export class SubmitEventPage {
 
   busyButton(): Locator {
     return this.page.getByRole('button', { name: 'Submitting…' });
+  }
+
+  /** Drops focus and scrolls to the top, so a screenshot shows the resting page. */
+  async settle(): Promise<void> {
+    await this.page.evaluate(() => {
+      (document.activeElement as HTMLElement | null)?.blur();
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
   }
 
   async submit(): Promise<void> {
