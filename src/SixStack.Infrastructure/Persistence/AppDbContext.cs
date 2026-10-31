@@ -20,6 +20,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<SubmissionCheck> SubmissionChecks => Set<SubmissionCheck>();
     public DbSet<ModerationDecision> ModerationDecisions => Set<ModerationDecision>();
     public DbSet<Notification> Notifications => Set<Notification>();
+
+    public DbSet<ProblemReport> ProblemReports => Set<ProblemReport>();
     public DbSet<AuditEntry> AuditEntries => Set<AuditEntry>();
     public DbSet<ReviewPresence> ReviewPresences => Set<ReviewPresence>();
 

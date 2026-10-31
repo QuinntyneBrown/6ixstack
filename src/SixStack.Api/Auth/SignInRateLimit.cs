@@ -8,11 +8,13 @@ public static class SignInRateLimit
 {
     public const string Policy = "sign-in-links";
     public const string FeedCreationPolicy = "feed-creation";
+    public const string ReportPolicy = "problem-reports";
 
     public static IServiceCollection AddSignInRateLimit(this IServiceCollection services, IConfiguration configuration)
     {
         var perHour = configuration.GetValue("Auth:SignInLinks:PerIpPerHour", 20);
         var feedsPerHour = configuration.GetValue("Feeds:CreatePerIpPerHour", 30);
+        var reportsPerHour = configuration.GetValue("Reports:PerIpPerHour", 10);
         return services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -29,6 +31,10 @@ public static class SignInRateLimit
             options.AddPolicy(FeedCreationPolicy, context => RateLimitPartition.GetFixedWindowLimiter(
                 context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                 _ => new FixedWindowRateLimiterOptions { PermitLimit = feedsPerHour, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
+            // Problem reports: 10 an hour per IP address (L2-040 criterion 3).
+            options.AddPolicy(ReportPolicy, context => RateLimitPartition.GetFixedWindowLimiter(
+                context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                _ => new FixedWindowRateLimiterOptions { PermitLimit = reportsPerHour, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
         });
     }
 }

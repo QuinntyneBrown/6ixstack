@@ -477,6 +477,36 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.ToTable("OutboxMessages");
                 });
 
+            modelBuilder.Entity("SixStack.Domain.Entities.ProblemReport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Reason")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReplyEmail")
+                        .HasMaxLength(254)
+                        .HasColumnType("nvarchar(254)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId", "CreatedAtUtc");
+
+                    b.ToTable("ProblemReports");
+                });
+
             modelBuilder.Entity("SixStack.Domain.Entities.ReviewPresence", b =>
                 {
                     b.Property<Guid>("EventId")
@@ -850,6 +880,17 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                 });
 
             modelBuilder.Entity("SixStack.Domain.Entities.ModerationDecision", b =>
+                {
+                    b.HasOne("SixStack.Domain.Entities.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("SixStack.Domain.Entities.ProblemReport", b =>
                 {
                     b.HasOne("SixStack.Domain.Entities.Event", "Event")
                         .WithMany()

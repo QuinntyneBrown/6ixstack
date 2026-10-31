@@ -18,6 +18,8 @@ public interface IAppDbContext
     DbSet<SubmissionCheck> SubmissionChecks { get; }
     DbSet<ModerationDecision> ModerationDecisions { get; }
     DbSet<Notification> Notifications { get; }
+
+    DbSet<ProblemReport> ProblemReports { get; }
     DbSet<AuditEntry> AuditEntries { get; }
     DbSet<ReviewPresence> ReviewPresences { get; }
 

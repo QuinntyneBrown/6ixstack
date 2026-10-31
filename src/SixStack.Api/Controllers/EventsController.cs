@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.RateLimiting;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,15 @@ public sealed class EventsController(ISender sender) : ControllerBase
     {
         var featured = await sender.Send(new GetFeaturedEventQuery(), cancellationToken);
         return featured is null ? NoContent() : Ok(featured);
+    }
+
+    /// <summary>A visitor's problem report (L2-039, L2-040): 202, 400 with field errors, 404, or 429 after ten an hour.</summary>
+    [HttpPost("{slug}/reports")]
+    [EnableRateLimiting(Auth.SignInRateLimit.ReportPolicy)]
+    public async Task<IActionResult> Report(string slug, ReportBody body, CancellationToken cancellationToken)
+    {
+        await sender.Send(new Application.Reports.ReportProblemCommand(slug, body.Reason, body.Details, body.ReplyEmail), cancellationToken);
+        return Accepted();
     }
 
     /// <summary>The event map for the list's filters (L2-011, L2-013): venue dots, stream arcs and the 14 timeline days.</summary>
@@ -61,3 +71,5 @@ public sealed class EventsController(ISender sender) : ControllerBase
         return File(Encoding.UTF8.GetBytes(file.Content), "text/calendar; charset=utf-8", file.FileName);
     }
 }
+
+public sealed record ReportBody(string? Reason, string? Details, string? ReplyEmail);
