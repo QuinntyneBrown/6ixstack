@@ -34,6 +34,9 @@ import { IconName } from '../icon/icons';
     .success-panel__title {
       font: var(--sx-text-h3);
     }
+    h1.success-panel__title {
+      font: var(--sx-text-h2);
+    }
     .success-panel__icon {
       display: grid;
       place-items: center;

@@ -2,7 +2,7 @@
   <div class="auth-card">
     @if (sentTo(); as address) {
       <sx-success-panel class="form-card" icon="mail" [headingLevel]="1" title="Check your inbox">
-        <p>
+        <p class="text-muted">
           We sent a sign-in link to <strong>{{ address }}</strong
           >. It works once and expires in 15 minutes.
         </p>

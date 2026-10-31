@@ -13,7 +13,7 @@
 }
 .form-card {
   display: block;
-  padding: var(--spacingHorizontalXXL);
+  padding: var(--spacingHorizontalXXXL);
   border: 1px solid var(--colorNeutralStroke2);
   border-radius: var(--borderRadius2XLarge);
   background: var(--colorNeutralBackground1);
@@ -33,6 +33,9 @@ h1 {
 .auth-summary {
   display: block;
   margin-bottom: var(--spacingHorizontalXXL);
+}
+.text-muted {
+  color: var(--colorNeutralForeground2);
 }
 .text-caption {
   font: var(--sx-text-caption);

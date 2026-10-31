@@ -72,7 +72,7 @@ test.describe('Sign in: request a link', () => {
     const signIn = new SignInPage(page);
     await signIn.open();
 
-    await signIn.requestLink('nobody-here@example.com');
+    await signIn.requestLink(uniqueEmail('nobody-here'));
 
     await expect(signIn.heading).toHaveText('Check your inbox');
   });

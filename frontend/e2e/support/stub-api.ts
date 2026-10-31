@@ -147,3 +147,8 @@ export async function holdSignInLink(page: Page): Promise<() => void> {
   });
   return release;
 }
+
+/** Answers POST /api/auth/sign-in-links with 202 without sending, for screenshots with a fixed address. */
+export async function acceptSignInLink(page: Page): Promise<void> {
+  await page.route('**/api/auth/sign-in-links', (route) => route.fulfill({ status: 202, body: '' }));
+}
