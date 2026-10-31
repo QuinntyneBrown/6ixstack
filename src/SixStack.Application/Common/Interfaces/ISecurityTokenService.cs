@@ -7,7 +7,7 @@ namespace SixStack.Application.Common.Interfaces;
 public interface ISecurityTokenService
 {
     /// <summary>Adds a token row to the unit of work and returns the plaintext for the link.</summary>
-    string Issue(string email, SecurityTokenPurpose purpose, TimeSpan lifetime);
+    string Issue(string email, SecurityTokenPurpose purpose, TimeSpan lifetime, string? returnUrl = null);
 
     string Hash(string token);
 }

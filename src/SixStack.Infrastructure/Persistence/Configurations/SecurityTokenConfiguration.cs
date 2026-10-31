@@ -13,6 +13,7 @@ public sealed class SecurityTokenConfiguration : IEntityTypeConfiguration<Securi
         builder.Property(t => t.TokenHash).HasMaxLength(64).IsRequired();
         builder.HasIndex(t => t.TokenHash).IsUnique();
         builder.HasIndex(t => new { t.Email, t.Purpose, t.CreatedAtUtc });
+        builder.Property(t => t.ReturnUrl).HasMaxLength(500);
     }
 }
 

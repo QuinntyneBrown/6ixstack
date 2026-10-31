@@ -9,8 +9,7 @@ public static class AuthenticationSetup
 {
     /// <summary>
     /// Cookie session authentication and the organizer and moderator policies (L2-080, L2-083).
-    /// The magic-link sign-in flow that issues sessions arrives with journey 05; until then only
-    /// the test sign-in seam signs anyone in.
+    /// Each cookie names a server-side session that is checked on every request (ADR 0009).
     /// </summary>
     public static IServiceCollection AddSixStackAuth(this IServiceCollection services)
     {
@@ -26,6 +25,7 @@ public static class AuthenticationSetup
                 options.Cookie.Path = "/";
                 options.ExpireTimeSpan = TimeSpan.FromDays(14);
                 options.SlidingExpiration = true;
+                options.Events.OnValidatePrincipal = SessionValidator.ValidateAsync;
                 options.Events.OnRedirectToLogin = context =>
                 {
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -47,6 +47,7 @@ public static class AuthenticationSetup
             options.Cookie.HttpOnly = true;
         });
         services.AddScoped<XsrfTokenService>();
+        services.AddScoped<SessionSignIn>();
 
         services.AddAuthorizationBuilder()
             .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())

@@ -13,5 +13,8 @@ public class SecurityToken
     public DateTimeOffset ExpiresAtUtc { get; set; }
     public DateTimeOffset? UsedAtUtc { get; set; }
 
+    /// <summary>For a sign-in link: the local path to open after signing in.</summary>
+    public string? ReturnUrl { get; set; }
+
     public bool IsUsable(DateTimeOffset now) => UsedAtUtc is null && now < ExpiresAtUtc;
 }
