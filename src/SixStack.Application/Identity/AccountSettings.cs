@@ -22,7 +22,8 @@ public sealed record AccountSettingsDto(
     bool EmailEventDecisions,
     bool EmailProblemReports,
     bool EmailWeeklySummary,
-    SettingsCommunityDto? Community);
+    SettingsCommunityDto? Community,
+    string DeletionNotice);
 
 /// <summary>The signed-in person's settings (L2-068 to L2-070).</summary>
 public sealed record GetAccountSettingsQuery : IRequest<AccountSettingsDto>;
@@ -84,7 +85,12 @@ public sealed class AccountSettingsHandlers(
         }
 
         var p = user.EmailPreferences;
-        return new AccountSettingsDto(user.Name ?? string.Empty, user.Email, user.PendingEmail, user.WebsiteUrl, p.EventDecisions, p.ProblemReports, p.WeeklySummary, community);
+        var notice = community is null
+            ? "You lose access to your events on 6ixstack. Published events stay up. This can’t be undone."
+            : community.CoOrganizerCount > 0
+                ? $"You lose access to edit {community.Name} events. Published events stay up, managed by your {community.CoOrganizerCount} {(community.CoOrganizerCount == 1 ? "co-organizer" : "co-organizers")}. This can’t be undone."
+                : $"You lose access to edit {community.Name} events. Published events stay up under {community.Name}. This can’t be undone.";
+        return new AccountSettingsDto(user.Name ?? string.Empty, user.Email, user.PendingEmail, user.WebsiteUrl, p.EventDecisions, p.ProblemReports, p.WeeklySummary, community, notice);
     }
 
     public async Task<SettingsSavedDto> Handle(UpdateAccountSettingsCommand request, CancellationToken cancellationToken)
