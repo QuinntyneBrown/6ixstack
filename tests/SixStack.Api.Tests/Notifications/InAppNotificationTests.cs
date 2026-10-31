@@ -59,6 +59,7 @@ public sealed class InAppNotificationTests
     {
         using var factory = new ApiFactory();
         var marcus = await As(factory, Marcus);
+        Assert.Equal(3, (await marcus.GetFromJsonAsync<JsonElement>("/api/auth/me")).GetProperty("unreadNotificationCount").GetInt32());
 
         var response = await marcus.PostAsync("/api/notifications/read-all", null);
 

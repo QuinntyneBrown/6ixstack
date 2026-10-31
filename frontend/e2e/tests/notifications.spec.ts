@@ -25,6 +25,16 @@ test.describe('Notifications', () => {
     await expect(notifications.shell.notifications).toHaveAccessibleName('Notifications, 3 unread');
   });
 
+  test('the header shows the unread count on every page', async ({ page }) => {
+    await signInAs(page, CO_ORGANIZER);
+    const notifications = new NotificationsPage(page);
+
+    await page.goto('/organize');
+
+    await expect(notifications.shell.notifications).toHaveAccessibleName('Notifications, 3 unread');
+    await expect(notifications.shell.notificationsBadge).toHaveText('3');
+  });
+
   test('opening one marks it read', async ({ page, baseURL }) => {
     const own = await ownEvent(page, baseURL!, `Read check ${Date.now()}`, 'sentBack');
     const notifications = new NotificationsPage(page);
