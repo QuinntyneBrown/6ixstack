@@ -30,7 +30,8 @@ public sealed record EventFactsDto(WhenFactDto When, VenueFactDto? Venue, Labell
 /// <summary>"Thursday, November 5, 2026" and "9:00 AM – 5:00 PM ET", with a stream's source time and "ended" or "cancelled".</summary>
 public sealed record WhenFactDto(string DateLabel, string TimeRange, string? SourceTime, string? Suffix);
 
-public sealed record VenueFactDto(string Name, string Address, string DirectionsUrl, string? TravelNotes);
+/// <summary>The venue, with its coordinates for the compact venue map when it has them.</summary>
+public sealed record VenueFactDto(string Name, string Address, string DirectionsUrl, string? TravelNotes, string City, double? Latitude, double? Longitude);
 
 public sealed record LabelledFactDto(string Label, string? Note);
 

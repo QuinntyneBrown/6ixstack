@@ -16,7 +16,15 @@ export interface EventDetail {
       sourceTime: string | null;
       suffix: 'ended' | 'cancelled' | null;
     };
-    venue: { name: string; address: string; directionsUrl: string; travelNotes: string | null } | null;
+    venue: {
+      name: string;
+      address: string;
+      directionsUrl: string;
+      travelNotes: string | null;
+      city: string;
+      latitude: number | null;
+      longitude: number | null;
+    } | null;
     stream: LabelledFact | null;
     price: LabelledFact | null;
     attendance: LabelledFact | null;

@@ -1,0 +1,1 @@
+The event map shows where events happen: a dot per GTA venue coloured by its first topic, a dashed ring for hybrid events, and an arc for each stream arriving in Toronto. Under it, a two-week timeline focuses a day or plays through them. The map is an ink panel in both themes. Everything inside is decorative; the list beside it is the accessible route to every event.

@@ -5,6 +5,20 @@
 .day-group {
   margin-top: var(--spacingHorizontalXXXL);
   scroll-margin-top: 6rem;
+  transition: opacity var(--durationNormal) var(--curveEasyEase);
+}
+.day-group--dim {
+  opacity: 0.35;
+}
+.day-group__focus {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--colorBrandBackground);
+  flex: none;
+}
+.event-list > li {
+  scroll-margin-block: 6rem;
 }
 .day-group__heading {
   display: flex;

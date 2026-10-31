@@ -30,6 +30,8 @@ import {
   NO_FILTERS,
 } from '../../shared/filters/event-filters';
 import { FilterStateStore } from '../../shared/filters/filter-state.store';
+import { EventMapPanel } from './map/event-map-panel';
+import { MapTimelineState, prefersReducedMotion, TimelinePlayer } from './map/map-timeline-state';
 import {
   SUBSCRIBE_FEED_TITLE_ID,
   SubscribeFeedDialog,
@@ -43,6 +45,7 @@ import {
     Button,
     DayGroup,
     EmptyState,
+    EventMapPanel,
     Icon,
     RouterLink,
     SearchField,
@@ -52,13 +55,37 @@ import {
   ],
   templateUrl: './events-page.html',
   styleUrl: './events-page.scss',
-  providers: [FilterStateStore],
+  providers: [FilterStateStore, MapTimelineState, TimelinePlayer],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsPage {
   private readonly api = inject(EVENTS_API);
   private readonly toasts = inject(ToastService);
   private readonly store = inject(FilterStateStore);
+  protected readonly timeline = inject(MapTimelineState);
+
+  /** " · showing Thursday, November 5" or " · playing: Tuesday, November 10" (L2-013, L2-014). */
+  protected readonly focusPhrase = computed(() => {
+    const day = this.timeline.focusedDay();
+    if (!day) return '';
+    return this.timeline.playing() ? ` · playing: ${day.label}` : ` · showing ${day.label}`;
+  });
+
+  /** Scrolls a dot's row to the centre of the viewport and moves focus to it (L2-012). */
+  protected revealEvent(slug: string): void {
+    const row = document.querySelector<HTMLElement>(`li[data-slug="${CSS.escape(slug)}"]`);
+    if (!row) return;
+    row.scrollIntoView({ block: 'center', behavior: prefersReducedMotion() ? 'instant' : 'smooth' });
+    row.querySelector<HTMLElement>('a')?.focus({ preventScroll: true });
+  }
+
+  /** At 1,024 px and wider, a picked day scrolls the list to its heading (L2-013). */
+  protected scrollToDay(date: string): void {
+    if (!matchMedia('(min-width: 64rem)').matches) return;
+    document
+      .getElementById(`group-${date}`)
+      ?.scrollIntoView({ block: 'start', behavior: prefersReducedMotion() ? 'instant' : 'smooth' });
+  }
 
   protected readonly topics = TOPICS;
   protected readonly topicLabels = TOPIC_LABELS;

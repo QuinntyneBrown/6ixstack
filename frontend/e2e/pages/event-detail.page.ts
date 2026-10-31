@@ -6,6 +6,10 @@ import { AppShell } from './app-shell';
 export class EventDetailPage {
   readonly shell: AppShell;
   readonly share: Locator;
+  readonly venueMap: Locator;
+  readonly venueMapTitle: Locator;
+  readonly venueMapDots: Locator;
+  readonly venueMapDays: Locator;
   readonly backLink: Locator;
   readonly title: Locator;
   readonly community: Locator;
@@ -22,6 +26,10 @@ export class EventDetailPage {
 
   constructor(private readonly page: Page) {
     this.share = page.getByRole('button', { name: 'Share', exact: true });
+    this.venueMap = page.locator('section[aria-labelledby="venue-h"] .event-map');
+    this.venueMapTitle = this.venueMap.locator('.event-map__title');
+    this.venueMapDots = this.venueMap.locator('.event-map__event');
+    this.venueMapDays = this.venueMap.getByRole('group', { name: 'Choose a day' });
     this.shell = new AppShell(page);
     this.backLink = page.getByRole('link', { name: 'All events' });
     this.title = page.getByRole('heading', { level: 1 });

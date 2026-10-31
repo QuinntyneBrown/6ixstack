@@ -90,6 +90,19 @@
         @if (e.facts.venue; as venue) {
           <section aria-labelledby="venue-h">
             <h2 id="venue-h" class="section-title">Venue</h2>
+            @if (venuePoint().length) {
+              <sx-event-map
+                class="venue-map"
+                compact
+                uid="venue"
+                [showTimeline]="false"
+                [still]="still"
+                [points]="venuePoint()"
+                [hoveredSlug]="e.slug"
+                [heading]="venue.name + ', ' + venue.city"
+                subtitle=""
+              />
+            }
             <div class="facts">
               <sx-fact-item icon="pin" [label]="venue.name">{{ venue.address }}</sx-fact-item>
               @if (venue.travelNotes) {

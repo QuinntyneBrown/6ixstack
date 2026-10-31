@@ -1,4 +1,5 @@
 import { Scenario } from './scenario';
+import { scenario as eventMap } from './EventMap';
 import { scenario as inlineStatus } from './InlineStatus';
 import { scenario as backLink } from './BackLink';
 import { scenario as table } from './Table';
@@ -48,6 +49,7 @@ import { scenario as toast } from './Toast';
 /** Every scenario, by name. Add one file per component and register it here. */
 export const SCENARIOS: Record<string, Scenario> = Object.fromEntries(
   [
+    eventMap,
     inlineStatus,
     backLink,
     table,

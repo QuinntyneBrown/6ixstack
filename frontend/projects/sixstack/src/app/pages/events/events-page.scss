@@ -141,3 +141,29 @@
 .arrow-link:hover {
   text-decoration: underline;
 }
+
+// List and map side by side (ported from docs/mocks/assets/ui.css .page-grid--map, .map-col): the map comes first
+// on phones and sticks beside the list from 1024 px (L2-016).
+.page-grid--map {
+  display: grid;
+  gap: var(--spacingHorizontalXXXL);
+}
+.list-col {
+  min-width: 0;
+}
+.map-col {
+  order: -1;
+  min-width: 0;
+}
+@media (min-width: 64rem) {
+  .page-grid--map {
+    grid-template-columns: minmax(0, 1fr) minmax(25rem, 31.25rem);
+    gap: var(--sx-space-12);
+  }
+  .map-col {
+    order: 0;
+    position: sticky;
+    top: 6rem;
+    align-self: start;
+  }
+}
