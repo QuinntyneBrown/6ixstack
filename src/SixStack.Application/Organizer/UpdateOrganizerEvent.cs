@@ -1,3 +1,6 @@
+using SixStack.Application.Common.Messages;
+using SixStack.Application.Calendar;
+using Microsoft.Extensions.Options;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SixStack.Application.Common.Exceptions;
@@ -41,7 +44,11 @@ public sealed class UpdateOrganizerEventCommandHandler(
     IClock clock,
     EventAccess access,
     IAuditLog audit,
-    ISubmissionCheckScheduler checks) : IRequestHandler<UpdateOrganizerEventCommand, EventSavedDto>
+    ISubmissionCheckScheduler checks,
+    ICurrentUser current,
+    IOutbox outbox,
+    Notifications.EmailPolicy emails,
+    IOptions<SiteOptions> site) : IRequestHandler<UpdateOrganizerEventCommand, EventSavedDto>
 {
     public async Task<EventSavedDto> Handle(UpdateOrganizerEventCommand request, CancellationToken cancellationToken)
     {
@@ -63,6 +70,17 @@ public sealed class UpdateOrganizerEventCommandHandler(
         }
 
         audit.Record("EventEdited", nameof(Domain.Entities.Event), e.Id, string.Join(", ", changed));
+        if (access.IsModerator && changed.Count > 0 && e.SubmitterEmail is { } owner
+            && await emails.WantsAsync(owner, p => p.EventDecisions, cancellationToken))
+        {
+            var moderator = await db.Users.Where(u => u.Id == current.UserId).Select(u => u.Name ?? "A moderator").SingleAsync(cancellationToken);
+            var what = string.Join(", ", changed.Select(FieldLabel).Distinct());
+            outbox.Enqueue(new SendEmail(new EmailMessage(
+                owner,
+                $"A moderator updated “{e.Title}”",
+                $"{moderator.Split(' ')[0]} from 6ixstack updated “{e.Title}”: {what}.\n\nCheck your event: {site.Value.PublicBaseUrl.TrimEnd('/')}/organize\n\nReply to this email if something looks wrong.")));
+        }
+
         try
         {
             await db.SaveChangesAsync(cancellationToken);
@@ -74,4 +92,19 @@ public sealed class UpdateOrganizerEventCommandHandler(
 
         return new EventSavedDto(e.Slug, e.Title, GetOrganizerEventQueryHandler.StatusName(e, now), e.GoingCount, resubmitted);
     }
+
+    /// <summary>The words for a changed field in the "a moderator updated" email.</summary>
+    private static string FieldLabel(string field) => field switch
+    {
+        "organizerName" => "organizer",
+        "startTime" => "start time",
+        "endTime" => "end time",
+        "timeZoneId" => "time zone",
+        "venueName" => "venue",
+        "streetAddress" => "address",
+        "streamUrl" => "livestream link",
+        "priceCad" => "price",
+        "ticketUrl" => "ticket link",
+        _ => field,
+    };
 }

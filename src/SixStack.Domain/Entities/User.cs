@@ -20,4 +20,16 @@ public class User
         string.IsNullOrWhiteSpace(Name)
             ? Email[..1].ToUpperInvariant()
             : string.Concat(Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(p => char.ToUpperInvariant(p[0])));
+
+    /// <summary>Which notification emails the person receives (L2-067).</summary>
+    public EmailPreferences EmailPreferences { get; set; } = new();
+}
+
+/// <summary>Email switches with their defaults (L2-067): decisions and reports on, summary and follows off.</summary>
+public class EmailPreferences
+{
+    public bool EventDecisions { get; set; } = true;
+    public bool ProblemReports { get; set; } = true;
+    public bool WeeklySummary { get; set; }
+    public bool FollowedCommunities { get; set; }
 }

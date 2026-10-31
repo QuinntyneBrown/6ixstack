@@ -876,6 +876,49 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SixStack.Domain.Entities.User", b =>
+                {
+                    b.OwnsOne("SixStack.Domain.Entities.EmailPreferences", "EmailPreferences", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<bool>("EventDecisions")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bit")
+                                .HasDefaultValue(true)
+                                .HasColumnName("EmailEventDecisions");
+
+                            b1.Property<bool>("FollowedCommunities")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bit")
+                                .HasDefaultValue(false)
+                                .HasColumnName("EmailFollowedCommunities");
+
+                            b1.Property<bool>("ProblemReports")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bit")
+                                .HasDefaultValue(true)
+                                .HasColumnName("EmailProblemReports");
+
+                            b1.Property<bool>("WeeklySummary")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bit")
+                                .HasDefaultValue(false)
+                                .HasColumnName("EmailWeeklySummary");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("EmailPreferences")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SixStack.Domain.Entities.Community", b =>
                 {
                     b.Navigation("Organizers");

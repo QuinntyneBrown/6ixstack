@@ -54,6 +54,7 @@ public static class DependencyInjection
         services.AddScoped<IOutbox, Outbox.Outbox>();
         services.AddScoped<Application.Organizer.IAttendeeDirectory, Organizer.NoAttendeeDirectory>();
         services.AddScoped<OutboxDispatcher>();
+        services.AddHostedService<Notifications.WeeklySummaryJob>();
         services.AddScoped<IOutboxMessageHandler<SendEmail>, SendEmailHandler>();
         services.Configure<SiteOptions>(configuration.GetSection(SiteOptions.Section));
         services.AddSingleton<IIcsWriter, IcsWriter>();

@@ -13,5 +13,13 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(u => u.Email).IsUnique();
         builder.Property(u => u.Name).HasMaxLength(120);
         builder.Ignore(u => u.Initials);
+        builder.OwnsOne(u => u.EmailPreferences, prefs =>
+        {
+            prefs.Property(p => p.EventDecisions).HasColumnName("EmailEventDecisions").HasDefaultValue(true);
+            prefs.Property(p => p.ProblemReports).HasColumnName("EmailProblemReports").HasDefaultValue(true);
+            prefs.Property(p => p.WeeklySummary).HasColumnName("EmailWeeklySummary").HasDefaultValue(false);
+            prefs.Property(p => p.FollowedCommunities).HasColumnName("EmailFollowedCommunities").HasDefaultValue(false);
+        });
+        builder.Navigation(u => u.EmailPreferences).IsRequired();
     }
 }

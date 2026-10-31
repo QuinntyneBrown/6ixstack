@@ -53,6 +53,7 @@ public sealed class RejectSubmissionCommandHandler(
     ICurrentUser user,
     IOutbox outbox,
     IAuditLog audit,
+    Notifications.EmailPolicy emails,
     IOptions<SiteOptions> site) : IRequestHandler<RejectSubmissionCommand, RejectionResultDto>
 {
     public async Task<RejectionResultDto> Handle(RejectSubmissionCommand request, CancellationToken cancellationToken)
@@ -91,7 +92,12 @@ public sealed class RejectSubmissionCommandHandler(
         var to = e.SubmitterEmail ?? string.Empty;
         if (to.Length > 0)
         {
-            outbox.Enqueue(new SendEmail(new EmailMessage(to, subject, body)));
+            // A rejection is always emailed (L2-061); a send-back follows the event-decisions switch (L2-067).
+            if (!needsChanges || await emails.WantsAsync(to, p => p.EventDecisions, cancellationToken))
+            {
+                outbox.Enqueue(new SendEmail(new EmailMessage(to, subject, body)));
+            }
+
             db.Notifications.Add(new Notification
             {
                 RecipientEmail = to,

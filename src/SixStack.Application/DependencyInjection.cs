@@ -22,6 +22,7 @@ public static class DependencyInjection
         services.AddScoped<IOutboxMessageHandler<SubmissionApprovedNotification>, SubmissionApprovedNotificationHandler>();
         services.AddScoped<IAuditLog, Common.AuditLog>();
         services.AddScoped<Organizer.EventAccess>();
+        services.AddScoped<Notifications.EmailPolicy>();
         return services;
     }
 }
