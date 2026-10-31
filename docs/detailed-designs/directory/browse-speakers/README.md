@@ -183,3 +183,23 @@ failure keeps the toolbar values and offers Try again. "Show 24 more" appends
 the next 24 cards and updates the caption.
 
 ![Sequence diagram for loading, paging and retrying the speakers directory](diagrams/sequence-load-states.png)
+
+## Decisions (journey 23)
+
+- **Listed speakers**: every speaker. The lead reads "{n} people who have spoken at GTA meetups and conferences this
+  year." The seed lists 14 (L2-032 uses that number; the mocks keep 214).
+- **Order**: by next talk, soonest first, then by name. Speakers with no upcoming talk come last and show no Next
+  line.
+- **Periods** (`period` = `any`, `month`, `year`):
+  - "Speaking this month" keeps speakers with a talk at a published, not cancelled event before the Toronto month
+    ends.
+  - "Spoke this year" keeps speakers whose talk this year has already happened.
+  - Unknown values answer 400.
+- **Search**: case-insensitive on the name, role and company, and talk titles (or event titles where a talk has no
+  title of its own).
+- **Empty**: "No {topic} talks this month" (or "this year"; "No talks …" without a topic), "Nobody is listed to speak
+  about {topic} before {month end}.", with "Show any time" (resets the period) and "Pitch a talk" (to `/submit`).
+  A community's call for speakers has no data yet, so that line is left out.
+- **Cards** reuse `DirectoryCard` with its person variant: avatar, topics row, then the next talk.
+- The seed adds five speakers with talks earlier this year.
+
