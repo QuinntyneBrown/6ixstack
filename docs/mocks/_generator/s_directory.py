@@ -302,7 +302,7 @@ def _():
 # ======================================================================= calendar feeds
 screen("calendar-feeds", "page", "Calendar feeds", route="/feeds", na={"empty": "Ready-made feeds always exist."})
 READY = [("Everything", "All GTA and streaming events", 14, "all"), ("In the GTA", "In-person and hybrid events only", 9, "gta"), ("Streaming", "Online talks you can watch from anywhere", 7, "streaming"),
-         ("AI", "Every AI event, local or streamed", 6, "ai"), (".NET", ".NET and C# events", 4, "dotnet"), ("Azure", "Azure and Fabric events", 5, "azure")]
+         ("AI", "Every AI event, local or streamed", 6, "ai"), (".NET", ".NET and C# events", 4, "dotnet"), ("Azure", "Azure and Fabric events", 4, "azure")]
 
 
 def ready_list(skeleton=False):
