@@ -35,6 +35,21 @@ test.describe('Contact the team', () => {
     await expect(contact.email).toBeFocused();
   });
 
+  test('fixing a field clears its error and keeps the others', async ({ page }) => {
+    const contact = new ContactPage(page);
+    await contact.open();
+    await contact.send.click();
+    await expect(contact.summaryItems()).toHaveCount(3);
+
+    await contact.name.fill('Priya');
+
+    await expect(contact.summaryItems()).toHaveText([
+      'Enter an email address like name@example.com',
+      'Write a message so we know how to help',
+    ]);
+    await expect(contact.name).not.toHaveAttribute('aria-invalid', 'true');
+  });
+
   test('while sending the fields are read-only and the button says Sending…', async ({ page }) => {
     const release = await contactAnswers(page, 0);
     const contact = new ContactPage(page);

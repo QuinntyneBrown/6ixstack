@@ -2,12 +2,14 @@ import {
   afterNextRender,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   Injector,
   signal,
   viewChild,
 } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ApiError, ContactSent, ContactTopic, SITE_API } from 'api';
 import {
@@ -72,6 +74,18 @@ export class ContactPage {
   protected readonly sending = signal(false);
   protected readonly failed = signal(false);
   protected readonly sent = signal<ContactSent | null>(null);
+
+  constructor() {
+    // Editing a field drops its error; the others stay until the next send (design: site/contact-form).
+    const destroyRef = inject(DestroyRef);
+    const controls: [string, AbstractControl][] = Object.entries(this.form.controls);
+    for (const [field, control] of controls) {
+      control.valueChanges.pipe(takeUntilDestroyed(destroyRef)).subscribe(() => {
+        const id = FIELD_IDS[field];
+        if (this.errorFor(id)) this.errors.update((errors) => errors.filter((e) => e.controlId !== id));
+      });
+    }
+  }
 
   protected errorFor(controlId: string): string | null {
     return this.errors().find((e) => e.controlId === controlId)?.message ?? null;

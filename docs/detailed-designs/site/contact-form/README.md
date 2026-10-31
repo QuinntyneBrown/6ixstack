@@ -157,4 +157,8 @@ Try again. The email to the team inbox leaves in the background.
   know how to help"). The summary reads "Fix {n} things before sending".
 - **Retention**: contact messages are kept for a year (L2-100). The deletion job joins with the retention work
   deferred in journey 26.
+- **Clearing errors**: editing a field drops its own error, and the summary keeps the rest until the next send, so
+  an error never sits beside a value that has been fixed.
+- **Other ways to reach us**: the addresses are shown as text, as the mock draws them (`FactItem` labels are plain
+  text); "Your message didn't send" also names hello@6ixstack.dev.
 
