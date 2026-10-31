@@ -5,7 +5,8 @@ export interface EventDetail {
   description: string;
   state: 'upcoming' | 'past' | 'cancelled';
   format: 'inPerson' | 'streaming' | 'hybrid';
-  community: { slug: string; name: string };
+  /** `slug` is null for a new organizer without a community yet. */
+  community: { slug: string | null; name: string };
   topics: string[];
   dateTile: { month: string; day: string };
   facts: {

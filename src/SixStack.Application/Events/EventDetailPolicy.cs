@@ -20,7 +20,8 @@ public static class EventDetailPolicy
 
     public static EventDetailDto Build(Event e, Event? nextEvent, DateTimeOffset now, string publicBaseUrl)
     {
-        var community = e.Community!;
+        // A new organizer's approved event has no community yet; it goes by the organizer name it was submitted with.
+        var community = e.Community ?? new Community { Name = e.OrganizerName ?? "the organizer" };
         var state = e.IsCancelled ? "cancelled" : e.IsPast(now) ? "past" : "upcoming";
         var upcoming = state == "upcoming";
         var startLocal = TorontoTime.ToLocal(e.StartsAtUtc);
@@ -80,7 +81,7 @@ public static class EventDetailPolicy
             e.Description,
             state,
             EventLabels.Format(e.Format),
-            new CommunityLinkDto(community.Slug, community.Name),
+            new CommunityLinkDto(e.Community?.Slug, community.Name),
             TopicKeys.Of(e.Topics),
             new DateTileDto(startLocal.ToString("MMM", En), day.Day.ToString(En)),
             new EventFactsDto(when, venue, stream, price, attendance),
@@ -100,7 +101,7 @@ public static class EventDetailPolicy
             var names = string.Join(" or ", topics.Select(TopicKeys.Label));
             return new EventActionsDto(null, null, false, false, false, null, null, null,
                 new LinkDto(topics.Count == 0 ? "Find another event" : $"Find another {names} event", topics.Count == 0 ? "/" : $"/?topics={string.Join(',', topics)}"),
-                new LinkDto($"Follow {community.Name}", $"/communities/{community.Slug}"));
+                e.Community is null ? null : new LinkDto($"Follow {community.Name}", $"/communities/{community.Slug}"));
         }
 
         if (state == "past")
