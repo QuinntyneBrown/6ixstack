@@ -131,10 +131,10 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 - Library: `FeatureCard` (with `DateTile`, `Button` on-feature; journey 17), `SegmentedControl` (design system: button group, segmented), `TopicChip`, `SearchField` (design system: text field, search), `DayGroup`, `EventRow` (with `TopicTag`, `Badge`), `EventMap`, `MapTimeline` (journey 16), `Link` (arrow), `Button`; loading `Skeleton`; empty and no-results `EmptyState`; error `Alert` (list, with Try again and a link action) + `Skeleton` (map waits); long load more (`Button`, busy while loading); edge `Badge` (Waitlist open, Cancelled on `EventRow`).
 - Local: hero (`hero`, `hero__stat`), filter bar, result line, `EventMapPanel` (map states), CTA band (`cta-band`: submit and subscribe sections). hover, day-focus, playing and partial change map/list state classes only (`is-dim`, `is-off`, `is-hot`).
 
-#### Event detail — `/events/:id` — `pages/event-detail`: default, loading, error, streaming, past, cancelled
+#### Event detail — `/events/:slug` — `pages/event-detail`: default, loading, error, streaming, past, cancelled
 
-- Library: `Link` (back), `DetailHero`, `DateTile` (lg), `TopicTag`, `DescriptionRenderer`, `List` (people/person) with `Avatar`, `EventMap` (compact), `Facts`/`FactItem`, `Button` (primary, block, ghost), `DockedActionBar`; loading `Skeleton`; error `EmptyState`; streaming, past and cancelled `Alert` (event status, see `notifications/event-alert`).
-- Local: page layout, prose section, agenda (`ol.agenda`, `agenda__time`: no library component for an event agenda; flag for catalogue review), share/report/calendar action row.
+- Library: `Icon` (back link), `DateTile` (lg), `TopicTag`, `Description` (the design's `DescriptionRenderer`), `PersonLink` with `Avatar` (speakers), `EventMap` (compact; journey 16), `FactItem` (facts), `Button` (primary, block, ghost), `DockedActionBar`; loading `Skeleton`; error `EmptyState` (error); not found `StatusPage` (`NotFoundPage`); streaming, past, cancelled and status alerts `Alert` (see `notifications/event-alert`).
+- Local: page layout, back link, detail hero, facts panel frame (`.facts`), prose section, agenda (`ol.agenda`, `agenda__time`: no library component for an event agenda; flag for catalogue review), share/report/calendar action row.
 
 #### Calendar — `/calendar` — `pages/calendar`: default, loading, empty, error, no-results
 
