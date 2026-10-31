@@ -417,8 +417,22 @@
         "loading",
         "empty",
         "error",
-        "forbidden"
+        "forbidden",
+        "checking"
       ]
+    },
+    {
+      "id": "keyboard-shortcuts",
+      "kind": "dialog",
+      "title": "Keyboard shortcuts",
+      "opens_from": "review-queue",
+      "states": [
+        "default"
+      ],
+      "not_applicable": {
+        "invalid": "No inputs; a reference list.",
+        "busy": "Nothing to submit."
+      }
     },
     {
       "id": "notifications",

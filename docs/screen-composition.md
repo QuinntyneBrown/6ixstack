@@ -207,10 +207,15 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 - Library: `Button` (New event, row actions), `StatsRow`, `Stat`, `Table` (status cell, row actions), `Badge`; loading `Skeleton`; empty `FormLayout` (form-card) + `EmptyState`; error `Alert`; submission status `Alert` (see `notifications/submission-banner`).
 - Local: page title.
 
-#### Review queue — `/admin/review` — `pages/review-queue`: default, loading, empty, error, forbidden
+#### Review queue — `/admin/review` — `pages/review-queue`: default, checking, loading, empty, error, forbidden
 
-- Library: `Card` (review card with check list), `EventRow` meta (`meta-item`), `TopicTag`, `Button` (Approve, Edit, Reject); loading `Skeleton`; empty `EmptyState`; forbidden `EmptyState`; error `Alert`.
-- Local: page title, review list layout (`review-list`).
+- Library: `ReviewCard` (design system: card, review card; meta items, `TopicTag`, check list with passed, warning and pending checks, actions slot), `Button` (Approve, Edit, Reject from journeys 07, 08 and 14); loading `Skeleton`; empty `EmptyState`; forbidden `EmptyState`; error `Alert`.
+- Local: page title with the queue summary, review list layout (`review-list`), `ReviewQueueShortcuts`.
+
+#### Keyboard shortcuts — dialog — `dialogs/keyboard-shortcuts`: default
+
+- Library: `DialogShell`, `Button` (Close).
+- Local: `KeyboardShortcutsDialog` content (description list of keys, `kbd`).
 
 #### Notifications — `/notifications` — `pages/notifications`: default, loading, empty, error, read
 
