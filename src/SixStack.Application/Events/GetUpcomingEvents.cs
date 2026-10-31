@@ -158,14 +158,14 @@ public sealed class GetUpcomingEventsQueryHandler(IAppDbContext db, IClock clock
         _ => true,
     };
 
-    private static IQueryable<Event> ApplyFormat(IQueryable<Event> events, string format) => format switch
+    internal static IQueryable<Event> ApplyFormat(IQueryable<Event> events, string format) => format switch
     {
         "gta" => events.Where(e => e.Format == EventFormat.InPerson || e.Format == EventFormat.Hybrid),
         "streaming" => events.Where(e => e.Format == EventFormat.Streaming || e.Format == EventFormat.Hybrid),
         _ => events,
     };
 
-    private static IQueryable<Event> ApplyTopics(IQueryable<Event> events, IReadOnlyList<string>? topics)
+    internal static IQueryable<Event> ApplyTopics(IQueryable<Event> events, IReadOnlyList<string>? topics)
     {
         if (topics is null || topics.Count == 0)
         {
@@ -176,7 +176,7 @@ public sealed class GetUpcomingEventsQueryHandler(IAppDbContext db, IClock clock
         return events.Where(e => (e.Topics & mask) != Topics.None);
     }
 
-    private static IQueryable<Event> ApplySearch(IQueryable<Event> events, string search)
+    internal static IQueryable<Event> ApplySearch(IQueryable<Event> events, string search)
     {
         if (search.Length == 0)
         {

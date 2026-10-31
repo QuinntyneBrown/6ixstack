@@ -72,6 +72,16 @@ internal static class SeedData
         new("nadia-chen", "Nadia Chen", "NC", "ML engineer, Cohere", "Cohere", Topics.AI, "Toronto"),
     ];
 
+    /// <summary>Where each streaming community broadcasts from, as the event map draws it.</summary>
+    public static readonly IReadOnlyDictionary<string, string> StreamOrigins = new Dictionary<string, string>
+    {
+        ["microsoft-reactor"] = "Redmond",
+        ["dotnet-conf-community"] = "London",
+        ["ng-conf"] = "Salt Lake City",
+        ["semantic-kernel-team"] = "Redmond",
+        ["react-summit"] = "Amsterdam",
+    };
+
     private static readonly VenueSeed MicrosoftCanada = new("Microsoft Canada", "81 Bay St", "Toronto", 43.6440, -79.3770);
     private static readonly VenueSeed Mars = new("MaRS Discovery District", "101 College St", "Toronto", 43.6598, -79.3881);
     private static readonly VenueSeed LivingArts = new("Living Arts Centre", "4141 Living Arts Dr", "Mississauga", 43.5912, -79.6441);

@@ -241,6 +241,9 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("StreamOriginCity")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("StreamUrl")
                         .HasMaxLength(2048)
                         .HasColumnType("nvarchar(2048)");
