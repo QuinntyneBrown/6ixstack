@@ -44,3 +44,4 @@ export * from './lib/form/form-section';
 export * from './lib/success-panel/success-panel';
 export * from './lib/next-steps/next-steps';
 export * from './lib/tooltip/tooltip';
+export * from './lib/review-card/review-card';

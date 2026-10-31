@@ -1,0 +1,63 @@
+<div class="page-title">
+  <h1>Review queue</h1>
+  <p class="lead">{{ lead() }}</p>
+</div>
+
+@if (state(); as s) {
+  @if (s.status === 'loaded') {
+    @if (s.data.cards.length) {
+      <ul class="review-list" sxReviewQueueShortcuts>
+        @for (card of s.data.cards; track card.id) {
+          <li
+            sx-review-card
+            [title]="card.title"
+            [organizer]="card.organizer"
+            [when]="card.whenLabel"
+            [where]="card.whereLabel"
+            [topics]="topics(card)"
+            [checks]="card.checks"
+            [submitted]="card.submittedLabel + ' · ' + card.submitterEmail"
+          ></li>
+        }
+      </ul>
+    } @else {
+      <sx-empty-state icon="check-circle" title="All caught up">
+        <span slot="text">No submissions are waiting. New ones show up here and in your notifications.</span>
+        <a slot="actions" sx-button routerLink="/">See what’s live</a>
+      </sx-empty-state>
+    }
+  } @else if (forbidden()) {
+    <sx-empty-state icon="lock" title="Only moderators can review submissions">
+      <span slot="text"
+        >You’re signed in as {{ session.user()?.name }}, an organizer. To help moderate, ask the 6ixstack
+        team.</span
+      >
+      <ng-container slot="actions">
+        <a sx-button appearance="primary" routerLink="/organize">Go to your events</a>
+        <a sx-button routerLink="/contact">Ask to moderate</a>
+      </ng-container>
+    </sx-empty-state>
+  } @else if (s.status === 'failed') {
+    <sx-alert
+      kind="danger"
+      announce="alert"
+      title="We couldn’t load the queue"
+      [actions]="[{ label: 'Try again', run: retry.bind(this) }]"
+    >
+      Submissions are safe. Nothing is approved or rejected until you act.
+    </sx-alert>
+  } @else if (slow()) {
+    <ul class="review-list" aria-busy="true">
+      @for (row of [0, 1, 2]; track row) {
+        <li class="review-card skeleton-card" aria-hidden="true">
+          <div class="skeleton-card__body">
+            <sx-skeleton variant="title" width="50%" />
+            <sx-skeleton width="30%" />
+            <sx-skeleton width="70%" />
+            <sx-skeleton width="60%" />
+          </div>
+        </li>
+      }
+    </ul>
+  }
+}

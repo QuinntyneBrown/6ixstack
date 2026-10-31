@@ -368,7 +368,7 @@ QUEUE = [
     dict(title="Rust in production at scale", org="Toronto Rust Meetup", when="Tue, Nov 17 · 6:30 PM", where="Shopify, 620 King St W, Toronto", topics=[], submitted="2 hours ago · organizers@torontorust.ca",
          checks=[("ok", "Venue address found"), ("ok", "Link reachable"), ("ok", "No duplicates")]),
     dict(title="Kubernetes on a budget", org="Cloud Native Toronto", when="Thu, Nov 19 · 6:00 PM", where="Streaming online", topics=["azure", "aws"], submitted="5 hours ago · hello@cloudnativeto.ca",
-         checks=[("ok", "Stream link reachable"), ("warn", "Possible duplicate of a Nov 19 listing"), ("ok", "Organizer has 6 approved events")]),
+         checks=[("ok", "Stream link reachable"), ("warn", "Possible duplicate of a Nov 19 listing"), ("ok", "Organizer has 4 approved events")]),
     dict(title="Fabric for Power BI developers", org="GTA Azure Community", when="Wed, Nov 18 · 6:30 PM", where="Microsoft Canada, 81 Bay St, Toronto", topics=["azure", "ai"], submitted="Yesterday · priya@gtaazure.ca",
          checks=[("ok", "Venue address found"), ("ok", "Link reachable"), ("ok", "Trusted organizer")]),
     dict(title="Free crypto trading masterclass", org="WealthFast Academy", when="Sat, Nov 14 · 2:00 PM", where="Address not given", topics=[], submitted="Yesterday · promo@wealthfast.biz",
@@ -377,7 +377,7 @@ QUEUE = [
 
 
 def review_card(q, hover=False):
-    ck = "".join(f'<li>{icon("check-circle" if k == "ok" else "warning", "icon icon--sm " + k)}{t}</li>' for k, t in q["checks"])
+    ck = "".join(f'<li>{icon({"ok": "check-circle", "warn": "warning", "pending": "clock"}[k], "icon icon--sm " + k)}{t}</li>' for k, t in q["checks"])
     tags = "".join(topic_tag(t) for t in q["topics"]) or '<span class="topic-tag">No topic picked</span>'
     hv = HOVER if hover else ""
     return (f'<li class="review-card"{hv}><div style="min-width: 0;"><h2>{esc(q["title"])}</h2><p class="text-muted">{esc(q["org"])}</p>'
@@ -424,6 +424,28 @@ def _():
                             "You’re signed in as Priya Natarajan, an organizer. To help moderate, ask the 6ixstack team.",
                             f'<a class="btn btn--primary" href="{P("organizer-dashboard")}">Go to your events</a><a class="btn" href="{P("contact")}">Ask to moderate</a>'),
                       sub="You don’t have access to this page", user="organizer", unread=3)
+
+
+@state("review-queue", "checking", "A new submission whose automatic checks are still running: pending checks read Checking…, the card stays reviewable.")
+def _():
+    q = dict(QUEUE[0], title="Blazor at the edge", org="Toronto .NET User Group", when="Tue, Nov 24 · 6:00 PM",
+             where="Microsoft Canada, 81 Bay St, Toronto", topics=["dotnet"], submitted="just now · hello@torontodotnet.ca",
+             checks=[("pending", "Checking…"), ("pending", "Checking…"), ("pending", "Checking…")])
+    return queue_page('<ul class="review-list">' + review_card(q) + "".join(review_card(x) for x in QUEUE[1:]) + '</ul>')
+
+
+# ---- keyboard shortcuts (opened with ? on the review queue)
+screen("keyboard-shortcuts", "dialog", "Keyboard shortcuts", opens_from="review-queue", na={"invalid": "No inputs; a reference list.", "busy": "Nothing to submit."})
+
+
+@state("keyboard-shortcuts", "default", "The review queue's shortcuts; Close has focus and Escape closes.")
+def _():
+    rows = [("J", "Next submission"), ("K", "Previous submission"), ("A", "Approve the focused submission"),
+            ("R", "Reject the focused submission"), ("?", "Show these shortcuts")]
+    body = ('<dl class="dl">' + "".join(f'<dt><kbd>{k}</kbd></dt><dd>{t}</dd>' for k, t in rows) + '</dl>'
+            '<p class="text-caption">Shortcuts don’t fire while you type in a field.</p>')
+    foot = f'<a class="btn" href="{P("review-queue")}" autofocus>Close</a>'
+    return inert(queue_page('<ul class="review-list">' + "".join(review_card(q) for q in QUEUE) + '</ul>')) + dialog("Keyboard shortcuts", body, foot, size="dialog__panel--sm")
 
 
 # ======================================================================= notifications

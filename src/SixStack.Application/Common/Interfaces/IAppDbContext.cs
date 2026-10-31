@@ -15,6 +15,8 @@ public interface IAppDbContext
     DbSet<SecurityToken> SecurityTokens { get; }
     DbSet<VerifiedEmail> VerifiedEmails { get; }
     DbSet<Session> Sessions { get; }
+    DbSet<SubmissionCheck> SubmissionChecks { get; }
+    DbSet<ModerationDecision> ModerationDecisions { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

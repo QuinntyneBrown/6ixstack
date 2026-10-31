@@ -30,7 +30,12 @@ internal static class SeedData
         bool Featured = false,
         string? SubmitterEmail = null,
         (string Speaker, string Talk)[]? Speakers = null,
-        Action<Event>? Details = null);
+        Action<Event>? Details = null,
+        double? SubmittedHoursAgo = null,
+        double? ReviewHours = null,
+        double? DecidedMinutesAgo = null,
+        bool ApprovedAwaitingVerification = false,
+        string? OrganizerEmail = null);
 
     public static readonly CommunitySeed[] Communities =
     [
@@ -50,7 +55,7 @@ internal static class SeedData
         new("react-summit", "React Summit", "RS", "Streaming", 12800, Topics.React, "The global React conference, with remote tracks streamed from Amsterdam."),
         new("toronto-rust-meetup", "Toronto Rust Meetup", "TR", "Toronto", 980, Topics.None, "Monthly talks for Rust developers in Toronto."),
         new("cloud-native-toronto", "Cloud Native Toronto", "CN", "Toronto", 1540, Topics.Aws | Topics.Azure, "Kubernetes and cloud native talks for GTA teams."),
-        new("crypto-wealth-academy", "Crypto Wealth Academy", "CW", "Toronto", 0, Topics.None, "Unverified submitter."),
+        new("crypto-wealth-academy", "WealthFast Academy", "WA", "Toronto", 0, Topics.None, "Unverified submitter."),
     ];
 
     public static readonly SpeakerSeed[] Speakers =
@@ -74,6 +79,8 @@ internal static class SeedData
     private static readonly VenueSeed Csi = new("Centre for Social Innovation", "192 Spadina Ave", "Toronto", 43.6488, -79.3963);
     private static readonly VenueSeed Vector = new("Vector Institute", "661 University Ave", "Toronto", 43.6596, -79.3889);
     private static readonly VenueSeed Spaces = new("Spaces", "1 University Ave", "Toronto", 43.6455, -79.3790);
+    private static readonly VenueSeed Shopify = new("Shopify", "620 King St W", "Toronto", 43.6446, -79.4006);
+    private static readonly VenueSeed WealthFast = new("WealthFast Academy", null, "Toronto", 43.6532, -79.3832);
     private static readonly VenueSeed Brampton = new("Brampton Innovation District", "8 Nelson St W", "Brampton", 43.6858, -79.7599);
 
     public static readonly EventSeed[] Events =
@@ -88,7 +95,7 @@ internal static class SeedData
             }),
         new("signals-all-the-way-down", "Signals all the way down", "angular-toronto", "Migrating a large app from RxJS-heavy state to signals, and what broke along the way.", Topics.Angular, EventFormat.InPerson, "2026-11-04", "18:30", "21:00", Mars, null, 0, 87,
             Speakers: [("leila-haddad", "Signals all the way down")]),
-        new("azure-data-ai-day-gta", "Azure Data & AI Day GTA", "gta-azure-community", "A full day of Fabric, Azure OpenAI and data platform sessions from local MVPs, with a hands-on lab track.", Topics.Azure | Topics.AI, EventFormat.Hybrid, "2026-11-05", "09:00", "17:00", LivingArts, null, 4900, 318, Featured: true,
+        new("azure-data-ai-day-gta", "Azure Data & AI Day GTA", "gta-azure-community", "A full day of Fabric, Azure OpenAI and data platform sessions from local MVPs, with a hands-on lab track.", Topics.Azure | Topics.AI, EventFormat.Hybrid, "2026-11-05", "09:00", "17:00", LivingArts, null, 4900, 318, Featured: true, SubmitterEmail: OrganizerEmail,
             Speakers: [("priya-natarajan", "Keynote: Fabric one year later"), ("marcus-bell", "Panel: data teams in Canadian banks"), ("aisha-rahman", "Grounding Azure OpenAI on your lakehouse"), ("kenji-watanabe", "Panel: data teams in Canadian banks")],
             Details: e =>
             {
@@ -122,8 +129,8 @@ internal static class SeedData
         new("react-summit-remote-performance-track", "React Summit Remote: performance track", "react-summit", "Rendering, bundling and profiling talks from the global React community.", Topics.React, EventFormat.Streaming, "2026-11-13", "11:00", "15:00", null, "Europe/Amsterdam", 0, 3200),
 
         // Later in November: the month calendar and community pages show these.
-        new("vector-search-in-postgres", "Vector search in Postgres", "ai-builders-gta", "Indexing embeddings in Postgres with pgvector, from schema to query plans.", Topics.AI, EventFormat.InPerson, "2026-11-17", "18:30", "20:30", VentureLab, null, 0, 58),
-        new("fabric-for-power-bi-developers", "Fabric for Power BI developers", "gta-azure-community", "Moving Power BI reports onto Fabric semantic models, with a live migration.", Topics.Azure, EventFormat.Hybrid, "2026-11-18", "18:00", "20:00", LivingArts, null, 0, 0, EventStatus.InReview, SubmitterEmail: "priya@gtaazure.ca"),
+        new("vector-search-in-postgres", "Vector search in Postgres", "ai-builders-gta", "Indexing embeddings in Postgres with pgvector, from schema to query plans.", Topics.AI, EventFormat.InPerson, "2026-11-17", "18:30", "20:30", VentureLab, null, 0, 58, ReviewHours: 3, DecidedMinutesAgo: 12),
+        new("fabric-for-power-bi-developers", "Fabric for Power BI developers", "gta-azure-community", "Moving Power BI reports onto Fabric semantic models, with a live migration.", Topics.Azure | Topics.AI, EventFormat.Hybrid, "2026-11-18", "18:30", "20:30", MicrosoftCanada, null, 0, 0, EventStatus.InReview, SubmitterEmail: OrganizerEmail, SubmittedHoursAgo: 22),
         new("angular-toronto-lightning-talks", "Angular Toronto: lightning talks", "angular-toronto", "Five-minute talks from the community. Bring a demo.", Topics.Angular, EventFormat.InPerson, "2026-11-19", "18:30", "21:00", Mars, null, 0, 66),
         new("minimal-apis-in-practice", "Minimal APIs in practice", "toronto-dotnet-user-group", "Structuring, testing and versioning minimal API projects that grow.", Topics.DotNet, EventFormat.InPerson, "2026-11-19", "18:00", "20:30", MicrosoftCanada, null, 0, 97),
         new("reinvent-keynote-watch-party", "re:Invent keynote watch party", "aws-user-group-toronto", "Watch the keynote together, then talk through the launches.", Topics.Aws, EventFormat.InPerson, "2026-11-24", "11:00", "13:30", Bremner, null, 0, 45),
@@ -144,10 +151,24 @@ internal static class SeedData
                 e.CancellationReason = "Our venue had a scheduling conflict. We're rebooking for January and will post the new date here.";
             }),
 
-        // Pending submissions in the review queue.
-        new("rust-in-production-at-scale", "Rust in production at scale", "toronto-rust-meetup", "Three teams on running Rust services in production.", Topics.None, EventFormat.InPerson, "2026-11-16", "18:30", "20:30", Csi, null, 0, 0, EventStatus.InReview, SubmitterEmail: "hello@torontorust.dev"),
-        new("kubernetes-on-a-budget", "Kubernetes on a budget", "cloud-native-toronto", "Running small clusters cheaply on any cloud.", Topics.Aws | Topics.Azure, EventFormat.Hybrid, "2026-11-20", "18:00", "20:00", Spaces, null, 0, 0, EventStatus.InReview, SubmitterEmail: "organizers@cloudnativeto.dev"),
-        new("free-crypto-trading-masterclass", "Free crypto trading masterclass", "crypto-wealth-academy", "Learn the secrets of 10x returns. Limited seats, register now!", Topics.None, EventFormat.Streaming, "2026-11-21", "20:00", "21:00", null, "America/Toronto", 0, 0, EventStatus.InReview, SubmitterEmail: "promo@crypto-wealth.example"),
+        // Pending submissions in the review queue, as in docs/mocks/pages/review-queue (oldest first).
+        new("rust-in-production-at-scale", "Rust in production at scale", "toronto-rust-meetup", "Three teams on running Rust services in production.", Topics.None, EventFormat.InPerson, "2026-11-17", "18:30", "20:30", Shopify, null, 0, 0, EventStatus.InReview, SubmitterEmail: "organizers@torontorust.ca", SubmittedHoursAgo: 2),
+        new("kubernetes-on-a-budget", "Kubernetes on a budget", "cloud-native-toronto", "Running small clusters cheaply on any cloud.", Topics.Aws | Topics.Azure, EventFormat.Streaming, "2026-11-19", "18:00", "20:00", null, null, 0, 0, EventStatus.InReview, SubmitterEmail: "hello@cloudnativeto.ca", SubmittedHoursAgo: 5),
+        new("free-crypto-trading-masterclass", "Free crypto trading masterclass", "crypto-wealth-academy", "Learn the secrets of 10x returns. Limited seats, register now!", Topics.None, EventFormat.InPerson, "2026-11-14", "14:00", "16:00", WealthFast, null, 0, 0, EventStatus.InReview, SubmitterEmail: "promo@wealthfast.biz", SubmittedHoursAgo: 26),
+
+        // Approved, waiting for its sender to verify their email: not public and not in the queue, but the
+        // Kubernetes submission duplicates it (same community, same day).
+        new("cloud-native-toronto-november-meetup", "Cloud Native Toronto: November meetup", "cloud-native-toronto", "Lightning talks on platform engineering, then pizza.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-11-19", "18:30", "20:30", Spaces, null, 0, 0, EventStatus.InReview, SubmitterEmail: "events@cloudnativeto.ca", ApprovedAwaitingVerification: true),
+
+        // Past events that give senders an approval history and the queue its median review time (3 h).
+        new("service-meshes-without-tears", "Service meshes without tears", "cloud-native-toronto", "What a mesh buys you, and what it costs.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-10-12", "18:30", "20:30", Spaces, null, 0, 64, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 1),
+        new("gitops-with-flux", "GitOps with Flux", "cloud-native-toronto", "Shipping to Kubernetes from a pull request.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-10-15", "18:30", "20:30", Spaces, null, 0, 71, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 3),
+        new("cost-aware-autoscaling", "Cost-aware autoscaling", "cloud-native-toronto", "Scaling clusters on price as well as load.", Topics.Aws, EventFormat.InPerson, "2026-10-22", "18:30", "20:30", Spaces, null, 0, 58, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 3),
+        new("cloud-native-toronto-october-meetup", "Cloud Native Toronto: October meetup", "cloud-native-toronto", "Platform teams compare notes.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-10-27", "18:30", "20:30", Spaces, null, 0, 66, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 5),
+        new("azure-functions-deep-dive", "Azure Functions deep dive", "gta-azure-community", "Isolated workers, Flex Consumption and cold starts.", Topics.Azure, EventFormat.InPerson, "2026-10-13", "18:30", "20:30", MicrosoftCanada, null, 0, 88, SubmitterEmail: OrganizerEmail, ReviewHours: 2),
+        new("bicep-for-app-developers", "Bicep for app developers", "gta-azure-community", "Infrastructure as code without the YAML.", Topics.Azure, EventFormat.InPerson, "2026-10-19", "18:30", "20:30", MicrosoftCanada, null, 0, 74, SubmitterEmail: OrganizerEmail, ReviewHours: 3),
+        new("azure-ai-search-hands-on", "Azure AI Search hands-on", "gta-azure-community", "Hybrid retrieval for your own data.", Topics.Azure | Topics.AI, EventFormat.InPerson, "2026-10-26", "18:30", "20:30", MicrosoftCanada, null, 0, 95, SubmitterEmail: OrganizerEmail, ReviewHours: 3),
+        new("copilot-studio-for-developers", "Copilot Studio for developers", "gta-azure-community", "Extending agents with your own APIs.", Topics.Azure | Topics.AI, EventFormat.InPerson, "2026-10-29", "18:30", "20:30", MicrosoftCanada, null, 0, 81, SubmitterEmail: OrganizerEmail, ReviewHours: 6),
     ];
 
     public const string OrganizerEmail = "priya@gtaazure.ca";

@@ -47,36 +47,36 @@ through the outbox, to the external services and back to the database.
   and its Pending rows, runs each `ISubmissionCheck` whose row is still Pending,
   writes each result as it completes and saves. A thrown exception leaves the
   remaining rows Pending; `OutboxProcessor` retries the message with exponential
-  backoff up to 5 attempts (`L2-103`). After the fifth failure the rows stay
-  Pending; whether they then turn into warnings, and with what copy, is
-  `<TO SUPPLY>`.
+  backoff up to 5 attempts (`L2-103`). After the fifth failure the remaining
+  rows become warnings "Couldn’t run this check".
 - **`ISubmissionCheck`** — interface with `Kind`, `AppliesTo(event)` and
   `Run(event)`. Each implementation returns a `CheckResult` of outcome, message
   and optional `RelatedEventId`.
 - **`VenueAddressCheck`** — applies to in-person and hybrid events. A blank
   address gives Warning "No venue address". An address that `IGeocoder` resolves
-  gives Passed "Venue address found". An address it cannot resolve gives a
-  warning whose copy is `<TO SUPPLY>`. Whether this check also stores the
-  coordinates on `Venue` for the map is `<TO SUPPLY>`.
+  gives Passed "Venue address found". An address it cannot resolve gives Warning
+  "Venue address not found on the map". Storing coordinates for the map arrives with the event map (journey 16).
 - **`LinkReachabilityCheck`** — one row per link present: `TicketLink` and
   `StreamLink`. `ILinkChecker` requests the URL with a 5 s timeout. A 2xx or 3xx
   status gives Passed "Link reachable" or "Stream link reachable". Any other
-  status, a network error or the timeout gives a warning whose copy is
-  `<TO SUPPLY>`. Whether the checker refuses private network addresses is
-  `<TO SUPPLY>`.
+  status, a network error or the timeout gives Warning "Ticket link didn't respond" or "Stream link didn't
+  respond". The checker refuses hosts that resolve to loopback, private or link-local addresses (same warning),
+  so a submission cannot make the server probe its own network.
 - **`DuplicateCheck`** — queries other events in status Published or In review
   that start on the same Toronto calendar day. A match gives Warning "Possible
   duplicate of a {Mon d} listing" and stores the matched event in
-  `RelatedEventId`; no match gives Passed "No duplicates". The title similarity
-  measure and its threshold are `<TO SUPPLY>`.
+  `RelatedEventId`; no match gives Passed "No duplicates". A match is the same submitter
+  email, the same community, or titles whose word sets overlap by half or more (Jaccard ≥ 0.5, ignoring case and
+  words under three letters).
 - **`OrganizerHistoryCheck`** — counts the organizer's events that a moderator
   approved. None gives Warning "First submission from this sender"; 5 or more
   gives Passed "Trusted organizer"; 1 to 4 gives Passed "Organizer has {n}
   approved events".
 - **`DeveloperRelevanceCheck`** — matches the title and description against
   the moderator-maintained developer keyword list. No match gives Warning "Not
-  a developer topic"; a match gives Passed. Where the keyword list is
-  maintained is `<TO SUPPLY>`.
+  a developer topic"; a match gives Passed. The keyword list lives in configuration
+  (`SubmissionChecks:DeveloperKeywords`) until a moderator screen exists; matching ignores case and works on
+  whole words.
 - **`SubmissionCheck`** — domain entity (`Id`, `EventId`, `Kind`, `Outcome`,
   `Message`). This design adds `Guid? RelatedEventId` for the duplicate match
   and `DateTimeOffset? CompletedAtUtc`.
@@ -84,14 +84,18 @@ through the outbox, to the external services and back to the database.
   `Duplicate`, `OrganizerHistory`, `DeveloperRelevance`.
 - **`IGeocoder`** / **`HttpGeocoder`**, **`ILinkChecker`** /
   **`HttpLinkChecker`** — ports in `SixStack.Application` and their adapters in
-  `SixStack.Infrastructure`. The geocoding service is `<TO SUPPLY>`.
+  `SixStack.Infrastructure`. No geocoding provider is chosen yet:
+  `LocalGeocoder` resolves an address that has a street number and street name in a GTA city from the reference
+  list; a hosted provider can replace it behind `IGeocoder`. `SubmissionChecks:LinkChecker` set to
+  `AssumeReachable` keeps API tests, Playwright and demos off the network; everywhere else it is `Http`. The
+  seeder schedules checks for its seeded submissions through the outbox, like a real submission.
 
-The requirements and mocks leave these points open; each is `<TO SUPPLY>`:
+The requirements and mocks left these points open; journey 06 decided them:
 
 | Point | Conflict |
 |-------|----------|
-| Organizer identity | The history check counts by "organizer" but warns about the "sender". Whether it counts by community, by organizer name or by submitter email is undecided. |
-| Trusted threshold | The mock shows "Organizer has 6 approved events" where 6 meets the trusted threshold of 5. |
+| Organizer identity | Decided (journey 06): counts the published events from the same submitter email ("sender"). |
+| Trusted threshold | Decided (journey 06): 5 or more is "Trusted organizer", as L2-059 states; the mock's "Organizer has 6 approved events" card is corrected to 4. |
 
 ## Requirements
 

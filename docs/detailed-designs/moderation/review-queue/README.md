@@ -46,18 +46,19 @@ query. The shortcuts run in the browser.
   and hosts the toasts raised by approve and reject.
 - **`ReviewCard`** — local component that renders one `ReviewCardDto`. Each
   check shows an icon and its message; a passed check uses the check icon, a
-  warning uses the warning icon and a pending check shows "Checking…" (copy
-  `<TO SUPPLY>`). The card is focusable so the shortcuts act on it. Reject
+  warning uses the warning icon and a pending check shows "Checking…" with the clock icon
+  (`review-queue/checking`). The card is focusable so the shortcuts act on it. Reject
   carries the visually hidden title for screen readers.
 - **`ReviewQueueShortcuts`** — Angular directive on the list. It handles J (next
   card), K (previous card), A (approve the focused card), R (open Reject for the
   focused card) and ? (open the shortcut list). It ignores a key when the event
   target is an `input`, `textarea`, `select` or `contenteditable` element, when
-  a modifier key is held, or when a dialog is open. Which card takes focus after
-  the focused card leaves the queue is `<TO SUPPLY>`.
+  a modifier key is held, or when a dialog is open. After the focused card leaves the queue
+  (journeys 07 and 08), the next card takes focus, or the previous one when it was last.
 - **`KeyboardShortcutsDialog`** — CDK dialog at
   `frontend/projects/sixstack/src/app/dialogs/keyboard-shortcuts/` that lists
-  the five shortcuts. No mock draws it; its layout is `<TO SUPPLY>`.
+  the five shortcuts. Mock: `dialogs/keyboard-shortcuts` (a
+  description list of keys and actions, Close focused).
 - **`authGuard`** — route guard that sends an anonymous visitor to `/sign-in`
   with a return URL. It reads `SessionStore`.
 - **`ModerationApi`** / **`MODERATION_API`** / **`HttpModerationApi`** — the
@@ -89,12 +90,24 @@ The handler computes the summary as follows:
 |-------|------|
 | Waiting count | Number of cards returned. |
 | Oldest | `SubmittedAtUtc` of the first card, as a relative day ("yesterday"). |
-| Median review time | Median of `DecidedAtUtc − SubmittedAtUtc` over decisions in the last 30 days that were not undone. Rounding ("3 h") and whether a resubmitted event's earlier decision counts are `<TO SUPPLY>`. |
+| Median review time | Median of `DecidedAtUtc − SubmittedAtUtc` over decisions in the last 30 days that were not undone. Shown in whole hours ("3 h"), or minutes under an hour ("40 min"); every decision counts, including an earlier decision on a resubmitted event. With no decisions in 30 days the median part is left out. |
 | Last approval | When nothing waits, the time since the newest approval that was not undone ("last approval 12 minutes ago"). |
 
-The queue lists all waiting submissions in one response. A page size or limit is
-`<TO SUPPLY>`. How the list refreshes while open, so that decisions by other
+The queue lists all waiting submissions in one response. There is no page size: the queue
+is short by nature. How the list refreshes while open, so that decisions by other
 moderators appear, is described in `moderation/approve-submission`.
+
+Decisions in journey 06:
+
+- The page and API deliver the queue, its states, the checks and the J, K and ? shortcuts. The shortcuts
+  dialog lists only the shortcuts that work; A and R join it with journeys 07 and 08 (the mock shows the end state). Approve (A), Reject
+  (R), Edit and the card actions arrive with journeys 07, 08 and 14, so no card shows a button that does nothing.
+- Review presence and the 409 conflict (`L2-063`) arrive with journey 07, where `moderation/approve-submission`
+  designs them.
+- `ModerationDecision` (`EventId`, `ModeratorId`, `Kind`, `DecidedAtUtc`, `UndoneAtUtc`) is added now so the
+  summary can compute the median and last approval; the seed holds past decisions.
+- The API route is `GET /api/moderation/queue`. The page maps 403 to the forbidden state and the guard sends
+  anonymous visitors to sign in.
 
 ## Requirements
 

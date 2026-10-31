@@ -17,6 +17,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<SecurityToken> SecurityTokens => Set<SecurityToken>();
     public DbSet<VerifiedEmail> VerifiedEmails => Set<VerifiedEmail>();
     public DbSet<Session> Sessions => Set<Session>();
+    public DbSet<SubmissionCheck> SubmissionChecks => Set<SubmissionCheck>();
+    public DbSet<ModerationDecision> ModerationDecisions => Set<ModerationDecision>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
