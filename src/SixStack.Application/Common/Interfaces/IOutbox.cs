@@ -4,6 +4,9 @@ namespace SixStack.Application.Common.Interfaces;
 public interface IOutbox
 {
     void Enqueue<TMessage>(TMessage message) where TMessage : notnull;
+
+    /// <summary>Holds the message until <paramref name="notBeforeUtc"/>, e.g. until an undo window closes.</summary>
+    void Enqueue<TMessage>(TMessage message, DateTimeOffset notBeforeUtc) where TMessage : notnull;
 }
 
 /// <summary>Processes one outbox message type.</summary>

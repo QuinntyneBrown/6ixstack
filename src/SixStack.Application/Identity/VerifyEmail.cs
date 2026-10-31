@@ -38,6 +38,7 @@ public sealed class VerifyEmailCommandHandler(IAppDbContext db, IClock clock, IS
         {
             e.Status = EventStatus.Published;
             e.PublishedAtUtc = now;
+            db.Notifications.Add(Moderation.LiveNotification.For(e, now));
         }
 
         await db.SaveChangesAsync(cancellationToken);

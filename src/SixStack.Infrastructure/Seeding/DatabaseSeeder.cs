@@ -52,6 +52,17 @@ public sealed class DatabaseSeeder(AppDbContext db, IClock clock, IOutbox outbox
             db.Users.Add(jordan);
         }
 
+        if (!users.ContainsKey(SeedData.SecondModeratorEmail))
+        {
+            db.Users.Add(new User { Email = SeedData.SecondModeratorEmail, Name = "Sam Okafor", Role = UserRole.Moderator, CreatedAtUtc = clock.UtcNow });
+        }
+
+        var verified = await db.VerifiedEmails.Select(v => v.NormalizedEmail).ToHashSetAsync(cancellationToken);
+        foreach (var email in SeedData.VerifiedSenders.Where(e => !verified.Contains(e)))
+        {
+            db.VerifiedEmails.Add(new VerifiedEmail { NormalizedEmail = email, VerifiedAtUtc = clock.UtcNow.AddDays(-60) });
+        }
+
         var now = clock.UtcNow;
         var submissions = new List<Event>();
 

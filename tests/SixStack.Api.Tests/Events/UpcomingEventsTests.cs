@@ -150,12 +150,12 @@ public sealed class UpcomingEventsTests(ApiFactory factory) : IClassFixture<ApiF
         var second = await Get("?page=2");
 
         Assert.Equal(14, first.GetProperty("shown").GetInt32());
-        Assert.Equal(19, first.GetProperty("total").GetInt32());
+        Assert.Equal(20, first.GetProperty("total").GetInt32());
         Assert.Equal("November 26", first.GetProperty("throughLabel").GetString());
         Assert.True(first.GetProperty("hasMore").GetBoolean());
-        Assert.Equal(["Vector search in Postgres", "Minimal APIs in practice", "Angular Toronto: lightning talks", "re:Invent keynote watch party", "Testing React in 2027"],
+        Assert.Equal(["Vector search in Postgres", "Minimal APIs in practice", "Angular Toronto: lightning talks", "Cloud Native Toronto: November meetup", "re:Invent keynote watch party", "Testing React in 2027"],
             Titles(second));
-        Assert.Equal(19, second.GetProperty("shown").GetInt32());
+        Assert.Equal(20, second.GetProperty("shown").GetInt32());
         Assert.False(second.GetProperty("hasMore").GetBoolean());
     }
 

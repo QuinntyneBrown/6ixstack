@@ -156,9 +156,8 @@ internal static class SeedData
         new("kubernetes-on-a-budget", "Kubernetes on a budget", "cloud-native-toronto", "Running small clusters cheaply on any cloud.", Topics.Aws | Topics.Azure, EventFormat.Streaming, "2026-11-19", "18:00", "20:00", null, null, 0, 0, EventStatus.InReview, SubmitterEmail: "hello@cloudnativeto.ca", SubmittedHoursAgo: 5),
         new("free-crypto-trading-masterclass", "Free crypto trading masterclass", "crypto-wealth-academy", "Learn the secrets of 10x returns. Limited seats, register now!", Topics.None, EventFormat.InPerson, "2026-11-14", "14:00", "16:00", WealthFast, null, 0, 0, EventStatus.InReview, SubmitterEmail: "promo@wealthfast.biz", SubmittedHoursAgo: 26),
 
-        // Approved, waiting for its sender to verify their email: not public and not in the queue, but the
-        // Kubernetes submission duplicates it (same community, same day).
-        new("cloud-native-toronto-november-meetup", "Cloud Native Toronto: November meetup", "cloud-native-toronto", "Lightning talks on platform engineering, then pizza.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-11-19", "18:30", "20:30", Spaces, null, 0, 0, EventStatus.InReview, SubmitterEmail: "events@cloudnativeto.ca", ApprovedAwaitingVerification: true),
+        // The listing the Kubernetes submission duplicates (same community, same day); Compare opens it.
+        new("cloud-native-toronto-november-meetup", "Cloud Native Toronto: November meetup", "cloud-native-toronto", "Lightning talks on platform engineering, then pizza.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-11-19", "19:00", "21:00", Spaces, null, 0, 0, SubmitterEmail: "events@cloudnativeto.ca"),
 
         // Past events that give senders an approval history and the queue its median review time (3 h).
         new("service-meshes-without-tears", "Service meshes without tears", "cloud-native-toronto", "What a mesh buys you, and what it costs.", Topics.Aws | Topics.Azure, EventFormat.InPerson, "2026-10-12", "18:30", "20:30", Spaces, null, 0, 64, SubmitterEmail: "hello@cloudnativeto.ca", ReviewHours: 1),
@@ -173,4 +172,8 @@ internal static class SeedData
 
     public const string OrganizerEmail = "priya@gtaazure.ca";
     public const string ModeratorEmail = "jordan@6ixstack.dev";
+    public const string SecondModeratorEmail = "sam@6ixstack.dev";
+
+    /// <summary>Senders who already proved their address, so their approved events publish straight away (L2-085).</summary>
+    public static readonly string[] VerifiedSenders = [OrganizerEmail, "hello@cloudnativeto.ca", "organizers@torontorust.ca", "events@cloudnativeto.ca"];
 }

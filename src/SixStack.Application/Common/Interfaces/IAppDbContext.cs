@@ -17,6 +17,9 @@ public interface IAppDbContext
     DbSet<Session> Sessions { get; }
     DbSet<SubmissionCheck> SubmissionChecks { get; }
     DbSet<ModerationDecision> ModerationDecisions { get; }
+    DbSet<Notification> Notifications { get; }
+    DbSet<AuditEntry> AuditEntries { get; }
+    DbSet<ReviewPresence> ReviewPresences { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
