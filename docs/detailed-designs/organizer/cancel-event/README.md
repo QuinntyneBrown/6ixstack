@@ -152,3 +152,24 @@ offers Try again.
 failure leaves the cancellation in place and schedules a retry (`L2-103`).
 
 ![Sequence diagram for sending cancellation emails](diagrams/sequence-send-cancellation-emails.png)
+
+## Decisions (journey 15)
+
+- **State**: a cancelled event keeps its status and gains `CancelledAtUtc` and `CancellationReason`, the
+  representation the listing, the feeds (`STATUS:CANCELLED`) and the dashboard already read. `Sequence`
+  increments for a published event, so calendar apps replace the entry.
+- **Who may cancel**: anyone who may edit (`EventAccess`: community organizers, the submitter, moderators). The
+  endpoint is `POST /api/organizer/events/{id}/cancel`, and every cancellation is audited as `EventCancelled`.
+- **In review events**: cancelling withdraws the submission. It leaves the review queue, never appears publicly, and
+  shows as Cancelled on the dashboard.
+- **Past and already cancelled events** answer 409, and the dialog is never offered for them.
+- **Recipients**: 6ixstack sells no tickets and holds no addresses for the people going. `IAttendeeDirectory` is
+  the port for them; its only implementation returns none until a source exists. The dialog offers "Email the {n}
+  people going" only when the directory has addresses (`cancel-event/no-email` otherwise). Each recipient gets an
+  `EventCancelledEmail` through the outbox.
+- **Typed confirmation** (paid, or 100 or more going) is checked again on the server: a mismatch is 400 on
+  `confirmationName`, "Type the event name to confirm." The reason is required and limited to 500 characters.
+- **After success**: the toast "Cancelled “{title}”" (`cancel-toast/success`). The dashboard reloads; the edit page
+  becomes read-only with "This event is cancelled, so it can’t be edited" and the reason (`edit-event/cancelled`).
+  Closing the dialog while the request runs does not abort it, and the toast still reports the outcome.
+
