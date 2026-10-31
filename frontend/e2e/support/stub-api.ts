@@ -488,3 +488,26 @@ export async function allNotificationsRead(page: Page): Promise<void> {
     }),
   );
 }
+
+/** Holds POST /api/events/{slug}/reports until the returned function answers it with `status`. */
+export async function holdReports(page: Page): Promise<(status: number) => Promise<void>> {
+  let held: import('@playwright/test').Route | null = null;
+  await page.route('**/api/events/*/reports', async (route) => {
+    held = route;
+  });
+  return async (status: number) => {
+    await held!.fulfill({
+      status,
+      contentType: 'application/problem+json',
+      body: JSON.stringify({ status }),
+    });
+  };
+}
+
+/** Answers POST /api/events/{slug}/reports with `status` until the returned function is called. */
+export async function reportsAnswer(page: Page, status: number): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({ status, contentType: 'application/problem+json', body: JSON.stringify({ status }) });
+  await page.route('**/api/events/*/reports', handler);
+  return () => page.unroute('**/api/events/*/reports', handler);
+}

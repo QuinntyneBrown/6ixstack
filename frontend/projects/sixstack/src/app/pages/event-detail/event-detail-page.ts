@@ -39,6 +39,11 @@ import {
   AddToCalendarDialog,
 } from '../../dialogs/add-to-calendar/add-to-calendar-dialog';
 import { NotFoundPage } from '../status/not-found-page';
+import {
+  REPORT_EVENT_TITLE_ID,
+  ReportEventDialog,
+  ReportEventDialogData,
+} from '../../dialogs/report-event/report-event-dialog';
 import { prefersReducedMotion } from '../events/map/map-timeline-state';
 
 /** The event detail page (`/events/:slug`): the API decides state, facts, actions and alerts (L2-017 to L2-024). */
@@ -194,5 +199,18 @@ export class EventDetailPage {
 
   protected topics(detail: EventDetail): TopicKey[] {
     return detail.topics.filter(isTopic);
+  }
+
+  /** Report a problem (L2-039): the dialog names the event and its organizer; focus returns to the button. */
+  protected openReport(e: EventDetail, trigger: EventTarget | null): void {
+    this.dialog.open<unknown, ReportEventDialogData>(
+      ReportEventDialog,
+      modalDialogConfig({
+        data: { slug: e.slug, title: e.title, communityName: e.community.name },
+        ariaLabelledBy: REPORT_EVENT_TITLE_ID,
+        ariaDescribedBy: 'report-description',
+        restoreFocus: (trigger as HTMLElement | null) ?? true,
+      }),
+    );
   }
 }
