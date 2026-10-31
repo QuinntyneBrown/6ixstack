@@ -165,3 +165,21 @@ conduct concern reaches two moderators only. Every other reason reaches the
 community's organizers without the reporter's email, and reaches moderators.
 
 ![Sequence diagram for storing and routing a report](diagrams/sequence-route-report.png)
+
+## Decisions (journey 22)
+
+- **Endpoint**: `POST /api/events/{slug}/reports`, anonymous, for published events. It answers 202, 400 with field
+  errors (`reason`, `details`, `replyEmail`), 404, or 429 after ten reports an hour from one IP address
+  (`Reports:PerIpPerHour`).
+- **Reasons** (API values): `wrongDetails`, `cancelled`, `brokenLink`, `spam`, `codeOfConduct`.
+- **Who hears**:
+  - Every moderator is notified, linking to the edit page, where moderators act on the report (`L2-062`).
+  - The event's community organizers and its submitter are notified, quoting the details and never naming the
+    reporter. They also get an email when report emails are on (`L2-067`).
+  - A conduct concern goes to two moderators only (the first two by address) and never to the organizer.
+- **Titles**: "Someone reported the time on {title}" (wrong date, time or venue), "Someone says {title} is
+  cancelled", "Someone reported a broken link on {title}", "Someone reported {title} as spam" and "Code of conduct
+  concern about {title}".
+- The reply address is stored for moderators only, and no response or notification includes it (`L2-099`).
+- A moderator screen that lists reports is not part of this journey; moderators act from the notification.
+

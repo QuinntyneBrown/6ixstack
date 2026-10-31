@@ -1,0 +1,78 @@
+@if (sent()) {
+  <sx-dialog-shell title="Report sent" [titleId]="titleId">
+    <p>
+      Thanks — a moderator will check it today. If the details are wrong, we’ll fix the listing and let
+      {{ data.communityName }} know.
+    </p>
+    <button #back slot="footer" sx-button appearance="primary" type="button" (click)="close()">
+      Back to the event
+    </button>
+  </sx-dialog-shell>
+} @else {
+  <sx-dialog-shell title="Report a problem" [titleId]="titleId">
+    <p slot="description" id="report-description">
+      Tell the 6ixstack moderators about {{ data.title }}. We review reports within a day.
+    </p>
+    <div class="report-body">
+      @if (failed()) {
+        <sx-alert class="report-failure" kind="danger" announce="alert" title="Your report didn't send">
+          Check your connection and try again. Nothing you wrote was lost.
+        </sx-alert>
+      }
+      <sx-field-set legend="What is wrong?" controlId="report-reason" [error]="reasonError()">
+        <div class="reasons">
+          @for (option of reasons; track option.value; let i = $index) {
+            <label sx-choice>
+              <input
+                sx-check
+                type="radio"
+                name="report-reason"
+                [id]="'report-reason-' + i"
+                [value]="option.value"
+                [formControl]="reason"
+                [attr.aria-invalid]="reasonError() ? 'true' : null"
+                [attr.aria-describedby]="reasonError() ? 'report-reason-error' : null"
+              />{{ option.label }}
+            </label>
+          }
+        </div>
+      </sx-field-set>
+      <sx-form-field
+        label="Details"
+        controlId="report-details"
+        optional
+        hint="Links or screenshots help. Organizers don't see who reported."
+      >
+        <textarea
+          sx-input
+          id="report-details"
+          rows="3"
+          maxlength="2000"
+          [formControl]="details"
+          [attr.aria-describedby]="describedBy('report-details', true, false)"
+        ></textarea>
+      </sx-form-field>
+      <sx-form-field
+        label="Your email"
+        controlId="report-email"
+        optional
+        hint="Only if you want a reply."
+        [error]="emailError()"
+      >
+        <input
+          sx-input
+          id="report-email"
+          type="email"
+          autocomplete="email"
+          [formControl]="email"
+          [attr.aria-invalid]="emailError() ? 'true' : null"
+          [attr.aria-describedby]="describedBy('report-email', true, !!emailError())"
+        />
+      </sx-form-field>
+    </div>
+    <button slot="footer" sx-button type="button" cdkFocusInitial (click)="close()">Cancel</button>
+    <button slot="footer" sx-button appearance="primary" type="button" [busy]="busy()" (click)="submit()">
+      {{ busy() ? 'Sending…' : failed() ? 'Try again' : 'Send report' }}
+    </button>
+  </sx-dialog-shell>
+}

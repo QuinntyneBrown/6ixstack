@@ -113,7 +113,17 @@ export interface FeaturedEvent {
   primaryAction: { label: string; url: string };
 }
 
+export type ReportReason = 'wrongDetails' | 'cancelled' | 'brokenLink' | 'spam' | 'codeOfConduct';
+
+export interface ProblemReport {
+  reason: ReportReason;
+  details: string | null;
+  replyEmail: string | null;
+}
+
 export interface EventsApi {
+  /** Sends a problem report (L2-039); 400 carries field errors, 429 means too many from this address. */
+  report(slug: string, report: ProblemReport): Observable<void>;
   /** This week's featured event, or null when nothing is featured (204). */
   featured(): Observable<FeaturedEvent | null>;
   /** The map's dots, arcs and timeline days for the same filters as the list. */
@@ -147,6 +157,10 @@ export class HttpEventsApi implements EventsApi {
     if (query.q) params = params.set('q', query.q);
     if (query.page && query.page > 1) params = params.set('page', query.page);
     return this.http.get<UpcomingEvents>(`${this.baseUrl}/api/events`, { params });
+  }
+
+  report(slug: string, report: ProblemReport): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/api/events/${encodeURIComponent(slug)}/reports`, report);
   }
 
   featured(): Observable<FeaturedEvent | null> {

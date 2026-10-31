@@ -6,6 +6,7 @@ import { AppShell } from './app-shell';
 export class EventDetailPage {
   readonly shell: AppShell;
   readonly share: Locator;
+  readonly reportProblem: Locator;
   readonly venueMap: Locator;
   readonly venueMapTitle: Locator;
   readonly venueMapDots: Locator;
@@ -30,6 +31,7 @@ export class EventDetailPage {
     this.venueMapTitle = this.venueMap.locator('.event-map__title');
     this.venueMapDots = this.venueMap.locator('.event-map__event');
     this.venueMapDays = this.venueMap.getByRole('group', { name: 'Choose a day' });
+    this.reportProblem = page.getByRole('button', { name: 'Report a problem' });
     this.shell = new AppShell(page);
     this.backLink = page.getByRole('link', { name: 'All events' });
     this.title = page.getByRole('heading', { level: 1 });
