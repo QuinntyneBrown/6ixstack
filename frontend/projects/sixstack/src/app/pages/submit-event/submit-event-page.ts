@@ -12,26 +12,9 @@ import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-i
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ApiError, REFERENCE_DATA_API, ReferenceData, SUBMISSIONS_API, SubmissionReceived } from 'api';
-import {
-  Alert,
-  Button,
-  Check,
-  Choice,
-  describedBy,
-  ErrorSummary,
-  FieldErrorItem,
-  FieldSet,
-  FormField,
-  FormSection,
-  Input,
-  isTopic,
-  NextSteps,
-  Skeleton,
-  SuccessPanel,
-  TopicKey,
-  TopicTag,
-} from 'components';
+import { Alert, Button, ErrorSummary, FieldErrorItem, NextSteps, Skeleton, SuccessPanel } from 'components';
 import { catchError, debounceTime, finalize, map, merge, of, startWith, switchMap, timer } from 'rxjs';
+import { EventFormFields } from '../../shared/event-form/event-form-fields';
 import { DraftStore } from '../../shared/draft-store';
 import {
   applyFormat,
@@ -49,19 +32,13 @@ import { failed, loaded, loading, LoadState, SKELETON_DELAY_MS } from '../../sha
   imports: [
     Alert,
     Button,
-    Check,
-    Choice,
     ErrorSummary,
-    FieldSet,
-    FormField,
-    FormSection,
-    Input,
+    EventFormFields,
     NextSteps,
     ReactiveFormsModule,
     RouterLink,
     Skeleton,
     SuccessPanel,
-    TopicTag,
   ],
   templateUrl: './submit-event-page.html',
   styleUrl: './submit-event-page.scss',
@@ -75,7 +52,6 @@ export class SubmitEventPage {
   private readonly drafts = inject(DraftStore);
 
   protected readonly form = createEventForm();
-  protected readonly describedBy = describedBy;
   protected readonly nextSteps = [
     'A moderator checks the details, usually within a day.',
     'We email you when it’s live, or what to fix if something is missing.',
@@ -124,27 +100,11 @@ export class SubmitEventPage {
     this.form.valueChanges.pipe(debounceTime(500), takeUntilDestroyed()).subscribe(() => {
       if (!this.received()) this.drafts.write(SubmitEventPage.DRAFT_KEY, this.form.getRawValue());
     });
-    merge(this.form.controls.format.valueChanges, this.form.controls.price.valueChanges)
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => applyFormat(this.form));
-  }
-
-  protected topics(data: ReferenceData): TopicKey[] {
-    return data.topics.map((t) => t.key).filter(isTopic);
   }
 
   protected error(name: FieldName): string | null {
     this.formValue();
     return this.submitted() ? fieldError(this.form, name, this.serverErrors()) : null;
-  }
-
-  protected isTopicChecked(topic: string): boolean {
-    return this.form.controls.topics.value.includes(topic);
-  }
-
-  protected toggleTopic(topic: string, checked: boolean): void {
-    const current = this.form.controls.topics.value;
-    this.form.controls.topics.setValue(checked ? [...current, topic] : current.filter((t) => t !== topic));
   }
 
   protected retryReference(): void {
