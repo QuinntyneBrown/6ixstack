@@ -9,7 +9,7 @@ const external = process.env['PW_BASE_URL'];
  * setup starts on a freshly seeded SQLite database with the clock fixed at Monday, November 2, 2026.
  */
 export default defineConfig({
-  testDir: './e2e/tests',
+  testDir: './e2e',
   outputDir: './test-results',
   snapshotPathTemplate: './e2e/visual-baselines/{testFileName}/{arg}-{platform}{ext}',
   fullyParallel: false,
@@ -30,14 +30,43 @@ export default defineConfig({
     colorScheme: 'light',
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 720 } } },
-  ],
-  webServer: external
-    ? undefined
-    : {
-        command: 'npx ng serve sixstack --port 4200',
-        url: 'http://localhost:4200',
-        reuseExistingServer: !process.env['CI'],
-        timeout: 180_000,
+    // The app, end to end, against the API.
+    {
+      name: 'chromium',
+      testDir: './e2e/tests',
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 720 } },
+    },
+    // Library components through their Storybook stories (still Chromium only).
+    {
+      name: 'components',
+      testDir: './e2e/component-tests',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 },
+        baseURL: process.env['PW_STORYBOOK_URL'] ?? 'http://localhost:6007',
       },
+    },
+  ],
+  webServer: [
+    ...(external
+      ? []
+      : [
+          {
+            command: 'npx ng serve sixstack --port 4200',
+            url: 'http://localhost:4200',
+            reuseExistingServer: !process.env['CI'],
+            timeout: 180_000,
+          },
+        ]),
+    ...(process.env['PW_STORYBOOK_URL']
+      ? []
+      : [
+          {
+            command: 'npx tsx e2e/support/serve-storybook.ts',
+            url: 'http://localhost:6007/iframe.html',
+            reuseExistingServer: !process.env['CI'],
+            timeout: 300_000,
+          },
+        ]),
+  ],
 });

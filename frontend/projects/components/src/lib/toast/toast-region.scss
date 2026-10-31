@@ -1,0 +1,26 @@
+@use 'breakpoints' as bp;
+
+.toast-region {
+  position: fixed;
+  z-index: var(--sx-z-toast);
+  bottom: var(--spacingHorizontalL);
+  left: var(--spacingHorizontalL);
+  right: var(--spacingHorizontalL);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalM);
+  pointer-events: none;
+}
+@include bp.media-up(sm) {
+  .toast-region {
+    left: auto;
+    width: 24rem;
+    bottom: var(--spacingHorizontalXXL);
+    right: var(--spacingHorizontalXXL);
+  }
+}
+@media print {
+  .toast-region {
+    display: none;
+  }
+}

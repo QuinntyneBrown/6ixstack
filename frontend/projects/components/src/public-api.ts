@@ -14,3 +14,6 @@ export * from './lib/status-page/status-page';
 export * from './lib/dialog-shell/dialog-shell';
 export * from './lib/dialog-shell/dialog-config';
 export * from './lib/divider/divider';
+export * from './lib/toast/toast.service';
+export * from './lib/toast/toast';
+export * from './lib/toast/toast-region';
