@@ -1,0 +1,148 @@
+<div class="page-title">
+  <h1>Settings</h1>
+  <p class="lead">
+    @if (loadFailed()) {
+      Settings unavailable right now.
+    } @else if (settings(); as s) {
+      Signed in as {{ s.email }}
+    } @else if (slow()) {
+      Loading your settings…
+    }
+  </p>
+</div>
+
+@if (loadFailed()) {
+  <sx-alert
+    kind="danger"
+    announce="alert"
+    title="We couldn’t load your settings"
+    [actions]="[{ label: 'Try again', run: retry.bind(this) }]"
+  >
+    Nothing has been changed. Try again in a moment.
+  </sx-alert>
+} @else if (settings(); as s) {
+  <div class="settings-layout">
+    <sx-sidebar-nav
+      label="Settings sections"
+      [items]="sections"
+      [current]="current()"
+      (selected)="current.set($event)"
+    />
+    <div class="settings-main">
+      @if (saved()) {
+        <sx-alert
+          class="settings-top"
+          kind="success"
+          title="Settings saved"
+          announce="status"
+          dismissible
+          (dismissed)="saved.set(null)"
+        >
+          {{ savedText() }}
+        </sx-alert>
+      }
+      @if (saveFailed()) {
+        <sx-alert class="settings-top" kind="danger" announce="alert" title="We couldn’t save your settings">
+          6ixstack didn’t respond. Your changes are still here; save again in a moment.
+        </sx-alert>
+      }
+      @if (errors().length) {
+        <sx-error-summary class="settings-top" [errors]="errors()" />
+      }
+      <form class="form-card" [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <sx-form-section title="Profile" sectionId="profile" lead="Shown to moderators, not to attendees.">
+          <div class="form-grid form-grid--2">
+            <sx-form-field label="Name" controlId="name" [error]="error('name')">
+              <input
+                sx-input
+                id="name"
+                type="text"
+                maxlength="100"
+                autocomplete="name"
+                formControlName="name"
+                [attr.aria-invalid]="!!error('name')"
+                [attr.aria-describedby]="describedBy('name', false, !!error('name'))"
+              />
+            </sx-form-field>
+            <sx-form-field
+              label="Email"
+              controlId="email"
+              hint="Changing it sends a confirmation link to the new address."
+              [error]="error('email')"
+            >
+              <input
+                sx-input
+                id="email"
+                type="email"
+                autocomplete="email"
+                formControlName="email"
+                [attr.aria-invalid]="!!error('email')"
+                [attr.aria-describedby]="describedBy('email', true, !!error('email'))"
+              />
+            </sx-form-field>
+            @if (s.community; as c) {
+              <sx-form-field label="Community" controlId="org">
+                <input sx-input id="org" type="text" readonly [value]="c.name" />
+              </sx-form-field>
+            }
+            <sx-form-field label="Website" controlId="website" optional [error]="error('website')">
+              <input
+                sx-input
+                id="website"
+                type="url"
+                placeholder="https://"
+                formControlName="website"
+                [attr.aria-invalid]="!!error('website')"
+                [attr.aria-describedby]="describedBy('website', false, !!error('website'))"
+              />
+            </sx-form-field>
+          </div>
+        </sx-form-section>
+        <sx-form-section
+          title="Email notifications"
+          sectionId="email-notifications"
+          lead="Everything still shows in your notifications page."
+        >
+          <div class="switches">
+            <label sx-switch
+              ><input type="checkbox" role="switch" formControlName="emailEventDecisions" />My event is
+              approved or needs changes</label
+            >
+            <label sx-switch
+              ><input type="checkbox" role="switch" formControlName="emailProblemReports" />Someone reports a
+              problem with my event</label
+            >
+            <label sx-switch
+              ><input type="checkbox" role="switch" formControlName="emailWeeklySummary" />Weekly summary of
+              going and feed numbers</label
+            >
+          </div>
+        </sx-form-section>
+        <div class="form-actions">
+          <button sx-button appearance="primary" type="submit" [busy]="saving()">
+            {{ saving() ? 'Saving…' : 'Save settings' }}
+          </button>
+        </div>
+      </form>
+      <section class="form-card settings-section" id="community" aria-labelledby="s-community">
+        <h2 id="s-community" class="section-title">Community</h2>
+        <p class="settings-community">
+          @if (s.community; as c) {
+            You manage <a [routerLink]="'/communities/' + c.slug">{{ c.name }}</a> with
+            {{ c.coOrganizerCount }} {{ c.coOrganizerCount === 1 ? 'co-organizer' : 'co-organizers' }}.
+          } @else {
+            No community is assigned to your account yet.
+          }
+        </p>
+      </section>
+    </div>
+  </div>
+} @else if (slow()) {
+  <div class="form-card settings-skeleton" aria-busy="true" aria-label="Loading your settings">
+    <sx-skeleton variant="title" width="30%" />
+    <sx-skeleton variant="rect" height="2.5rem" />
+    <sx-skeleton variant="rect" height="2.5rem" />
+    <sx-skeleton variant="title" width="40%" />
+    <sx-skeleton variant="rect" height="6rem" />
+  </div>
+}

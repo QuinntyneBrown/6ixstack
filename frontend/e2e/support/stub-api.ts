@@ -552,3 +552,47 @@ export async function slowSpeaker(page: Page, ms: number): Promise<void> {
     }),
   );
 }
+
+/** Makes GET /api/account/settings fail until the returned function is called. */
+export async function failSettings(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.request().method() === 'GET'
+      ? route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' })
+      : route.fallback();
+  await page.route('**/api/account/settings', handler);
+  return () => page.unroute('**/api/account/settings', handler);
+}
+
+/** Holds PUT /api/account/settings until the returned function answers it with a 500. */
+export async function holdSettingsSave(page: Page): Promise<() => Promise<void>> {
+  let held: import('@playwright/test').Route | null = null;
+  await page.route('**/api/account/settings', async (route) => {
+    if (route.request().method() !== 'PUT') return route.fallback();
+    held = route;
+  });
+  return async () => {
+    await held!.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+  };
+}
+
+/** Delays GET /api/account/settings by `ms`. */
+export async function slowSettings(page: Page, ms: number): Promise<void> {
+  await page.route(
+    '**/api/account/settings',
+    guarded(page, async (route) => {
+      if (route.request().method() !== 'GET') return route.fallback();
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
+}
+
+/** Answers PUT /api/account/settings as saved at `savedAt`, without saving anything. */
+export async function settingsSaveAnswers(page: Page, savedAt: string): Promise<void> {
+  await page.route('**/api/account/settings', (route) =>
+    route.request().method() === 'PUT'
+      ? route.fulfill({ json: { savedAtLabel: savedAt, pendingEmail: null } })
+      : route.fallback(),
+  );
+}

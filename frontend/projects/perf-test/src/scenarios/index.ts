@@ -1,4 +1,6 @@
 import { Scenario } from './scenario';
+import { scenario as sidebarNav } from './SidebarNav';
+import { scenario as switchToggle } from './Switch';
 import { scenario as notificationItem } from './NotificationItem';
 import { scenario as directoryCard } from './DirectoryCard';
 import { scenario as featureCard } from './FeatureCard';
@@ -52,6 +54,8 @@ import { scenario as toast } from './Toast';
 /** Every scenario, by name. Add one file per component and register it here. */
 export const SCENARIOS: Record<string, Scenario> = Object.fromEntries(
   [
+    sidebarNav,
+    switchToggle,
     notificationItem,
     directoryCard,
     featureCard,

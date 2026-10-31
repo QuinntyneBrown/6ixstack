@@ -23,6 +23,7 @@ test.describe('Notifications', () => {
       '(unread)',
     );
     await expect(notifications.shell.notifications).toHaveAccessibleName('Notifications, 3 unread');
+    await expect(notifications.settingsLink).toHaveAttribute('href', '/settings#email-notifications');
   });
 
   test('the header shows the unread count on every page', async ({ page }) => {

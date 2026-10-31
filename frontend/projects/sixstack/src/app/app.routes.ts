@@ -59,6 +59,13 @@ export const routes: Routes = [
       import('./pages/community-detail/community-detail-page').then((m) => m.CommunityDetailPage),
   },
   {
+    path: 'settings',
+    title: 'Settings · 6ixstack',
+    data: { hideSubmit: true },
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/settings/settings-page').then((m) => m.SettingsPage),
+  },
+  {
     path: 'notifications',
     title: 'Notifications · 6ixstack',
     data: { hideSubmit: true },
