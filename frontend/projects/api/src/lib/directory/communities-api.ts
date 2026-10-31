@@ -111,7 +111,40 @@ export interface SpeakerDirectory {
   monthEndLabel: string;
 }
 
+export interface SpeakerDetail {
+  slug: string;
+  name: string;
+  initials: string;
+  role: string;
+  community: { roleLabel: string; name: string; slug: string } | null;
+  topics: string[];
+  bio: string[];
+  upcoming: {
+    slug: string;
+    title: string;
+    organizer: string;
+    date: string;
+    startTimeEt: string;
+    format: string;
+    topics: string[];
+    locationLabel: string;
+    priceLabel: string;
+    goingCount: number;
+  }[];
+  past: { title: string; meta: string; eventSlug: string; recordingUrl: string | null }[];
+  facts: {
+    talkCountLabel: string;
+    sinceLabel: string | null;
+    homeCity: string | null;
+    homeCityNote: string | null;
+    links: { label: string; url: string }[];
+  };
+  inviteUrl: string | null;
+}
+
 export interface SpeakersApi {
+  /** A speaker's page; fails with `ApiError` kind `NotFound` for an unknown slug (L2-033). */
+  get(slug: string): Observable<SpeakerDetail>;
   /** The speakers directory: 9 on page 1, 24 on each later page (L2-032). */
   list(query: SpeakersQuery): Observable<SpeakerDirectory>;
 }
@@ -122,6 +155,10 @@ export const SPEAKERS_API = new InjectionToken<SpeakersApi>('SPEAKERS_API');
 export class HttpSpeakersApi implements SpeakersApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
+
+  get(slug: string): Observable<SpeakerDetail> {
+    return this.http.get<SpeakerDetail>(`${this.baseUrl}/api/speakers/${encodeURIComponent(slug)}`);
+  }
 
   list(query: SpeakersQuery): Observable<SpeakerDirectory> {
     let params = new HttpParams();

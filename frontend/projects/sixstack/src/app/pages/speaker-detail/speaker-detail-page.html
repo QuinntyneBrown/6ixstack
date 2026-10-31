@@ -1,0 +1,136 @@
+@switch (state().status) {
+  @case ('notFound') {
+    <sx-not-found-page />
+  }
+  @case ('failed') {
+    <a sx-back-link routerLink="/speakers">All speakers</a>
+    <sx-empty-state
+      class="speaker-failed"
+      icon="alert"
+      title="This profile didn't load"
+      error
+      [headingLevel]="1"
+    >
+      <span slot="text">We couldn't reach 6ixstack. Check your connection and try again.</span>
+      <ng-container slot="actions">
+        <button sx-button appearance="primary" type="button" (click)="retry()">
+          <sx-icon name="refresh" size="sm" />Try again
+        </button>
+        <a sx-button routerLink="/speakers">Back to speakers</a>
+      </ng-container>
+    </sx-empty-state>
+  }
+  @case ('loading') {
+    @if (slow()) {
+      <a sx-back-link routerLink="/speakers">All speakers</a>
+      <div class="speaker-skeleton" aria-busy="true" aria-label="Loading speaker">
+        <div class="speaker-hero">
+          <sx-skeleton variant="rect" width="4.5rem" height="4.5rem" />
+          <div class="speaker-skeleton__lines">
+            <sx-skeleton variant="title" width="50%" />
+            <sx-skeleton width="70%" />
+          </div>
+        </div>
+        <sx-skeleton variant="rect" height="12rem" />
+      </div>
+    }
+  }
+  @case ('loaded') {
+    @let s = data()!;
+    <a sx-back-link routerLink="/speakers">All speakers</a>
+    <div class="speaker-hero">
+      <sx-avatar [initials]="s.initials" size="xl" />
+      <div>
+        <h1>{{ s.name }}</h1>
+        <p class="speaker-hero__role">
+          {{ s.role }}
+          @if (s.community; as c) {
+            · {{ c.roleLabel }} of <a [routerLink]="'/communities/' + c.slug">{{ c.name }}</a>
+          }
+        </p>
+        <div class="chip-row">
+          @for (topic of topics(); track topic) {
+            <sx-topic-tag [topic]="topic" />
+          }
+        </div>
+      </div>
+    </div>
+    <div class="page-grid">
+      <div class="stack-gap">
+        @if (s.bio.length) {
+          <section class="speaker-about" aria-labelledby="about-h">
+            <h2 id="about-h" class="section-title">About</h2>
+            <div class="prose">
+              @for (paragraph of s.bio; track $index) {
+                <p>{{ paragraph }}</p>
+              }
+            </div>
+          </section>
+        }
+        <section class="speaker-upcoming" aria-labelledby="upcoming-h">
+          <h2 id="upcoming-h" class="section-title">Upcoming talks</h2>
+          @if (rows().length) {
+            <ul class="event-list">
+              @for (talk of rows(); track talk.row.slug) {
+                <li><sx-event-row [event]="talk.row" [date]="talk.date" /></li>
+              }
+            </ul>
+          } @else {
+            <sx-empty-state icon="mic" title="No upcoming talks" compact>
+              <span slot="text"
+                >{{ firstName() }} isn't scheduled to speak anywhere right now.{{
+                  s.inviteUrl ? ' Organizers can send an invitation.' : ''
+                }}</span
+              >
+              @if (s.inviteUrl) {
+                <a slot="actions" sx-button [href]="s.inviteUrl">Invite to speak</a>
+              }
+            </sx-empty-state>
+          }
+        </section>
+        @if (s.past.length) {
+          <section aria-labelledby="past-h">
+            <h2 id="past-h" class="section-title">Past talks</h2>
+            <ul sx-list class="speaker-past">
+              @for (talk of s.past; track talk.eventSlug + talk.title) {
+                <li sx-list-item [title]="talk.title" [meta]="talk.meta">
+                  @if (talk.recordingUrl) {
+                    <a
+                      slot="actions"
+                      sx-button
+                      appearance="ghost"
+                      size="sm"
+                      [href]="talk.recordingUrl"
+                      rel="noopener"
+                      target="_blank"
+                      >Recording<span class="visually-hidden"> of {{ talk.title }}</span></a
+                    >
+                  }
+                </li>
+              }
+            </ul>
+          </section>
+        }
+      </div>
+      <aside class="stack-gap">
+        <div class="facts speaker-facts">
+          <sx-fact-item icon="mic" [label]="s.facts.talkCountLabel">{{ s.facts.sinceLabel }}</sx-fact-item>
+          @if (s.facts.homeCity) {
+            <sx-fact-item icon="pin" [label]="s.facts.homeCity">{{ s.facts.homeCityNote }}</sx-fact-item>
+          }
+          @if (s.facts.links.length) {
+            <sx-fact-item icon="globe" label="Links">
+              @for (link of s.facts.links; track link.url; let last = $last) {
+                <a [href]="link.url" rel="noopener" target="_blank">{{ link.label }}</a
+                >{{ last ? '' : ' · ' }}
+              }
+            </sx-fact-item>
+          }
+        </div>
+        @if (s.inviteUrl) {
+          <a sx-button appearance="primary" block [href]="s.inviteUrl">Invite to speak</a>
+        }
+      </aside>
+    </div>
+  }
+}
