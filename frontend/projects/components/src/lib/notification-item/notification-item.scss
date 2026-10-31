@@ -1,0 +1,96 @@
+// Ported from docs/mocks/assets/ui.css (.notif).
+:host {
+  display: block;
+}
+.notif {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: var(--spacingHorizontalM);
+  padding: var(--spacingHorizontalL) var(--spacingHorizontalL) var(--spacingHorizontalL)
+    var(--spacingHorizontalXL);
+}
+@media (min-width: 40rem) {
+  .notif {
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  }
+}
+.notif:hover {
+  background: var(--colorSubtleBackgroundHover);
+}
+.notif:has(a:focus-visible) {
+  outline: var(--sx-focus-ring-width) solid var(--colorStrokeFocus2);
+  outline-offset: -2px;
+}
+.notif--unread::before {
+  content: '';
+  position: absolute;
+  left: var(--spacingHorizontalS);
+  top: 50%;
+  translate: 0 -50%;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: var(--sx-color-brand);
+}
+.notif__icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--colorSubtleBackgroundHover);
+  color: var(--colorNeutralForeground2);
+}
+.notif__icon--success {
+  background: var(--colorStatusSuccessBackground1);
+  color: var(--colorStatusSuccessForeground1);
+}
+.notif__icon--warning {
+  background: var(--colorStatusWarningBackground1);
+  color: var(--colorStatusWarningForeground1);
+}
+.notif__icon--danger {
+  background: var(--colorStatusDangerBackground1);
+  color: var(--colorStatusDangerForeground1);
+}
+.notif__title {
+  margin: 0;
+  font: var(--sx-text-body-sm);
+  color: var(--colorNeutralForeground2);
+}
+.notif--unread .notif__title {
+  font-weight: var(--fontWeightSemibold);
+  color: var(--colorNeutralForeground1);
+}
+.notif__title a {
+  color: inherit;
+  text-decoration: none;
+}
+.notif__title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.notif__title a:hover {
+  text-decoration: underline;
+}
+.notif__title a:focus-visible {
+  outline: none;
+}
+.notif__text {
+  margin: var(--spacingHorizontalXXS) 0 0;
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}
+.notif__time {
+  grid-column: 2;
+  color: var(--colorNeutralForeground3);
+  font: var(--sx-text-caption);
+  white-space: nowrap;
+}
+@media (min-width: 40rem) {
+  .notif__time {
+    grid-column: auto;
+  }
+}

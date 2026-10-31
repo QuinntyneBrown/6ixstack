@@ -59,3 +59,4 @@ export * from './lib/event-map/event-map';
 export * from './lib/event-map/gta-projection';
 export * from './lib/feature-card/feature-card';
 export * from './lib/directory-card/directory-card';
+export * from './lib/notification-item/notification-item';

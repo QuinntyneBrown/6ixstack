@@ -8,6 +8,9 @@ public class Notification
     public string Title { get; set; } = string.Empty;
     public string? Text { get; set; }
     public string? Link { get; set; }
+
+    /// <summary>The icon's tone: neutral, success, warning or danger (notifications page).</summary>
+    public string Tone { get; set; } = "neutral";
     public DateTimeOffset CreatedAtUtc { get; set; }
     public DateTimeOffset? ReadAtUtc { get; set; }
 }

@@ -3,6 +3,8 @@ import { Page } from '@playwright/test';
 
 export const ORGANIZER = 'priya@gtaazure.ca';
 export const MODERATOR = 'jordan@6ixstack.dev';
+/** GTA Azure's co-organizer, seeded with three unread and two read notifications. */
+export const CO_ORGANIZER = 'marcus@gtaazure.ca';
 
 /** Signs the page's browser context in as a seeded user through the test-only seam (ADR 0002). */
 export async function signInAs(page: Page, email: string): Promise<void> {

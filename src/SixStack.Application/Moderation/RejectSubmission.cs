@@ -103,7 +103,8 @@ public sealed class RejectSubmissionCommandHandler(
                 RecipientEmail = to,
                 Title = subject,
                 Text = $"Reason: {label.ToLowerInvariant()}." + (needsChanges ? " Edit it and resubmit." : string.Empty),
-                Link = needsChanges ? "/organize" : null,
+                Link = "/organize",
+                Tone = "danger",
                 CreatedAtUtc = now,
             });
         }

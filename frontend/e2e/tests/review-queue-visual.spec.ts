@@ -1,13 +1,15 @@
 import { expect, test } from '../fixtures';
 import { ReviewQueuePage } from '../pages/review-queue.page';
 import { approvalsSucceed } from '../support/moderation';
-import { MODERATOR, ORGANIZER, signInAs } from '../support/session';
+import { MODERATOR, ORGANIZER, signInAs, withUnreadCount } from '../support/session';
 import { emptyQueue, failQueue, slowQueue, stubQueue, withPendingChecks } from '../support/stub-api';
 
 // Visual parity with docs/mocks/pages/review-queue and docs/mocks/dialogs/keyboard-shortcuts.
 test.describe('Review queue visuals', () => {
   test.beforeEach(async ({ page }) => {
     await signInAs(page, MODERATOR);
+    // Submissions made by earlier tests notify moderators; the screenshots show the seeded header.
+    await withUnreadCount(page, 0);
   });
 
   test('default', async ({ page }) => {

@@ -196,3 +196,24 @@ publisher fans out to community organizers or to every moderator, and the
 dedupe key keeps a going milestone to one notification per event.
 
 ![Sequence diagram for creating notifications from a trigger](diagrams/sequence-create-notifications.png)
+
+## Decisions (journey 21)
+
+- **Recipients** are addressed by email (`Notification.RecipientEmail`), as journeys 07 and 08 already create them,
+  so a submitter without an account sees them after signing in with that address.
+- **Relative times** come from the API (`NotificationTime`, from `IClock` in Toronto time): "Just now" under a
+  minute, "{n} min ago" under an hour, "{n} h ago" earlier today, "Yesterday", then "Oct 29". The browser's clock
+  never decides them.
+- **Tone** is stored on the notification (neutral, success, warning, danger) and picks the icon.
+- **Triggers now**:
+  - Approved (success) and needs changes or rejected (danger), from journeys 07 and 08.
+  - A new submission notifies every moderator, linking to the queue.
+  - Problem reports come with journey 22.
+  - Going and feed milestones need sources that change those counts (tickets are sold elsewhere, and feed requests
+    are not counted), so the milestone detector waits for them. The seed holds historical milestone notifications
+    for the demo.
+- **Seed**: Marcus Bell (GTA Azure co-organizer) has the mock's set, three unread and two read. Priya's account keeps
+  no unread items, so her pages look as before.
+- **No paging** for now; histories are short. The settings line ("Choose which of these also arrive by email")
+  joins with the settings page (journey 25).
+

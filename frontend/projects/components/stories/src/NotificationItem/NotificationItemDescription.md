@@ -1,0 +1,1 @@
+A notification item shows one update: an icon whose tone matches the news, the title linking to what it is about, a line of detail and when it happened. Unread items have a brand dot, a bold title and the hidden text "(unread)" for screen readers.

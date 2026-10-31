@@ -11,6 +11,13 @@ export class SessionStore {
 
   readonly user = this.current.asReadonly();
 
+  /** Keeps the header's unread badge in step after the notifications page loads or marks items read. */
+  setUnreadCount(count: number): void {
+    const user = this.current();
+    if (user && user.unreadNotificationCount !== count)
+      this.current.set({ ...user, unreadNotificationCount: count });
+  }
+
   /** Loads the user the first time it is asked for; later calls reuse that answer. */
   load(): Observable<CurrentUser | null> {
     this.loading ??= this.auth.me().pipe(
