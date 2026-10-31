@@ -37,3 +37,27 @@ test.describe('Streaming event detail', () => {
     );
   });
 });
+
+test.describe('Past event detail', () => {
+  test('says it ended, links to the next one, and offers the recording and slides', async ({ page }) => {
+    const detail = new EventDetailPage(page);
+    await detail.open('minimal-apis-in-practice-october');
+
+    expect(await detail.factTexts()).toEqual([
+      'Tuesday, October 20, 2026 · 6:00 PM – 8:30 PM ET · ended',
+      'Microsoft Canada · 81 Bay St, Toronto · Directions',
+      '131 attended',
+    ]);
+    await expect(detail.alert('This event has ended')).toContainText(
+      'Toronto .NET User Group meets again on November 3.',
+    );
+    await expect(detail.alertAction('This event has ended', 'See the next one')).toHaveAttribute(
+      'href',
+      '/events/whats-new-in-dotnet-11-previews',
+    );
+    await expect(detail.action('Watch the recording')).toHaveAttribute('href', /youtube\.com/);
+    await expect(detail.action('Slides and code')).toHaveAttribute('href', /github\.com/);
+    await expect(detail.action(/Get tickets|Register/)).toHaveCount(0);
+    await expect(detail.action('Add to my calendar')).toHaveCount(0);
+  });
+});

@@ -143,6 +143,16 @@
             ><sx-icon name="video" />{{ e.actions.join!.label }}</a
           >
         }
+        @if (e.actions.recordingUrl; as recording) {
+          <a sx-button appearance="primary" block [href]="recording" target="_blank" rel="noopener noreferrer"
+            ><sx-icon name="video" />Watch the recording</a
+          >
+        }
+        @if (e.actions.slidesUrl; as slides) {
+          <a sx-button block [href]="slides" target="_blank" rel="noopener noreferrer"
+            ><sx-icon name="download" />Slides and code</a
+          >
+        }
         @if (e.actions.addToCalendar) {
           <button sx-button block type="button"><sx-icon name="calendar-plus" />Add to my calendar</button>
         }
