@@ -36,6 +36,7 @@ import {
   DeleteAccountDialog,
   DeleteAccountDialogData,
 } from '../../dialogs/delete-account/delete-account-dialog';
+import { SIGN_OUT_TITLE_ID, SignOutDialog } from '../../dialogs/sign-out/sign-out-dialog';
 import { merge, startWith } from 'rxjs';
 import { SessionStore } from '../../shell/session/session-store';
 import { SKELETON_DELAY_MS } from '../../shared/load-state';
@@ -72,6 +73,23 @@ export class SettingsPage {
   private readonly dialog = inject(Dialog);
   private readonly router = inject(Router);
   private readonly toasts = inject(ToastService);
+
+  /** Sign out of 6ixstack? (L2-049): on success the events page opens, signed out. */
+  protected openSignOut(trigger: EventTarget | null): void {
+    const ref = this.dialog.open<boolean>(
+      SignOutDialog,
+      modalDialogConfig({
+        ariaLabelledBy: SIGN_OUT_TITLE_ID,
+        ariaDescribedBy: 'sign-out-description',
+        restoreFocus: (trigger as HTMLElement | null) ?? true,
+      }),
+    );
+    ref.closed.subscribe((signedOut) => {
+      if (!signedOut) return;
+      this.session.clear();
+      void this.router.navigateByUrl('/');
+    });
+  }
 
   /** Delete your organizer account? (L2-071): on success the app lands signed out on the events page. */
   protected openDelete(s: AccountSettings, trigger: EventTarget | null): void {

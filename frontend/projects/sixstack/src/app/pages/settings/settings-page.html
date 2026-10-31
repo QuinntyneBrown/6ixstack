@@ -138,11 +138,11 @@
       <section class="form-card settings-section danger-zone" id="account" aria-labelledby="s-account">
         <h2 id="s-account" class="section-title">Account</h2>
         <p class="settings-note">
-          Deleting your account removes your organizer access; published events stay up{{
-            s.community ? ' under ' + s.community.name : ''
-          }}.
+          Signing out ends this session only. Deleting your account removes your organizer access; published
+          events stay up{{ s.community ? ' under ' + s.community.name : '' }}.
         </p>
         <div class="danger-zone__actions">
+          <button sx-button type="button" (click)="openSignOut($event.currentTarget)">Sign out</button>
           <button sx-button appearance="danger" type="button" (click)="openDelete(s, $event.currentTarget)">
             Delete account
           </button>

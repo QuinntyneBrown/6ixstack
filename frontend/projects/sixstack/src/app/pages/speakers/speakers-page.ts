@@ -122,8 +122,12 @@ export class SpeakersPage {
     };
   }
 
+  /** The filters last asked for, so quick successive changes build on each other before the URL catches up. */
+  private requested: SpeakerFilters | null = null;
+
   protected setFilter(change: Partial<SpeakerFilters>): void {
-    const next = { ...this.filters(), ...change };
+    const next = { ...(this.requested ?? this.filters()), ...change };
+    this.requested = next;
     void this.router.navigate([], {
       relativeTo: this.route,
       replaceUrl: true,

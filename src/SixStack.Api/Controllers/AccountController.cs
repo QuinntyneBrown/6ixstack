@@ -31,6 +31,21 @@ public sealed class AccountController(ISender sender) : ControllerBase
         return NoContent();
     }
 
+    /// <summary>Signs this device out (L2-049): the session is revoked; other devices stay signed in.</summary>
+    [HttpPost("auth/sign-out")]
+    [Authorize]
+    public async Task<IActionResult> SignOutDevice(CancellationToken cancellationToken)
+    {
+        if (Guid.TryParse(User.FindFirst(Auth.SessionSignIn.SessionIdClaim)?.Value, out var sessionId))
+        {
+            await sender.Send(new SignOutCommand(sessionId), cancellationToken);
+        }
+
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        Response.Cookies.Delete(Auth.XsrfTokenService.CookieName);
+        return NoContent();
+    }
+
     /// <summary>Confirms a new email from its link and returns to settings with the outcome (L2-068).</summary>
     [HttpGet("auth/confirm-email")]
     [AllowAnonymous]

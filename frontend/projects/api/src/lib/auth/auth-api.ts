@@ -17,6 +17,8 @@ export interface AuthApi {
   requestSignInLink(email: string, returnUrl?: string | null): Observable<void>;
   /** The signed-in user; fails with a 401 `ApiError` when anonymous. */
   me(): Observable<CurrentUser>;
+  /** Ends this device's session; other devices stay signed in (L2-049). */
+  signOut(): Observable<void>;
 }
 
 export const AUTH_API = new InjectionToken<AuthApi>('AUTH_API');
@@ -35,5 +37,9 @@ export class HttpAuthApi implements AuthApi {
 
   me(): Observable<CurrentUser> {
     return this.http.get<CurrentUser>(`${this.baseUrl}/api/auth/me`);
+  }
+
+  signOut(): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/auth/sign-out`, null);
   }
 }

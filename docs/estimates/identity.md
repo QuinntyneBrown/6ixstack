@@ -5,4 +5,4 @@
 | account-settings | 3 days | 85% |
 | delete-account | 3 days | 85% |
 | magic-link-sign-in | 5 days | 95% |
-| sessions-and-sign-out | 4 days | 60% |
+| sessions-and-sign-out | 4 days | 90% |

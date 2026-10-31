@@ -21,6 +21,7 @@ export class SettingsPage {
   readonly loadFailed: Locator;
   readonly skeleton: Locator;
   readonly deleteAccount: Locator;
+  readonly signOut: Locator;
 
   constructor(private readonly page: Page) {
     this.shell = new AppShell(page);
@@ -41,6 +42,7 @@ export class SettingsPage {
     this.loadFailed = page.getByRole('alert').filter({ hasText: 'We couldn’t load your settings' });
     this.skeleton = page.locator('.settings-skeleton');
     this.deleteAccount = page.getByRole('button', { name: 'Delete account' });
+    this.signOut = page.getByRole('button', { name: 'Sign out', exact: true });
   }
 
   async open(): Promise<void> {
