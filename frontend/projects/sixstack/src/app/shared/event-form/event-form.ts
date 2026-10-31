@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { EventSubmission } from 'api';
+import { torontoToday } from '../toronto-time';
 
 /** The submit and edit forms' controls; names match the API contract and its field errors (L2-041). */
 export type EventForm = FormGroup<{
@@ -70,11 +71,6 @@ const httpsUrl: ValidatorFn = (c) => {
     return { message: 'Enter a full link that starts with https://' };
   }
 };
-
-/** Today's date in Toronto as yyyy-MM-dd ("not in the past" is judged by the Toronto calendar day). */
-export function torontoToday(now = new Date()): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Toronto' }).format(now);
-}
 
 function formatTime(hhmm: string): string {
   const [h, m] = hhmm.split(':').map(Number);

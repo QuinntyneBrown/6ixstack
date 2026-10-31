@@ -1,0 +1,44 @@
+// Local layout, ported from docs/mocks/assets/ui.css (.filter-bar, .chip-row, .cal-toolbar, .cal-legend).
+:host {
+  display: block;
+}
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalL);
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS);
+}
+.calendar {
+  margin-top: var(--spacingHorizontalXXL);
+}
+.cal-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacingHorizontalL);
+  margin-bottom: var(--spacingHorizontalL);
+}
+.cal-toolbar h2 {
+  font: var(--sx-text-h3);
+}
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacingHorizontalS);
+}
+.calendar-alert {
+  display: block;
+  margin-bottom: var(--spacingHorizontalL);
+}
+.cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS) var(--spacingHorizontalL);
+  margin-top: var(--spacingHorizontalL);
+}

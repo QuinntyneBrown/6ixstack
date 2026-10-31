@@ -1,0 +1,46 @@
+{
+  "month": "2026-11",
+  "monthLabel": "November 2026",
+  "totals": {
+    "events": 4,
+    "gta": 4,
+    "streaming": 1
+  },
+  "counts": {
+    "all": 4,
+    "gta": 4,
+    "streaming": 1
+  },
+  "matchCount": 4,
+  "days": [
+    {
+      "date": "2026-11-05",
+      "events": [
+        {
+          "slug": "azure-data-ai-day-gta",
+          "title": "Azure Data & AI Day GTA",
+          "firstTopic": "ai",
+          "startTimeEt": "9:00 AM"
+        },
+        {
+          "slug": "bedrock-in-the-real-world",
+          "title": "Bedrock in the real world",
+          "firstTopic": "ai",
+          "startTimeEt": "6:00 PM"
+        },
+        {
+          "slug": "signals-all-the-way-down",
+          "title": "Signals all the way down",
+          "firstTopic": "angular",
+          "startTimeEt": "6:30 PM"
+        },
+        {
+          "slug": "rag-evaluation-workshop",
+          "title": "RAG evaluation workshop",
+          "firstTopic": "ai",
+          "startTimeEt": "7:00 PM"
+        }
+      ]
+    }
+  ]
+}

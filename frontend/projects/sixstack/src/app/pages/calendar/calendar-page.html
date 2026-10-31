@@ -1,0 +1,95 @@
+<div class="page-title">
+  <h1>Calendar</h1>
+  <p class="lead">{{ subtitle() }}</p>
+</div>
+
+<div class="filter-bar">
+  <sx-segmented-control
+    label="Where"
+    [options]="formatOptions()"
+    [value]="filters().format"
+    (valueChange)="chooseFormat($event)"
+  />
+  <div class="chip-row" role="group" aria-label="Topics">
+    @for (topic of topics; track topic) {
+      <button sx-topic-chip [topic]="topic" [pressed]="isTopicSelected(topic)" (click)="toggleTopic(topic)">
+        {{ topicLabels[topic] }}
+      </button>
+    }
+  </div>
+</div>
+
+<div class="calendar">
+  <div class="cal-toolbar">
+    <div class="cluster">
+      <a
+        sx-button
+        iconOnly
+        [routerLink]="[]"
+        [queryParams]="{ month: previous() }"
+        queryParamsHandling="merge"
+        [attr.aria-label]="'Previous month, ' + monthLabelOf(previous())"
+        ><sx-icon name="chevron-left"
+      /></a>
+      <h2 aria-live="polite">{{ label() }}</h2>
+      <a
+        sx-button
+        iconOnly
+        [routerLink]="[]"
+        [queryParams]="{ month: next() }"
+        queryParamsHandling="merge"
+        [attr.aria-label]="'Next month, ' + monthLabelOf(next())"
+        ><sx-icon name="chevron-right"
+      /></a>
+      <a sx-button size="sm" [routerLink]="[]" [queryParams]="{ month: null }" queryParamsHandling="merge"
+        >Today</a
+      >
+    </div>
+    <sx-button-group label="View">
+      <a sx-button size="sm" routerLink="/" [queryParams]="listParams()"
+        ><sx-icon name="list" size="sm" />List</a
+      >
+      <a sx-button size="sm" [routerLink]="[]" aria-pressed="true" aria-current="page"
+        ><sx-icon name="grid" size="sm" />Month</a
+      >
+    </sx-button-group>
+  </div>
+
+  @if (failed()) {
+    <sx-alert
+      class="calendar-alert"
+      kind="danger"
+      announce="alert"
+      [title]="'We couldn’t load ' + monthName() + '’s events'"
+      [actions]="errorActions"
+    >
+      The calendar is showing empty days because the request failed, not because nothing is on.
+    </sx-alert>
+  } @else if (data()?.totals?.events === 0) {
+    <sx-alert class="calendar-alert" kind="info" [title]="'Nothing listed for ' + monthName() + ' yet'">
+      Organizers usually post meetups a few weeks ahead. <a routerLink="/submit">Submit an event</a> or
+      <a routerLink="/feeds">subscribe to a feed</a> to see them as they arrive.
+    </sx-alert>
+  } @else if (match(); as m) {
+    <sx-alert class="calendar-alert" kind="info" [title]="m.title" [actions]="m.actions" />
+  }
+
+  <sx-month-grid
+    [month]="month()"
+    [label]="label()"
+    [today]="today"
+    [days]="gridDays()"
+    [loading]="busy()"
+    (dayPicked)="picked.set($event)"
+  />
+
+  @if (dayList(); as list) {
+    <sx-calendar-day-list [heading]="list.heading" [events]="list.events" />
+  }
+
+  <div class="cal-legend">
+    @for (topic of topics; track topic) {
+      <sx-topic-tag [topic]="topic" />
+    }
+  </div>
+</div>

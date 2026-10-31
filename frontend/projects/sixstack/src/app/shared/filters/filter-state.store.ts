@@ -32,6 +32,8 @@ export class FilterStateStore {
     void this.router.navigate([], {
       relativeTo: this.route,
       replaceUrl: true,
+      // Merge, so a page's own parameters (the calendar's month) stay in the URL.
+      queryParamsHandling: 'merge',
       queryParams: {
         format: filters.format === 'all' ? null : filters.format,
         topics: filters.topics.length ? filters.topics.join(',') : null,

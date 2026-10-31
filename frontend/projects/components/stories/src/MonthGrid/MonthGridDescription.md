@@ -1,0 +1,1 @@
+A month grid lays out a month Sunday-first: today is marked, each day shows up to three event links in start order and "+N more", and days of the adjacent months are greyed. Every cell's label states the date, "today", and how many events it has. Below 768 px days show topic dots and become buttons that emit `dayPicked`; while `loading`, each day shows a skeleton chip.

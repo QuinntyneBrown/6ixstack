@@ -46,6 +46,25 @@ export interface UpcomingEvents {
   search: string;
 }
 
+export interface MonthCalendar {
+  /** `YYYY-MM`. */
+  month: string;
+  monthLabel: string;
+  totals: { events: number; gta: number; streaming: number };
+  counts: { all: number; gta: number; streaming: number };
+  matchCount: number;
+  days: {
+    date: string;
+    events: { slug: string; title: string; firstTopic: string | null; startTimeEt: string }[];
+  }[];
+}
+
+export interface MonthCalendarQuery {
+  month: string;
+  format?: EventFormatFilter;
+  topics?: string[];
+}
+
 export interface EventsApi {
   /** Upcoming published events: page 1 is the two-week window, later pages hold 20 more each. */
   upcoming(query: UpcomingEventsQuery): Observable<UpcomingEvents>;
@@ -53,6 +72,8 @@ export interface EventsApi {
   detail(slug: string): Observable<EventDetail>;
   /** The event as a single-event .ics file. */
   downloadIcs(slug: string): Observable<CalendarFile>;
+  /** One Toronto month for the calendar grid. */
+  month(query: MonthCalendarQuery): Observable<MonthCalendar>;
 }
 
 export interface CalendarFile {
@@ -74,6 +95,13 @@ export class HttpEventsApi implements EventsApi {
     if (query.q) params = params.set('q', query.q);
     if (query.page && query.page > 1) params = params.set('page', query.page);
     return this.http.get<UpcomingEvents>(`${this.baseUrl}/api/events`, { params });
+  }
+
+  month(query: MonthCalendarQuery): Observable<MonthCalendar> {
+    let params = new HttpParams().set('month', query.month);
+    if (query.format && query.format !== 'all') params = params.set('format', query.format);
+    for (const topic of query.topics ?? []) params = params.append('topics', topic);
+    return this.http.get<MonthCalendar>(`${this.baseUrl}/api/events/calendar`, { params });
   }
 
   downloadIcs(slug: string): Observable<CalendarFile> {

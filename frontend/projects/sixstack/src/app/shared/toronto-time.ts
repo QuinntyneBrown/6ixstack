@@ -8,3 +8,8 @@ const timeFormat = new Intl.DateTimeFormat('en-US', {
 export function formatTorontoTime(date: Date): string {
   return timeFormat.format(date);
 }
+
+/** Today's date in Toronto as yyyy-MM-dd ("not in the past" and "today" follow the Toronto calendar day). */
+export function torontoToday(now = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Toronto' }).format(now);
+}

@@ -233,3 +233,35 @@ export async function stubQueue(page: Page, fixture: string): Promise<void> {
     route.fulfill({ contentType: 'application/json', body }),
   );
 }
+
+/** Answers GET /api/events/calendar with a fixture from support/fixtures. */
+export async function stubCalendar(page: Page, fixture: string): Promise<void> {
+  const body = readFileSync(resolve(__dirname, 'fixtures', `${fixture}.json`), 'utf8');
+  await page.route('**/api/events/calendar*', (route) =>
+    route.fulfill({ contentType: 'application/json', body }),
+  );
+}
+
+/** Delays GET /api/events/calendar by `ms`. */
+export async function slowCalendar(page: Page, ms: number): Promise<void> {
+  await page.route(
+    '**/api/events/calendar*',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
+}
+
+/** Makes GET /api/events/calendar fail with a 500 until the returned function is called. */
+export async function failCalendar(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({
+      status: 500,
+      contentType: 'application/problem+json',
+      body: '{"status":500,"referenceCode":"3C9E-77B2"}',
+    });
+  await page.route('**/api/events/calendar*', handler);
+  return () => page.unroute('**/api/events/calendar*', handler);
+}
