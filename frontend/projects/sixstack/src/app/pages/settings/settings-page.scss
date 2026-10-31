@@ -59,11 +59,22 @@ sx-form-section + sx-form-section {
   margin: 0 0 var(--spacingHorizontalS);
   font: var(--sx-text-h4);
 }
-.settings-community {
+.settings-community,
+.settings-note {
   margin: 0;
   color: var(--colorNeutralForeground2);
 }
 .settings-skeleton {
   display: grid;
   gap: var(--spacingHorizontalL);
+}
+
+.danger-zone {
+  border-color: var(--colorStatusDangerBorder1);
+}
+.danger-zone__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalM);
+  margin-top: var(--spacingHorizontalL);
 }

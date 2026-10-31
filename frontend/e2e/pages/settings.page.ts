@@ -20,6 +20,7 @@ export class SettingsPage {
   readonly saved: Locator;
   readonly loadFailed: Locator;
   readonly skeleton: Locator;
+  readonly deleteAccount: Locator;
 
   constructor(private readonly page: Page) {
     this.shell = new AppShell(page);
@@ -39,6 +40,7 @@ export class SettingsPage {
     this.saved = page.locator('sx-alert').filter({ hasText: 'Settings saved' });
     this.loadFailed = page.getByRole('alert').filter({ hasText: 'We couldn’t load your settings' });
     this.skeleton = page.locator('.settings-skeleton');
+    this.deleteAccount = page.getByRole('button', { name: 'Delete account' });
   }
 
   async open(): Promise<void> {

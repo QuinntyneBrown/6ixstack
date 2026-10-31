@@ -11,6 +11,12 @@ export class SessionStore {
 
   readonly user = this.current.asReadonly();
 
+  /** Forgets the user after signing out or deleting the account; the next `load()` asks the API again. */
+  clear(): void {
+    this.current.set(null);
+    this.loading = null;
+  }
+
   /** Keeps the header's unread badge in step after the notifications page loads or marks items read. */
   setUnreadCount(count: number): void {
     const user = this.current();

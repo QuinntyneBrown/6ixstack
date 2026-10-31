@@ -42,7 +42,7 @@ test.describe('Communities directory', () => {
 
     await expect(communities.cards).toHaveCount(1);
     await expect(communities.card('GTA Azure Community').root).toBeVisible();
-    expect(communities.url().searchParams.get('city')).toBe('Mississauga');
+    await expect(page).toHaveURL(/[?&]city=Mississauga(&|$)/);
   });
 
   test('search, topic and sort shape the list', async ({ page }) => {
@@ -51,7 +51,7 @@ test.describe('Communities directory', () => {
 
     await communities.searchFor('angular');
     await expect(communities.card('Angular Toronto').root).toBeVisible();
-    expect(communities.url().searchParams.get('q')).toBe('angular');
+    await expect(page).toHaveURL(/[?&]q=angular(&|$)/);
 
     await communities.searchFor('');
     await communities.sort.selectOption({ label: 'A–Z' });

@@ -596,3 +596,18 @@ export async function settingsSaveAnswers(page: Page, savedAt: string): Promise<
       : route.fallback(),
   );
 }
+
+/** Holds POST /api/account/delete until the returned function answers it with `status`. */
+export async function holdAccountDeletion(page: Page): Promise<(status: number) => Promise<void>> {
+  let held: import('@playwright/test').Route | null = null;
+  await page.route('**/api/account/delete', async (route) => {
+    held = route;
+  });
+  return async (status: number) => {
+    await held!.fulfill({
+      status,
+      contentType: 'application/problem+json',
+      body: JSON.stringify({ status }),
+    });
+  };
+}
