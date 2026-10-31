@@ -20,7 +20,8 @@ public sealed record EventDetailDto(
 /// <summary>What the Add to my calendar dialog needs: its summary line and the event for Google and Outlook links.</summary>
 public sealed record CalendarDto(string Summary, DateTimeOffset StartsAtUtc, DateTimeOffset EndsAtUtc, string Location, string Details);
 
-public sealed record CommunityLinkDto(string Slug, string Name);
+/// <summary>The community that runs the event; <c>Slug</c> is null for a new organizer without one.</summary>
+public sealed record CommunityLinkDto(string? Slug, string Name);
 
 public sealed record DateTileDto(string Month, string Day);
 

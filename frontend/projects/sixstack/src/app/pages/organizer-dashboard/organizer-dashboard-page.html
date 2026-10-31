@@ -69,9 +69,17 @@
               </td>
               <td class="num">{{ row.going ?? '–' }}</td>
               <td>
-                @if (row.status === 'past' && row.publicUrl) {
-                  <a sx-button appearance="ghost" size="sm" [routerLink]="row.publicUrl"
-                    >View<span class="visually-hidden"> {{ row.title }}</span></a
+                @if (row.status === 'past') {
+                  <a sx-button size="sm" [routerLink]="['/organize/events', row.id, 'edit']"
+                    ><sx-icon name="eye" size="sm" />View<span class="visually-hidden">
+                      {{ row.title }}</span
+                    ></a
+                  >
+                } @else if (row.status !== 'cancelled') {
+                  <a sx-button size="sm" [routerLink]="['/organize/events', row.id, 'edit']"
+                    ><sx-icon name="edit" size="sm" />Edit<span class="visually-hidden">
+                      {{ row.title }}</span
+                    ></a
                   >
                 }
               </td>

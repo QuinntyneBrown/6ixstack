@@ -18,6 +18,61 @@ using SixStack.Domain.Enums;
 
 namespace SixStack.Application.Submissions;
 
+/// <summary>The event details the submit and edit forms send; property names match the form's controls (L2-041).</summary>
+public interface IEventDetailsInput
+{
+    string? Title { get; }
+    string? OrganizerName { get; }
+    string? Description { get; }
+    IReadOnlyList<string>? Topics { get; }
+    string? Date { get; }
+    string? TimeZoneId { get; }
+    string? StartTime { get; }
+    string? EndTime { get; }
+    string? Format { get; }
+    string? VenueName { get; }
+    string? City { get; }
+    string? StreetAddress { get; }
+    string? StreamUrl { get; }
+    bool IsFree { get; }
+    decimal? PriceCad { get; }
+    string? TicketUrl { get; }
+
+    bool HasVenue => Format is "inPerson" or "hybrid";
+
+    /// <summary>The validated input as domain details, with times converted from the chosen zone to UTC.</summary>
+    EventDetails ToDetails()
+    {
+        SubmitEventCommand.TryDate(Date, out var date);
+        SubmitEventCommand.TryTime(StartTime, out var start);
+        SubmitEventCommand.TryTime(EndTime, out var end);
+        var zone = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId!);
+        DateTimeOffset ToUtc(TimeOnly time)
+        {
+            var local = date.ToDateTime(time);
+            return new DateTimeOffset(local, zone.GetUtcOffset(local)).ToUniversalTime();
+        }
+
+        static string? Clean(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+        var format = Format switch { "streaming" => EventFormat.Streaming, "hybrid" => EventFormat.Hybrid, _ => EventFormat.InPerson };
+        return new EventDetails(
+            Title!.Trim(),
+            OrganizerName!.Trim(),
+            Description!.Trim(),
+            TopicKeys.Parse(Topics!),
+            format,
+            ToUtc(start),
+            ToUtc(end),
+            TimeZoneId!,
+            HasVenue ? VenueName!.Trim() : null,
+            HasVenue ? StreetAddress!.Trim() : null,
+            HasVenue ? City : null,
+            format == EventFormat.InPerson ? null : Clean(StreamUrl),
+            IsFree ? 0 : (int)Math.Round(PriceCad!.Value * 100),
+            Clean(TicketUrl));
+    }
+}
+
 /// <summary>A submission from the submit page; property names match the form's controls (L2-041).</summary>
 public sealed record SubmitEventCommand(
     string? Title,
@@ -36,7 +91,7 @@ public sealed record SubmitEventCommand(
     bool IsFree,
     decimal? PriceCad,
     string? TicketUrl,
-    string? ContactEmail) : IRequest<SubmissionReceivedDto>
+    string? ContactEmail) : IRequest<SubmissionReceivedDto>, IEventDetailsInput
 {
     public static readonly string[] Formats = ["inPerson", "streaming", "hybrid"];
 
@@ -52,9 +107,10 @@ public sealed record SubmitEventCommand(
 public sealed record SubmissionReceivedDto(string EventTitle, string ContactEmail);
 
 /// <summary>The L2-041 and L2-042 rules, with the form's own messages, so server errors land on the same fields.</summary>
-public sealed class SubmitEventCommandValidator : AbstractValidator<SubmitEventCommand>
+public abstract class EventDetailsValidator<T> : AbstractValidator<T>
+    where T : IEventDetailsInput
 {
-    public SubmitEventCommandValidator(IClock clock)
+    protected EventDetailsValidator(IClock clock)
     {
         RuleFor(c => c.Title).Cascade(CascadeMode.Stop)
             .Must(v => !string.IsNullOrWhiteSpace(v)).WithMessage("Enter a title for the event.")
@@ -104,6 +160,15 @@ public sealed class SubmitEventCommandValidator : AbstractValidator<SubmitEventC
             RuleFor(c => c.PriceCad).Cascade(CascadeMode.Stop)
                 .Must(p => p is > 0).WithMessage("Enter a price above $0.")
                 .Must(p => p <= 10_000).WithMessage("Enter a price of $10,000 or less."));
+    }
+}
+
+/// <summary>The details rules plus the contact email the submit page asks for.</summary>
+public sealed class SubmitEventCommandValidator : EventDetailsValidator<SubmitEventCommand>
+{
+    public SubmitEventCommandValidator(IClock clock)
+        : base(clock)
+    {
         RuleFor(c => c.ContactEmail).Cascade(CascadeMode.Stop)
             .Must(v => !string.IsNullOrWhiteSpace(v)).WithMessage("Enter your email address.")
             .EmailAddress().WithMessage("Enter an email address like name@example.com.")
@@ -166,34 +231,24 @@ public sealed partial class SubmitEventCommandHandler(
 
     private async Task<Event> NewEvent(SubmitEventCommand c, string email, DateTimeOffset now, CancellationToken cancellationToken)
     {
-        SubmitEventCommand.TryDate(c.Date, out var date);
-        SubmitEventCommand.TryTime(c.StartTime, out var start);
-        SubmitEventCommand.TryTime(c.EndTime, out var end);
-        var zone = TimeZoneInfo.FindSystemTimeZoneById(c.TimeZoneId!);
-        DateTimeOffset ToUtc(TimeOnly time)
-        {
-            var local = date.ToDateTime(time);
-            return new DateTimeOffset(local, zone.GetUtcOffset(local)).ToUniversalTime();
-        }
-
-        var format = c.Format switch { "streaming" => EventFormat.Streaming, "hybrid" => EventFormat.Hybrid, _ => EventFormat.InPerson };
+        var d = ((IEventDetailsInput)c).ToDetails();
         return new Event
         {
-            Slug = await UniqueSlug(c.Title!, cancellationToken),
-            Title = c.Title!.Trim(),
-            OrganizerName = c.OrganizerName!.Trim(),
-            Description = c.Description!.Trim(),
-            Topics = TopicKeys.Parse(c.Topics!),
+            Slug = await UniqueSlug(d.Title, cancellationToken),
+            Title = d.Title,
+            OrganizerName = d.OrganizerName,
+            Description = d.Description,
+            Topics = d.Topics,
             Status = EventStatus.InReview,
-            Format = format,
-            StartsAtUtc = ToUtc(start),
-            EndsAtUtc = ToUtc(end),
-            TimeZoneId = c.TimeZoneId!,
-            SourceTimeZoneId = c.TimeZoneId == "America/Toronto" ? null : c.TimeZoneId,
-            Venue = c.HasVenue ? new Venue { Name = c.VenueName!.Trim(), Address = c.StreetAddress!.Trim(), City = c.City! } : null,
-            StreamUrl = format == EventFormat.InPerson ? null : Clean(c.StreamUrl),
-            TicketUrl = Clean(c.TicketUrl),
-            PriceCents = c.IsFree ? 0 : (int)Math.Round(c.PriceCad!.Value * 100),
+            Format = d.Format,
+            StartsAtUtc = d.StartsAtUtc,
+            EndsAtUtc = d.EndsAtUtc,
+            TimeZoneId = d.TimeZoneId,
+            SourceTimeZoneId = d.TimeZoneId == "America/Toronto" ? null : d.TimeZoneId,
+            Venue = d.VenueName is null ? null : new Venue { Name = d.VenueName, Address = d.StreetAddress, City = d.City! },
+            StreamUrl = d.StreamUrl,
+            TicketUrl = d.TicketUrl,
+            PriceCents = d.PriceCents,
             SubmitterEmail = email,
             SubmittedAtUtc = now,
         };
@@ -211,8 +266,6 @@ public sealed partial class SubmitEventCommandHandler(
 
         return candidate;
     }
-
-    private static string? Clean(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
     [GeneratedRegex("[^a-z0-9]+")]
     private static partial Regex NonSlug();

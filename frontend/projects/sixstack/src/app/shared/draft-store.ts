@@ -4,6 +4,9 @@ import { Injectable } from '@angular/core';
  * Unsent form values kept in browser storage on this device (L2-044). Storage can be blocked or full; then the form
  * simply works without a draft.
  */
+/** The submit page's browser draft (L2-044); "Duplicate as a new event" fills it too. */
+export const SUBMIT_DRAFT_KEY = 'sx.draft.submit-event';
+
 @Injectable({ providedIn: 'root' })
 export class DraftStore {
   read<T>(key: string): Partial<T> | null {

@@ -37,6 +37,9 @@
             >
               <sx-icon name="check" size="sm" />Approve<span class="visually-hidden"> {{ card.title }}</span>
             </button>
+            <a slot="actions" sx-button size="sm" [routerLink]="['/organize/events', card.id, 'edit']">
+              <sx-icon name="edit" size="sm" />Edit<span class="visually-hidden"> {{ card.title }}</span>
+            </a>
             <button
               slot="actions"
               sx-button

@@ -1,0 +1,51 @@
+@use 'breakpoints' as bp;
+
+// Local layout, ported from docs/mocks/assets/ui.css (page--narrow column, form-card, form-actions).
+:host {
+  display: block;
+}
+.edit-column {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+.page-title {
+  padding-top: var(--spacingHorizontalXXL);
+}
+.edit-status {
+  margin-bottom: var(--spacingHorizontalL);
+}
+.edit-top {
+  display: block;
+  margin-bottom: var(--spacingHorizontalXXL);
+}
+.form-card {
+  padding: var(--spacingHorizontalXXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadius2XLarge);
+  background: var(--colorNeutralBackground1);
+}
+@include bp.media-up(md) {
+  .form-card {
+    padding: var(--spacingHorizontalXXXL);
+  }
+}
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalM);
+  justify-content: flex-end;
+  padding-top: var(--spacingHorizontalXXXL);
+}
+.form-skeleton {
+  display: grid;
+  gap: var(--spacingHorizontalM);
+}
+.form-skeleton + .form-skeleton {
+  margin-top: var(--spacingHorizontalXXXL);
+  padding-top: var(--spacingHorizontalXXXL);
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+.load-failed {
+  display: block;
+  margin-top: var(--spacingHorizontalXXL);
+}

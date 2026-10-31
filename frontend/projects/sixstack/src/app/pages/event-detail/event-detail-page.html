@@ -17,7 +17,12 @@
         <div>
           <h1>{{ e.title }}</h1>
           <p class="lead">
-            by <a [routerLink]="['/communities', e.community.slug]">{{ e.community.name }}</a>
+            by
+            @if (e.community.slug) {
+              <a [routerLink]="['/communities', e.community.slug]">{{ e.community.name }}</a>
+            } @else {
+              {{ e.community.name }}
+            }
           </p>
           <div class="chip-row">
             @for (topic of topics(e); track topic) {

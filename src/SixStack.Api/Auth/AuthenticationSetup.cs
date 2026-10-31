@@ -53,6 +53,7 @@ public static class AuthenticationSetup
         services.AddAuthorizationBuilder()
             .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())
             .AddPolicy(AuthPolicies.Organizer, policy => policy.RequireRole(nameof(UserRole.Organizer)))
+            .AddPolicy(AuthPolicies.EventEditor, policy => policy.RequireRole(nameof(UserRole.Organizer), nameof(UserRole.Moderator)))
             .AddPolicy(AuthPolicies.Moderator, policy => policy.RequireRole(nameof(UserRole.Moderator)));
         return services;
     }

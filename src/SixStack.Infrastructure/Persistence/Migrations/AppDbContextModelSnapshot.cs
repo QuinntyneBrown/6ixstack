@@ -38,6 +38,9 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("ActorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset>("OccurredAtUtc")
                         .HasColumnType("datetimeoffset");
 
@@ -175,6 +178,9 @@ namespace SixStack.Infrastructure.Persistence.Migrations
 
                     b.Property<bool>("IsSoldOut")
                         .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LastEditedAtUtc")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LivestreamNote")
                         .HasMaxLength(200)

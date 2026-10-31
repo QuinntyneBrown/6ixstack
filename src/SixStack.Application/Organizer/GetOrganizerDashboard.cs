@@ -23,7 +23,7 @@ public sealed record OrganizerEventRowDto(
     string? PublicUrl);
 
 /// <summary>The newest review outcome for the organizer (L2-053); <c>Key</c> changes with each new outcome.</summary>
-public sealed record SubmissionBannerDto(string Kind, string Key, string Title, string Text, string? EventSlug, bool Dismissible);
+public sealed record SubmissionBannerDto(string Kind, string Key, Guid? EventId, string Title, string Text, string? EventSlug, bool Dismissible);
 
 public sealed record OrganizerDashboardDto(
     string? CommunityName,
@@ -105,6 +105,7 @@ public sealed class GetOrganizerDashboardQueryHandler(IAppDbContext db, IClock c
     private static SubmissionBannerDto Unverified(string email) => new(
         "unverified",
         "unverified",
+        null,
         $"Verify {email} to publish events",
         "Your submissions wait in review until you click the link we sent.",
         null,
@@ -118,7 +119,7 @@ public sealed class GetOrganizerDashboardQueryHandler(IAppDbContext db, IClock c
             .OrderByDescending(e => e.SubmittedAtUtc).FirstOrDefault();
         if (waiting is not null && (decision is null || waiting.SubmittedAtUtc > decision.DecidedAtUtc))
         {
-            return new SubmissionBannerDto("inReview", $"inReview:{waiting.Id}", $"“{waiting.Title}” is in review",
+            return new SubmissionBannerDto("inReview", $"inReview:{waiting.Id}", waiting.Id, $"“{waiting.Title}” is in review",
                 "Moderators usually reply within a day. We’ll email you either way.", waiting.Slug, true);
         }
 
@@ -132,16 +133,16 @@ public sealed class GetOrganizerDashboardQueryHandler(IAppDbContext db, IClock c
         switch (decision.Kind)
         {
             case DecisionKind.Approved when e.Status == EventStatus.Published:
-                return new SubmissionBannerDto("live", key, $"“{e.Title}” is live", "It’s in the list, the calendar and every matching feed.", e.Slug, true);
+                return new SubmissionBannerDto("live", key, e.Id, $"“{e.Title}” is live", "It’s in the list, the calendar and every matching feed.", e.Slug, true);
             case DecisionKind.RequestChanges:
-                return new SubmissionBannerDto("needsChanges", key, $"“{e.Title}” needs a venue address",
+                return new SubmissionBannerDto("needsChanges", key, e.Id, $"“{e.Title}” needs a venue address",
                     "Add the street address and room, then resubmit. It keeps its place in the queue.", e.Slug, true);
             case DecisionKind.Rejected:
                 var moderator = decision.ModeratorId is { } id
                     ? await db.Users.AsNoTracking().Where(u => u.Id == id).Select(u => u.Name ?? u.Email).SingleOrDefaultAsync(cancellationToken)
                     : null;
                 var quote = decision.Message ?? (decision.Reason is { } r ? Submissions.RejectionText.Label(r) : "It doesn’t fit 6ixstack.");
-                return new SubmissionBannerDto("notApproved", key, $"“{e.Title}” wasn’t approved",
+                return new SubmissionBannerDto("notApproved", key, e.Id, $"“{e.Title}” wasn’t approved",
                     $"“{quote}” — {(moderator ?? "A").Split(' ')[0]}, 6ixstack moderator", e.Slug, true);
             default:
                 return null;

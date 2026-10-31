@@ -45,6 +45,13 @@ export const routes: Routes = [
       import('./pages/organizer-dashboard/organizer-dashboard-page').then((m) => m.OrganizerDashboardPage),
   },
   {
+    path: 'organize/events/:id/edit',
+    title: 'Edit event · 6ixstack',
+    data: { hideSubmit: true },
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/edit-event/edit-event-page').then((m) => m.EditEventPage),
+  },
+  {
     path: 'admin/review',
     title: 'Review queue · 6ixstack',
     data: { hideSubmit: true },

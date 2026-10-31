@@ -22,6 +22,7 @@ export interface OrganizerEventRow {
 export interface SubmissionBanner {
   kind: 'inReview' | 'live' | 'needsChanges' | 'notApproved' | 'unverified';
   key: string;
+  eventId: string | null;
   title: string;
   text: string;
   eventSlug: string | null;
@@ -36,8 +37,51 @@ export interface OrganizerDashboard {
   banner: SubmissionBanner | null;
 }
 
+/** The edit form's values; the same shape is sent back to save (L2-054). */
+export interface EventDetailsForm {
+  title: string;
+  organizerName: string;
+  description: string;
+  topics: string[];
+  date: string;
+  timeZoneId: string;
+  startTime: string;
+  endTime: string;
+  format: 'inPerson' | 'streaming' | 'hybrid';
+  venueName: string | null;
+  city: string | null;
+  streetAddress: string | null;
+  streamUrl: string | null;
+  isFree: boolean;
+  priceCad: number | null;
+  ticketUrl: string | null;
+}
+
+export interface EventEdit {
+  id: string;
+  slug: string;
+  title: string;
+  status: DashboardStatus;
+  statusLine: string;
+  isReadOnly: boolean;
+  readOnlyLead: string | null;
+  goingCount: number;
+  details: EventDetailsForm;
+}
+
+export interface EventSaved {
+  slug: string;
+  title: string;
+  status: DashboardStatus;
+  goingCount: number;
+  resubmitted: boolean;
+}
+
 export interface OrganizerEventsApi {
   dashboard(): Observable<OrganizerDashboard>;
+  /** An event for the edit page; 403 carries communityName, eventTitle, signedInEmail and signedInCommunity. */
+  getEvent(id: string): Observable<EventEdit>;
+  updateEvent(id: string, details: EventDetailsForm): Observable<EventSaved>;
   /** Sends a new verification link to the signed-in organizer. */
   resendVerification(): Observable<void>;
 }
@@ -51,6 +95,17 @@ export class HttpOrganizerEventsApi implements OrganizerEventsApi {
 
   dashboard(): Observable<OrganizerDashboard> {
     return this.http.get<OrganizerDashboard>(`${this.baseUrl}/api/organizer/events`);
+  }
+
+  getEvent(id: string): Observable<EventEdit> {
+    return this.http.get<EventEdit>(`${this.baseUrl}/api/organizer/events/${encodeURIComponent(id)}`);
+  }
+
+  updateEvent(id: string, details: EventDetailsForm): Observable<EventSaved> {
+    return this.http.put<EventSaved>(
+      `${this.baseUrl}/api/organizer/events/${encodeURIComponent(id)}`,
+      details,
+    );
   }
 
   resendVerification(): Observable<void> {

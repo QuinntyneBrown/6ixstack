@@ -1,0 +1,251 @@
+<ng-container [formGroup]="form()">
+  <sx-form-section title="Event basics" sectionId="basics" lead="This is what people see in the list.">
+    <sx-form-field
+      label="Event title"
+      controlId="title"
+      hint="Up to 90 characters. Say what people will learn."
+      [error]="error()('title')"
+    >
+      <input
+        sx-input
+        id="title"
+        type="text"
+        formControlName="title"
+        maxlength="90"
+        [attr.aria-invalid]="!!error()('title')"
+        [attr.aria-describedby]="describedBy('title', true, !!error()('title'))"
+      />
+    </sx-form-field>
+    <sx-form-field
+      label="Community or organizer"
+      controlId="organizerName"
+      [error]="error()('organizerName')"
+    >
+      <input
+        sx-input
+        id="organizerName"
+        type="text"
+        formControlName="organizerName"
+        autocomplete="organization"
+        [attr.aria-invalid]="!!error()('organizerName')"
+        [attr.aria-describedby]="describedBy('organizerName', false, !!error()('organizerName'))"
+      />
+    </sx-form-field>
+    <sx-form-field
+      label="Description"
+      controlId="description"
+      hint="Two or three sentences. Markdown links are fine."
+      [error]="error()('description')"
+    >
+      <textarea
+        sx-input
+        id="description"
+        rows="4"
+        formControlName="description"
+        [attr.aria-invalid]="!!error()('description')"
+        [attr.aria-describedby]="describedBy('description', true, !!error()('description'))"
+      ></textarea>
+    </sx-form-field>
+    <sx-field-set legend="Topics" controlId="topics" [error]="error()('topics')">
+      <div class="form-grid form-grid--3 topic-grid">
+        @for (topic of topics(); track topic; let first = $first) {
+          <label sx-choice>
+            <input
+              sx-check
+              type="checkbox"
+              [id]="first ? 'topics' : 'topic-' + topic"
+              [checked]="isTopicChecked(topic)"
+              [disabled]="busy()"
+              [attr.aria-invalid]="!!error()('topics')"
+              [attr.aria-describedby]="error()('topics') ? 'topics-error' : null"
+              (change)="toggleTopic(topic, $any($event.target).checked)"
+            /><sx-topic-tag [topic]="topic" />
+          </label>
+        }
+      </div>
+    </sx-field-set>
+  </sx-form-section>
+
+  <sx-form-section
+    title="When"
+    sectionId="when"
+    lead="Times are shown to everyone in Toronto time, with your time zone alongside for streams."
+  >
+    <div class="form-grid form-grid--2">
+      <sx-form-field label="Date" controlId="date" [error]="error()('date')">
+        <input
+          sx-input
+          id="date"
+          type="date"
+          formControlName="date"
+          [attr.aria-invalid]="!!error()('date')"
+          [attr.aria-describedby]="describedBy('date', false, !!error()('date'))"
+        />
+      </sx-form-field>
+      <sx-form-field label="Time zone" controlId="timeZoneId">
+        <select sx-input id="timeZoneId" formControlName="timeZoneId">
+          @for (zone of reference().timeZones; track zone.id) {
+            <option [value]="zone.id">{{ zone.label }}</option>
+          }
+        </select>
+      </sx-form-field>
+      <sx-form-field label="Starts" controlId="startTime" [error]="error()('startTime')">
+        <input
+          sx-input
+          id="startTime"
+          type="time"
+          formControlName="startTime"
+          [attr.aria-invalid]="!!error()('startTime')"
+          [attr.aria-describedby]="describedBy('startTime', false, !!error()('startTime'))"
+        />
+      </sx-form-field>
+      <sx-form-field label="Ends" controlId="endTime" [error]="error()('endTime')">
+        <input
+          sx-input
+          id="endTime"
+          type="time"
+          formControlName="endTime"
+          [attr.aria-invalid]="!!error()('endTime')"
+          [attr.aria-describedby]="describedBy('endTime', false, !!error()('endTime'))"
+        />
+      </sx-form-field>
+    </div>
+  </sx-form-section>
+
+  <sx-form-section title="Where" sectionId="where">
+    <sx-field-set legend="Format" controlId="format">
+      <div class="choice-cards">
+        <label sx-choice card hint="At a venue in the GTA">
+          <input sx-check type="radio" id="format" formControlName="format" value="inPerson" />In person
+        </label>
+        <label sx-choice card hint="Online only">
+          <input sx-check type="radio" formControlName="format" value="streaming" />Streaming
+        </label>
+        <label sx-choice card hint="Venue plus a livestream">
+          <input sx-check type="radio" formControlName="format" value="hybrid" />Hybrid
+        </label>
+      </div>
+    </sx-field-set>
+    @if (form().controls.format.value !== 'streaming') {
+      <div class="form-grid form-grid--2">
+        <sx-form-field label="Venue name" controlId="venueName" [error]="error()('venueName')">
+          <input
+            sx-input
+            id="venueName"
+            type="text"
+            formControlName="venueName"
+            [attr.aria-invalid]="!!error()('venueName')"
+            [attr.aria-describedby]="describedBy('venueName', false, !!error()('venueName'))"
+          />
+        </sx-form-field>
+        <sx-form-field label="City" controlId="city" [error]="error()('city')">
+          <select sx-input id="city" formControlName="city">
+            @for (city of reference().cities; track city) {
+              <option [value]="city">{{ city }}</option>
+            }
+          </select>
+        </sx-form-field>
+      </div>
+      <sx-form-field
+        label="Street address"
+        controlId="streetAddress"
+        hint="Include the floor or room so people find you."
+        [error]="error()('streetAddress')"
+      >
+        <input
+          sx-input
+          id="streetAddress"
+          type="text"
+          formControlName="streetAddress"
+          autocomplete="street-address"
+          [attr.aria-invalid]="!!error()('streetAddress')"
+          [attr.aria-describedby]="describedBy('streetAddress', true, !!error()('streetAddress'))"
+        />
+      </sx-form-field>
+    }
+    @if (form().controls.format.value !== 'inPerson') {
+      <sx-form-field
+        label="Livestream link"
+        controlId="streamUrl"
+        optional
+        hint="Shown 15 minutes before start."
+        [error]="error()('streamUrl')"
+      >
+        <input
+          sx-input
+          id="streamUrl"
+          type="url"
+          formControlName="streamUrl"
+          placeholder="https://youtube.com/live/…"
+          [attr.aria-invalid]="!!error()('streamUrl')"
+          [attr.aria-describedby]="describedBy('streamUrl', true, !!error()('streamUrl'))"
+        />
+      </sx-form-field>
+    }
+  </sx-form-section>
+
+  <sx-form-section title="Tickets" sectionId="tickets">
+    <sx-field-set legend="Price" controlId="price">
+      <div class="choice-row">
+        <label sx-choice><input sx-check type="radio" formControlName="price" value="free" />Free</label>
+        <label sx-choice><input sx-check type="radio" formControlName="price" value="paid" />Paid</label>
+      </div>
+    </sx-field-set>
+    <div class="form-grid form-grid--2">
+      <sx-form-field label="Price (CAD)" controlId="priceCad" [error]="error()('priceCad')">
+        <div class="input-group">
+          <span class="addon" aria-hidden="true">$</span>
+          <input
+            sx-input
+            id="priceCad"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            formControlName="priceCad"
+            [attr.aria-invalid]="!!error()('priceCad')"
+            [attr.aria-describedby]="describedBy('priceCad', false, !!error()('priceCad'))"
+          />
+        </div>
+      </sx-form-field>
+      <sx-form-field
+        label="Registration or ticket link"
+        controlId="ticketUrl"
+        optional
+        hint="Meetup, Luma, Eventbrite or your own site."
+        [error]="error()('ticketUrl')"
+      >
+        <input
+          sx-input
+          id="ticketUrl"
+          type="url"
+          formControlName="ticketUrl"
+          placeholder="https://"
+          [attr.aria-invalid]="!!error()('ticketUrl')"
+          [attr.aria-describedby]="describedBy('ticketUrl', true, !!error()('ticketUrl'))"
+        />
+      </sx-form-field>
+    </div>
+  </sx-form-section>
+
+  @if (showContact()) {
+    <sx-form-section
+      title="Your contact email"
+      sectionId="contact"
+      lead="Only moderators see it. We’ll tell you when the event is live."
+    >
+      <sx-form-field label="Email" controlId="contactEmail" [error]="error()('contactEmail')">
+        <input
+          sx-input
+          id="contactEmail"
+          type="email"
+          formControlName="contactEmail"
+          autocomplete="email"
+          placeholder="name@example.com"
+          [attr.aria-invalid]="!!error()('contactEmail')"
+          [attr.aria-describedby]="describedBy('contactEmail', false, !!error()('contactEmail'))"
+        />
+      </sx-form-field>
+    </sx-form-section>
+  }
+</ng-container>

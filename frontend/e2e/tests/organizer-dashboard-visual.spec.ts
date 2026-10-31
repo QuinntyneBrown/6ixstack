@@ -47,6 +47,7 @@ test.describe('Organizer dashboard visuals', () => {
     await withDashboardBanner(page, {
       kind: 'needsChanges',
       key: 'visual-needs-changes',
+      eventId: '00000000-0000-0000-0000-000000000001',
       title: '“Azure Bicep clinic” needs a venue address',
       text: 'Add the street address and room, then resubmit. It keeps its place in the queue.',
       eventSlug: 'azure-bicep-clinic',
@@ -62,6 +63,7 @@ test.describe('Organizer dashboard visuals', () => {
     await withDashboardBanner(page, {
       kind: 'notApproved',
       key: 'visual-not-approved',
+      eventId: '00000000-0000-0000-0000-000000000001',
       title: '“Azure Bicep clinic” wasn’t approved',
       text: '“We couldn’t confirm where this happens. Add the venue address and submit again.” — Jordan, 6ixstack moderator',
       eventSlug: 'azure-bicep-clinic',
