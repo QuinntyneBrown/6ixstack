@@ -72,3 +72,18 @@
 .filter-row__search {
   flex: 1 1 14rem;
 }
+.events-error {
+  margin-top: var(--spacingHorizontalXXL);
+}
+.event-list--loading {
+  list-style: none;
+  margin: var(--spacingHorizontalXXXL) 0 0;
+  padding: 0;
+}
+.skeleton-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: var(--spacingHorizontalL);
+  padding: var(--spacingHorizontalL) 0;
+  border-top: 1px solid var(--colorNeutralStroke2);
+}

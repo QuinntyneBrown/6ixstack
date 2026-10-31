@@ -5,11 +5,17 @@
       Meetups and conferences across Toronto and the GTA, plus global talks you can stream. All in one
       calendar, in Toronto time.
     </p>
-    @if (result(); as r) {
-      <p class="hero__stat">
-        <strong>{{ r.heroCounts.gta }} in the GTA</strong> and
-        <strong>{{ r.heroCounts.streamable }} streamable</strong> over the next two weeks.
-      </p>
+    @if (state().status === 'failed') {
+      <p class="hero__stat">Event counts are unavailable right now.</p>
+    } @else if (result(); as r) {
+      @if (r.search && r.shown === 0) {
+        <p class="hero__stat">No matches for “{{ r.search }}” in the next two weeks.</p>
+      } @else {
+        <p class="hero__stat">
+          <strong>{{ r.heroCounts.gta }} in the GTA</strong> and
+          <strong>{{ r.heroCounts.streamable }} streamable</strong> over the next two weeks.
+        </p>
+      }
     }
   </div>
 </section>
@@ -38,20 +44,66 @@
       }
     </div>
   </div>
-  @if (result(); as r) {
+  @if (state().status === 'failed') {
+    <sx-alert
+      class="events-error"
+      kind="danger"
+      announce="alert"
+      title="We couldn't load events"
+      [actions]="errorActions"
+    >
+      6ixstack didn't respond in time. Your filters are kept; try again in a moment.
+    </sx-alert>
+  } @else if (result(); as r) {
     <p class="result-line" aria-live="polite">
       {{ r.shown }} {{ r.shown === 1 ? 'event' : 'events' }}{{ topicPhrase() }} · times in ET
       @if (hasFilters()) {
         · <button class="result-line__clear" type="button" (click)="clearFilters()">Clear filters</button>
       }
     </p>
-    @for (day of r.days; track day.date) {
-      <sx-day-group
-        [date]="day.date"
-        [weekday]="day.weekday"
-        [dateLabel]="day.dateLabel"
-        [events]="day.events"
-      />
+    @if (r.shown === 0 && hasFilters()) {
+      <sx-empty-state icon="search-x" title="No events match those filters">
+        <span slot="text">Try another topic, or include streaming events.</span>
+        <ng-container slot="actions">
+          <button sx-button appearance="primary" type="button" (click)="clearFilters()">Clear filters</button>
+          @if (r.search) {
+            <a sx-button routerLink="/feeds" [queryParams]="{ q: r.search }">Get a feed for {{ r.search }}</a>
+          }
+        </ng-container>
+      </sx-empty-state>
+    } @else if (r.shown === 0) {
+      <sx-empty-state icon="calendar" title="No events in the next two weeks">
+        <span slot="text"
+          >It's a quiet stretch. Organizers post new meetups every week, so check back soon.</span
+        >
+        <ng-container slot="actions">
+          <a sx-button appearance="primary" routerLink="/submit">Submit an event</a>
+          <a sx-button routerLink="/calendar">Browse the calendar</a>
+        </ng-container>
+      </sx-empty-state>
+    } @else {
+      @for (day of r.days; track day.date) {
+        <sx-day-group
+          [date]="day.date"
+          [weekday]="day.weekday"
+          [dateLabel]="day.dateLabel"
+          [events]="day.events"
+        />
+      }
     }
+  } @else if (slow()) {
+    <p class="result-line" aria-live="polite">Loading events…</p>
+    <ul class="event-list event-list--loading" aria-hidden="true">
+      @for (row of skeletonRows; track row) {
+        <li class="skeleton-row">
+          <sx-skeleton width="3.5rem" />
+          <div>
+            <sx-skeleton variant="title" width="70%" />
+            <sx-skeleton width="40%" />
+            <sx-skeleton width="55%" />
+          </div>
+        </li>
+      }
+    </ul>
   }
 </div>

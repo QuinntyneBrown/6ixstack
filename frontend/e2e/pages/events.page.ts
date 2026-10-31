@@ -39,6 +39,20 @@ export class EventsPage {
     await this.page.locator('.result-line, .empty, .alert').first().waitFor();
   }
 
+  /** Opens the page without waiting for the list, to look at the loading state. */
+  async startOpening(query = ''): Promise<void> {
+    await this.page.goto(`/${query}`, { waitUntil: 'domcontentloaded' });
+    await this.shell.main.waitFor();
+  }
+
+  emptyTitle(): Locator {
+    return this.emptyState.locator('.empty__title');
+  }
+
+  emptyText(): Locator {
+    return this.emptyState.locator('.empty__text');
+  }
+
   async dayHeadingTexts(): Promise<string[]> {
     return (await this.dayHeadings.allInnerTexts()).map((t) => t.replace(/\s+/g, ' ').trim());
   }
@@ -113,8 +127,8 @@ export class EventsPage {
     return this.toast(title).getByRole('button', { name: action });
   }
 
-  get skeletons(): Locator {
-    return this.page.locator('.skeleton');
+  get rowSkeletons(): Locator {
+    return this.page.locator('.event-list--loading .skeleton');
   }
 
   async hasHorizontalScroll(): Promise<boolean> {

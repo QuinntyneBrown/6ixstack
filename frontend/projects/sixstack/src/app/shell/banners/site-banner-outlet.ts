@@ -12,7 +12,7 @@ import { BannerService } from './banner.service';
         banner
         [kind]="banner.kind"
         [title]="banner.title"
-        [role]="banner.role"
+        [announce]="banner.role"
         [actions]="banner.actions ?? []"
         [dismissible]="banner.dismissible"
         (dismissed)="service.dismiss(banner)"

@@ -2,24 +2,41 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { EventFormatFilter, EVENTS_API, UpcomingEvents } from 'api';
 import {
+  Alert,
+  AlertAction,
+  Button,
   DayGroup,
+  EmptyState,
   SearchField,
   SegmentedControl,
   SegmentedOption,
+  Skeleton,
   TOPIC_LABELS,
   TopicChip,
   TopicKey,
   TOPICS,
   ToastService,
 } from 'components';
-import { skip, switchMap } from 'rxjs';
+import { RouterLink } from '@angular/router';
+import { catchError, finalize, map, of, skip, switchMap } from 'rxjs';
+import { failed, loaded, loading, LoadState, SKELETON_DELAY_MS } from '../../shared/load-state';
 import { EventFilters, FORMAT_LABELS, MAX_SEARCH_LENGTH, NO_FILTERS } from './event-filters';
 import { FilterStateStore } from './filter-state.store';
 
 /** The events page (`/`): upcoming events grouped by day, with filters (discovery/browse-events). */
 @Component({
   selector: 'sx-events-page',
-  imports: [DayGroup, SearchField, SegmentedControl, TopicChip],
+  imports: [
+    Alert,
+    Button,
+    DayGroup,
+    EmptyState,
+    RouterLink,
+    SearchField,
+    SegmentedControl,
+    Skeleton,
+    TopicChip,
+  ],
   templateUrl: './events-page.html',
   styleUrl: './events-page.scss',
   providers: [FilterStateStore],
@@ -35,7 +52,18 @@ export class EventsPage {
   private undoFilters: EventFilters | null = null;
 
   protected readonly filters = signal<EventFilters>(this.store.initial());
-  protected readonly result = signal<UpcomingEvents | null>(null);
+  private readonly attempt = signal(0);
+  protected readonly state = signal<LoadState<UpcomingEvents>>(loading());
+  /** True once a pending load has taken longer than 300 ms, so quick loads never flash a skeleton. */
+  protected readonly slow = signal(false);
+  /** The latest data, kept while a new load runs; null after a failure. */
+  protected readonly result = computed(() => (this.state().status === 'failed' ? null : this.state().data));
+  protected readonly skeletonRows = [0, 1, 2];
+
+  protected readonly errorActions: AlertAction[] = [
+    { label: 'Try again', run: () => this.attempt.update((n) => n + 1) },
+    { label: 'Use a calendar feed instead', link: '/feeds' },
+  ];
 
   protected readonly formatOptions = computed<SegmentedOption[]>(() => {
     const counts = this.result()?.formatCounts;
@@ -61,14 +89,26 @@ export class EventsPage {
     toObservable(this.filters)
       .pipe(skip(1), takeUntilDestroyed())
       .subscribe((filters) => this.store.save(filters));
-    toObservable(this.filters)
+    toObservable(computed(() => ({ filters: this.filters(), attempt: this.attempt() })))
       .pipe(
-        switchMap((f) => this.api.upcoming({ format: f.format, topics: f.topics, q: f.q })),
+        switchMap(({ filters: f }) => {
+          this.state.update((s) => loading(s.status === 'failed' ? null : s.data));
+          this.slow.set(false);
+          const timer = setTimeout(() => this.slow.set(true), SKELETON_DELAY_MS);
+          return this.api.upcoming({ format: f.format, topics: f.topics, q: f.q }).pipe(
+            map((result) => loaded(result)),
+            catchError((error: unknown) => of(failed<UpcomingEvents>(error))),
+            finalize(() => clearTimeout(timer)),
+          );
+        }),
         takeUntilDestroyed(),
       )
-      .subscribe((result) => {
-        this.result.set(result);
-        this.announceCleared(result);
+      .subscribe((state) => {
+        this.slow.set(false);
+        this.state.set(state);
+        if (state.status === 'loaded') {
+          this.announceCleared(state.data);
+        }
       });
   }
 
