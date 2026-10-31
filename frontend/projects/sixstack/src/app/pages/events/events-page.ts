@@ -1,22 +1,25 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EVENTS_API, UpcomingEvents } from 'api';
+import { DayGroup } from 'components';
 
-/** The events page (`/`). The scaffold shows its title; journey 01 adds the list, filters and map. */
+/** The events page (`/`): upcoming events grouped by day (discovery/browse-events). */
 @Component({
   selector: 'sx-events-page',
-  template: `
-    <div class="page-title">
-      <h1>Every dev event in the 6ix<span class="dot">.</span></h1>
-      <p class="lead">
-        Meetups and conferences across Toronto and the GTA, plus global talks you can stream. All in one
-        calendar, in Toronto time.
-      </p>
-    </div>
-  `,
-  styles: `
-    .dot {
-      color: var(--sx-color-brand);
-    }
-  `,
+  imports: [DayGroup],
+  templateUrl: './events-page.html',
+  styleUrl: './events-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventsPage {}
+export class EventsPage {
+  private readonly api = inject(EVENTS_API);
+
+  protected readonly result = signal<UpcomingEvents | null>(null);
+
+  constructor() {
+    this.api
+      .upcoming({})
+      .pipe(takeUntilDestroyed())
+      .subscribe((result) => this.result.set(result));
+  }
+}

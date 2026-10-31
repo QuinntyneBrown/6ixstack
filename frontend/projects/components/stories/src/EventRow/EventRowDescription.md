@@ -1,0 +1,1 @@
+An event row shows one event in a list: the start time in Toronto (and a stream's own time), the title linking to the event, the organizer, where it happens, its topics, any status badge (Waitlist open, Cancelled), the price and how many are going. The whole row is the link's target; long titles, organizers and venues wrap (L2-010).

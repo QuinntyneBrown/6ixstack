@@ -18,3 +18,8 @@ export * from './lib/toast/toast.service';
 export * from './lib/toast/toast';
 export * from './lib/toast/toast-region';
 export * from './lib/alert/alert';
+export * from './lib/topics/topics';
+export * from './lib/topics/topic-tag';
+export * from './lib/badge/badge';
+export * from './lib/event-row/event-row';
+export * from './lib/day-group/day-group';

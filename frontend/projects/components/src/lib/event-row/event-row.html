@@ -1,0 +1,40 @@
+<article class="event-row" [class.event-row--cancelled]="event().isCancelled">
+  <div class="event-row__time">
+    <time [attr.datetime]="date() || null">{{ event().startTimeEt }}</time>
+    @if (event().sourceTime) {
+      <span class="event-row__source">{{ event().sourceTime }}</span>
+    }
+  </div>
+  <div>
+    <h3 class="event-row__title">
+      <a [routerLink]="linkPrefix() + event().slug">{{ event().title }}</a>
+    </h3>
+    <p class="event-row__org">{{ event().organizer }}</p>
+    <div class="event-row__meta">
+      @if (event().format === 'streaming') {
+        <span class="meta-item meta-item--stream"
+          ><sx-icon name="radio" size="sm" />{{ event().locationLabel }}</span
+        >
+      } @else {
+        <span class="meta-item"><sx-icon name="pin" size="sm" />{{ event().locationLabel }}</span>
+        @if (event().format === 'hybrid') {
+          <span class="meta-item meta-item--stream"><sx-icon name="radio" size="sm" />+ stream</span>
+        }
+      }
+      @for (topic of topics(); track topic) {
+        <sx-topic-tag [topic]="topic" />
+      }
+      @if (event().isCancelled) {
+        <sx-badge kind="danger">Cancelled</sx-badge>
+      } @else if (event().isSoldOut) {
+        <sx-badge kind="warning">Waitlist open</sx-badge>
+      }
+    </div>
+  </div>
+  <div class="event-row__aside">
+    <span class="event-row__price">{{ event().priceLabel }}</span>
+    <span class="going" [attr.aria-label]="going() + ' going'"
+      ><sx-icon name="users" size="sm" />{{ going() }}</span
+    >
+  </div>
+</article>

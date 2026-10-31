@@ -1,0 +1,22 @@
+<section class="hero" aria-labelledby="hero-title">
+  <div>
+    <h1 class="hero__title" id="hero-title">Every dev event in the 6ix<span class="hero__dot">.</span></h1>
+    <p class="hero__lead">
+      Meetups and conferences across Toronto and the GTA, plus global talks you can stream. All in one
+      calendar, in Toronto time.
+    </p>
+  </div>
+</section>
+<div id="events">
+  @if (result(); as r) {
+    <p class="result-line" aria-live="polite">{{ r.formatCounts.all }} events · times in ET</p>
+    @for (day of r.days; track day.date) {
+      <sx-day-group
+        [date]="day.date"
+        [weekday]="day.weekday"
+        [dateLabel]="day.dateLabel"
+        [events]="day.events"
+      />
+    }
+  }
+</div>

@@ -6,12 +6,15 @@ export class MobileMenuDialog {
   readonly title: Locator;
   readonly close: Locator;
   readonly submitEvent: Locator;
+  /** The visible sheet, for visual comparison. */
+  readonly panel: Locator;
 
   constructor(private readonly page: Page) {
     this.dialog = page.getByRole('dialog', { name: 'Menu' });
     this.title = this.dialog.getByRole('heading', { name: 'Menu' });
     this.close = this.dialog.getByRole('button', { name: 'Close' });
     this.submitEvent = this.dialog.getByRole('link', { name: 'Submit event' });
+    this.panel = this.dialog.locator('.dialog__panel');
   }
 
   link(name: string): Locator {

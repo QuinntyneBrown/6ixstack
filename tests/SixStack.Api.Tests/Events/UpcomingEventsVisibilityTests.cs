@@ -50,4 +50,20 @@ public sealed class UpcomingEventsVisibilityTests(ApiFactory factory) : IClassFi
         Assert.Equal("Sold out", row.GetProperty("priceLabel").GetString());
         Assert.True(row.GetProperty("isSoldOut").GetBoolean());
     }
+
+    [Fact]
+    public async Task Prices_group_thousands()
+    {
+        await factory.WithDbAsync(async db =>
+        {
+            var e = await db.Events.SingleAsync(x => x.Slug == "landing-zones-that-dont-hurt");
+            e.PriceCents = 125_000;
+            return await db.SaveChangesAsync();
+        });
+
+        var page = await factory.CreateHttpsClient().GetFromJsonAsync<JsonElement>("/api/events?q=landing%20zones");
+        var row = page.GetProperty("days").EnumerateArray().SelectMany(d => d.GetProperty("events").EnumerateArray()).Single();
+
+        Assert.Equal("$1,250", row.GetProperty("priceLabel").GetString());
+    }
 }

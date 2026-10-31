@@ -1,0 +1,26 @@
+// The hue dot shared by topic tags and chips.
+.topic-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex: none;
+  background: var(--colorNeutralForeground3);
+}
+.topic-dot--ai {
+  background: var(--sx-topic-ai);
+}
+.topic-dot--dotnet {
+  background: var(--sx-topic-dotnet);
+}
+.topic-dot--azure {
+  background: var(--sx-topic-azure);
+}
+.topic-dot--angular {
+  background: var(--sx-topic-angular);
+}
+.topic-dot--react {
+  background: var(--sx-topic-react);
+}
+.topic-dot--aws {
+  background: var(--sx-topic-aws);
+}

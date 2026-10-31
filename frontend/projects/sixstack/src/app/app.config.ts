@@ -6,7 +6,14 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
-import { apiErrorInterceptor, HttpSiteApi, NETWORK_ERROR_LISTENER, SITE_API } from 'api';
+import {
+  apiErrorInterceptor,
+  EVENTS_API,
+  HttpEventsApi,
+  HttpSiteApi,
+  NETWORK_ERROR_LISTENER,
+  SITE_API,
+} from 'api';
 import { routes } from './app.routes';
 import { ConnectivityService } from './shell/banners/connectivity.service';
 import { MaintenanceNoticeSource } from './shell/banners/maintenance-notice-source';
@@ -32,6 +39,7 @@ export const appConfig: ApplicationConfig = {
       },
     },
     { provide: SITE_API, useClass: HttpSiteApi },
+    { provide: EVENTS_API, useClass: HttpEventsApi },
     provideAppInitializer(() => inject(MaintenanceNoticeSource).load()),
   ],
 };

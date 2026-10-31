@@ -70,6 +70,7 @@ test.describe('App shell', () => {
     const events = new EventsPage(page);
     await events.open();
 
-    await expect(page).toHaveScreenshot('app-shell-light.png', { fullPage: true });
+    await expect(events.shell.header).toHaveScreenshot('site-header-light.png');
+    await expect(events.shell.footer).toHaveScreenshot('site-footer-light.png');
   });
 });

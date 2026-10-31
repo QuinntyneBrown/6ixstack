@@ -1,0 +1,36 @@
+// Local UI of the events page (hero, filter bar, result line), ported from docs/mocks/assets/ui.css.
+.hero {
+  display: grid;
+  gap: var(--sx-space-10);
+  padding-block: var(--sx-space-12) var(--sx-space-10);
+  align-items: end;
+}
+.hero__title {
+  font: var(--fontWeightSemibold) var(--fontSizeHero1000) / 1.02 var(--fontFamilyBase);
+  letter-spacing: -0.035em;
+  max-width: 19ch;
+}
+.hero__dot {
+  color: var(--sx-color-brand);
+}
+.hero__lead {
+  margin-top: var(--spacingHorizontalXXL);
+  font: var(--sx-text-body-lg);
+  line-height: var(--sx-line-height-relaxed);
+  color: var(--colorNeutralForeground2);
+  max-width: 46ch;
+}
+.hero__stat {
+  margin-top: var(--spacingHorizontalXXL);
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}
+.hero__stat strong {
+  color: var(--colorNeutralForeground1);
+  font-weight: var(--fontWeightSemibold);
+}
+.result-line {
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+  margin-top: var(--spacingHorizontalXXL);
+}

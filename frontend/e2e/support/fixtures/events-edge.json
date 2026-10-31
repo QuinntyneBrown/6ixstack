@@ -1,0 +1,32 @@
+{
+  "heroCounts": { "gta": 9, "streamable": 7 },
+  "formatCounts": { "all": 14, "gta": 9, "streaming": 7 },
+  "days": [
+    {
+      "date": "2026-11-12",
+      "weekday": "Thursday",
+      "dateLabel": "November 12",
+      "events": [
+        {
+          "slug": "edge-long",
+          "title": "An extraordinarily long community event title that keeps going well past what anyone would reasonably type, to prove that rows wrap cleanly on small phones too",
+          "organizer": "The Greater Toronto Area Cross-Platform Developers and Cloud Architects Guild",
+          "format": "hybrid",
+          "topics": ["ai", "dotnet", "azure", "angular", "react", "aws"],
+          "startTimeEt": "6:30 PM",
+          "sourceTime": null,
+          "locationLabel": "Brampton Innovation District, 8 Nelson St W, Brampton",
+          "priceLabel": "Sold out",
+          "goingCount": 12480,
+          "isSoldOut": true,
+          "isCancelled": false
+        }
+      ]
+    }
+  ],
+  "shown": 1,
+  "total": 1,
+  "throughLabel": "November 12",
+  "hasMore": false,
+  "search": ""
+}

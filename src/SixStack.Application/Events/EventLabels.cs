@@ -21,6 +21,8 @@ public static class EventLabels
     public static string Price(Event e) =>
         e.IsSoldOut ? "Sold out"
         : e.PriceCents == 0 ? "Free"
-        : e.PriceCents % 100 == 0 ? $"${(e.PriceCents / 100).ToString(CultureInfo.InvariantCulture)}"
-        : $"${(e.PriceCents / 100m).ToString("0.00", CultureInfo.InvariantCulture)}";
+        : e.PriceCents % 100 == 0 ? $"${(e.PriceCents / 100).ToString("N0", En)}"
+        : $"${(e.PriceCents / 100m).ToString("N2", En)}";
+
+    private static readonly CultureInfo En = CultureInfo.GetCultureInfo("en-US");
 }
