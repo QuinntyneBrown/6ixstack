@@ -40,6 +40,24 @@ export class EventDetailPage {
     await this.title.waitFor();
   }
 
+  /** Opens without waiting for the content, to look at the loading state. */
+  async startOpening(slug: string): Promise<void> {
+    await this.page.goto(`/events/${slug}`, { waitUntil: 'domcontentloaded' });
+    await this.shell.main.waitFor();
+  }
+
+  get skeletons(): Locator {
+    return this.page.locator('.detail-loading .skeleton');
+  }
+
+  get errorState(): Locator {
+    return this.page.locator('.empty').filter({ hasText: "This event didn't load" });
+  }
+
+  errorAction(name: string): Locator {
+    return this.errorState.getByRole('link', { name }).or(this.errorState.getByRole('button', { name }));
+  }
+
   /** The text of each fact, label and value joined by " · ", e.g. "318 going · Capacity 400". */
   async factTexts(): Promise<string[]> {
     return this.facts.evaluateAll((facts) =>

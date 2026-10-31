@@ -17,15 +17,17 @@ import {
   DateTile,
   Description,
   DockedActionBar,
+  EmptyState,
   FactItem,
   Icon,
   isTopic,
   PersonLink,
+  Skeleton,
   TopicKey,
   TopicTag,
 } from 'components';
-import { catchError, map, of, switchMap } from 'rxjs';
-import { failed, loaded, loading, LoadState } from '../../shared/load-state';
+import { catchError, finalize, map, of, switchMap } from 'rxjs';
+import { failed, loaded, loading, LoadState, SKELETON_DELAY_MS } from '../../shared/load-state';
 import { NotFoundPage } from '../status/not-found-page';
 
 /** The event detail page (`/events/:slug`): the API decides state, facts, actions and alerts (L2-017 to L2-024). */
@@ -37,11 +39,13 @@ import { NotFoundPage } from '../status/not-found-page';
     DateTile,
     Description,
     DockedActionBar,
+    EmptyState,
     FactItem,
     Icon,
     NotFoundPage,
     PersonLink,
     RouterLink,
+    Skeleton,
     TopicTag,
   ],
   templateUrl: './event-detail-page.html',
@@ -54,6 +58,8 @@ export class EventDetailPage {
   readonly slug = input.required<string>();
   protected readonly state = signal<LoadState<EventDetail>>(loading());
   private readonly reload = signal(0);
+  /** True once the first load has taken longer than 300 ms (DelayedSkeleton). */
+  protected readonly slow = signal(false);
   private joinTimer?: ReturnType<typeof setTimeout>;
 
   constructor() {
@@ -61,12 +67,18 @@ export class EventDetailPage {
     toObservable(computed(() => ({ slug: this.slug(), reload: this.reload() })))
       .pipe(
         switchMap(({ slug, reload }) => {
-          if (reload === 0) {
+          const first = reload === 0 || this.state().status === 'failed';
+          if (first) {
             this.state.set(loading());
           }
+          const timer = first ? setTimeout(() => this.slow.set(true), SKELETON_DELAY_MS) : undefined;
           return this.api.detail(slug).pipe(
             map((detail) => loaded(detail)),
             catchError((error: unknown) => of(failed<EventDetail>(error))),
+            finalize(() => {
+              clearTimeout(timer);
+              this.slow.set(false);
+            }),
           );
         }),
         takeUntilDestroyed(),
@@ -109,6 +121,10 @@ export class EventDetailPage {
       return [{ label, href }];
     }
     return [{ label, run: () => undefined }];
+  }
+
+  protected retry(): void {
+    this.reload.update((n) => n + 1);
   }
 
   protected isNotFound(state: LoadState<EventDetail>): boolean {

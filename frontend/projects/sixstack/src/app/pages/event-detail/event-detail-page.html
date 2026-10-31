@@ -1,5 +1,13 @@
 @if (isNotFound(state())) {
   <sx-not-found-page />
+} @else if (state().status === 'failed') {
+  <sx-empty-state class="detail-error" icon="alert" title="This event didn't load" error>
+    <span slot="text">6ixstack didn't respond in time. Check your connection and try again.</span>
+    <ng-container slot="actions">
+      <button sx-button appearance="primary" type="button" (click)="retry()">Try again</button>
+      <a sx-button routerLink="/">Back to all events</a>
+    </ng-container>
+  </sx-empty-state>
 } @else if (state().data; as e) {
   <a class="back-link" routerLink="/"><sx-icon name="arrow-left" size="sm" />All events</a>
   <div class="page-grid">
@@ -202,4 +210,27 @@
       >
     </sx-docked-action-bar>
   }
+} @else if (slow()) {
+  <div class="page-grid detail-loading" aria-label="Loading the event">
+    <div class="detail-main">
+      <div class="detail-hero">
+        <sx-skeleton variant="rect" width="4.5rem" height="4.5rem" />
+        <div class="detail-loading__hero">
+          <sx-skeleton variant="title" width="70%" />
+          <sx-skeleton width="40%" />
+        </div>
+      </div>
+      <sx-skeleton width="90%" />
+      <sx-skeleton width="85%" />
+      <sx-skeleton width="60%" />
+    </div>
+    <aside class="stack" aria-label="Event details" aria-busy="true">
+      <div class="facts">
+        @for (row of [0, 1, 2, 3]; track row) {
+          <sx-skeleton width="80%" />
+        }
+      </div>
+      <sx-skeleton variant="rect" height="3rem" />
+    </aside>
+  </div>
 }

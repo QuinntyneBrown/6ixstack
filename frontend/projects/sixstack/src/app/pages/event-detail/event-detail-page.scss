@@ -115,3 +115,10 @@
 .detail-actions__secondary {
   justify-content: space-between;
 }
+.detail-loading {
+  margin-top: var(--sx-space-12);
+}
+.detail-loading__hero {
+  flex: 1;
+  width: 100%;
+}
