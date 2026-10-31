@@ -1,0 +1,104 @@
+@use 'breakpoints' as bp;
+
+// Local layout of the submit page, ported from docs/mocks/assets/ui.css (form-card, form-grid, choice-cards…).
+:host {
+  display: block;
+  max-width: 48rem;
+}
+.form-card {
+  padding: var(--spacingHorizontalXXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadius2XLarge);
+  background: var(--colorNeutralBackground1);
+}
+@include bp.media-up(md) {
+  .form-card {
+    padding: var(--spacingHorizontalXXXL);
+  }
+}
+sx-form-section + sx-form-section {
+  margin-top: var(--spacingHorizontalXXXL);
+  padding-top: var(--spacingHorizontalXXXL);
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+.form-grid {
+  display: grid;
+  gap: var(--spacingHorizontalXL);
+}
+.topic-grid {
+  gap: var(--spacingHorizontalS);
+}
+@include bp.media-up(sm) {
+  .form-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .form-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .choice-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.choice-cards {
+  display: grid;
+  gap: var(--spacingHorizontalM);
+}
+.choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS) var(--spacingHorizontalXL);
+}
+.topic-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalXS);
+}
+.topic-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+@each $topic in ai, dotnet, azure, angular, react, aws {
+  .topic-dot--#{$topic} {
+    background: var(--sx-topic-#{$topic});
+  }
+}
+.input-group {
+  display: flex;
+  align-items: stretch;
+}
+.input-group .addon {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--spacingHorizontalM);
+  background: var(--colorSubtleBackgroundHover);
+  border: 1px solid var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusXLarge) 0 0 var(--borderRadiusXLarge);
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}
+.input-group input {
+  margin-left: -1px;
+  border-radius: 0 var(--borderRadiusXLarge) var(--borderRadiusXLarge) 0;
+}
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalM);
+  justify-content: flex-end;
+  padding-top: var(--spacingHorizontalXXXL);
+}
+.submit-summary,
+.submit-failure {
+  display: block;
+  margin-bottom: var(--spacingHorizontalXXL);
+}
+.form-skeleton {
+  display: grid;
+  gap: var(--spacingHorizontalM);
+}
+.form-skeleton + .form-skeleton {
+  margin-top: var(--spacingHorizontalXXXL);
+  padding-top: var(--spacingHorizontalXXXL);
+  border-top: 1px solid var(--colorNeutralStroke2);
+}

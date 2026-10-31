@@ -1,0 +1,33 @@
+// Ported from docs/mocks/assets/ui.css (.choice, .choice-card).
+:host {
+  display: flex;
+  gap: var(--spacingHorizontalM);
+  align-items: flex-start;
+  cursor: pointer;
+  font: var(--sx-text-body);
+  padding-block: var(--spacingHorizontalXS);
+  min-height: var(--sx-target-min);
+}
+.choice__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalXXS);
+}
+small {
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}
+:host(.choice-card) {
+  padding: var(--spacingHorizontalL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--colorNeutralBackground1);
+}
+:host(.choice-card:has(input:checked)) {
+  border-color: var(--colorBrandBackground);
+  box-shadow: 0 0 0 1px var(--colorBrandBackground);
+}
+:host(:has(input:disabled)) {
+  color: var(--colorNeutralForegroundDisabled);
+  cursor: not-allowed;
+}

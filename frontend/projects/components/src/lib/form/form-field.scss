@@ -1,0 +1,35 @@
+// Ported from docs/mocks/assets/ui.css (.field).
+:host {
+  display: block;
+  min-width: 0;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalXS);
+}
+.field__label {
+  font: var(--sx-text-label);
+  color: var(--colorNeutralForeground1);
+  display: flex;
+  gap: var(--spacingHorizontalXS);
+}
+.optional {
+  color: var(--colorNeutralForeground3);
+  font-weight: var(--fontWeightRegular);
+}
+.field__help {
+  font: var(--sx-text-body-sm);
+  color: var(--colorNeutralForeground2);
+}
+.field__error {
+  font: var(--sx-text-body-sm);
+  color: var(--colorStatusDangerForeground1);
+  display: flex;
+  gap: var(--spacingHorizontalXS);
+  align-items: flex-start;
+}
+.field__error::before {
+  content: '⚠';
+  flex: none;
+}

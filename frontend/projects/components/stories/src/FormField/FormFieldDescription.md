@@ -1,0 +1,1 @@
+A form field pairs a visible label with one control, a hint under it and, after a failed submit, an error. The hint is `{controlId}-help` and the error `{controlId}-error`; point the control's `aria-describedby` at them with `describedBy()`.

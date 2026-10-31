@@ -11,9 +11,13 @@ import {
   apiErrorInterceptor,
   EVENTS_API,
   HttpEventsApi,
+  HttpReferenceDataApi,
+  HttpSubmissionsApi,
   HttpSiteApi,
   NETWORK_ERROR_LISTENER,
+  REFERENCE_DATA_API,
   SITE_API,
+  SUBMISSIONS_API,
 } from 'api';
 import { routes } from './app.routes';
 import { ConnectivityService } from './shell/banners/connectivity.service';
@@ -42,6 +46,8 @@ export const appConfig: ApplicationConfig = {
     },
     { provide: SITE_API, useClass: HttpSiteApi },
     { provide: EVENTS_API, useClass: HttpEventsApi },
+    { provide: REFERENCE_DATA_API, useClass: HttpReferenceDataApi },
+    { provide: SUBMISSIONS_API, useClass: HttpSubmissionsApi },
     provideAppInitializer(() => inject(MaintenanceNoticeSource).load()),
   ],
 };

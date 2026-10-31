@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, map } from 'rxjs';
 import { SiteFooter, SiteHeader, SkipLink, ToastRegion } from 'components';
 import { ConnectivityService } from './banners/connectivity.service';
 import { SiteBannerOutlet } from './banners/site-banner-outlet';
@@ -16,6 +18,7 @@ import { FOOTER_ITEMS, NAV_ITEMS } from './nav-items';
       [items]="navItems"
       [menuExpanded]="menu.isOpen()"
       [submitDisabled]="!connectivity.online()"
+      [showSubmit]="!hideSubmit()"
       (menuRequested)="menu.open($event)"
     />
     <sx-site-banner-outlet />
@@ -44,6 +47,20 @@ import { FOOTER_ITEMS, NAV_ITEMS } from './nav-items';
 export class AppShell {
   protected readonly menu = inject(MenuController);
   protected readonly connectivity = inject(ConnectivityService);
+  private readonly route = inject(ActivatedRoute);
+
+  /** Route data `hideSubmit: true` hides the header's Submit event button (the submit page, organizer pages). */
+  protected readonly hideSubmit = toSignal(
+    inject(Router).events.pipe(
+      filter((e) => e instanceof NavigationEnd),
+      map(() => {
+        let route = this.route;
+        while (route.firstChild) route = route.firstChild;
+        return route.snapshot.data['hideSubmit'] === true;
+      }),
+    ),
+    { initialValue: false },
+  );
   protected readonly navItems = NAV_ITEMS;
   protected readonly footerItems = FOOTER_ITEMS;
 }

@@ -1,0 +1,54 @@
+// Ported from docs/mocks/assets/ui.css (.input, .textarea, .select).
+:host {
+  width: 100%;
+  min-height: var(--sx-control-height-md);
+  padding: var(--spacingHorizontalS) var(--spacingHorizontalM);
+  font: var(--sx-text-body);
+  color: var(--colorNeutralForeground1);
+  background: var(--colorNeutralBackground1);
+  border: 1px solid var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusXLarge);
+  transition:
+    border-color var(--durationFaster) var(--curveEasyEase),
+    box-shadow var(--durationFaster) var(--curveEasyEase);
+}
+:host(textarea) {
+  min-height: calc(var(--sx-control-height-md) * 2.5);
+  resize: vertical;
+}
+:host(select) {
+  appearance: none;
+  padding-right: var(--sx-space-10);
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 13px) 50%;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+}
+:host::placeholder {
+  color: var(--colorNeutralForeground3);
+}
+:host(:hover) {
+  border-color: var(--colorNeutralForeground2);
+}
+:host(:focus-visible) {
+  outline: var(--sx-focus-ring-width) solid var(--colorStrokeFocus2);
+  outline-offset: 0;
+  border-color: var(--colorStrokeFocus2);
+  border-radius: var(--borderRadiusXLarge);
+}
+:host([aria-invalid='true']) {
+  border-color: var(--colorStatusDangerBackground3);
+  box-shadow: inset 0 0 0 1px var(--colorStatusDangerBackground3);
+}
+:host(:disabled) {
+  background: var(--colorSubtleBackgroundHover);
+  color: var(--colorNeutralForegroundDisabled);
+  cursor: not-allowed;
+  border-color: var(--colorNeutralStroke2);
+}
