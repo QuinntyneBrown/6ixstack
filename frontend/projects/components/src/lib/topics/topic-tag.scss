@@ -1,0 +1,15 @@
+:host {
+  display: inline-flex;
+}
+.topic-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalXS);
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+  white-space: nowrap;
+}
+.topic-tag .topic-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+}

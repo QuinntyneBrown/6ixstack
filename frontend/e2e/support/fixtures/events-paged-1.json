@@ -1,0 +1,39 @@
+{
+  "heroCounts": {
+    "gta": 9,
+    "streamable": 7
+  },
+  "formatCounts": {
+    "all": 14,
+    "gta": 9,
+    "streaming": 7
+  },
+  "days": [
+    {
+      "date": "2026-11-03",
+      "weekday": "Tuesday",
+      "dateLabel": "November 3",
+      "events": [
+        {
+          "slug": "one",
+          "title": "First meetup",
+          "organizer": "AI Builders GTA",
+          "format": "inPerson",
+          "topics": ["ai"],
+          "startTimeEt": "6:00 PM",
+          "sourceTime": null,
+          "locationLabel": "MaRS Discovery District, Toronto",
+          "priceLabel": "Free",
+          "goingCount": 40,
+          "isSoldOut": false,
+          "isCancelled": false
+        }
+      ]
+    }
+  ],
+  "shown": 1,
+  "total": 3,
+  "throughLabel": "December 31",
+  "hasMore": true,
+  "search": ""
+}

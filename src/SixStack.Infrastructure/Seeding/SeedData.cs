@@ -64,14 +64,14 @@ internal static class SeedData
         new("nadia-chen", "Nadia Chen", "NC", "ML engineer, Cohere", "Cohere", Topics.AI, "Toronto"),
     ];
 
-    private static readonly VenueSeed MicrosoftCanada = new("Microsoft Canada", "81 Bay St", "Toronto", 43.6440, -79.3770);
+    private static readonly VenueSeed MicrosoftCanada = new("Microsoft Canada, 81 Bay St", "81 Bay St", "Toronto", 43.6440, -79.3770);
     private static readonly VenueSeed Mars = new("MaRS Discovery District", "101 College St", "Toronto", 43.6598, -79.3881);
     private static readonly VenueSeed LivingArts = new("Living Arts Centre", "4141 Living Arts Dr", "Mississauga", 43.5912, -79.6441);
     private static readonly VenueSeed Bremner = new("120 Bremner Blvd", "120 Bremner Blvd", "Toronto", 43.6418, -79.3818);
     private static readonly VenueSeed VentureLab = new("ventureLAB", "3600 Steeles Ave E", "Markham", 43.8480, -79.3370);
-    private static readonly VenueSeed Csi = new("Centre for Social Innovation", "192 Spadina Ave", "Toronto", 43.6488, -79.3963);
+    private static readonly VenueSeed Csi = new("Centre for Social Innovation, 192 Spadina Ave", "192 Spadina Ave", "Toronto", 43.6488, -79.3963);
     private static readonly VenueSeed Vector = new("Vector Institute", "661 University Ave", "Toronto", 43.6596, -79.3889);
-    private static readonly VenueSeed Spaces = new("Spaces", "1 University Ave", "Toronto", 43.6455, -79.3790);
+    private static readonly VenueSeed Spaces = new("Spaces, 1 University Ave", "1 University Ave", "Toronto", 43.6455, -79.3790);
     private static readonly VenueSeed Brampton = new("Brampton Innovation District", "8 Nelson St W", "Brampton", 43.6858, -79.7599);
 
     public static readonly EventSeed[] Events =

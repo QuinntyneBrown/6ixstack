@@ -72,8 +72,8 @@ test.describe('Mobile menu', () => {
   test('matches the design as a bottom sheet', async ({ page }) => {
     const events = new EventsPage(page);
     await events.open();
-    await events.shell.openMenu();
+    const menu = await events.shell.openMenu();
 
-    await expect(page).toHaveScreenshot('mobile-menu-light.png');
+    await expect(menu.panel).toHaveScreenshot('mobile-menu-light.png');
   });
 });

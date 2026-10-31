@@ -1,0 +1,29 @@
+// Ported from docs/mocks/assets/ui.css (.day-group, .event-list).
+:host {
+  display: block;
+}
+.day-group {
+  margin-top: var(--spacingHorizontalXXXL);
+  scroll-margin-top: 6rem;
+}
+.day-group__heading {
+  display: flex;
+  gap: var(--spacingHorizontalS);
+  align-items: center;
+  padding-bottom: var(--spacingHorizontalM);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+  font: var(--sx-text-label);
+  font-size: var(--fontSizeBase400);
+}
+.day-group__heading span {
+  color: var(--colorNeutralForeground2);
+  font-weight: var(--fontWeightRegular);
+}
+.event-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.event-list > li + li {
+  border-top: 1px solid var(--colorNeutralStroke2);
+}

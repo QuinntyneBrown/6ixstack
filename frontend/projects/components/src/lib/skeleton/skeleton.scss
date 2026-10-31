@@ -1,0 +1,44 @@
+// Ported from docs/mocks/assets/ui.css (.skeleton).
+:host {
+  display: block;
+}
+.skeleton {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--colorSubtleBackgroundHover) 25%,
+    var(--colorSubtleBackgroundPressed) 37%,
+    var(--colorSubtleBackgroundHover) 63%
+  );
+  background-size: 400% 100%;
+  border-radius: var(--borderRadiusMedium);
+  animation: shimmer 1.4s var(--curveEasyEase) infinite;
+  min-height: 1em;
+}
+.skeleton--text {
+  height: 0.9em;
+  margin-block: 0.3em;
+}
+.skeleton--title {
+  height: 1.5em;
+  width: 40%;
+}
+.skeleton--circle {
+  border-radius: 50%;
+}
+.skeleton--rect {
+  border-radius: var(--borderRadiusXLarge);
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}

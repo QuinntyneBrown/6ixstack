@@ -111,6 +111,9 @@ test.describe('Site banners', () => {
     await goOffline(context);
     await expect(events.shell.banner("You're offline")).toBeVisible();
 
-    await expect(page).toHaveScreenshot('site-banners-light.png');
+    await expect(events.shell.banner("You're offline")).toHaveScreenshot('site-banner-offline-light.png');
+    await expect(events.shell.banner('Submissions pause Sunday, Nov 8, 2–4 AM ET')).toHaveScreenshot(
+      'site-banner-maintenance-light.png',
+    );
   });
 });

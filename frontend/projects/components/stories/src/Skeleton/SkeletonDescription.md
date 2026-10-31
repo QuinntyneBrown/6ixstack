@@ -1,0 +1,1 @@
+A skeleton stands in for content that is still loading, in the shape of what will appear. It shimmers, and stays still under reduced motion. Show skeletons only when a load takes longer than 300 ms, so quick loads don't flash.

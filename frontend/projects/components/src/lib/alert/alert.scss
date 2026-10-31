@@ -62,6 +62,11 @@
   padding: 1px var(--spacingHorizontalSNudge);
   cursor: pointer;
 }
+.alert__actions a {
+  color: inherit;
+  font: var(--sx-text-label);
+  align-self: center;
+}
 .alert__actions button:hover {
   background: var(--colorSubtleBackgroundHover);
 }

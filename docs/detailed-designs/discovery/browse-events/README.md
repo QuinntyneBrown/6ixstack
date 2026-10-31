@@ -73,6 +73,45 @@ description. It uses case-insensitive `LIKE` matching. The `Events` table has an
 index on `(Status, StartsAtUtc)` to meet the latency target in `L2-087`. A
 full-text index is `<TO SUPPLY>` if the catalogue outgrows this approach.
 
+### API contract
+
+`GET /api/events?format=all|gta|streaming&topics=ai&topics=dotnet&q=…&page=1` answers `UpcomingEventsDto`:
+
+| Field | Meaning |
+|-------|---------|
+| `heroCounts` | `gta` and `streamable` events in the upcoming window, ignoring every filter (`L2-007`) |
+| `formatCounts` | `all`, `gta` and `streaming` in the upcoming window after the topic and search filters (`L2-002`) |
+| `days` | `DayGroupDto` (`date`, `weekday`, `dateLabel`, `events`) for this page, in start order |
+| `shown`, `total`, `throughLabel`, `hasMore` | rows shown so far, all upcoming matches, the date of the last match ("December 31") and whether a next page exists (`L2-009`) |
+| `search` | the search actually applied, after truncation to 100 characters (`L2-004`) |
+
+Page 1 is the upcoming window; page `n > 1` holds the next 20 matches after the window, so the client appends
+its day groups (merging a day it already shows).
+
+### Decisions
+
+- Cancelled events are left out of this page, as `L2-001` states. The `events/edge` mock shows a Cancelled row;
+  `EventRow` keeps the Cancelled badge for the lists `L2-010` names (calendar, community, speaker, dashboard).
+- The `events/long` mock's hero ("38 in the GTA and 29 streamable through December 31") and result line count
+  every loaded event. This design follows `L2-007` (hero counts the upcoming window) and `L2-009` (the load-more
+  caption carries the total): the hero and the format counts stay on the window, and the caption reads
+  "Showing 14 of 61 events through December 31".
+- `LocationLabel` is the venue's display name and city ("Microsoft Canada, 81 Bay St, Toronto"); a hybrid
+  event adds a "+ stream" item; a streaming event reads "Streaming online". `SourceTime` uses the source zone's
+  short name (PT, MT, GMT, CET) for the event date.
+- "Get a feed for Kubernetes" in the no-results state links to `/feeds?q=Kubernetes`; the feed builder arrives
+  with journeys 10 and 11.
+- The map and the featured card are left to journeys 16 and 17; until then the list takes the full width.
+- `LoadState<T>` and the inline failure pattern (`site/status-pages`, ADR 0008) are introduced here.
+  `DelayedSkeleton` is the page's `slow` signal: skeletons and "Loading events…" appear only when a load is still
+  pending after 300 ms (`SKELETON_DELAY_MS`). While a later load runs, the previous list stays on screen.
+- Topics are returned and shown in the fixed topic order (AI, .NET, Azure, Angular, React, AWS), not in the order
+  an organizer entered them.
+- The empty state's sentence is "It's a quiet stretch. Organizers post new meetups every week, so check back
+  soon." The `events/empty` mock's holiday wording only fits December.
+- The result line drops its "Clear filters" link when nothing matches, because the no-results state offers it.
+- When Show 20 more fails, a danger toast "We couldn't load more events" offers Try again and the list stays.
+
 ## Requirements
 
 | L2 ID | Refines (L1) | Requirement |

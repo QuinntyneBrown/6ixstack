@@ -1,0 +1,1 @@
+An empty state explains why there is nothing to show and what to do next: an icon, a title, one sentence (`[slot=text]`) and up to two actions (`[slot=actions]`). Use it when a list has never had content, when filters remove everything, or when access is denied.

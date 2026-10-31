@@ -1,0 +1,96 @@
+@use 'breakpoints' as bp;
+
+// Local UI of the events page (hero, filter bar, result line), ported from docs/mocks/assets/ui.css.
+.hero {
+  display: grid;
+  gap: var(--sx-space-10);
+  padding-block: var(--sx-space-12) var(--sx-space-10);
+  align-items: end;
+}
+.hero__title {
+  font: var(--fontWeightSemibold) var(--fontSizeHero1000) / 1.02 var(--fontFamilyBase);
+  letter-spacing: -0.035em;
+  max-width: 19ch;
+}
+.hero__dot {
+  color: var(--sx-color-brand);
+}
+.hero__lead {
+  margin-top: var(--spacingHorizontalXXL);
+  font: var(--sx-text-body-lg);
+  line-height: var(--sx-line-height-relaxed);
+  color: var(--colorNeutralForeground2);
+  max-width: 46ch;
+}
+.hero__stat {
+  margin-top: var(--spacingHorizontalXXL);
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}
+.hero__stat strong {
+  color: var(--colorNeutralForeground1);
+  font-weight: var(--fontWeightSemibold);
+}
+.result-line {
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+  margin-top: var(--spacingHorizontalXXL);
+}
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacingHorizontalL);
+}
+.filter-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalM);
+  align-self: stretch;
+}
+@include bp.media-up(sm) {
+  .filter-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS);
+}
+.result-line__clear {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--colorBrandForegroundLink);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+}
+.filter-row__search {
+  flex: 1 1 14rem;
+}
+.events-error {
+  margin-top: var(--spacingHorizontalXXL);
+}
+.event-list--loading {
+  list-style: none;
+  margin: var(--spacingHorizontalXXXL) 0 0;
+  padding: 0;
+}
+.skeleton-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: var(--spacingHorizontalL);
+  padding: var(--spacingHorizontalL) 0;
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+.load-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacingHorizontalM);
+  margin-top: var(--spacingHorizontalXXXL);
+}

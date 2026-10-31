@@ -1,0 +1,56 @@
+// Ported from docs/mocks/assets/ui.css (.badge).
+:host {
+  display: inline-flex;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalXS);
+  padding: 0 var(--spacingHorizontalS);
+  min-height: 1.375rem;
+  border-radius: var(--borderRadiusCircular);
+  font: var(--sx-text-overline);
+  letter-spacing: var(--sx-letter-spacing-wide);
+  text-transform: uppercase;
+  background: var(--colorSubtleBackgroundHover);
+  color: var(--colorNeutralForeground2);
+  white-space: nowrap;
+}
+.badge::before {
+  content: '';
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.badge--info {
+  background: var(--colorPaletteBlueBackground2);
+  color: var(--colorPaletteBlueForeground2);
+}
+.badge--success {
+  background: var(--colorStatusSuccessBackground1);
+  color: var(--colorStatusSuccessForeground1);
+}
+.badge--warning {
+  background: var(--colorStatusWarningBackground1);
+  color: var(--colorStatusWarningForeground1);
+}
+.badge--danger {
+  background: var(--colorStatusDangerBackground1);
+  color: var(--colorStatusDangerForeground1);
+}
+.badge--brand {
+  background: var(--sx-color-brand);
+  color: var(--sx-color-on-brand);
+}
+.badge--count {
+  min-width: 1.375rem;
+  justify-content: center;
+  padding-inline: var(--spacingHorizontalXS);
+  background: var(--colorStatusDangerBackground3);
+  color: var(--colorStatusDangerForegroundInverted);
+  font-variant-numeric: tabular-nums;
+}
+.badge--count::before {
+  display: none;
+}

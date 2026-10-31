@@ -34,7 +34,8 @@ test.describe('Themes', () => {
     const events = new EventsPage(page);
     await events.open();
 
-    await expect(page).toHaveScreenshot('app-shell-dark.png', { fullPage: true });
+    await expect(events.shell.header).toHaveScreenshot('site-header-dark.png');
+    await expect(events.shell.footer).toHaveScreenshot('site-footer-dark.png');
   });
 
   test('the not-found page matches the design in dark theme', async ({ page }) => {
@@ -50,8 +51,8 @@ test.describe('Themes', () => {
     await page.emulateMedia({ colorScheme: 'dark' });
     const events = new EventsPage(page);
     await events.open();
-    await events.shell.openMenu();
+    const menu = await events.shell.openMenu();
 
-    await expect(page).toHaveScreenshot('mobile-menu-dark.png');
+    await expect(menu.panel).toHaveScreenshot('mobile-menu-dark.png');
   });
 });

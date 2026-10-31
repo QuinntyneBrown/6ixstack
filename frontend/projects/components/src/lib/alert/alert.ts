@@ -1,12 +1,15 @@
 import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Icon } from '../icon/icon';
 import { IconName } from '../icon/icons';
 
 export type AlertKind = 'info' | 'success' | 'warning' | 'danger';
 
+/** A button that runs `run`, or a link to `link` (an app route). */
 export interface AlertAction {
   label: string;
-  run: () => void;
+  run?: () => void;
+  link?: string;
 }
 
 const ICONS: Record<AlertKind, IconName> = {
@@ -22,9 +25,9 @@ const ICONS: Record<AlertKind, IconName> = {
  */
 @Component({
   selector: 'sx-alert',
-  imports: [Icon],
+  imports: [Icon, RouterLink],
   template: `
-    <div [class]="classes()" [attr.role]="role()">
+    <div [class]="classes()" [attr.role]="announce()">
       <sx-icon [name]="icon()" />
       <div class="alert__body">
         <p class="alert__title">{{ title() }}</p>
@@ -32,7 +35,11 @@ const ICONS: Record<AlertKind, IconName> = {
         @if (actions().length) {
           <div class="alert__actions">
             @for (action of actions(); track action.label) {
-              <button type="button" (click)="action.run()">{{ action.label }}</button>
+              @if (action.link) {
+                <a [routerLink]="action.link">{{ action.label }}</a>
+              } @else {
+                <button type="button" (click)="action.run?.()">{{ action.label }}</button>
+              }
             }
           </div>
         }
@@ -50,7 +57,8 @@ const ICONS: Record<AlertKind, IconName> = {
 export class Alert {
   readonly kind = input<AlertKind>('info');
   readonly title = input.required<string>();
-  readonly role = input<'status' | 'alert' | null>(null);
+  /** How assistive technology announces it: `alert` for failures that need attention now, `status` for quiet updates. */
+  readonly announce = input<'status' | 'alert' | null>(null);
   readonly actions = input<AlertAction[]>([]);
   readonly dismissible = input(false, { transform: booleanAttribute });
   readonly banner = input(false, { transform: booleanAttribute });
