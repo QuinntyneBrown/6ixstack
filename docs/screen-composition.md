@@ -247,7 +247,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 | Notification (mock folder: states) | Surface | Library components | Local UI |
 |---|---|---|---|
 | Toast (`app-toast`: info, success, warning, danger, with-action, stacked) | `ToastRegion` via `ToastService` | `ToastRegion`, `Toast` (action, dismiss, progress) | — |
-| Moderation toast (`moderation-toast`: info, success, warning, danger, conflict, too-late, with-action, stacked) | `ToastRegion` via `ToastService` (on review queue) | `ToastRegion`, `Toast` (Undo action) | — |
+| Moderation toast (`moderation-toast`: info, success, warning, danger, conflict, too-late, with-action, needs-changes, stacked) | `ToastRegion` via `ToastService` (on review queue) | `ToastRegion`, `Toast` (Undo action) | — |
 | Event status alert (`event-alert`: info, success, warning, danger) | inline on event detail | `Alert` | — |
 | Site banner (`site-banner`: info, success, warning, danger, persistent) | between header and `main` | `Alert` (`site-banner`, dismiss unless persistent) | `SiteBannerOutlet` |
 | Submission status banner (`submission-banner`: info, success, warning, danger, persistent) | inline on organizer dashboard | `Alert` (dismiss on info and success) | — |

@@ -857,6 +857,11 @@ def _():
     return queue_under(3) + toast_region(toast("info", "Rejected “Free crypto trading masterclass”", "WealthFast Academy was emailed your reason.", "View email"))
 
 
+@state("moderation-toast", "needs-changes", "Sent back for a missing venue address: the organizer was emailed what to fix.")
+def _():
+    return queue_under(3) + toast_region(toast("info", "Sent “Free crypto trading masterclass” back for changes", "WealthFast Academy was emailed what to fix.", "View email"))
+
+
 @state("moderation-toast", "stacked", "Three toasts after quick decisions: newest at the bottom.")
 def _():
     return queue_under(1) + toast_region(

@@ -8,8 +8,8 @@ import {
 } from '../../dialogs/keyboard-shortcuts/keyboard-shortcuts-dialog';
 
 /**
- * Review queue shortcuts (L2-064): J and K move between cards, A approves the focused card and ? lists the
- * shortcuts. R arrives with reject. Keys are ignored while typing, with a modifier held, or while a dialog is open.
+ * Review queue shortcuts (L2-064): J and K move between cards, A approves and R opens Reject for the focused card,
+ * and ? lists the shortcuts. Keys are ignored while typing, with a modifier held, or while a dialog is open.
  */
 @Directive({
   selector: '[sxReviewQueueShortcuts]',
@@ -22,6 +22,8 @@ export class ReviewQueueShortcuts {
 
   /** The focused card's element, when A is pressed on it. */
   readonly approveRequested = output<HTMLElement>();
+  /** The focused card's element, when R is pressed on it. */
+  readonly rejectRequested = output<HTMLElement>();
 
   protected onKey(event: KeyboardEvent): void {
     if (
@@ -42,6 +44,10 @@ export class ReviewQueueShortcuts {
       const card = this.focusedCard();
       if (!card) return;
       this.approveRequested.emit(card);
+    } else if (event.key === 'r' || event.key === 'R') {
+      const card = this.focusedCard();
+      if (!card) return;
+      this.rejectRequested.emit(card);
     } else if (event.key === '?') {
       this.dialog.open(
         KeyboardShortcutsDialog,

@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -8,11 +9,19 @@ import {
   EmptyState,
   Icon,
   isTopic,
+  modalDialogConfig,
   ReviewCard,
   Skeleton,
   ToastService,
   TopicKey,
 } from 'components';
+import {
+  REJECT_SUBMISSION_TITLE_ID,
+  RejectSubmissionDialog,
+  RejectSubmissionDialogData,
+  RejectSubmissionOutcome,
+} from '../../dialogs/reject-submission/reject-submission-dialog';
+import { SENT_EMAIL_TITLE_ID, SentEmailDialog } from '../../dialogs/sent-email/sent-email-dialog';
 import { catchError, finalize, map, of, switchMap, timer } from 'rxjs';
 import { SessionStore } from '../../shell/session/session-store';
 import { failed, loaded, loading, LoadState, SKELETON_DELAY_MS } from '../../shared/load-state';
@@ -32,6 +41,7 @@ export class ReviewQueuePage {
   private readonly moderation = inject(MODERATION_API);
   private readonly toasts = inject(ToastService);
   private readonly presence = inject(ReviewPresenceTracker);
+  private readonly dialog = inject(Dialog);
   protected readonly session = inject(SessionStore);
 
   private readonly reload = signal(0);
@@ -87,6 +97,58 @@ export class ReviewQueuePage {
   protected onFocusOut(event: FocusEvent): void {
     const next = event.relatedTarget as HTMLElement | null;
     if (!next?.closest('.review-card')) this.presence.stop();
+  }
+
+  protected rejectFocused(element: HTMLElement): void {
+    const card = this.cards().find((c) => c.id === element.dataset['id']);
+    if (card) this.openReject(card, element);
+  }
+
+  /** Opens Reject “{title}”? (L2-061) and reports how it ended. */
+  protected openReject(card: ReviewCardData, trigger: EventTarget | null): void {
+    const ref = this.dialog.open<RejectSubmissionOutcome, RejectSubmissionDialogData>(
+      RejectSubmissionDialog,
+      modalDialogConfig({
+        data: {
+          eventId: card.id,
+          title: card.title,
+          organizerName: card.organizer,
+          submitterEmail: card.submitterEmail,
+        },
+        ariaLabelledBy: REJECT_SUBMISSION_TITLE_ID,
+        ariaDescribedBy: 'reject-description',
+        restoreFocus: (trigger as HTMLElement | null) ?? true,
+      }),
+    );
+    ref.closed.subscribe((outcome) => {
+      if (!outcome) return;
+      this.remove(card);
+      if (outcome.kind === 'conflict') {
+        this.toasts.show({
+          kind: 'info',
+          title: `${outcome.decidedBy ?? 'Another moderator'} already ${outcome.decision} “${card.title}”`,
+          text: 'It’s no longer in the queue.',
+        });
+        return;
+      }
+      const { result } = outcome;
+      const sentBack = result.status === 'needsChanges';
+      this.toasts.show({
+        kind: 'info',
+        title: sentBack ? `Sent “${result.title}” back for changes` : `Rejected “${result.title}”`,
+        text: sentBack
+          ? `${result.organizerName} was emailed what to fix.`
+          : `${result.organizerName} was emailed your reason.`,
+        action: {
+          label: 'View email',
+          run: () =>
+            this.dialog.open(
+              SentEmailDialog,
+              modalDialogConfig({ data: result.emailPreview, ariaLabelledBy: SENT_EMAIL_TITLE_ID }),
+            ),
+        },
+      });
+    });
   }
 
   protected approveFocused(element: HTMLElement): void {
