@@ -1,8 +1,8 @@
 import { expect, test } from '../fixtures';
 import { EventsPage } from '../pages/events.page';
-import { failEvents, stubEvents } from '../support/stub-api';
+import { failEvents, nothingFeatured, stubEvents } from '../support/stub-api';
 
-// Visual parity with docs/mocks/pages/events (the featured card arrives with journey 17). The map draws its
+// Visual parity with docs/mocks/pages/events, featured card included (journey 17). The map draws its
 // reduced-motion still frame, so screenshots are stable.
 test.describe('Events page visuals', () => {
   test.beforeEach(async ({ page }) => {
@@ -31,6 +31,7 @@ test.describe('Events page visuals', () => {
 
   test('empty', async ({ page }) => {
     await stubEvents(page, 'events-empty');
+    await nothingFeatured(page);
     const events = new EventsPage(page);
     await events.open();
     await expect(page).toHaveScreenshot('events-empty-light.png');

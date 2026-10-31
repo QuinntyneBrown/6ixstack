@@ -1,0 +1,51 @@
+<section class="feature-card" aria-labelledby="featured-title" [attr.aria-busy]="loading() ? 'true' : null">
+  <p class="feature-card__label">Featured this week</p>
+  @if (loading()) {
+    <div class="feature-card__head">
+      <sx-skeleton variant="rect" width="3.5rem" height="3.5rem" />
+      <div class="feature-card__lines">
+        <sx-skeleton variant="title" width="80%" />
+        <sx-skeleton width="50%" />
+      </div>
+    </div>
+    <div class="feature-card__lines feature-card__desc">
+      <sx-skeleton width="100%" />
+      <sx-skeleton width="70%" />
+    </div>
+    <h2 class="visually-hidden" id="featured-title">Loading the featured event</h2>
+  } @else if (event(); as e) {
+    <div class="feature-card__head">
+      <sx-date-tile [month]="e.monthLabel" [day]="e.dayOfMonth" />
+      <div>
+        <h2 class="feature-card__title" id="featured-title">
+          <a [routerLink]="'/events/' + e.slug">{{ e.title }}</a>
+        </h2>
+        <p class="feature-card__org">{{ e.organizer }}</p>
+      </div>
+    </div>
+    <p class="feature-card__desc">{{ e.description }}</p>
+    <div class="feature-card__meta">
+      <span class="meta-item"><sx-icon name="pin" size="sm" />{{ e.locationLabel }}</span>
+      @if (e.hasLivestream) {
+        <span class="meta-item meta-item--stream"
+          ><sx-icon name="radio" size="sm" />Livestream available</span
+        >
+      }
+    </div>
+    <div class="feature-card__foot">
+      <span class="feature-card__when">{{ e.whenLabel }}</span>
+      <a sx-button appearance="on-feature" [routerLink]="e.primaryAction.url">{{ e.primaryAction.label }}</a>
+    </div>
+  } @else {
+    <h2 class="feature-card__title feature-card__title--invite" id="featured-title">
+      Your event could be here
+    </h2>
+    <p class="feature-card__desc">
+      Each week we feature one GTA event with a hands-on track or a first-time speaker line-up.
+    </p>
+    <div class="feature-card__foot">
+      <span class="feature-card__when">Free to list</span>
+      <a sx-button appearance="on-feature" routerLink="/submit">Submit an event</a>
+    </div>
+  }
+</section>

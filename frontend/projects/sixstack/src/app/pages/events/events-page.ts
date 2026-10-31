@@ -8,6 +8,8 @@ import {
   Button,
   DayGroup,
   EmptyState,
+  FeatureCard,
+  FeatureCardData,
   Icon,
   modalDialogConfig,
   SearchField,
@@ -46,6 +48,7 @@ import {
     DayGroup,
     EmptyState,
     EventMapPanel,
+    FeatureCard,
     Icon,
     RouterLink,
     SearchField,
@@ -63,6 +66,11 @@ export class EventsPage {
   private readonly toasts = inject(ToastService);
   private readonly store = inject(FilterStateStore);
   protected readonly timeline = inject(MapTimelineState);
+
+  /** This week's featured event, requested once and apart from the list (L2-006); null shows the invitation. */
+  protected readonly featured = signal<FeatureCardData | null>(null);
+  /** True until the featured request answers; a failure keeps the skeleton frame (featured-event design). */
+  protected readonly featuredLoading = signal(true);
 
   /** " · showing Thursday, November 5" or " · playing: Tuesday, November 10" (L2-013, L2-014). */
   protected readonly focusPhrase = computed(() => {
@@ -140,6 +148,13 @@ export class EventsPage {
   }
 
   constructor() {
+    this.api.featured().subscribe({
+      next: (event) => {
+        this.featured.set(event);
+        this.featuredLoading.set(false);
+      },
+      error: () => this.featuredLoading.set(true),
+    });
     toObservable(this.filters)
       .pipe(skip(1), takeUntilDestroyed())
       .subscribe((filters) => this.store.save(filters));

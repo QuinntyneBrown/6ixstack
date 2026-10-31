@@ -377,3 +377,15 @@ export async function slowMap(page: Page, ms: number): Promise<void> {
     }),
   );
 }
+
+/** Answers GET /api/events/featured with 204: nothing is featured this week. */
+export async function nothingFeatured(page: Page): Promise<void> {
+  await page.route('**/api/events/featured', (route) => route.fulfill({ status: 204 }));
+}
+
+/** Makes GET /api/events/featured fail. */
+export async function failFeatured(page: Page): Promise<void> {
+  await page.route('**/api/events/featured', (route) =>
+    route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' }),
+  );
+}

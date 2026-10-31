@@ -99,7 +99,23 @@ export interface EventMapData {
   }[];
 }
 
+/** This week's featured event, as the card shows it (L2-006). */
+export interface FeaturedEvent {
+  slug: string;
+  title: string;
+  organizer: string;
+  description: string;
+  monthLabel: string;
+  dayOfMonth: string;
+  locationLabel: string;
+  hasLivestream: boolean;
+  whenLabel: string;
+  primaryAction: { label: string; url: string };
+}
+
 export interface EventsApi {
+  /** This week's featured event, or null when nothing is featured (204). */
+  featured(): Observable<FeaturedEvent | null>;
   /** The map's dots, arcs and timeline days for the same filters as the list. */
   map(query: UpcomingEventsQuery): Observable<EventMapData>;
   /** Upcoming published events: page 1 is the two-week window, later pages hold 20 more each. */
@@ -131,6 +147,12 @@ export class HttpEventsApi implements EventsApi {
     if (query.q) params = params.set('q', query.q);
     if (query.page && query.page > 1) params = params.set('page', query.page);
     return this.http.get<UpcomingEvents>(`${this.baseUrl}/api/events`, { params });
+  }
+
+  featured(): Observable<FeaturedEvent | null> {
+    return this.http
+      .get<FeaturedEvent>(`${this.baseUrl}/api/events/featured`, { observe: 'response' })
+      .pipe(map((response) => (response.status === 204 ? null : response.body)));
   }
 
   map(query: UpcomingEventsQuery): Observable<EventMapData> {

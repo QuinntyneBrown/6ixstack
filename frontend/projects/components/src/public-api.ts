@@ -57,3 +57,4 @@ export * from './lib/back-link/back-link';
 export * from './lib/inline-status/inline-status';
 export * from './lib/event-map/event-map';
 export * from './lib/event-map/gta-projection';
+export * from './lib/feature-card/feature-card';
