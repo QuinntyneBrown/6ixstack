@@ -6,12 +6,15 @@ export class AddToCalendarDialog {
   readonly description: Locator;
   readonly options: Locator;
   readonly failure: Locator;
+  /** The visible panel, for visual comparison. */
+  readonly panel: Locator;
 
   constructor(private readonly page: Page) {
     this.dialog = page.getByRole('dialog', { name: 'Add to my calendar' });
     this.description = this.dialog.locator('.dialog__description');
     this.options = this.dialog.locator('.option-btn');
     this.failure = this.dialog.getByRole('alert');
+    this.panel = this.dialog.locator('.dialog__panel');
   }
 
   option(name: string): Locator {
