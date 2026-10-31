@@ -17,3 +17,4 @@ export * from './lib/divider/divider';
 export * from './lib/toast/toast.service';
 export * from './lib/toast/toast';
 export * from './lib/toast/toast-region';
+export * from './lib/alert/alert';

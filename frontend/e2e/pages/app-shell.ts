@@ -28,6 +28,29 @@ export class AppShell {
     this.footerNav = page.getByRole('navigation', { name: 'Footer' });
   }
 
+  /** A site banner under the header, found by its title. */
+  banner(title: string): Locator {
+    return this.page
+      .locator('.site-banner')
+      .filter({ has: this.page.locator('.alert__title', { hasText: title }) });
+  }
+
+  bannerText(title: string): Locator {
+    return this.banner(title).locator('.alert__text');
+  }
+
+  bannerAction(title: string, action: string): Locator {
+    return this.banner(title).getByRole('button', { name: action, exact: true });
+  }
+
+  bannerDismiss(title: string): Locator {
+    return this.banner(title).getByRole('button', { name: 'Dismiss' });
+  }
+
+  get banners(): Locator {
+    return this.page.locator('.site-banner');
+  }
+
   primaryLink(name: string): Locator {
     return this.primaryNav.getByRole('link', { name, exact: true });
   }

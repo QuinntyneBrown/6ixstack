@@ -26,6 +26,8 @@
           appearance="primary"
           [routerLink]="submitDisabled() ? null : submitPath()"
           [attr.aria-disabled]="submitDisabled() ? 'true' : null"
+          [attr.role]="submitDisabled() ? 'link' : null"
+          [attr.tabindex]="submitDisabled() ? 0 : null"
           aria-label="Submit event"
         >
           <sx-icon name="plus" /><span class="site-header__submit-label">Submit event</span>

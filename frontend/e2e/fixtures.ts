@@ -5,7 +5,8 @@ export const TODAY = new Date('2026-11-02T14:00:00Z');
 
 export const test = base.extend({
   page: async ({ page }, use) => {
-    await page.clock.setFixedTime(TODAY);
+    // Time starts at TODAY and flows; tests can jump ahead with page.clock.runFor().
+    await page.clock.install({ time: TODAY });
     await use(page);
   },
 });

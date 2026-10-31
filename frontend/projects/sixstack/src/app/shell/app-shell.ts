@@ -1,16 +1,24 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SiteFooter, SiteHeader, SkipLink, ToastRegion } from 'components';
+import { ConnectivityService } from './banners/connectivity.service';
+import { SiteBannerOutlet } from './banners/site-banner-outlet';
 import { MenuController } from './menu-controller';
 import { FOOTER_ITEMS, NAV_ITEMS } from './nav-items';
 
 /** The frame every page sits in: skip link, header, main region and footer (site/app-shell design). */
 @Component({
   selector: 'sx-app-shell',
-  imports: [RouterOutlet, SkipLink, SiteHeader, SiteFooter, ToastRegion],
+  imports: [RouterOutlet, SkipLink, SiteHeader, SiteFooter, ToastRegion, SiteBannerOutlet],
   template: `
     <sx-skip-link target="main" />
-    <sx-site-header [items]="navItems" [menuExpanded]="menu.isOpen()" (menuRequested)="menu.open($event)" />
+    <sx-site-header
+      [items]="navItems"
+      [menuExpanded]="menu.isOpen()"
+      [submitDisabled]="!connectivity.online()"
+      (menuRequested)="menu.open($event)"
+    />
+    <sx-site-banner-outlet />
     <main id="main" class="page" tabindex="-1">
       <router-outlet />
     </main>
@@ -35,6 +43,7 @@ import { FOOTER_ITEMS, NAV_ITEMS } from './nav-items';
 })
 export class AppShell {
   protected readonly menu = inject(MenuController);
+  protected readonly connectivity = inject(ConnectivityService);
   protected readonly navItems = NAV_ITEMS;
   protected readonly footerItems = FOOTER_ITEMS;
 }

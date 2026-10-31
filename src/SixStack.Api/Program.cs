@@ -14,6 +14,7 @@ builder.Services.AddControllers(options => options.Conventions.Add(new TestSignI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
+builder.Services.Configure<SixStack.Application.Site.MaintenanceOptions>(builder.Configuration.GetSection(SixStack.Application.Site.MaintenanceOptions.Section));
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSixStackAuth();
 builder.Services.AddHsts(options =>

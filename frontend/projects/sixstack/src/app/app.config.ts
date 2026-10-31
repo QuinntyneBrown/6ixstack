@@ -1,7 +1,15 @@
-import { provideHttpClient, withFetch, withXsrfConfiguration } from '@angular/common/http';
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideHttpClient, withFetch, withInterceptors, withXsrfConfiguration } from '@angular/common/http';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
+import { apiErrorInterceptor, HttpSiteApi, NETWORK_ERROR_LISTENER, SITE_API } from 'api';
 import { routes } from './app.routes';
+import { ConnectivityService } from './shell/banners/connectivity.service';
+import { MaintenanceNoticeSource } from './shell/banners/maintenance-notice-source';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +22,16 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withFetch(),
       withXsrfConfiguration({ cookieName: 'XSRF-TOKEN', headerName: 'X-XSRF-TOKEN' }),
+      withInterceptors([apiErrorInterceptor]),
     ),
+    {
+      provide: NETWORK_ERROR_LISTENER,
+      useFactory: () => {
+        const connectivity = inject(ConnectivityService);
+        return () => connectivity.reportNetworkError();
+      },
+    },
+    { provide: SITE_API, useClass: HttpSiteApi },
+    provideAppInitializer(() => inject(MaintenanceNoticeSource).load()),
   ],
 };
