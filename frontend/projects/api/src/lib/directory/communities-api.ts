@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../core/api-config';
+import { UpcomingEvents } from '../events/events-api';
 
 export type CommunitySort = 'members' | 'next' | 'name';
 
@@ -32,7 +33,31 @@ export interface CommunityDirectory {
   hasMore: boolean;
 }
 
+export interface CommunityDetail {
+  slug: string;
+  name: string;
+  initials: string;
+  tagline: string;
+  topics: string[];
+  about: string[];
+  upcoming: UpcomingEvents['days'];
+  past: { slug: string; title: string; dateLabel: string; attendedCount: number }[];
+  facts: {
+    audienceLabel: string;
+    cadenceLabel: string | null;
+    placesLabel: string;
+    placesDetail: string | null;
+    websiteLabel: string | null;
+    websiteUrl: string | null;
+    links: { label: string; url: string }[];
+    postingLeadLabel: string;
+  };
+  organizers: { name: string; initials: string; roleLabel: string; speakerSlug: string | null }[];
+}
+
 export interface CommunitiesApi {
+  /** A community's page; fails with `ApiError` kind `NotFound` for an unknown slug (L2-031). */
+  get(slug: string): Observable<CommunityDetail>;
   /** The communities directory: 10 on page 1, 20 on each later page (L2-029). */
   list(query: CommunitiesQuery): Observable<CommunityDirectory>;
 }
@@ -43,6 +68,10 @@ export const COMMUNITIES_API = new InjectionToken<CommunitiesApi>('COMMUNITIES_A
 export class HttpCommunitiesApi implements CommunitiesApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
+
+  get(slug: string): Observable<CommunityDetail> {
+    return this.http.get<CommunityDetail>(`${this.baseUrl}/api/communities/${encodeURIComponent(slug)}`);
+  }
 
   list(query: CommunitiesQuery): Observable<CommunityDirectory> {
     let params = new HttpParams();

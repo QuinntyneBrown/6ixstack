@@ -42,6 +42,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/communities/communities-page').then((m) => m.CommunitiesPage),
   },
   {
+    path: 'communities/:slug',
+    title: 'Community · 6ixstack',
+    loadComponent: () =>
+      import('./pages/community-detail/community-detail-page').then((m) => m.CommunityDetailPage),
+  },
+  {
     path: 'organize',
     title: 'Your events · 6ixstack',
     data: { hideSubmit: true },
