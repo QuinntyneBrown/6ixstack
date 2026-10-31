@@ -244,6 +244,7 @@ export const lightTokens: TokenSet = {
 export const lightKnobs: Record<string, string> = {
   'sx-color-brand': p.orange500,
   'sx-header-background': 'rgba(247, 246, 243, 0.9)',
+  'sx-brand-mark-ring': 'transparent',
   'sx-feature-card-background': p.gray950,
   'sx-feature-card-border': p.gray950,
   'sx-feature-card-foreground': p.white,
@@ -325,6 +326,7 @@ export const darkTokens: TokenSet = {
 export const darkKnobs: Record<string, string> = {
   'sx-color-brand': p.orange500,
   'sx-header-background': 'rgba(14, 15, 18, 0.88)',
+  'sx-brand-mark-ring': '#2c2e35',
   'sx-feature-card-background': '#1e2026',
   'sx-feature-card-border': '#34363e',
   'sx-feature-card-foreground': '#f3f2ee',

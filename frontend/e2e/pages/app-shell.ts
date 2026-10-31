@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { Locator, Page } from '@playwright/test';
 import { MobileMenuDialog } from './mobile-menu.dialog';
 
@@ -6,6 +8,7 @@ export class AppShell {
   readonly skipLink: Locator;
   readonly header: Locator;
   readonly brand: Locator;
+  readonly brandMark: Locator;
   readonly primaryNav: Locator;
   readonly submitEvent: Locator;
   readonly menuButton: Locator;
@@ -22,6 +25,7 @@ export class AppShell {
     this.skipLink = page.getByRole('link', { name: 'Skip to content' });
     this.header = page.locator('header.site-header');
     this.brand = this.header.getByRole('link', { name: '6ixstack home' });
+    this.brandMark = this.brand.locator('.brand__mark');
     this.primaryNav = page.getByRole('navigation', { name: 'Primary' });
     this.submitEvent = this.header.getByRole('link', { name: 'Submit event' });
     this.menuButton = this.header.getByRole('button', { name: 'Open menu' });
@@ -114,6 +118,105 @@ export class AppShell {
   async hasHorizontalScroll(): Promise<boolean> {
     return this.page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    );
+  }
+
+  /**
+   * Share of the brand mark's pixels that differ from the official Magic Patterns logo
+   * (docs/assets/6ixstack-mark.svg) drawn at the same size on the page background: 0 is identical.
+   */
+  async brandMarkDifferenceFromOfficialLogo(): Promise<number> {
+    const box = await this.brandMark.boundingBox();
+    if (!box) throw new Error('The brand mark is not rendered');
+    const shot = (await this.brandMark.screenshot({ animations: 'disabled' })).toString('base64');
+    return this.differenceFromOfficialLogo(
+      `data:image/png;base64,${shot}`,
+      Math.round(box.width),
+      Math.round(box.height),
+    );
+  }
+
+  /** The tab icons the page declares, as written in `<link rel="icon">`. */
+  async tabIcons(): Promise<{ href: string; type: string }[]> {
+    return this.page.locator('link[rel~="icon"]').evaluateAll((links) =>
+      links.map((link) => ({
+        href: link.getAttribute('href') ?? '',
+        type: link.getAttribute('type') ?? '',
+      })),
+    );
+  }
+
+  /** Fetches a declared tab icon the way the browser would. */
+  async fetchTabIcon(href: string): Promise<{ status: number; contentType: string; body: Buffer }> {
+    const response = await this.page.request.get(new URL(href, this.page.url()).toString());
+    return {
+      status: response.status(),
+      contentType: response.headers()['content-type'] ?? '',
+      body: await response.body(),
+    };
+  }
+
+  /** The square sizes, in px, of the images inside an ICO tab icon, smallest first. */
+  async tabIconIcoSizes(href: string): Promise<number[]> {
+    const { body } = await this.fetchTabIcon(href);
+    const count = body.readUInt16LE(4);
+    const sizes: number[] = [];
+    for (let i = 0; i < count; i++) {
+      const width = body.readUInt8(6 + i * 16) || 256;
+      const height = body.readUInt8(7 + i * 16) || 256;
+      if (width !== height) throw new Error(`Icon image ${i} is not square: ${width}x${height}`);
+      sizes.push(width);
+    }
+    return sizes.sort((a, b) => a - b);
+  }
+
+  /** Share of a tab icon's pixels, drawn at `size` px, that differ from the official logo at that size. */
+  async tabIconDifferenceFromOfficialLogo(href: string, size: number): Promise<number> {
+    const { contentType, body } = await this.fetchTabIcon(href);
+    return this.differenceFromOfficialLogo(
+      `data:${contentType};base64,${body.toString('base64')}`,
+      size,
+      size,
+    );
+  }
+
+  private async differenceFromOfficialLogo(src: string, width: number, height: number): Promise<number> {
+    const official = readFileSync(join(__dirname, '../../../docs/assets/6ixstack-mark.svg')).toString(
+      'base64',
+    );
+    return this.page.evaluate(
+      async ({ src, official, width, height }) => {
+        const load = (url: string) =>
+          new Promise<HTMLImageElement>((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = url;
+          });
+        const pixels = async (url: string) => {
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d')!;
+          ctx.fillStyle = getComputedStyle(document.body).backgroundColor;
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(await load(url), 0, 0, width, height);
+          return ctx.getImageData(0, 0, width, height).data;
+        };
+        const actual = await pixels(src);
+        const expected = await pixels(`data:image/svg+xml;base64,${official}`);
+        let different = 0;
+        for (let i = 0; i < actual.length; i += 4) {
+          const delta = Math.max(
+            Math.abs(actual[i] - expected[i]),
+            Math.abs(actual[i + 1] - expected[i + 1]),
+            Math.abs(actual[i + 2] - expected[i + 2]),
+          );
+          if (delta > 64) different++;
+        }
+        return different / (width * height);
+      },
+      { src, official, width, height },
     );
   }
 

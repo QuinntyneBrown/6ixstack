@@ -56,6 +56,10 @@ organizer events table, scrolls inside its own container.
   CSS hides the navigation and shows the menu button below 992 px. Below 576 px
   the Submit event button keeps its icon and accessible name and hides its text
   label.
+- **Tab icon** — `frontend/projects/sixstack/public/` holds `favicon.svg` (a copy
+  of `docs/assets/6ixstack-mark.svg`) and `favicon.ico` rendered from it at 16,
+  32 and 48 px; `index.html` links the SVG first and the ICO as the fallback
+  (`L2-104`).
 - **`SiteFooter`** (`sx-site-footer`) — component in project `components`. It
   shows "Made in Toronto, for the people building in the 6ix." and the Footer
   navigation: About, Code of conduct, Contact, Calendar feeds, Organizer sign
@@ -109,6 +113,7 @@ Open points the requirements leave undecided:
 | `L2-095` | `L1-022` | The site shall adapt at these breakpoints without horizontal scrolling at any width from 320 px: extra small (<576 px) single column, menu button opening a bottom-sheet menu, map above the list, docked event actions; small (>=576 px) two-column card grids; medium (>=768 px) calendar titles in cells and no docked bar; large (>=992 px) header navigation, list beside a sticky map, detail pages with a side panel; extra large (>=1200 px) content capped at 1280 px. |
 | `L2-096` | `L1-022` | Below 992 px, the menu button shall open a bottom-sheet dialog with Events, Calendar, Communities, Speakers, Calendar feeds, Organizer sign in and a Submit event action, marking the current page. |
 | `L2-097` | `L1-022` | The site shall follow the operating system colour scheme, render every screen in light and dark themes using design tokens, and keep the event map dark in both. |
+| `L2-104` | `L1-022` | The site shall show the official 6ixstack logo mark from the Magic Patterns prototype beside the wordmark in the site header, and serve that mark as the browser tab icon: `favicon.svg` plus a `favicon.ico` fallback with 16, 32 and 48 px images. |
 
 ## Diagrams
 

@@ -152,9 +152,17 @@ def event_href(e): return P("event-detail", "streaming" if e["fmt"] == "streamin
 NAV = [("events", "Events"), ("calendar", "Calendar"), ("communities", "Communities"), ("speakers", "Speakers")]
 
 
+# Official logo mark from the Magic Patterns prototype; same artwork as docs/assets/6ixstack-mark.svg (L2-104).
+BRAND_MARK = ('<svg class="brand__mark" aria-hidden="true" focusable="false" viewBox="0 0 32 32">'
+              '<rect width="32" height="32" rx="8" fill="#111318"/>'
+              '<path d="M19.75 7.25C14 8 10.5 12.5 10.5 19.5" fill="none" stroke="#FFFFFF" stroke-width="3.25" stroke-linecap="round"/>'
+              '<circle cx="16" cy="19.5" r="5.5" fill="none" stroke="#FFFFFF" stroke-width="3.25"/>'
+              '<circle cx="16" cy="19.5" r="1.9" fill="#FF5A1F"/></svg>')
+
+
 def brand():
     return (f'<a class="brand" href="{P("events")}" aria-label="6ixstack home">'
-            '<span class="brand__mark" aria-hidden="true">6</span>'
+            f'{BRAND_MARK}'
             '<span aria-hidden="true"><span class="brand__six">6ix</span><span class="brand__stack">stack</span></span></a>')
 
 
@@ -366,6 +374,7 @@ def render(sc, st):
 <meta name="mock:screen" content="{sc["id"]}">
 <meta name="mock:state" content="{st}">
 <meta name="description" content="{esc(desc)}">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
 <link rel="stylesheet" href="../../assets/tokens.css">
 <link rel="stylesheet" href="../../assets/ui.css">
 <link rel="stylesheet" href="../../assets/mock.css">
