@@ -172,7 +172,9 @@ public static class LiveNotification
     {
         RecipientEmail = e.SubmitterEmail!,
         Title = $"“{e.Title}” is live",
+        Text = "Approved by a moderator. It’s in the list, the calendar and every matching feed.",
         Link = $"/events/{e.Slug}",
+        Tone = "success",
         CreatedAtUtc = now,
     };
 }

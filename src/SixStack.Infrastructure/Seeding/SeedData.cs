@@ -74,6 +74,22 @@ internal static class SeedData
 
     public const string CoOrganizerEmail = "marcus@gtaazure.ca";
 
+    /// <summary>Marcus's notifications, as the notifications mock shows them: three unread, two read (L2-065).</summary>
+    public static IEnumerable<Notification> CoOrganizerNotifications(DateTimeOffset now)
+    {
+        Notification Make(string title, string text, string link, string tone, TimeSpan ago, bool read) => new()
+        {
+            RecipientEmail = CoOrganizerEmail, Title = title, Text = text, Link = link, Tone = tone,
+            CreatedAtUtc = now - ago, ReadAtUtc = read ? now - ago + TimeSpan.FromHours(1) : null,
+        };
+
+        yield return Make("1,204 people now follow your events in a feed", "Up 86 this month.", "/organize", "neutral", TimeSpan.FromHours(26), false);
+        yield return Make("“Azure Bicep clinic” needs changes", "Reason: missing or unclear venue address. Edit it and resubmit.", "/organize", "danger", TimeSpan.FromHours(72), false);
+        yield return Make("Azure Data & AI Day GTA passed 300 going", "Capacity is 400.", "/events/azure-data-ai-day-gta", "neutral", TimeSpan.FromDays(5), false);
+        yield return Make("“Copilot Studio for developers” is live", "Approved by a moderator. It’s in the list, the calendar and every matching feed.", "/events/copilot-studio-for-developers", "success", TimeSpan.FromDays(25), true);
+        yield return Make("“Azure AI Search hands-on” is live", "Approved by a moderator. It’s in the list, the calendar and every matching feed.", "/events/azure-ai-search-hands-on", "success", TimeSpan.FromDays(28), true);
+    }
+
     /// <summary>Community page profiles (L2-031); other communities fall back to their description.</summary>
     public static readonly IReadOnlyDictionary<string, Action<Community>> Profiles = new Dictionary<string, Action<Community>>
     {

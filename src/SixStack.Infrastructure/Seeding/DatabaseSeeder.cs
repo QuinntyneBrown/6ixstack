@@ -59,6 +59,10 @@ public sealed class DatabaseSeeder(AppDbContext db, IClock clock, IOutbox outbox
                 Community = communities["gta-azure-community"], Role = "Co-organizer", Speaker = speakers["marcus-bell"], SortOrder = 1,
             });
             db.Users.Add(marcus);
+            foreach (var n in SeedData.CoOrganizerNotifications(clock.UtcNow))
+            {
+                db.Notifications.Add(n);
+            }
         }
 
         if (!users.TryGetValue(SeedData.ModeratorEmail, out var jordan))

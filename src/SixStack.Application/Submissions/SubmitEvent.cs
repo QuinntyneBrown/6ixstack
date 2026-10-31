@@ -209,6 +209,20 @@ public sealed partial class SubmitEventCommandHandler(
 
         var e = await NewEvent(c, email, now, cancellationToken);
         db.Events.Add(e);
+
+        // Every moderator hears about a new submission (L2-066 criterion 3).
+        var moderators = await db.Users.Where(u => u.Role == UserRole.Moderator).Select(u => u.Email).ToListAsync(cancellationToken);
+        foreach (var moderator in moderators)
+        {
+            db.Notifications.Add(new Notification
+            {
+                RecipientEmail = moderator,
+                Title = $"New submission: “{e.Title}”",
+                Text = $"{e.OrganizerName} · {TorontoTime.ToLocal(e.StartsAtUtc).ToString("ddd, MMM d", CultureInfo.GetCultureInfo("en-US"))}. It’s waiting in the review queue.",
+                Link = "/admin/review",
+                CreatedAtUtc = now,
+            });
+        }
         await checks.ScheduleAsync(e, cancellationToken);
 
         var baseUrl = site.Value.PublicBaseUrl.TrimEnd('/');
