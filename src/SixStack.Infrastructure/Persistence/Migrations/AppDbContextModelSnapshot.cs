@@ -315,8 +315,14 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Property<int>("Kind")
                         .HasColumnType("int");
 
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("ModeratorId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("Reason")
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("UndoneAtUtc")
                         .HasColumnType("datetimeoffset");

@@ -12,4 +12,6 @@ public class ModerationDecision
     public DecisionKind Kind { get; set; }
     public DateTimeOffset DecidedAtUtc { get; set; }
     public DateTimeOffset? UndoneAtUtc { get; set; }
+    public RejectionReason? Reason { get; set; }
+    public string? Message { get; set; }
 }

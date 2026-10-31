@@ -126,7 +126,12 @@ public static class ModerationConflicts
         var name = active?.ModeratorId is { } moderatorId
             ? await db.Users.Where(u => u.Id == moderatorId).Select(u => u.Name ?? u.Email).SingleOrDefaultAsync(cancellationToken)
             : null;
-        var decision = active?.Kind == DecisionKind.Rejected || e.Status == EventStatus.Rejected ? "rejected" : "approved";
+        var decision = (active?.Kind, e.Status) switch
+        {
+            (DecisionKind.Rejected, _) or (_, EventStatus.Rejected) => "rejected",
+            (DecisionKind.RequestChanges, _) or (_, EventStatus.NeedsChanges) => "sent back",
+            _ => "approved",
+        };
         throw new DecisionConflictException(decision, name?.Split(' ')[0]);
     }
 }

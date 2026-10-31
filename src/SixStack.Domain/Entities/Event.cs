@@ -110,4 +110,16 @@ public class Event
         PublishedAtUtc = null;
         Version = Guid.NewGuid();
     }
+
+    /// <summary>Turns a submission down: a missing venue address asks for changes, anything else rejects (L2-061).</summary>
+    public void Decline(RejectionReason reason)
+    {
+        if (Status != EventStatus.InReview || ApprovedAtUtc is not null)
+        {
+            throw new Exceptions.InvalidStatusTransitionException(Status, "reject");
+        }
+
+        Status = reason == RejectionReason.MissingVenueAddress ? EventStatus.NeedsChanges : EventStatus.Rejected;
+        Version = Guid.NewGuid();
+    }
 }
