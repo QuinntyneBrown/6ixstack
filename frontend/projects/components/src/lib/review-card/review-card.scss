@@ -1,0 +1,80 @@
+@use 'breakpoints' as bp;
+
+// Ported from docs/mocks/assets/ui.css (.review-card, .check-list, .event-row__meta, .meta-item).
+:host {
+  display: grid;
+  gap: var(--spacingHorizontalL);
+  padding: var(--spacingHorizontalXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--colorNeutralBackground1);
+}
+:host(:focus-visible) {
+  outline: var(--sx-focus-ring-width) solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}
+@include bp.media-up(md) {
+  :host {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+.review-card__body {
+  min-width: 0;
+}
+h2 {
+  font: var(--sx-text-h4);
+}
+.review-card__organizer {
+  color: var(--colorNeutralForeground2);
+}
+.event-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacingHorizontalS) var(--spacingHorizontalL);
+  margin-top: var(--spacingHorizontalM);
+}
+.meta-item,
+.no-topic {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalXS);
+  min-width: 0;
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}
+.check-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacingHorizontalM) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS) var(--spacingHorizontalL);
+}
+.check-list li {
+  display: inline-flex;
+  gap: var(--spacingHorizontalXS);
+  align-items: center;
+  font: var(--sx-text-body-sm);
+  color: var(--colorNeutralForeground2);
+}
+.check-icon--passed {
+  color: var(--colorStatusSuccessForeground3);
+}
+.check-icon--warning {
+  color: var(--colorStatusWarningForeground3);
+}
+.check-icon--pending {
+  color: var(--colorNeutralForeground3);
+}
+.review-card__submitted {
+  margin-top: var(--spacingHorizontalS);
+  font: var(--sx-text-caption);
+  color: var(--colorNeutralForeground2);
+}
+.review-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS);
+  align-items: flex-start;
+}

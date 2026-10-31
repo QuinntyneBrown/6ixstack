@@ -1,0 +1,1 @@
+A review card holds one submission waiting for a moderator: what, who, when and where, its topics, the automatic checks (passed, warning or still checking) and who sent it. Moderator actions go in `[slot=actions]`. The card takes programmatic focus so the queue's J and K shortcuts can move between cards.

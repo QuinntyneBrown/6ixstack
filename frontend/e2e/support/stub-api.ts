@@ -152,3 +152,51 @@ export async function holdSignInLink(page: Page): Promise<() => void> {
 export async function acceptSignInLink(page: Page): Promise<void> {
   await page.route('**/api/auth/sign-in-links', (route) => route.fulfill({ status: 202, body: '' }));
 }
+
+/** Delays GET /api/moderation/queue by `ms`. */
+export async function slowQueue(page: Page, ms: number): Promise<void> {
+  await page.route('**/api/moderation/queue', async (route) => {
+    const response = await route.fetch();
+    await new Promise((resolve) => setTimeout(resolve, ms));
+    await route.fulfill({ response });
+  });
+}
+
+/** Makes GET /api/moderation/queue fail with a 500 until the returned function is called. */
+export async function failQueue(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({
+      status: 500,
+      contentType: 'application/problem+json',
+      body: JSON.stringify({
+        status: 500,
+        title: 'Something went wrong on our side.',
+        referenceCode: '2B7E-90C1',
+      }),
+    });
+  await page.route('**/api/moderation/queue', handler);
+  return () => page.unroute('**/api/moderation/queue', handler);
+}
+
+/** Answers GET /api/moderation/queue with the real queue, its first card's checks still pending. */
+export async function withPendingChecks(page: Page): Promise<void> {
+  await page.route('**/api/moderation/queue', async (route) => {
+    const response = await route.fetch();
+    const queue = await response.json();
+    queue.cards[0].checks = queue.cards[0].checks.map((c: { kind: string }) => ({
+      kind: c.kind,
+      outcome: 'pending',
+      message: 'Checking…',
+    }));
+    await route.fulfill({ response, json: queue });
+  });
+}
+
+/** Answers GET /api/moderation/queue with nothing waiting. */
+export async function emptyQueue(page: Page): Promise<void> {
+  await page.route('**/api/moderation/queue', (route) =>
+    route.fulfill({
+      json: { summary: '0 waiting · last approval 12 minutes ago', waitingCount: 0, cards: [] },
+    }),
+  );
+}
