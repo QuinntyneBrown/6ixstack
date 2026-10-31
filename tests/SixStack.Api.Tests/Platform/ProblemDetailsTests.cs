@@ -56,13 +56,13 @@ public sealed partial class ProblemDetailsTests(PlatformFactory factory) : IClas
     }
 
     [Fact]
-    public async Task Validation_failure_maps_to_400_with_errors_keyed_by_field()
+    public async Task Validation_failure_maps_to_400_with_errors_keyed_by_camel_case_field()
     {
         var response = await factory.CreateHttpsClient().GetAsync("/api/test-probe/invalid");
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var problem = await response.Content.ReadFromJsonAsync<JsonElement>();
-        Assert.Equal("Enter a title.", problem.GetProperty("errors").GetProperty("Title")[0].GetString());
+        Assert.Equal("Enter a title.", problem.GetProperty("errors").GetProperty("title")[0].GetString());
     }
 
     [Fact]

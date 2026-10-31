@@ -8,8 +8,15 @@ public class Event
     public string Slug { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public Guid CommunityId { get; set; }
+    /// <summary>The community that runs it; a new submission has none until moderation links it.</summary>
+    public Guid? CommunityId { get; set; }
     public Community? Community { get; set; }
+
+    /// <summary>The community or organizer as the submitter typed it.</summary>
+    public string? OrganizerName { get; set; }
+
+    /// <summary>When a moderator approved it; an unverified submitter's event waits in review until verification (L2-085).</summary>
+    public DateTimeOffset? ApprovedAtUtc { get; set; }
     public EventStatus Status { get; set; } = EventStatus.Draft;
     public EventFormat Format { get; set; }
     public Topics Topics { get; set; }

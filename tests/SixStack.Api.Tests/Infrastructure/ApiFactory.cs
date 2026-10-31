@@ -29,6 +29,7 @@ public class ApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Auth:TestSignIn:Enabled", "true");
         builder.UseSetting("Outbox:Enabled", "false");
         builder.UseSetting("Swagger:Enabled", "true");
+        builder.UseSetting("DevMailbox:Expose", "true");
         builder.ConfigureServices(ConfigureTestServices);
     }
 

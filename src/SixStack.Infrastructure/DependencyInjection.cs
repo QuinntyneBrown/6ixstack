@@ -6,6 +6,7 @@ using SixStack.Application.Common.Interfaces;
 using SixStack.Application.Common.Messages;
 using SixStack.Infrastructure.Calendar;
 using SixStack.Infrastructure.Email;
+using SixStack.Infrastructure.Identity;
 using SixStack.Infrastructure.Outbox;
 using SixStack.Infrastructure.Persistence;
 using SixStack.Infrastructure.Seeding;
@@ -53,6 +54,7 @@ public static class DependencyInjection
         services.AddScoped<IOutboxMessageHandler<SendEmail>, SendEmailHandler>();
         services.Configure<SiteOptions>(configuration.GetSection(SiteOptions.Section));
         services.AddSingleton<IIcsWriter, IcsWriter>();
+        services.AddScoped<ISecurityTokenService, SecurityTokenService>();
         services.AddScoped<DatabaseSeeder>();
         services.AddScoped<DatabaseMaintenance>();
         return services;

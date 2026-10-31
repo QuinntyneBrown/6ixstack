@@ -14,6 +14,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<User> Users => Set<User>();
     public DbSet<CommunityOrganizer> CommunityOrganizers => Set<CommunityOrganizer>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
+    public DbSet<SecurityToken> SecurityTokens => Set<SecurityToken>();
+    public DbSet<VerifiedEmail> VerifiedEmails => Set<VerifiedEmail>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
