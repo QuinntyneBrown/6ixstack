@@ -1,0 +1,66 @@
+<div class="notif-page">
+  <div class="page-title notif-title">
+    <div>
+      <h1>Notifications</h1>
+      <p class="lead">{{ lead() }}</p>
+    </div>
+    @if (data()?.unreadCount) {
+      <button sx-button type="button" [busy]="marking()" (click)="markAllRead()">Mark all as read</button>
+    }
+  </div>
+
+  @switch (state().status) {
+    @case ('failed') {
+      <sx-empty-state icon="alert" title="We couldn’t load notifications" error>
+        <span slot="text"
+          >Try again in a moment. Important updates are also emailed to {{ session.user()?.email }}.</span
+        >
+        <button slot="actions" sx-button appearance="primary" type="button" (click)="retry()">
+          <sx-icon name="refresh" size="sm" />Try again
+        </button>
+      </sx-empty-state>
+    }
+    @case ('loading') {
+      @if (slow()) {
+        <ul class="notif-list" aria-busy="true" aria-label="Loading notifications">
+          @for (n of skeletons; track n) {
+            <li class="notif-skeleton">
+              <sx-skeleton variant="rect" width="2.5rem" height="2.5rem" />
+              <div class="notif-skeleton__lines">
+                <sx-skeleton width="60%" />
+                <sx-skeleton width="80%" />
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    }
+    @case ('loaded') {
+      @let d = data()!;
+      @if (d.items.length) {
+        <ul class="notif-list">
+          @for (item of d.items; track item.id) {
+            <li>
+              <sx-notification-item
+                [title]="item.title"
+                [link]="item.link"
+                [text]="item.text"
+                [time]="item.timeLabel"
+                [tone]="item.tone"
+                [unread]="!item.isRead"
+                (opened)="opened(item)"
+              />
+            </li>
+          }
+        </ul>
+      } @else {
+        <sx-empty-state icon="bell" title="No notifications yet">
+          <span slot="text"
+            >When moderators review your events or people report a problem, you’ll see it here.</span
+          >
+          <a slot="actions" sx-button routerLink="/organize">Go to your events</a>
+        </sx-empty-state>
+      }
+    }
+  }
+</div>

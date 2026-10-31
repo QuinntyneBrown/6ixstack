@@ -2,7 +2,7 @@ import { expect, test } from '../fixtures';
 import { RejectSubmissionDialog, SentEmailDialog } from '../pages/reject-submission.dialog';
 import { ReviewQueuePage } from '../pages/review-queue.page';
 import { failRejections, holdRejections, rejectionsSucceed } from '../support/moderation';
-import { MODERATOR, signInAs } from '../support/session';
+import { MODERATOR, signInAs, withUnreadCount } from '../support/session';
 import { stubQueue } from '../support/stub-api';
 
 const CRYPTO = 'Free crypto trading masterclass';
@@ -12,6 +12,8 @@ const MESSAGE = 'This is advertising for a trading course, not a developer event
 test.describe('Reject submission visuals', () => {
   test.beforeEach(async ({ page }) => {
     await signInAs(page, MODERATOR);
+    // Submissions made by earlier tests notify moderators; the screenshots show the seeded header.
+    await withUnreadCount(page, 0);
     await stubQueue(page, 'review-queue');
   });
 

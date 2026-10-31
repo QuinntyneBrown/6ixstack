@@ -1,0 +1,41 @@
+// Local layout, ported from docs/mocks/assets/ui.css (.notif-list, page title with action).
+:host {
+  display: block;
+}
+.notif-page {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+.notif-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacingHorizontalL);
+}
+.notif-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--colorNeutralBackground1);
+  overflow: hidden;
+}
+.notif-list > li + li {
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+.notif-skeleton {
+  display: flex;
+  gap: var(--spacingHorizontalM);
+  align-items: center;
+  padding: var(--spacingHorizontalL) var(--spacingHorizontalXL);
+}
+.notif-skeleton + .notif-skeleton {
+  border-top: 1px solid var(--colorNeutralStroke2);
+}
+.notif-skeleton__lines {
+  display: grid;
+  flex: 1;
+  gap: var(--spacingHorizontalS);
+}

@@ -14,3 +14,4 @@ export * from './lib/moderation/moderation-api';
 export * from './lib/feeds/feeds-api';
 export * from './lib/organizer/organizer-events-api';
 export * from './lib/directory/communities-api';
+export * from './lib/notifications/notifications-api';

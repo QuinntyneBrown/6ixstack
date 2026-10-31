@@ -441,3 +441,50 @@ export async function nothingScheduled(page: Page): Promise<void> {
     }),
   );
 }
+
+/** Makes GET /api/notifications fail until the returned function is called. */
+export async function failNotifications(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.request().method() === 'GET'
+      ? route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' })
+      : route.fallback();
+  await page.route('**/api/notifications', handler);
+  return () => page.unroute('**/api/notifications', handler);
+}
+
+/** Delays GET /api/notifications by `ms`. */
+export async function slowNotifications(page: Page, ms: number): Promise<void> {
+  await page.route(
+    '**/api/notifications',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
+}
+
+/** Answers GET /api/notifications with an empty list. */
+export async function noNotifications(page: Page): Promise<void> {
+  await page.route('**/api/notifications', (route) =>
+    route.request().method() === 'GET'
+      ? route.fulfill({ json: { unreadCount: 0, items: [] } })
+      : route.fallback(),
+  );
+}
+
+/** Answers GET /api/notifications with the real items, all read. */
+export async function allNotificationsRead(page: Page): Promise<void> {
+  await page.route(
+    '**/api/notifications',
+    guarded(page, async (route) => {
+      if (route.request().method() !== 'GET') return route.fallback();
+      const response = await route.fetch();
+      const body = (await response.json()) as { items: { isRead: boolean }[] };
+      await route.fulfill({
+        response,
+        json: { unreadCount: 0, items: body.items.map((i) => ({ ...i, isRead: true })) },
+      });
+    }),
+  );
+}

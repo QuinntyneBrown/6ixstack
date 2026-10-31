@@ -48,6 +48,13 @@ export const routes: Routes = [
       import('./pages/community-detail/community-detail-page').then((m) => m.CommunityDetailPage),
   },
   {
+    path: 'notifications',
+    title: 'Notifications · 6ixstack',
+    data: { hideSubmit: true },
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/notifications/notifications-page').then((m) => m.NotificationsPage),
+  },
+  {
     path: 'organize',
     title: 'Your events · 6ixstack',
     data: { hideSubmit: true },
