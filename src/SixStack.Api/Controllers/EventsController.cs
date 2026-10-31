@@ -22,6 +22,14 @@ public sealed class EventsController(ISender sender) : ControllerBase
         CancellationToken cancellationToken = default) =>
         sender.Send(new GetUpcomingEventsQuery(format ?? "all", topics ?? [], q, page), cancellationToken);
 
+    /// <summary>This week's featured event (L2-006): 200 with its card, or 204 when nothing is featured.</summary>
+    [HttpGet("featured")]
+    public async Task<IActionResult> Featured(CancellationToken cancellationToken)
+    {
+        var featured = await sender.Send(new GetFeaturedEventQuery(), cancellationToken);
+        return featured is null ? NoContent() : Ok(featured);
+    }
+
     /// <summary>The event map for the list's filters (L2-011, L2-013): venue dots, stream arcs and the 14 timeline days.</summary>
     [HttpGet("map")]
     public Task<EventMapDto> Map(
