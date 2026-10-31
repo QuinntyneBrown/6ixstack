@@ -112,3 +112,18 @@ The prose renders at once. A successful stats response adds the row of four
 numbers. Any failure leaves the row out and shows no error.
 
 ![Sequence diagram for loading the About stats](diagrams/sequence-load-about-stats.png)
+
+## Decisions (journey 29)
+
+- **Events listed this year** counts published events that start in the current Toronto calendar year, so the
+  number matches what the calendar shows for the year. The response carries `year`, and the label reads "Events
+  listed in {year}".
+- **Feed subscribers** is the sum of each community's `FeedSubscriberCount`. Anonymous `.ics` subscribers are not
+  counted until `feeds-and-sharing/serve-calendar-feed` records them.
+- **Volunteer moderators** counts users with role `Moderator`. Deleted accounts are removed outright (journey 26),
+  so no `DeletedAtUtc` filter is needed.
+- **Caching**: `Cache-Control: public, max-age=300`.
+- **Loading**: the row is not drawn until the stats arrive and is omitted if they fail. The prose renders at once.
+- **Report a problem** is named in plain text on the Code of Conduct page: the dialog reports a specific event, so
+  it opens from an event page, as the sentence says.
+

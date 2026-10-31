@@ -1,0 +1,25 @@
+// Long-form text on the site pages, ported from docs/mocks/assets/ui.css (.page--narrow, .prose).
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingHorizontalL);
+  max-width: 45rem;
+  padding-bottom: var(--sx-space-16);
+  line-height: var(--sx-line-height-relaxed);
+}
+.prose h2 {
+  margin-top: var(--spacingHorizontalL);
+  font: var(--sx-text-h4);
+}
+.prose ul {
+  display: grid;
+  gap: var(--spacingHorizontalS);
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.prose a {
+  color: var(--colorBrandForegroundLink);
+}
+.prose .text-muted {
+  color: var(--colorNeutralForeground2);
+}

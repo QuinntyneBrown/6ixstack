@@ -19,4 +19,10 @@ public sealed class SiteController(ISender sender) : ControllerBase
         var notice = await sender.Send(new GetSiteNoticeQuery(), cancellationToken);
         return notice is null ? NoContent() : Ok(notice);
     }
+
+    /// <summary>The About page's live stats (L2-072), cacheable for five minutes.</summary>
+    [HttpGet("stats")]
+    [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
+    public async Task<SiteStatsDto> GetStats(CancellationToken cancellationToken) =>
+        await sender.Send(new GetSiteStatsQuery(), cancellationToken);
 }

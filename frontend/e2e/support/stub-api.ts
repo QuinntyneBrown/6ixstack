@@ -645,3 +645,25 @@ export async function contactAnswers(page: Page, status: number): Promise<() => 
     await page.unroute('**/api/contact', handler);
   };
 }
+
+/** Makes GET /api/site/stats fail, as when the stats cannot be loaded. */
+export async function failSiteStats(page: Page): Promise<void> {
+  await page.route('**/api/site/stats', (route) =>
+    route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' }),
+  );
+}
+
+/** Answers GET /api/site/stats with the About mock's numbers, so visuals do not move with the data. */
+export async function mockSiteStats(page: Page): Promise<void> {
+  await page.route('**/api/site/stats', (route) =>
+    route.fulfill({
+      json: {
+        year: 2026,
+        communities: 86,
+        eventsListedThisYear: 1240,
+        feedSubscribers: 9800,
+        volunteerModerators: 6,
+      },
+    }),
+  );
+}

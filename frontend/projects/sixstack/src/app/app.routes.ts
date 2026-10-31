@@ -47,6 +47,17 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/contact/contact-page').then((m) => m.ContactPage),
   },
   {
+    path: 'about',
+    title: 'About · 6ixstack',
+    loadComponent: () => import('./pages/about/about-page').then((m) => m.AboutPage),
+  },
+  {
+    path: 'code-of-conduct',
+    title: 'Code of conduct · 6ixstack',
+    loadComponent: () =>
+      import('./pages/code-of-conduct/code-of-conduct-page').then((m) => m.CodeOfConductPage),
+  },
+  {
     path: 'speakers',
     title: 'Speakers · 6ixstack',
     loadComponent: () => import('./pages/speakers/speakers-page').then((m) => m.SpeakersPage),
