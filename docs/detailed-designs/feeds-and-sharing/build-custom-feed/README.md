@@ -93,10 +93,16 @@ the feed slug and counts the matching events; it writes no rows.
   `GoogleCalendarUrl`, `OutlookUrl`, `AppleCalendarUrl`, `Summary` and
   `MatchingEventCount`.
 
-The mocks fix one slug: AI and Azure in "GTA and streaming" is
-`ai-azure-gta-stream`. The following parts of the slug grammar are
-`<TO SUPPLY>`: the scope tokens for "GTA only" and "Streaming only", the token
-for all topics, and the form of a community feed slug.
+The slug grammar (decided in journey 10, used by every feed):
+
+| Part | Tokens |
+|------|--------|
+| Topics | topic keys in the fixed topic order, joined by `-` (`ai-azure`), or `all` |
+| Scope | `gta-stream` (GTA and streaming), `gta` (GTA only), `stream` (Streaming only) |
+| Community | optional suffix `-in-{community-slug}`; the first `-in-` after the scope starts it |
+
+So AI and Azure in "GTA and streaming" is `ai-azure-gta-stream`, Everything is `all-gta-stream`, and the GTA Azure
+Community's feed is `all-gta-stream-in-gta-azure-community`.
 
 Open points in the requirement and mocks:
 

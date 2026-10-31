@@ -10,5 +10,9 @@
   "/auth": {
     "target": "http://localhost:5100",
     "secure": false
+  },
+  "/feeds/": {
+    "target": "http://localhost:5100",
+    "secure": false
   }
 }

@@ -1,0 +1,31 @@
+@use 'breakpoints' as bp;
+
+// Local layout, ported from docs/mocks/assets/ui.css (.page-grid, .aside, .aside-block).
+:host {
+  display: block;
+}
+.page-grid {
+  display: grid;
+  gap: var(--sx-space-12);
+}
+@include bp.media-up(lg) {
+  .page-grid {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+}
+.section-heading {
+  font: var(--sx-text-h4);
+  margin-bottom: var(--spacingHorizontalL);
+}
+.aside-block h2 {
+  font: var(--fontWeightSemibold) var(--fontSizeBase400) / var(--lineHeightBase400) var(--fontFamilyBase);
+  margin-bottom: var(--spacingHorizontalM);
+}
+.aside-block h2:focus {
+  outline: none;
+}
+.aside-block p {
+  margin-top: var(--spacingHorizontalL);
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}

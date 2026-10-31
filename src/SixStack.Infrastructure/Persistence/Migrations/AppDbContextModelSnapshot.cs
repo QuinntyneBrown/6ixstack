@@ -210,6 +210,9 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .HasMaxLength(2048)
                         .HasColumnType("nvarchar(2048)");
 
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
                     b.Property<string>("SlidesUrl")
                         .HasMaxLength(2048)
                         .HasColumnType("nvarchar(2048)");

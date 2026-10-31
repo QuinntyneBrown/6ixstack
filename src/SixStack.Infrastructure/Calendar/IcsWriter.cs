@@ -35,11 +35,25 @@ public sealed class IcsWriter(IOptions<SiteOptions> site, IClock clock) : IIcsWr
         END:VTIMEZONE
         """;
 
-    public string WriteSingleEvent(Event e)
+    public string WriteSingleEvent(Event e) => Write(null, [e]);
+
+    public string WriteCalendar(string name, IEnumerable<Event> events) => Write(name, events);
+
+    private string Write(string? name, IEnumerable<Event> events)
     {
         var lines = new List<string> { "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//6ixstack//Events//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH" };
+        if (name is not null)
+        {
+            lines.Add($"X-WR-CALNAME:{Escape(name)}");
+            lines.Add("X-WR-TIMEZONE:America/Toronto");
+        }
+
         lines.AddRange(TorontoTimeZone.Split('\n').Select(l => l.TrimEnd('\r')));
-        lines.AddRange(Event(e));
+        foreach (var e in events)
+        {
+            lines.AddRange(Event(e));
+        }
+
         lines.Add("END:VCALENDAR");
 
         var builder = new StringBuilder();
@@ -61,7 +75,7 @@ public sealed class IcsWriter(IOptions<SiteOptions> site, IClock clock) : IIcsWr
 
         yield return "BEGIN:VEVENT";
         yield return $"UID:{e.Id}@6ixstack.dev";
-        yield return "SEQUENCE:0";
+        yield return $"SEQUENCE:{e.Sequence}";
         yield return $"DTSTAMP:{clock.UtcNow.UtcDateTime.ToString("yyyyMMdd'T'HHmmss'Z'", CultureInfo.InvariantCulture)}";
         yield return $"DTSTART;TZID=America/Toronto:{Local(e.StartsAtUtc)}";
         yield return $"DTEND;TZID=America/Toronto:{Local(e.EndsAtUtc)}";

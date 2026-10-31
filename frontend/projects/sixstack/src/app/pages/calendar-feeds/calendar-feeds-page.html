@@ -1,0 +1,58 @@
+<div class="page-title">
+  <h1>Calendar feeds</h1>
+  <p class="lead">Subscribe once and every event you care about shows up in your own calendar.</p>
+</div>
+
+<div class="page-grid">
+  <div class="stack-gap">
+    <section aria-labelledby="ready-h">
+      <h2 id="ready-h" class="section-heading">Ready-made feeds</h2>
+      @if (state().status === 'failed') {
+        <sx-alert
+          kind="danger"
+          announce="alert"
+          title="We couldn’t load the ready-made feeds"
+          [actions]="retryActions"
+        >
+          Try again in a moment.
+        </sx-alert>
+      } @else {
+        <ul sx-list class="ready-feeds">
+          @for (feed of feeds; track feed.key) {
+            <li sx-list-item [title]="feed.name">
+              <sx-logo-tile slot="leading"><sx-icon name="rss" /></sx-logo-tile>
+              <span slot="meta">
+                {{ feed.description }}
+                @if (count(feed); as n) {
+                  · {{ n }} in the next two weeks
+                } @else if (count(feed) === 0) {
+                  · 0 in the next two weeks
+                } @else if (slow()) {
+                  <sx-skeleton width="8rem" />
+                }
+              </span>
+              <button
+                slot="actions"
+                sx-button
+                size="sm"
+                type="button"
+                [attr.aria-label]="'Copy the ' + feed.name + ' feed link'"
+                (click)="copy(feed)"
+              >
+                <sx-icon name="copy" size="sm" />Copy link
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </div>
+
+  <aside class="aside" aria-labelledby="how-h">
+    <div class="aside-block">
+      <h2 id="how-h" #howItWorks tabindex="-1">How it works</h2>
+      <sx-next-steps [steps]="steps" />
+      <p>Feeds are public links with no account needed. Calendar apps refresh them every 2–12 hours.</p>
+    </div>
+  </aside>
+</div>

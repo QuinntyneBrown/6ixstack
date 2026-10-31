@@ -83,14 +83,14 @@ before the API answers, so the copy buttons work while the counts load.
 The ready-made feed filters follow from their names: Everything is all topics
 in scope `All`; In the GTA is all topics in `GtaOnly`; Streaming is all topics
 in `StreamingOnly`; AI, .NET and Azure are one topic each in scope `All`. Their
-slug strings are `<TO SUPPLY>` until the slug token table in
-`build-custom-feed` is fixed. The public feed origin (`6ixstack.dev` in the
-mocks) is configuration, `<TO SUPPLY>` per environment.
+slugs are `all-gta-stream`, `all-gta`, `all-stream`, `ai-gta-stream`, `dotnet-gta-stream` and
+`azure-gta-stream` (grammar in `build-custom-feed`). The web app builds each link from the host it is served on
+(`webcal://{host}/feeds/{slug}.ics`), so production links name `6ixstack.dev` and local ones the dev server.
 
-The target of the "How to subscribe" toast action is `<TO SUPPLY>`; the "How
-it works" aside on `/feeds` is the nearest candidate. Whether the offline state
-disables the ready-made copy buttons, or only feed creation, is `<TO SUPPLY>`:
-`L2-075` says "feed actions" without listing them.
+Decided in journey 10: "How to subscribe" scrolls to the "How it works" aside and moves focus to its heading.
+Offline, the copy buttons stay usable (copying needs no network); only creating a custom feed is disabled
+(journey 11). The "Build your own" section arrives with journey 11. Counts use the same two-week window as the
+events page hero. The library gains `List`/`ListItem` and `LogoTile`; "How it works" uses `NextSteps`.
 
 ## Requirements
 

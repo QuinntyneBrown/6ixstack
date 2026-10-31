@@ -98,25 +98,17 @@ The feed URL uses the `webcal://` scheme in links and is served over HTTPS at
 the same path. The API serves `/feeds/*` on the public site host, outside the
 `/api` prefix; the reverse-proxy rule that routes it is `<TO SUPPLY>`.
 
-Open points in the requirement:
+Decided in journey 10:
 
-- `L2-036` says "from 30 days in the past onward" without naming the
-  reference instant. This design compares the event's end with the request
-  time minus 30 days; confirmation is `<TO SUPPLY>`.
-- `L2-036` sets no upper bound on how far ahead a feed reaches. The upper
-  bound, if any, is `<TO SUPPLY>`.
-- Because the window's lower bound moves each day, a snapshot also expires
-  after a time-to-live. The time-to-live is `<TO SUPPLY>`; the edit-event
-  success copy ("41 feeds will see the new details within an hour", `L2-054`)
-  implies changes reach feeds within 1 hour.
-- The `Cache-Control` header sent to calendar applications is `<TO SUPPLY>`.
-- An in-process cache holds one copy per API instance. The cache store for a
-  multi-instance deployment is `<TO SUPPLY>`.
-- The organizer dashboard and About page show "Feed subscribers" (`L2-051`,
-  `L2-072`) and the edit success copy states a feed count. How a subscriber is
-  counted from anonymous feed requests is `<TO SUPPLY>`; this slice records no
-  requester data.
-- The `PRODID` value and the exact `UID` format are `<TO SUPPLY>`.
+- The window keeps events that end on or after the request time minus 30 days; there is no upper bound.
+- No snapshot cache yet: each request builds the document, and the `ETag` (a SHA-256 of the content) still
+  answers `304` to a matching `If-None-Match`. `IFeedCache` and `FeedRegenerationRequested` arrive if the
+  `L2-087` budget needs them; the seed scale is far inside it.
+- `Cache-Control: public, max-age=900`.
+- Subscriber counting is decided with the dashboard (journey 15); this slice records no requester data.
+- `PRODID:-//6ixstack//Events//EN`, `UID:{event id}@6ixstack.dev`, `X-WR-CALNAME:6ixstack: {feed name}`.
+- `Event.Sequence` is added (0 for seeded events); `organizer/edit-event` increments it.
+- In development the Angular dev server proxies `/feeds/` to the API; production routes it at the reverse proxy.
 
 ## Requirements
 

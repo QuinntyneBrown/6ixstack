@@ -16,3 +16,4 @@ and `credits.md`. Build one with `npm run demo -- <nn>-<slug>` from `frontend/`;
 | 07 · Approve submission | [demo.mp4](07-approve-submission/demo.mp4) |
 | 08 · Reject submission | [demo.mp4](08-reject-submission/demo.mp4) |
 | 09 · Browse month calendar | [demo.mp4](09-browse-month-calendar/demo.mp4) |
+| 10 · Subscribe to ready-made feed | [demo.mp4](10-subscribe-to-ready-made-feed/demo.mp4) |

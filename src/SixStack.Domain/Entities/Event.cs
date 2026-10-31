@@ -76,6 +76,9 @@ public class Event
 
     public bool IsPast(DateTimeOffset now) => EndsAtUtc <= now;
 
+    /// <summary>The iCalendar SEQUENCE: raised when the start or end time changes, so calendar apps update (L2-036).</summary>
+    public int Sequence { get; set; }
+
     /// <summary>Changes on every moderation decision, so racing decisions commit once (L2-063).</summary>
     public Guid Version { get; set; } = Guid.NewGuid();
 

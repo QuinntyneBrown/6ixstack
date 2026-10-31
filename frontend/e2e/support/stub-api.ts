@@ -265,3 +265,27 @@ export async function failCalendar(page: Page): Promise<() => Promise<void>> {
   await page.route('**/api/events/calendar*', handler);
   return () => page.unroute('**/api/events/calendar*', handler);
 }
+
+/** Delays GET /api/feeds by `ms`. */
+export async function slowFeedCounts(page: Page, ms: number): Promise<void> {
+  await page.route(
+    '**/api/feeds',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
+}
+
+/** Makes GET /api/feeds fail with a 500 until the returned function is called. */
+export async function failFeedCounts(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({
+      status: 500,
+      contentType: 'application/problem+json',
+      body: '{"status":500,"referenceCode":"6F0A-12D4"}',
+    });
+  await page.route('**/api/feeds', handler);
+  return () => page.unroute('**/api/feeds', handler);
+}
