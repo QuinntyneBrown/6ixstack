@@ -1,0 +1,1 @@
+A topic chip toggles one topic filter. It is a `<button>` with `aria-pressed`: the component adds the topic's hue dot, and you put the name inside (`TOPIC_LABELS`). Several can be pressed at once; the list then shows events tagged with any of them (L2-003).

@@ -1,0 +1,29 @@
+// Ported from docs/mocks/assets/ui.css (.topic-chip).
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacingHorizontalS);
+  min-height: var(--sx-control-height-md);
+  padding: 0 var(--spacingHorizontalL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusCircular);
+  background: var(--colorNeutralBackground1);
+  color: var(--colorNeutralForeground1);
+  font: var(--sx-text-label);
+  font-size: var(--fontSizeBase400);
+  cursor: pointer;
+  transition:
+    background-color var(--durationFaster) var(--curveEasyEase),
+    border-color var(--durationFaster) var(--curveEasyEase);
+}
+:host(:hover) {
+  border-color: var(--colorNeutralStroke1);
+}
+:host([aria-pressed='true']) {
+  background: var(--colorBrandBackground);
+  border-color: var(--colorBrandBackground);
+  color: var(--colorNeutralForegroundOnBrand);
+}
+:host([aria-pressed='true']) .topic-dot {
+  box-shadow: 0 0 0 2px var(--colorNeutralForegroundOnBrand);
+}

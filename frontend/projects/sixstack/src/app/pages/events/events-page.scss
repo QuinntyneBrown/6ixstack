@@ -54,3 +54,18 @@
     flex-wrap: wrap;
   }
 }
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacingHorizontalS);
+}
+.result-line__clear {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--colorBrandForegroundLink);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+}

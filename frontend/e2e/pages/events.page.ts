@@ -66,7 +66,7 @@ export class EventsPage {
   }
 
   topicChip(name: string): Locator {
-    return this.topicChips.filter({ hasText: new RegExp(`^${name.replace('.', '\\.')}$`) });
+    return this.page.getByRole('group', { name: 'Topics' }).getByRole('button', { name, exact: true });
   }
 
   async toggleTopic(name: string): Promise<void> {
@@ -91,6 +91,17 @@ export class EventsPage {
 
   errorAction(name: string): Locator {
     return this.errorAlert.getByRole('button', { name }).or(this.errorAlert.getByRole('link', { name }));
+  }
+
+  /** The toast raised by the page, found by its title. */
+  toast(title: string): Locator {
+    return this.page
+      .locator('.toast')
+      .filter({ has: this.page.locator('.toast__title', { hasText: title }) });
+  }
+
+  toastAction(title: string, action: string): Locator {
+    return this.toast(title).getByRole('button', { name: action });
   }
 
   get skeletons(): Locator {

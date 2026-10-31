@@ -17,9 +17,21 @@
         (valueChange)="chooseFormat($event)"
       />
     </div>
+    <div class="chip-row" role="group" aria-label="Topics">
+      @for (topic of topics; track topic) {
+        <button sx-topic-chip [topic]="topic" [pressed]="isTopicSelected(topic)" (click)="toggleTopic(topic)">
+          {{ topicLabels[topic] }}
+        </button>
+      }
+    </div>
   </div>
   @if (result(); as r) {
-    <p class="result-line" aria-live="polite">{{ r.shown }} events · times in ET</p>
+    <p class="result-line" aria-live="polite">
+      {{ r.shown }} {{ r.shown === 1 ? 'event' : 'events' }}{{ topicPhrase() }} · times in ET
+      @if (hasFilters()) {
+        · <button class="result-line__clear" type="button" (click)="clearFilters()">Clear filters</button>
+      }
+    </p>
     @for (day of r.days; track day.date) {
       <sx-day-group
         [date]="day.date"

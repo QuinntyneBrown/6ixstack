@@ -26,4 +26,53 @@ test.describe('Events filters', () => {
     await expect(events.row('Azure Data & AI Day GTA').root).toHaveCount(1);
     expect(await events.formatCount('All')).toBe('14');
   });
+
+  test('a topic chip narrows the list and the counts', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+
+    await events.toggleTopic('AI');
+
+    await expect(events.rows).toHaveCount(6);
+    await expect(events.resultLine).toHaveText('6 events about AI · times in ET · Clear filters');
+    await expect(events.topicChip('AI')).toHaveAttribute('aria-pressed', 'true');
+    expect([
+      await events.formatCount('All'),
+      await events.formatCount('In the GTA'),
+      await events.formatCount('Streaming'),
+    ]).toEqual(['6', '4', '3']);
+  });
+
+  test('several topics show events tagged with any of them', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+
+    await events.toggleTopic('AI');
+    await events.toggleTopic('React');
+
+    await expect(events.rows).toHaveCount(8);
+    await expect(events.resultLine).toHaveText('8 events about AI or React · times in ET · Clear filters');
+  });
+
+  test('Clear filters resets everything, and Undo in its toast restores them', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+    await events.toggleTopic('AI');
+    await events.chooseFormat('In the GTA');
+    await expect(events.rows).toHaveCount(4);
+
+    await events.clearFilters().click();
+
+    await expect(events.rows).toHaveCount(14);
+    await expect(events.topicChip('AI')).toHaveAttribute('aria-pressed', 'false');
+    await expect(events.toast('Filters cleared').locator('.toast__text')).toHaveText(
+      'Showing all 14 events.',
+    );
+
+    await events.toastAction('Filters cleared', 'Undo').click();
+
+    await expect(events.rows).toHaveCount(4);
+    await expect(events.topicChip('AI')).toHaveAttribute('aria-pressed', 'true');
+    await expect(events.formatOption('In the GTA')).toHaveAttribute('aria-pressed', 'true');
+  });
 });
