@@ -65,7 +65,43 @@ export interface MonthCalendarQuery {
   topics?: string[];
 }
 
+/** The "Where it's happening" map for the list's filters (discovery/event-map). */
+export interface EventMapData {
+  points: {
+    slug: string;
+    title: string;
+    date: string;
+    topics: string[];
+    firstTopic: string;
+    cardMeta: string;
+    latitude: number;
+    longitude: number;
+    isHybrid: boolean;
+  }[];
+  streams: {
+    slug: string;
+    title: string;
+    date: string;
+    topics: string[];
+    firstTopic: string;
+    cardMeta: string;
+    originCity: string;
+    originSide: 'west' | 'east';
+    sourceTime: string | null;
+  }[];
+  days: {
+    date: string;
+    weekdayLetter: string;
+    dayOfMonth: number;
+    label: string;
+    count: number;
+    dots: { topic: string; isStream: boolean }[];
+  }[];
+}
+
 export interface EventsApi {
+  /** The map's dots, arcs and timeline days for the same filters as the list. */
+  map(query: UpcomingEventsQuery): Observable<EventMapData>;
   /** Upcoming published events: page 1 is the two-week window, later pages hold 20 more each. */
   upcoming(query: UpcomingEventsQuery): Observable<UpcomingEvents>;
   /** One published event; fails with `ApiError` kind `NotFound` for an unknown or unpublished slug. */
@@ -95,6 +131,14 @@ export class HttpEventsApi implements EventsApi {
     if (query.q) params = params.set('q', query.q);
     if (query.page && query.page > 1) params = params.set('page', query.page);
     return this.http.get<UpcomingEvents>(`${this.baseUrl}/api/events`, { params });
+  }
+
+  map(query: UpcomingEventsQuery): Observable<EventMapData> {
+    let params = new HttpParams();
+    if (query.format && query.format !== 'all') params = params.set('format', query.format);
+    for (const topic of query.topics ?? []) params = params.append('topics', topic);
+    if (query.q) params = params.set('q', query.q);
+    return this.http.get<EventMapData>(`${this.baseUrl}/api/events/map`, { params });
   }
 
   month(query: MonthCalendarQuery): Observable<MonthCalendar> {

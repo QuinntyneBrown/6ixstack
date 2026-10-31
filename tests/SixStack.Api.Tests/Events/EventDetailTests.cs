@@ -36,6 +36,8 @@ public sealed class EventDetailTests(ApiFactory factory) : IClassFixture<ApiFact
         Assert.Equal("Living Arts Centre", Str(venue, "name"));
         Assert.Equal("4141 Living Arts Dr, Mississauga", Str(venue, "address"));
         Assert.StartsWith("https://www.google.com/maps/search/?api=1&query=", Str(venue, "directionsUrl"));
+        Assert.Equal((43.5912, -79.6441), (venue.GetProperty("latitude").GetDouble(), venue.GetProperty("longitude").GetDouble()));
+        Assert.Equal("Mississauga", Str(venue, "city"));
         Assert.Equal("Livestream available", Str(e.GetProperty("facts").GetProperty("stream"), "label"));
         Assert.Equal("$49 · includes lunch", Str(e.GetProperty("facts").GetProperty("price"), "label"));
         var attendance = e.GetProperty("facts").GetProperty("attendance");

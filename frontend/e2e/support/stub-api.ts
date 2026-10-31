@@ -357,3 +357,23 @@ export async function withDashboardBanner(page: Page, banner: Record<string, unk
     }),
   );
 }
+
+/** Makes GET /api/events/map fail until the returned function is called. */
+export async function failMap(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+  await page.route('**/api/events/map*', handler);
+  return () => page.unroute('**/api/events/map*', handler);
+}
+
+/** Delays GET /api/events/map by `ms`. */
+export async function slowMap(page: Page, ms: number): Promise<void> {
+  await page.route(
+    '**/api/events/map*',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
+}

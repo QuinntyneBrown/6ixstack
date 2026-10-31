@@ -55,3 +55,5 @@ export * from './lib/stat/stat';
 export * from './lib/table/table';
 export * from './lib/back-link/back-link';
 export * from './lib/inline-status/inline-status';
+export * from './lib/event-map/event-map';
+export * from './lib/event-map/gta-projection';

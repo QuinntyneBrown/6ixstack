@@ -19,6 +19,7 @@ export class EventsPage {
   readonly showMore: Locator;
   readonly getCalendarFeed: Locator;
   readonly errorAlert: Locator;
+  readonly dimmedDays: Locator;
 
   constructor(private readonly page: Page) {
     this.shell = new AppShell(page);
@@ -35,6 +36,7 @@ export class EventsPage {
     this.showMore = page.getByRole('button', { name: 'Show 20 more' });
     this.getCalendarFeed = page.getByRole('button', { name: 'Get a calendar feed' });
     this.errorAlert = page.getByRole('alert').filter({ hasText: "We couldn't load events" });
+    this.dimmedDays = page.locator('.day-group--dim');
   }
 
   async open(query = ''): Promise<void> {

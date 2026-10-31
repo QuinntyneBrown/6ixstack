@@ -217,3 +217,23 @@ basemap or the request switches only the panel to its failed state; the list,
 filters and featured card are untouched (`L2-015`).
 
 ![Sequence diagram for map loading and failure](diagrams/sequence-map-states.png)
+
+## Decisions (journey 16)
+
+- **Basemap**: the bundled shoreline and city labels from the mock, drawn in the SVG, so no external provider can
+  fail. The panel's failure states are the map request and the deferred chunk.
+- **Stream origins**: `Event.StreamOriginCity` (new, seeded for the streaming communities) labels the arc. The side
+  comes from the source time zone's offset against Toronto at the event's start, west when behind. A stream without
+  an origin city is labelled "Online".
+- **First topic** follows the fixed topic order (AI, .NET, Azure, Angular, React, AWS).
+- **Play** starts from the first day with events, holds the last day for one step, then stops there. A filter change
+  stops playback and clears the focused day.
+- **`MapTimeline` is part of `EventMap`**: the timeline is the bottom of the same panel, with no separate component.
+- **Interactions**: dots and arcs respond to the pointer only. The basemap and its labels ignore the pointer, so the
+  timeline under the canvas stays clickable.
+- **Event detail**: the Venue section shows `EventMap` compact with the venue as a single highlighted dot and its
+  card ("Thu Nov 5 · 9:00 AM"), when the venue has coordinates. `VenueFactDto` gains `City`, `Latitude` and
+  `Longitude`.
+- **Reduced motion**: comets and ripples are replaced by a still frame. Visual tests use it, so screenshots are
+  stable.
+

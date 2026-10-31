@@ -77,7 +77,7 @@ binding: implement each screen from exactly the components its entry lists.
 | `MonthGrid` | `sx-month-grid` | calendar | `cal`, `cal-legend` |
 | `CalendarDayList` | `sx-calendar-day-list` | calendar (agenda) | `agenda` under the month grid (below 768 px) |
 | `EventMap` | `sx-event-map` | event-map | `event-map` (full and `--compact`) |
-| `MapTimeline` | `sx-map-timeline` | event-map | `map-day`, play control |
+| `MapTimeline` | part of `sx-event-map` | event-map | `map-day`, play control (the timeline is the bottom of `EventMap`; journey 16) |
 | `NotificationItem` | `sx-notification-item` | notification-item | `notif-list`, `notif` |
 | `DetailHero` | `sx-detail-hero` | none (named in directory designs) | `detail-hero` |
 | `DockedActionBar` | `sx-docked-action-bar` | none (named in view-event-detail design) | `sticky-cta` |

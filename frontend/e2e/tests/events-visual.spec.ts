@@ -2,8 +2,13 @@ import { expect, test } from '../fixtures';
 import { EventsPage } from '../pages/events.page';
 import { failEvents, stubEvents } from '../support/stub-api';
 
-// Visual parity with docs/mocks/pages/events (the map and featured card arrive with journeys 16 and 17).
+// Visual parity with docs/mocks/pages/events (the featured card arrives with journey 17). The map draws its
+// reduced-motion still frame, so screenshots are stable.
 test.describe('Events page visuals', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+  });
+
   test('default', async ({ page }) => {
     const events = new EventsPage(page);
     await events.open();

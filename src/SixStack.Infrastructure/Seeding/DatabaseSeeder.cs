@@ -83,6 +83,7 @@ public sealed class DatabaseSeeder(AppDbContext db, IClock clock, IOutbox outbox
                 StartsAtUtc = startsAt,
                 EndsAtUtc = ToUtc(seed.Date, seed.End),
                 SourceTimeZoneId = seed.SourceTimeZoneId,
+                StreamOriginCity = seed.Format == EventFormat.Streaming ? SeedData.StreamOrigins.GetValueOrDefault(seed.Community) : null,
                 Venue = seed.Venue is null ? null : new Venue
                 {
                     Name = seed.Venue.Name, Address = seed.Venue.Address, City = seed.Venue.City,

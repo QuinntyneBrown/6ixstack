@@ -1,0 +1,191 @@
+<section class="event-map" aria-label="Event map" [attr.aria-busy]="busy() ? 'true' : null">
+  <div class="event-map__canvas">
+    <svg
+      class="event-map__svg"
+      role="img"
+      [attr.aria-label]="summary()"
+      [attr.viewBox]="'0 0 ' + width + ' ' + height"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <defs>
+        <pattern [attr.id]="uid() + '-land'" width="8" height="8" patternUnits="userSpaceOnUse">
+          <rect x="3.25" y="3.25" width="1.5" height="1.5" class="event-map__land-dot" />
+        </pattern>
+        <pattern [attr.id]="uid() + '-lake'" width="16" height="16" patternUnits="userSpaceOnUse">
+          <rect x="3.5" y="3.5" width="1" height="1" class="event-map__lake-dot" />
+        </pattern>
+      </defs>
+      <path class="event-map__region" [attr.d]="regions.land" [attr.fill]="'url(#' + uid() + '-land)'" />
+      <path class="event-map__region" [attr.d]="regions.lake" [attr.fill]="'url(#' + uid() + '-lake)'" />
+      @for (place of places; track place.label) {
+        <text
+          aria-hidden="true"
+          [attr.x]="place.x"
+          [attr.y]="place.y"
+          [attr.class]="place.water ? 'event-map__water' : 'event-map__city'"
+          text-anchor="middle"
+        >
+          {{ place.label }}
+        </text>
+      }
+      @for (arc of arcs(); track arc.slug) {
+        <g
+          [attr.class]="'event-map__stream ' + arc.state"
+          [attr.data-slug]="arc.slug"
+          (mouseenter)="dotHovered.emit(arc.slug)"
+          (mouseleave)="dotHovered.emit(null)"
+          (click)="dotActivated.emit(arc.slug)"
+        >
+          <path [attr.d]="arc.path" [attr.class]="'event-map__arc topic-stroke--' + arc.firstTopic" />
+          @if (!arc.off) {
+            @if (still()) {
+              @for (p of arc.stills; track $index) {
+                <circle
+                  [attr.cx]="p[0]"
+                  [attr.cy]="p[1]"
+                  r="1.7"
+                  [attr.class]="'event-map__comet-still topic-fill--' + arc.firstTopic"
+                />
+              }
+            } @else {
+              @for (c of arc.comets; track $index) {
+                <circle
+                  [attr.r]="c.r"
+                  [attr.class]="'event-map__comet topic-fill--' + arc.firstTopic"
+                  [style.opacity]="c.opacity"
+                >
+                  <animateMotion
+                    [attr.dur]="arc.duration + 's'"
+                    [attr.begin]="c.begin + 's'"
+                    repeatCount="indefinite"
+                    [attr.path]="arc.path"
+                  />
+                </circle>
+              }
+            }
+          }
+          <text
+            aria-hidden="true"
+            [attr.x]="arc.labelX"
+            [attr.y]="arc.sy - 8"
+            class="event-map__origin"
+            [attr.text-anchor]="arc.originSide === 'west' ? 'start' : 'end'"
+          >
+            {{ arc.originCity }}{{ arc.sourceTime ? ' · ' + arc.sourceTime : '' }}
+          </text>
+        </g>
+      }
+      @if (arcs().length) {
+        <circle [attr.cx]="hub[0]" [attr.cy]="hub[1]" r="3" class="event-map__hub" />
+      }
+      @for (dot of dots(); track dot.slug) {
+        <g
+          [attr.class]="'event-map__event ' + dot.state"
+          [attr.data-slug]="dot.slug"
+          (mouseenter)="dotHovered.emit(dot.slug)"
+          (mouseleave)="dotHovered.emit(null)"
+          (click)="dotActivated.emit(dot.slug)"
+        >
+          @if (!still() && dot.state !== 'is-off' && (!hoveredSlug() || dot.state === 'is-hot')) {
+            <circle
+              [attr.cx]="dot.x"
+              [attr.cy]="dot.y"
+              r="4"
+              [attr.class]="'event-map__ripple topic-stroke--' + dot.firstTopic"
+              [style.--i]="dot.ripple"
+            />
+          }
+          @if (dot.isHybrid) {
+            <circle
+              [attr.cx]="dot.x"
+              [attr.cy]="dot.y"
+              [attr.r]="dot.state === 'is-hot' ? 12 : 9"
+              [attr.class]="'event-map__ring topic-stroke--' + dot.firstTopic"
+            />
+          }
+          <circle
+            [attr.cx]="dot.x"
+            [attr.cy]="dot.y"
+            [attr.r]="dot.state === 'is-hot' ? 6 : 4"
+            [attr.class]="'event-map__dot topic-fill--' + dot.firstTopic"
+          />
+          <circle [attr.cx]="dot.x" [attr.cy]="dot.y" r="11" class="event-map__hit" />
+        </g>
+      }
+      @if (tip(); as t) {
+        <g class="event-map__tip" aria-hidden="true">
+          <rect [attr.x]="t.x" [attr.y]="t.y" [attr.width]="t.width" height="42" rx="8" />
+          <text [attr.x]="t.x + 11" [attr.y]="t.y + 18" class="event-map__tip-title">{{ t.title }}</text>
+          <text [attr.x]="t.x + 11" [attr.y]="t.y + 33" class="event-map__tip-meta">{{ t.meta }}</text>
+        </g>
+      }
+    </svg>
+    <div class="event-map__head">
+      <p class="event-map__title" aria-live="polite">{{ title() }}</p>
+      @if (sub()) {
+        <p class="event-map__sub">{{ sub() }}</p>
+      }
+      <ul class="event-map__legend">
+        <li><span class="event-map__key event-map__key--dot" aria-hidden="true"></span>In person</li>
+        <li><span class="event-map__key event-map__key--ring" aria-hidden="true"></span>Hybrid</li>
+        <li><span class="event-map__key event-map__key--line" aria-hidden="true"></span>Streaming in</li>
+      </ul>
+    </div>
+    @if (notice(); as n) {
+      <div class="event-map__notice" [attr.role]="n.action ? 'alert' : 'status'">
+        <sx-icon [name]="n.icon ?? 'info'" size="sm" />
+        <div>
+          <p>{{ n.text }}</p>
+          @if (n.action) {
+            <button type="button" (click)="noticeAction.emit()">{{ n.action }}</button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+  @if (showTimeline()) {
+    <div class="event-map__timeline">
+      <div class="event-map__controls">
+        <button
+          class="event-map__play"
+          type="button"
+          [attr.aria-pressed]="playing() ? 'true' : 'false'"
+          [disabled]="!anyEvents()"
+          (click)="playToggled.emit()"
+        >
+          @if (playing()) {
+            <sx-icon name="pause" size="sm" />Pause
+          } @else {
+            <sx-icon name="play" size="sm" />Play the next two weeks
+          }
+        </button>
+        @if (focusedDay()) {
+          <button class="event-map__clear" type="button" (click)="focusCleared.emit()">Show all dates</button>
+        }
+      </div>
+      <div class="event-map__days" role="group" aria-label="Choose a day">
+        @for (day of days(); track day.date) {
+          <button
+            class="map-day"
+            type="button"
+            [attr.aria-pressed]="day.date === focusedDay() ? 'true' : 'false'"
+            [attr.data-state]="playing() && day.date === focusedDay() ? 'playing' : null"
+            [disabled]="!day.count"
+            [attr.aria-label]="dayLabel(day)"
+            (click)="dayPicked.emit(day.date)"
+          >
+            <span class="map-day__dow" aria-hidden="true">{{ day.weekdayLetter }}</span>
+            <span class="map-day__num" aria-hidden="true">{{ day.dayOfMonth }}</span>
+            <span class="map-day__dots" aria-hidden="true">
+              @for (dot of day.dots; track $index) {
+                <span
+                  [class]="'map-day__dot ' + (dot.isStream ? 'topic-ring--' : 'topic-fill--') + dot.topic"
+                ></span>
+              }
+            </span>
+          </button>
+        }
+      </div>
+    </div>
+  }
+</section>

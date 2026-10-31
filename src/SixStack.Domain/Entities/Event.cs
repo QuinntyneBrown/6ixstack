@@ -29,6 +29,9 @@ public class Event
     /// <summary>IANA time zone of a stream's origin, shown as the source time ("9:00 AM PT").</summary>
     public string? SourceTimeZoneId { get; set; }
 
+    /// <summary>The city a stream comes from, such as "Redmond", drawn where its arc starts on the event map.</summary>
+    public string? StreamOriginCity { get; set; }
+
     public Venue? Venue { get; set; }
 
     /// <summary>Price in whole cents; 0 means free.</summary>

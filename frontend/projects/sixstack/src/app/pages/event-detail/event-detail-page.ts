@@ -20,7 +20,9 @@ import {
   Description,
   DockedActionBar,
   EmptyState,
+  EventMap,
   FactItem,
+  MapPoint,
   Icon,
   isTopic,
   modalDialogConfig,
@@ -37,6 +39,7 @@ import {
   AddToCalendarDialog,
 } from '../../dialogs/add-to-calendar/add-to-calendar-dialog';
 import { NotFoundPage } from '../status/not-found-page';
+import { prefersReducedMotion } from '../events/map/map-timeline-state';
 
 /** The event detail page (`/events/:slug`): the API decides state, facts, actions and alerts (L2-017 to L2-024). */
 @Component({
@@ -48,6 +51,7 @@ import { NotFoundPage } from '../status/not-found-page';
     Description,
     DockedActionBar,
     EmptyState,
+    EventMap,
     FactItem,
     Icon,
     NotFoundPage,
@@ -71,6 +75,28 @@ export class EventDetailPage {
   /** True once the first load has taken longer than 300 ms (DelayedSkeleton). */
   protected readonly slow = signal(false);
   private joinTimer?: ReturnType<typeof setTimeout>;
+  protected readonly still = prefersReducedMotion();
+
+  /** The venue as one highlighted dot on the compact map, with its "Thu Nov 5 · 9:00 AM" card (event-detail/default). */
+  protected readonly venuePoint = computed<MapPoint[]>(() => {
+    const s = this.state();
+    const e = s.status === 'loaded' ? s.data : null;
+    const venue = e?.facts.venue;
+    if (!e || !venue || venue.latitude === null || venue.longitude === null) return [];
+    const start = e.facts.when.timeRange.split(' – ')[0];
+    return [
+      {
+        slug: e.slug,
+        title: e.title,
+        date: '',
+        firstTopic: e.topics[0] ?? 'ai',
+        cardMeta: `${e.facts.when.dateLabel.slice(0, 3)} ${e.dateTile.month} ${e.dateTile.day} · ${start}`,
+        latitude: venue.latitude,
+        longitude: venue.longitude,
+        isHybrid: e.format === 'hybrid',
+      },
+    ];
+  });
 
   constructor() {
     inject(DestroyRef).onDestroy(() => clearTimeout(this.joinTimer));

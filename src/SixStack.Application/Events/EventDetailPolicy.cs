@@ -38,7 +38,7 @@ public static class EventDetailPolicy
         {
             var address = string.IsNullOrWhiteSpace(e.Venue.Address) ? e.Venue.City : $"{e.Venue.Address}, {e.Venue.City}";
             var query = Uri.EscapeDataString($"{e.Venue.Name}, {address}");
-            venue = new VenueFactDto(e.Venue.Name, address, $"https://www.google.com/maps/search/?api=1&query={query}", e.Venue.TravelNotes);
+            venue = new VenueFactDto(e.Venue.Name, address, $"https://www.google.com/maps/search/?api=1&query={query}", e.Venue.TravelNotes, e.Venue.City, e.Venue.Latitude, e.Venue.Longitude);
         }
 
         LabelledFactDto? stream = e.Format switch

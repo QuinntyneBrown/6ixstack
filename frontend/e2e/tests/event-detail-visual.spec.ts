@@ -2,8 +2,12 @@ import { expect, test } from '../fixtures';
 import { EventDetailPage } from '../pages/event-detail.page';
 import { failEventDetail } from '../support/stub-api';
 
-// Visual parity with docs/mocks/pages/event-detail (maps arrive with journey 16).
+// Visual parity with docs/mocks/pages/event-detail; the venue map draws its reduced-motion still frame.
 test.describe('Event detail visuals', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+  });
+
   for (const [name, slug] of [
     ['default', 'azure-data-ai-day-gta'],
     ['streaming', 'azure-ai-foundry-shipping-agents'],
