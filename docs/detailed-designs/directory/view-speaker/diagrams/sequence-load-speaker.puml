@@ -1,0 +1,73 @@
+@startuml
+title UML sequence behaviour — Load the speaker page
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SpeakerDetailPage" as page
+  participant "DelayedSkeleton" as sk
+  participant "HttpSpeakersApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "SpeakersController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetSpeakerQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /speakers/priya-natarajan
+page -> sk : Start 300 ms timer (L2-089)
+page -> client : get("priya-natarajan")
+client -> controller : GET /api/speakers/priya-natarajan
+opt no response within 300 ms
+  sk --> page : Header, sections and aside as layout-matching skeletons (L2-089)
+end
+controller -> handler : Send GetSpeakerQuery
+handler -> db : Load speaker, talks at published events, organizer roles
+db --> handler : Speaker or nothing
+alt unknown slug
+  handler --> controller : null
+  controller --> client : 404 ProblemDetails
+  client --> page : NotFound
+  page --> actor : Not-found page "We can't find that page" (L2-033, L2-076)
+else speaker found
+  handler -> handler : Split upcoming and past talks with IsPast(now) (L2-033)
+  handler -> handler : Talk rows with talk title and start in ET, cancelled badge (L2-033, L2-079, L2-010)
+  handler -> handler : Past talks with RecordingUrl when present (L2-033)
+  handler -> handler : Affiliation and community links from organizer roles (L2-033)
+  handler -> handler : ContactEmail from PublicContactEmail only (L2-033, L2-099)
+  handler --> controller : SpeakerDetailDto
+  controller --> client : 200 JSON
+  client --> page : SpeakerDetail
+  alt no upcoming talks
+    page --> actor : "No upcoming talks"; past talks remain (L2-033)
+  else upcoming talks
+    page --> actor : Header, bio, talk rows, past talks, facts "43 talks · Since 2019" (L2-033)
+  end
+  alt ContactEmail present
+    page --> actor : "Invite to speak" as mailto link (L2-033)
+  else no published contact
+    page --> actor : No "Invite to speak" action (L2-033)
+  end
+else failure or timeout
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : "This profile didn't load" with Try again and Back to speakers (L2-033, L2-077)
+  actor -> page : Try again
+  page -> client : get("priya-natarajan")
+end
+@enduml

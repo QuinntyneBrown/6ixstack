@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Report a problem with an event
+
+Person(visitor, "Visitor", "Anonymous developer reporting a problem")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Report a problem dialog on the event detail page")
+  Container(api, "6ixstack API", "ASP.NET Core", "Report command, routing, OutboxProcessor")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Reports, notifications, outbox")
+}
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "POST /api/events/{slug}/reports", "JSON/HTTPS")
+Rel(api, db, "Reads events, writes reports and notifications", "EF Core")
+Rel(api, email, "Sends queued emails", "<TO SUPPLY>")
+@enduml

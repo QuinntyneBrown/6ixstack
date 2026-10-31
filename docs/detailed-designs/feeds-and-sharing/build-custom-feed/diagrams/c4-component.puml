@@ -1,0 +1,37 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Build a custom calendar feed
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "CalendarFeedsPage", "Angular page", "Hosts the builder inline, success panel")
+  Component(dialog, "SubscribeFeedDialog", "CDK Dialog", "Hosts the builder, Done on success")
+  Component(builder, "FeedBuilder", "Angular component", "Topics, Where, validation, busy and failed states")
+  Component(panel, "FeedLinkPanel", "Angular component", "Feed link, Copy, Google, Outlook, Apple options")
+  Component(copier, "FeedLinkCopier", "Angular service", "Copies the link and raises the toast")
+  Component(client, "HttpFeedsApi", "Angular service behind FEEDS_API", "Typed client for /api/feeds")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(limiter, "RateLimiter", "ASP.NET Core rate limiting", "FeedCreation policy, 30 per hour per IP")
+  Component(ctrl, "FeedsController", "ASP.NET Core controller", "POST /api/feeds, anonymous")
+  Component(validator, "CreateFeedCommandValidator", "FluentValidation", "Topic, scope and community rules")
+  Component(handler, "CreateFeedCommandHandler", "MediatR handler", "Derives FeedSlug and counts events")
+  Component(filter, "FeedEventFilter", "Application helper", "Narrows events to a FeedSlug")
+  Component(links, "FeedLinkBuilder", "Application service", "Webcal, Google, Outlook, Apple URLs and summary")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events and communities")
+
+Rel(page, builder, "Hosts")
+Rel(dialog, builder, "Hosts")
+Rel(page, panel, "Shows on success")
+Rel(dialog, panel, "Shows on success")
+Rel(panel, copier, "Copy")
+Rel(builder, client, "createFeed(choice)")
+Rel(client, limiter, "POST /api/feeds", "JSON/HTTPS")
+Rel(limiter, ctrl, "Admits request")
+Rel(ctrl, validator, "Validates command")
+Rel(ctrl, handler, "Sends CreateFeedCommand")
+Rel(handler, filter, "Applies FeedSlug")
+Rel(handler, links, "Builds FeedLinkDto")
+Rel(handler, db, "Counts events, reads community", "EF Core")
+@enduml

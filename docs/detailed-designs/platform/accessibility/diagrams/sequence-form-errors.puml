@@ -1,0 +1,59 @@
+@startuml
+title UML sequence behaviour — Form error summary
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Submitter" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SubmitEventPage\nor ReportEventDialog" as form
+  participant "FormErrorFocus" as focus
+  participant "ProblemDetailsFormMapper" as mapper
+  participant "FormField" as field
+  participant "ErrorSummary" as summary
+  participant "HttpSubmissionsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "SubmissionsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "ValidationBehavior" as validation
+end box
+actor -> form : Press Submit
+form -> form : Run client validators
+alt client validation fails
+  form -> field : Mark controls touched
+else client validation passes
+  form -> client : submit(form)
+  client -> controller : POST /api/submissions
+  controller -> validation : Send SubmitEventCommand
+  validation --> controller : ValidationException keyed by property
+  controller --> client : 400 ValidationProblemDetails {errors.ticketUrl}
+  client --> form : Problem
+  form -> mapper : apply(problem, form)
+  mapper -> field : Set server error on ticketUrl control
+end
+field -> field : aria-invalid="true"; message id added to aria-describedby (L2-092)
+form -> focus : afterFailedSubmit(form, context)
+alt page form
+  focus -> summary : Render one link per problem
+  focus -> summary : focus() (L2-092)
+  summary --> actor : Summary announced as alert
+  actor -> summary : Activate "Enter a ticket link starting with https://"
+  summary -> field : Focus ticketUrl control
+  field --> actor : Field and its message announced
+else dialog form with one invalid group
+  focus -> field : Focus first control of the invalid group (L2-092)
+  field --> actor : Control, invalid state and message announced
+end
+@enduml

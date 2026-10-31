@@ -1,0 +1,112 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Time zones
+
+package "SixStack.Domain" {
+  class Event {
+    +Guid Id
+    +DateTimeOffset StartsAtUtc
+    +DateTimeOffset EndsAtUtc
+    +string TimeZoneId
+    +Edit(details: EventDetails, now: DateTimeOffset): void
+    +IsPast(now: DateTimeOffset): bool
+  }
+}
+
+package "SixStack.Application" {
+  class SubmitEventCommand {
+    +DateTime StartsAtLocal
+    +DateTime EndsAtLocal
+    +string TimeZoneId
+  }
+  class EditEventCommand {
+    +Guid EventId
+    +DateTime StartsAtLocal
+    +DateTime EndsAtLocal
+    +string TimeZoneId
+  }
+  class EventTimeValidator {
+    +IsSupportedZone(zoneId: string): bool
+    +EndAfterStart(start, end): bool
+  }
+  interface IEventTimeConverter {
+    +ToUtc(local: DateTime, zoneId: string): DateTimeOffset
+  }
+  interface IEventTimeFormatter {
+    +Format(ev: Event): EventTimeLabels
+  }
+  class EventTimeFormatter
+  class EventTimeLabels <<value object>> {
+    +string DateLabelEt
+    +string StartTimeEt
+    +string EndTimeEt
+    +string? SourceTime
+  }
+  class TorontoTime <<static>> {
+    +ZoneId: string = "America/Toronto"
+    +ToToronto(instant: DateTimeOffset): DateTime
+    +DayOf(instant: DateTimeOffset): DateOnly
+    +Today(clock: IClock): DateOnly
+  }
+  class TimeZoneAbbreviations {
+    +Abbreviate(zoneId: string): string
+  }
+  interface IClock {
+    +UtcNow: DateTimeOffset
+  }
+  class EventSummaryDto {
+    +DateTimeOffset StartsAtUtc
+    +string StartTimeEt
+    +string? SourceTime
+  }
+  class ReferenceDataDto {
+    +IReadOnlyList<TimeZoneOptionDto> TimeZones
+  }
+}
+
+package "SixStack.Infrastructure" {
+  class EventTimeConverter
+  class SystemClock
+}
+
+package "sixstack (Angular)" {
+  class TorontoTimeFormatter {
+    +time(iso: string): string
+    +day(iso: string): string
+  }
+  class TimeZoneNotice {
+    -shown: boolean
+    +notifyOnce(): void
+  }
+  class FilterStateStore {
+    +write(filters: EventFilters): void
+  }
+  class ToastService {
+    +show(toast: ToastRequest): void
+  }
+}
+
+EventTimeConverter ..|> IEventTimeConverter
+EventTimeFormatter ..|> IEventTimeFormatter
+SystemClock ..|> IClock
+SubmitEventCommand ..> EventTimeValidator : validated by
+EditEventCommand ..> EventTimeValidator : validated by
+IEventTimeConverter ..> Event : sets StartsAtUtc, EndsAtUtc
+EventTimeFormatter ..> Event : reads
+EventTimeFormatter ..> TorontoTime
+EventTimeFormatter ..> TimeZoneAbbreviations
+EventTimeFormatter ..> EventTimeLabels : returns
+TorontoTime ..> IClock
+EventSummaryDto *-- EventTimeLabels : flattened into
+FilterStateStore --> TimeZoneNotice
+TimeZoneNotice --> ToastService
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — App shell, layout and theming
+
+Person(user, "Visitor, organizer or moderator", "Any viewport, any colour scheme")
+Container_Boundary(spa, "6ixstack web app") {
+  Component(shell, "AppShell", "Angular component", "Skip link, header, banner outlet, main, toast region, footer")
+  Component(header, "SiteHeader", "Angular component (components)", "Brand, primary nav, actions slot, Submit event, menu button")
+  Component(footer, "SiteFooter", "Angular component (components)", "Tagline and footer navigation")
+  Component(menuCtl, "MenuController", "Angular service", "Opens and closes the mobile menu")
+  Component(menu, "MobileMenuDialog", "CDK Dialog, bottom sheet", "Nav links with aria-current, Submit event")
+  Component(nav, "NAV_ITEMS", "TypeScript constant", "Primary routes shared by header and menu")
+  Component(bp, "BreakpointObserver", "Angular CDK Layout", "Reports width >= 992 px")
+  Component(session, "SessionStore", "Angular service", "Signed-in user and unread count")
+  Component(tokens, "_tokens.scss and _breakpoints.scss", "Generated SCSS (components)", "Fluent v9 light and dark roles; breakpoint map")
+}
+Container(api, "6ixstack API", "ASP.NET Core", "Session lookup")
+
+Rel(user, shell, "Uses", "HTTPS")
+Rel(shell, header, "Renders")
+Rel(shell, footer, "Renders")
+Rel(header, nav, "Reads links")
+Rel(menu, nav, "Reads links")
+Rel(header, menuCtl, "Open menu")
+Rel(menuCtl, menu, "Opens via CDK Dialog")
+Rel(menuCtl, bp, "Observes large breakpoint")
+Rel(shell, session, "Reads signed-in state")
+Rel(session, api, "GET /api/auth/me", "JSON/HTTPS")
+Rel(header, tokens, "Styles with tokens and media queries")
+Rel(menu, tokens, "Styles with tokens")
+@enduml

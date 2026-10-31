@@ -1,0 +1,43 @@
+@startuml
+title UML sequence behaviour — Load, page and retry the events list
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventsPage" as page
+  participant "DelayedSkeleton" as sk
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+actor -> page : Open /
+page -> sk : Start 300 ms timer (L2-089)
+page -> client : getUpcoming(stored filters, page 1)
+client -> controller : GET /api/events
+opt no response within 300 ms
+  sk --> page : Show layout-matching skeletons (L2-008)
+end
+alt success
+  controller --> client : 200 UpcomingEventsDto
+  client --> page : UpcomingEvents
+  page --> actor : Hero counts (L2-007) and day-grouped list (L2-001)
+  opt more events than the first page
+    actor -> page : Show 20 more
+    page -> client : getUpcoming(filters, next page)
+    client -> controller : GET /api/events?page=2&pageSize=20
+    controller --> client : 200 next page
+    client --> page : UpcomingEvents
+    page --> actor : Rows appended, focus kept on the button (L2-009)
+  end
+else failure or timeout
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : "We couldn't load events" with Try again, filters kept (L2-008, L2-077)
+  actor -> page : Try again
+  page -> client : getUpcoming(same filters, page 1)
+end
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Share an event
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person_Ext(recipient, "Recipient", "Person who receives the shared link")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(social, "LinkedIn, Bluesky and email client", "Share targets opened from the dialog")
+
+Rel(visitor, sixstack, "Copies or shares an event's short link using", "HTTPS")
+Rel(visitor, social, "Posts or sends the short link with")
+Rel(recipient, sixstack, "Opens https://6ixstack.dev/e/{slug}", "HTTPS")
+@enduml

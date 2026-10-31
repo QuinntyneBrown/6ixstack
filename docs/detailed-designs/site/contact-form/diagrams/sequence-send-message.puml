@@ -1,0 +1,68 @@
+@startuml
+title UML sequence behaviour — Send a contact message
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ContactPage" as page
+  participant "HttpContactApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "RateLimiter" as limiter
+  participant "ContactController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "SendContactMessageCommandHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+  participant "OutboxProcessor" as processor
+  participant "SmtpEmailSender" as sender
+end box
+participant "Email provider" as provider
+actor -> page : Send message with valid fields
+page --> actor : Fields read-only, button "Sending…", aria-busy="true" (L2-073)
+page -> client : send(message)
+client -> limiter : POST /api/contact
+alt sixth request from this IP within an hour
+  limiter --> client : 429 (L2-073)
+  client --> page : Error
+  page --> actor : "Your message didn't send", values kept, button "Try again" (L2-077)
+else admitted
+  limiter -> controller : Forward
+  controller -> controller : Validate command (L2-073)
+  controller -> handler : Send SendContactMessageCommand
+  handler -> handler : Inbox = conduct@6ixstack.dev for Code of conduct report, else hello@6ixstack.dev (L2-073)
+  handler -> db : Add ContactMessage and ContactEmail outbox message, one unit of work
+  db --> handler : Commit result
+  alt committed
+    handler --> controller : Result.Ok
+    controller --> client : 204
+    client --> page : Sent
+    page --> actor : "Thanks, Priya — message sent", reply to priya@gtaazure.ca within two working days (L2-073)
+  else server or network error
+    controller --> client : 5xx problem details or no response
+    client --> page : Error
+    page --> actor : "Your message didn't send", every field kept, button "Try again" (L2-073, L2-077)
+  end
+end
+== Background (L2-103) ==
+processor -> db : Claim due ContactEmail
+processor -> sender : Send to team inbox, reply-to sender
+sender -> provider : Submit email
+alt provider failure
+  processor -> db : Retry with exponential backoff, at most 5 attempts
+end
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Sign in with an emailed link
+
+Person(organizer, "Organizer", "Community organizer signing in")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Sign-in page: request, success, expired")
+  Container(api, "6ixstack API", "ASP.NET Core", "Sign-in link request and redemption, session cookie, OutboxProcessor")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Security tokens, users, sessions, outbox")
+}
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(organizer, api, "Opens sign-in link: GET /auth/redeem", "HTTPS")
+Rel(spa, api, "POST /api/auth/sign-in-links", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, email, "Sends sign-in emails", "<TO SUPPLY>")
+@enduml

@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Error page — 6ixstack design system</title>
+<meta name="description" content="404, 403, 500 and offline pages with recovery actions, inside the normal shell.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Error page</h1>
+      <p class="ds-lead">Error pages replace a page that can’t be shown, say why in plain words, and offer a way out.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Full page</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>An error page replaces the page content when the whole page cannot be shown: the address does not exist (404), the person may not see it (403), the server failed (500), or the device is offline. The site header and footer stay, so people can navigate away.</p>
+      <ul>
+        <li>Use an error page only when there is nothing useful left to show.</li>
+        <li>When part of a page failed (the events list), use an <a href="alert.html">alert</a> in that region and keep the rest.</li>
+        <li>When a region is permitted but empty or blocked inside an otherwise working page, use an <a href="empty-state.html">empty state</a> (pages/review-queue/forbidden does this rather than a 403 page).</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="status-page status-page--inline"><div><div class="status-page__code" aria-hidden="true">404<span>.</span></div><h2 class="status-page__title">We can’t find that page</h2><p>The event may have been removed by its organizer, or the link has a typo. Search for it or browse what’s on.</p><div class="empty__actions"><a class="btn btn--primary" href="../../mocks/pages/events/default.html">Browse events</a><a class="btn" href="../../mocks/pages/calendar/default.html">Open the calendar</a></div></div></div>
+          <span class="ds-callout" style="left: 64%; top: 18%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 74%; top: 46%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 84%; top: 62%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 70%; top: 82%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Status code</b><small>Hero mono numerals with the brand full stop; <code>aria-hidden</code>, decoration only.</small></div></li>
+          <li><div><b>Title</b><small>The page's <code>h1</code>: what happened, in words.</small></div></li>
+          <li><div><b>Explanation</b><small>Why, and what still works; <code>--color-fg-muted</code>.</small></div></li>
+          <li><div><b>Recovery actions</b><small>One primary, up to two more.</small></div></li>
+        </ol>
+      </div>
+    </section>
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="status-page status-page--inline"><div><div class="status-page__code" aria-hidden="true">404<span>.</span></div><h2 class="status-page__title">We can’t find that page</h2><p>The event may have been removed by its organizer, or the link has a typo. Search for it or browse what’s on.</p><div class="empty__actions"><a class="btn btn--primary" href="../../mocks/pages/events/default.html">Browse events</a><a class="btn" href="../../mocks/pages/calendar/default.html">Open the calendar</a></div></div></div>
+        </div>
+        <div class="ds-example__caption"><span>404 Not found (pages/not-found).</span></div>
+      </div>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="status-page status-page--inline"><div><div class="status-page__code" aria-hidden="true">403<span>.</span></div><h2 class="status-page__title">You can’t edit this event</h2><p>“Landing zones that don’t hurt” is managed by Azure Toronto. You’re signed in as priya@gtaazure.ca for GTA Azure Community. Ask an Azure Toronto organizer to add you, or sign in with another account.</p><div class="empty__actions"><a class="btn btn--primary" href="../../mocks/pages/organizer-dashboard/default.html">Back to your events</a><a class="btn" href="../../mocks/pages/sign-in/default.html">Use another account</a><a class="btn btn--ghost" href="../../mocks/pages/contact/default.html">Contact us</a></div></div></div>
+        </div>
+        <div class="ds-example__caption"><span>403 Forbidden (pages/forbidden): names the owner and the signed-in account.</span></div>
+      </div>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="status-page status-page--inline"><div><div class="status-page__code" aria-hidden="true">500<span>.</span></div><h2 class="status-page__title">Something broke on our side</h2><p>It’s not you. We’ve been notified and are looking into it. If it keeps happening, email hello@6ixstack.dev and mention Ref 7F3A-21C9.</p><div class="empty__actions"><button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M8 16H3v5"/></svg>Try again</button><a class="btn" href="../../mocks/pages/events/default.html">Go to events</a></div></div></div>
+        </div>
+        <div class="ds-example__caption"><span>500 Server error (pages/server-error): includes a reference to quote.</span></div>
+      </div>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="status-page status-page--inline"><div><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M8.5 16.43a5 5 0 0 1 7 0"/><path d="M5 12.86a10 10 0 0 1 5.17-2.69"/><path d="M19 12.86a10 10 0 0 0-2-1.5"/><path d="M2 8.82a15 15 0 0 1 4.18-2.65"/><path d="M22 8.82a15 15 0 0 0-11.29-3.76"/><path d="m2 2 20 20"/></svg></div><h2 class="status-page__title">You’re offline</h2><p>This page hasn’t been saved on this device yet. The events list you last opened is available offline.</p><div class="empty__actions"><button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M8 16H3v5"/></svg>Try again</button><a class="btn" href="../../mocks/notifications/site-banner/warning.html">Open saved events</a></div></div></div>
+        </div>
+        <div class="ds-example__caption"><span>Offline (pages/offline): an icon instead of a code, because there is no HTTP status.</span></div>
+      </div>
+      <p>Maintenance is not a separate page: the site stays readable and a <a href="alert.html">site banner</a> announces paused submissions.</p>
+    </section>
+    <section class="ds-section" id="sizes" data-na="One size; the code scales fluidly with --font-size-hero."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">One size; the code scales fluidly with --font-size-hero.</p>
+    </section>
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The page itself is static; its buttons follow <a href="button.html">button</a>. "Try again" on the 500 and offline pages becomes busy while it retries, and the page reloads into the real content on success.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Retrying</th></tr></thead>
+        <tbody><tr><th scope="row">500</th><td>Try again enabled</td><td><button class="btn btn--primary" type="button" aria-busy="true">Trying again…</button></td></tr><tr><th scope="row">Offline</th><td>Try again enabled</td><td><button class="btn btn--primary" type="button" aria-busy="true">Checking connection…</button></td></tr></tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="status-page status-page--inline"><div><div class="status-page__code" aria-hidden="true">404<span>.</span></div><h2 class="status-page__title">We can’t find that page</h2><p>The event may have been removed by its organizer, or the link has a typo. Search for it or browse what’s on.</p><div class="empty__actions"><a class="btn btn--primary" href="../../mocks/pages/events/default.html">Browse events</a><a class="btn" href="../../mocks/pages/calendar/default.html">Open the calendar</a></div></div></div></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="status-page status-page--inline"><div><div class="status-page__code" aria-hidden="true">404<span>.</span></div><h2 class="status-page__title">We can’t find that page</h2><p>The event may have been removed by its organizer, or the link has a typo. Search for it or browse what’s on.</p><div class="empty__actions"><a class="btn btn--primary" href="../../mocks/pages/events/default.html">Browse events</a><a class="btn" href="../../mocks/pages/calendar/default.html">Open the calendar</a></div></div></div></div></div>
+      </div>
+    </section>
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Centred at every width, inside the normal page shell (site header and footer stay).</li>
+        <li>The status code uses <code>--font-size-hero</code> (48–72px, fluid); the title drops to <code>--text-h2</code> at every size.</li>
+        <li>Below 360px the actions stack, primary first.</li>
+        <li>As a full page it keeps a minimum height of the viewport minus the header and footer, so the footer does not ride up; embedded (<code>.status-page--inline</code>) it has none.</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The code uses <code>--color-fg-default</code> with the full stop in <code>--color-brand</code>, the 6ixstack mark. The orange stop is decorative (the code is hidden from assistive technology), so it is exempt from contrast minimums in the light theme. Title and text use the default and muted foregrounds.</p>
+    </section>
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A normal page: unique <code>&lt;title&gt;</code> ("Page not found — 6ixstack"), one <code>h1</code> (the sentence title), landmarks from the shell. The HTTP status is returned by the server; the visible code is <code>aria-hidden="true"</code> so it is not read as "four hundred four".</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody><tr><td><kbd>Tab</kbd></td><td>Skip link, header navigation, then the recovery actions in order.</td></tr><tr><td><kbd>Enter</kbd></td><td>Activates the action.</td></tr></tbody></table>
+      <h3>Focus</h3>
+      <p>On a client-side route change into an error page, focus moves to the <code>h1</code> (with <code>tabindex="-1"</code>) so the change is announced.</p>
+      <h3>Labelling</h3>
+      <p>The title says what happened in plain words; the reference id on the 500 page is selectable text, not an image.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);"><div class="ds-pair"><span>Code and title on page</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-canvas" data-min="4.5"></span></div><div class="ds-pair"><span>Explanation on page</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-canvas" data-min="4.5"></span></div><div class="ds-pair"><span>Brand stop (decorative)</span><span class="ds-pair__ratio" data-contrast="--color-brand|--color-bg-canvas" data-min="1"></span></div><div class="ds-pair"><span>Offline icon</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-accent-subtle" data-min="3"></span></div></div>
+      <h3>Motion</h3>
+      <p>None.</p>
+      <h3>Touch</h3>
+      <p>Actions are medium buttons (40px), 12px apart.</p>
+    </section>
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Title in words, not codes: "We can’t find that page", "You can’t edit this event", "Something broke on our side", "You’re offline".</li>
+        <li>Say whose side the problem is on: "It’s not you."</li>
+        <li>403: name the owner and the account they are signed in with, and who can grant access.</li>
+        <li>500: give a reference id and an email address.</li>
+        <li>Offline: say what is still available.</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="status-page status-page--inline"><div><div class="status-page__code" aria-hidden="true">500<span>.</span></div><h2 class="status-page__title">Something broke on our side</h2><p>It’s not you. We’ve been notified and are looking into it. If it keeps happening, email hello@6ixstack.dev and mention Ref 7F3A-21C9.</p><div class="empty__actions"><button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M8 16H3v5"/></svg>Try again</button><a class="btn" href="../../mocks/pages/events/default.html">Go to events</a></div></div></div></div><figcaption>Explain, reassure, give a reference and a way to retry.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="status-page status-page--inline"><div><div class="status-page__code" aria-hidden="true">500<span>.</span></div><h2 class="status-page__title">Internal Server Error</h2><p>An unexpected error occurred.</p><div class="empty__actions"></div></div></div></div><figcaption>The status name as the title and no way forward.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="status-page status-page--inline"><div><div class="status-page__code" aria-hidden="true">403<span>.</span></div><h2 class="status-page__title">You can’t edit this event</h2><p>“Landing zones that don’t hurt” is managed by Azure Toronto. Ask an organizer to add you.</p><div class="empty__actions"><a class="btn btn--primary" href="#overview">Back to your events</a></div></div></div></div><figcaption>Name the owner and the way to get access.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="status-page status-page--inline"><div><div class="empty__icon" style="margin: 0 auto;"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M8.5 16.43a5 5 0 0 1 7 0"/><path d="M5 12.86a10 10 0 0 1 5.17-2.69"/><path d="M19 12.86a10 10 0 0 0-2-1.5"/><path d="M2 8.82a15 15 0 0 1 4.18-2.65"/><path d="M22 8.82a15 15 0 0 0-11.29-3.76"/><path d="m2 2 20 20"/></svg></div><h2 class="status-page__title">You’re offline</h2></div></div></div><figcaption>Centre the offline icon with an inline <code>margin: 0 auto</code> (pages/offline); the component does it.</figcaption></figure>
+      </div>
+    </section>
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Code</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Brand stop</td><td><code>--color-brand</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-brand" data-swatch></i><span data-token="--color-brand"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-brand" data-swatch></i><span data-token="--color-brand"></span></span></td></tr>
+          <tr><td>Explanation</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Code size</td><td><code>--font-size-hero</code></td><td colspan="2"><span data-token="--font-size-hero"></span></td></tr>
+          <tr><td>Code tracking</td><td><code>--letter-spacing-display</code></td><td colspan="2"><span data-token="--letter-spacing-display"></span></td></tr>
+          <tr><td>Title font</td><td><code>--text-h2</code></td><td colspan="2"><span data-token="--text-h2"></span></td></tr>
+          <tr><td>Vertical padding full / inline</td><td><code>--space-16</code> / <code>--space-8</code></td><td colspan="2"><span data-token="--space-16"></span> / <span data-token="--space-8"></span></td></tr>
+          <tr><td>Actions gap</td><td><code>--space-3</code></td><td colspan="2"><span data-token="--space-3"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;main id="main" class="page"&gt;
+  &lt;div class="status-page"&gt;
+    &lt;div&gt;
+      &lt;div class="status-page__code" aria-hidden="true"&gt;404&lt;span&gt;.&lt;/span&gt;&lt;/div&gt;
+      &lt;h1&gt;We can’t find that page&lt;/h1&gt;
+      &lt;p&gt;The event may have been removed by its organizer, or the link has a typo.&lt;/p&gt;
+      &lt;div class="empty__actions"&gt;
+        &lt;a class="btn btn--primary" href="/events"&gt;Browse events&lt;/a&gt;
+        &lt;a class="btn" href="/calendar"&gt;Open the calendar&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/main&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody><tr><td><code>.status-page</code></td><td>Centred full-height error content.</td></tr><tr><td><code>.status-page--inline</code></td><td>Without the minimum height (previews, embedded).</td></tr><tr><td><code>.status-page__code</code></td><td>Hero numerals; inner <code>&lt;span&gt;</code> is the brand stop.</td></tr><tr><td><code>.status-page__title</code></td><td>Title style for a non-<code>h1</code> heading.</td></tr><tr><td><code>.empty__actions</code></td><td>Action row, shared with empty states.</td></tr></tbody></table>
+    </section>
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/pages/not-found/default.html">pages/not-found/default</a></li>
+        <li><a href="../../mocks/pages/forbidden/default.html">pages/forbidden/default</a></li>
+        <li><a href="../../mocks/pages/server-error/default.html">pages/server-error/default</a></li>
+        <li><a href="../../mocks/pages/offline/default.html">pages/offline/default</a></li>
+        <li><a href="../../mocks/notifications/site-banner/warning.html">notifications/site-banner/warning</a> (offline banner)</li>
+      </ul>
+      <p>Drift fixed during extraction: pages/offline centred its icon with an inline <code>style="margin: 0 auto;"</code>; <code>.status-page .empty__icon</code> now does it. The status-code tracking (<code>-0.04em</code>) was a raw value; now <code>--letter-spacing-display</code>. Added <code>.status-page__title</code> and <code>.status-page--inline</code> for embedded use.</p>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

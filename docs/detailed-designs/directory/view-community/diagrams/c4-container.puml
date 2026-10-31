@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — View a community
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Ext(calendars, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Community page and Subscribe to a calendar feed dialog")
+  Container(api, "6ixstack API", "ASP.NET Core", "Public community query and feed creation")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Communities, organizers, events and feeds")
+}
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/communities/{slug}, POST /api/feeds", "JSON/HTTPS")
+Rel(api, db, "Reads community and events; stores feed", "EF Core")
+Rel(calendars, api, "GET /feeds/{feedSlug}.ics", "iCalendar/HTTPS")
+@enduml

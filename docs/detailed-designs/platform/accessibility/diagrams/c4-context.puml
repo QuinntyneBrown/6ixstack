@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Accessibility
+
+Person(visitor, "Visitor", "Anonymous developer browsing events, with any assistive technology")
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+
+Rel(visitor, sixstack, "Uses by keyboard, screen reader, magnifier or pointer", "HTTPS")
+Rel(organizer, sixstack, "Manages events with accessible forms and dialogs", "HTTPS")
+Rel(moderator, sixstack, "Reviews submissions by keyboard", "HTTPS")
+@enduml

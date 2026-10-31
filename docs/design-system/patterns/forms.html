@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forms — 6ixstack design system</title>
+<meta name="description" content="How 6ixstack collects input: sections, fields, validation timing, the error summary, submit states and destructive confirmations.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Forms</h1>
+      <p class="ds-lead">How 6ixstack collects input: sections, fields, validation timing, the error summary, submit states and destructive confirmations.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Composes form field, form layout, alert, dialog</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li></ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Forms are how organizers get events onto 6ixstack and how anyone reaches the team: <b>Submit an event</b>, <b>Edit event</b>, <b>Contact</b>, <b>Sign in</b> and <b>Settings</b>. Every one of them is built from the same parts: a <a href="../components/form-layout.html">form card</a> split into titled <code>.form-section</code>s, <a href="../components/form-field.html">fields</a> with a visible label, help and error text, a <code>.form-actions</code> bar with one primary button, and an error summary that appears above the card on submit.</p>
+      <ul>
+        <li>Validate on submit first, then on blur for fields the person has touched, then re-validate on input once a field is invalid so the error clears as soon as it is fixed.</li>
+        <li>Never block typing or paste. Never clear what someone entered after an error (<a href="../../mocks/pages/submit-event/error.html">submit-event/error</a> keeps every value).</li>
+        <li>Destructive actions in a form (delete account, cancel event) open a confirmation <a href="dialogs-and-overlays.html">dialog</a>; they are not submit buttons.</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Situation</th><th scope="col">Use</th><th scope="col">Mock</th></tr></thead><tbody><tr><td>Long, multi-part entry (an event listing)</td><td>Form card with titled sections, one column on phones, <code>.form-grid--2</code> for short paired fields</td><td><a href="../../mocks/pages/submit-event/default.html">submit-event</a></td></tr><tr><td>Short entry with one goal (sign in)</td><td><code>.auth-card</code> with a single field and a full-width large primary button</td><td><a href="../../mocks/pages/sign-in/default.html">sign-in</a></td></tr><tr><td>Settings grouped by topic</td><td><code>.settings-layout</code>: section nav plus one form; a single Save for the whole form</td><td><a href="../../mocks/pages/settings/default.html">settings</a></td></tr><tr><td>A few choices inside a task (subscribe, report)</td><td>Form inside a <a href="../components/dialog.html">dialog</a> body; the footer holds the actions</td><td><a href="../../mocks/dialogs/subscribe-feed/default.html">subscribe-feed</a></td></tr><tr><td>Editing something that can no longer change</td><td>Read-only form: <code>&lt;fieldset disabled&gt;</code> plus an info alert explaining why and what to do instead</td><td><a href="../../mocks/pages/edit-event/read-only.html">edit-event/read-only</a></td></tr></tbody></table></div>
+    </section>
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <p>Error summary, form card, sections, fields, actions. The summary is only rendered after a failed submit; it receives focus and each link jumps to its field.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+        <div style="width: 100%; max-width: 40rem;">
+          <div class="alert alert--danger form-summary" role="alert" tabindex="-1" id="ex-summary"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg><div class="alert__body"><p class="alert__title">Fix 2 things before you continue</p><ul><li><a href="#ex-title">Enter a title for the event.</a></li><li><a href="#ex-end">End time must be after the 6:30 PM start.</a></li></ul></div></div>
+          <form class="form-card" action="#structure" novalidate>
+            <section class="form-section" aria-labelledby="ex-sec-basics"><h3 id="ex-sec-basics">Event basics</h3><p>This is what people see in the list.</p>
+              <div class="form-grid">
+                <div class="field"><label class="field__label" for="ex-title">Event title</label><input class="input" id="ex-title" type="text" aria-invalid="true" aria-describedby="ex-title-help ex-title-error" maxlength="90" required><span class="field__help" id="ex-title-help">Up to 90 characters. Say what people will learn.</span><span class="field__error" id="ex-title-error">Enter a title for the event.</span></div>
+                <div class="field"><label class="field__label" for="ex-org">Community or organizer</label><input class="input" id="ex-org" type="text" value="GTA Azure Community" autocomplete="organization"></div>
+              </div>
+            </section>
+            <section class="form-section" aria-labelledby="ex-sec-when"><h3 id="ex-sec-when">When</h3>
+              <div class="form-grid form-grid--2">
+                <div class="field"><label class="field__label" for="ex-start">Starts</label><input class="input" id="ex-start" type="time" value="18:30"></div>
+                <div class="field"><label class="field__label" for="ex-end">Ends</label><input class="input" id="ex-end" type="time" value="17:30" aria-invalid="true" aria-describedby="ex-end-error"><span class="field__error" id="ex-end-error">End time must be after the 6:30 PM start.</span></div>
+                <div class="span-2"><div class="field"><label class="field__label" for="ex-stream">Livestream link <span class="optional">(optional)</span></label><input class="input" id="ex-stream" type="url" placeholder="https://youtube.com/live/…" aria-describedby="ex-stream-help"><span class="field__help" id="ex-stream-help">Shown 15 minutes before start. Leave empty for in-person events.</span></div></div>
+              </div>
+            </section>
+            <div class="form-actions"><a class="btn" href="#structure">Cancel</a><button class="btn btn--primary" type="submit">Submit for review</button></div>
+          </form>
+        </div>
+        </div>
+        <div class="ds-example__caption"><span>Submit an event after a failed submit: summary first, invalid fields marked with <code>aria-invalid</code>, help and error both linked by <code>aria-describedby</code>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>          &lt;div class="alert alert--danger form-summary" role="alert" tabindex="-1" id="ex-summary"&gt;&lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;circle cx="12" cy="12" r="10"/&gt;&lt;path d="M12 8v4"/&gt;&lt;path d="M12 16h.01"/&gt;&lt;/svg&gt;&lt;div class="alert__body"&gt;&lt;p class="alert__title"&gt;Fix 2 things before you continue&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#ex-title"&gt;Enter a title for the event.&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#ex-end"&gt;End time must be after the 6:30 PM start.&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Parts and spacing</h3>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Part</th><th scope="col">Class</th><th scope="col">Rule</th></tr></thead><tbody><tr><td>Error summary</td><td><code>.alert.alert--danger.form-summary</code></td><td>Above the card, <code>role=&quot;alert&quot;</code>, <code>tabindex=&quot;-1&quot;</code>; title counts the problems: “Fix 3 things before you continue”.</td></tr><tr><td>Card</td><td><code>.form-card</code></td><td>One per form; <code>--space-6</code> padding, <code>--radius-lg</code>.</td></tr><tr><td>Section</td><td><code>.form-section</code></td><td><code>h2</code> + one-sentence purpose; sections separated by a hairline.</td></tr><tr><td>Grid</td><td><code>.form-grid</code>, <code>--2</code>, <code>--3</code>, <code>.span-2</code></td><td>One column below <code>md</code>; two or three only for short, related fields (date + time zone, start + end, topics).</td></tr><tr><td>Field</td><td><code>.field</code> → label, control, <code>.field__help</code>, <code>.field__error</code></td><td>Label above the control; help under it; error last.</td></tr><tr><td>Choices</td><td><code>.choice</code>, <code>.choice-row</code>, <code>.choice-cards</code></td><td>In a <code>&lt;fieldset&gt;</code> with a <code>&lt;legend&gt;</code>.</td></tr><tr><td>Actions</td><td><code>.form-actions</code></td><td>Right-aligned: Cancel (secondary link) then the primary submit, last.</td></tr></tbody></table></div>
+    </section>
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Every form mock ships the same five states. Each changes the minimum needed and keeps the person's input.</p>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">State</th><th scope="col">What changes</th><th scope="col">Mock</th></tr></thead><tbody><tr><td>Default</td><td>Empty or pre-filled fields; optional fields say “(optional)”.</td><td><a href="../../mocks/pages/submit-event/default.html">submit-event/default</a></td></tr><tr><td>Loading</td><td>Skeleton fields while saved data loads (edit, settings).</td><td><a href="../../mocks/pages/edit-event/loading.html">edit-event/loading</a></td></tr><tr><td>Invalid</td><td>Error summary + per-field errors; focus moves to the summary.</td><td><a href="../../mocks/pages/submit-event/invalid.html">submit-event/invalid</a></td></tr><tr><td>Submitting</td><td>Only the submit button goes busy (<code>aria-busy=&quot;true&quot;</code>, “Submitting…”); other fields stay readable.</td><td><a href="../../mocks/pages/submit-event/submitting.html">submit-event/submitting</a></td></tr><tr><td>Error (server)</td><td>Danger alert above the card; values kept; Try again.</td><td><a href="../../mocks/pages/submit-event/error.html">submit-event/error</a></td></tr><tr><td>Success</td><td>Success panel replaces the form, or a success alert above it for settings.</td><td><a href="../../mocks/pages/submit-event/success.html">submit-event/success</a></td></tr></tbody></table></div>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="form-actions" style="margin: 0;"><a class="btn" href="#states">Cancel</a><button class="btn btn--primary" type="button" aria-busy="true">Submitting…</button></div><div class="success-panel"><div class="success-panel__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div><p>Thanks, Priya. A moderator checks every event within a day.</p></div></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="form-actions" style="margin: 0;"><a class="btn" href="#states">Cancel</a><button class="btn btn--primary" type="button" aria-busy="true">Submitting…</button></div><div class="success-panel"><div class="success-panel__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div><p>Thanks, Priya. A moderator checks every event within a day.</p></div></div></div>
+      </div>
+      <h3>Autosave and confirmation</h3>
+      <p>The mocks do not autosave; settings use one explicit Save and confirm with “Settings saved · Saved at 10:42 AM” (<a href="../../mocks/pages/settings/success.html">settings/success</a>). If autosave is added, show the time of the last save in a polite live region and never move focus. Destructive actions sit in a <code>.danger-zone</code> and open a confirmation dialog that asks for the email address (<a href="../../mocks/dialogs/delete-account/default.html">delete-account</a>).</p>
+    </section>
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive</a></h2>
+      <ul>
+        <li>Below <code>--layout-breakpoint-md</code> every grid collapses to one column; <code>.span-2</code> becomes a no-op.</li>
+        <li>On phones the long submit form keeps its action bar at the end of the form; the event detail page uses <code>.sticky-cta</code> instead, never the form.</li>
+        <li><code>.choice-cards</code> stack vertically below <code>sm</code> and sit three across above it.</li>
+        <li>The settings section nav scrolls horizontally on phones and becomes a sticky column at <code>lg</code>.</li>
+        <li>Inputs stay at least <code>--control-height-md</code> (40px) tall; the sign-in button is <code>.btn--lg.btn--block</code> (48px).</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Labels and descriptions</h3>
+      <p>Every control has a visible <code>&lt;label for&gt;</code>; placeholders are examples (“https://youtube.com/live/…”), never the label. Help and error text are joined with <code>aria-describedby="x-help x-error"</code>. Required fields use <code>required</code>; optional ones say “(optional)” in the label, because the mocks mark the exception, not the rule.</p>
+      <h3>Errors (3.3.1, 3.3.3)</h3>
+      <p>Invalid controls get <code>aria-invalid="true"</code>. The error names the field and the fix: “End time must be after the 6:30 PM start.” On submit, focus moves to the summary (<code>tabindex="-1"</code>, <code>role="alert"</code>); each summary link targets the control's id.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody><tr><td><kbd>Tab</kbd></td><td>Moves through fields in visual order; the summary links come first after a failed submit.</td></tr><tr><td><kbd>Enter</kbd></td><td>Submits from a single-line field; inserts a newline in a textarea.</td></tr><tr><td><kbd>Space</kbd></td><td>Toggles a checkbox or switch; selects a radio.</td></tr><tr><td>Arrow keys</td><td>Move between radios in a group (choice cards, Free/Paid).</td></tr></tbody></table>
+      <h3>Input purpose (1.3.5) and authentication (3.3.8)</h3>
+      <p><code>autocomplete</code> is set on name, email, organization and street address. Sign-in is a magic link: no password, no cognitive test, paste always allowed.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);"><div class="ds-pair"><span>Error text on card</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-bg-surface" data-min="4.5"></span></div><div class="ds-pair"><span>Help text on card</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div><div class="ds-pair"><span>Input border on card</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div><div class="ds-pair"><span>Invalid border on card</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div></div>
+    </section>
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Element</th><th scope="col">Rule</th><th scope="col">From the mocks</th></tr></thead><tbody><tr><td>Section title</td><td>Noun phrase, sentence case</td><td>“Event basics”, “When”, “Where”, “Tickets”, “Your contact email”</td></tr><tr><td>Section intro</td><td>One sentence on why, or who sees it</td><td>“Only moderators see it. We’ll tell you when the event is live.”</td></tr><tr><td>Help text</td><td>Constraint plus example</td><td>“Up to 90 characters. Say what people will learn.”</td></tr><tr><td>Error</td><td>What is wrong and how to fix it, with the value when useful</td><td>“That doesn’t match. Type priya@gtaazure.ca exactly.”</td></tr><tr><td>Summary title</td><td>Count + instruction</td><td>“Fix 3 things before you continue”</td></tr><tr><td>Submit</td><td>Verb + object; busy label in present progressive</td><td>“Submit for review” → “Submitting…”, “Send message” → “Sending…”</td></tr></tbody></table></div>
+    </section>
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="field" style="width: 100%;"><label class="field__label" for="dd-f1">Livestream link <span class="optional">(optional)</span></label><input class="input" id="dd-f1" type="url" placeholder="https://youtube.com/live/…"></div></div><figcaption>Label above the field; the placeholder is only an example.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="field" style="width: 100%;"><input class="input" type="url" aria-label="Livestream link" placeholder="Livestream link"></div></div><figcaption>Use the placeholder as the label; it disappears as soon as someone types.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="form-actions" style="margin: 0;"><a class="btn" href="#do-dont">Cancel</a><button class="btn btn--primary" type="button" aria-busy="true">Submitting…</button></div></div><figcaption>Busy state on the submit button only; Cancel stays available.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="form-actions" style="margin: 0;"><button class="btn" type="button" disabled>Cancel</button><button class="btn btn--primary" type="button" disabled>Submit for review</button></div></div><figcaption>Disable the whole form while submitting with no progress shown.</figcaption></figure>
+      </div>
+    </section>
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul><li><a href="../../mocks/pages/submit-event/invalid.html">pages/submit-event/invalid</a> — error summary, field errors</li><li><a href="../../mocks/pages/submit-event/submitting.html">pages/submit-event/submitting</a> — busy submit</li><li><a href="../../mocks/pages/submit-event/error.html">pages/submit-event/error</a> — server error, values kept</li><li><a href="../../mocks/pages/edit-event/read-only.html">pages/edit-event/read-only</a> — disabled fieldset</li><li><a href="../../mocks/pages/contact/success.html">pages/contact/success</a> — success panel</li><li><a href="../../mocks/pages/sign-in/default.html">pages/sign-in/default</a> — auth card</li><li><a href="../../mocks/pages/settings/success.html">pages/settings/success</a> — save confirmation</li><li><a href="../../mocks/dialogs/delete-account/invalid.html">dialogs/delete-account/invalid</a> — confirm-by-typing</li></ul>
+      <p>Drift fixed during extraction: section titles in the mocks are <code>h2</code> inside the form card; in this page's example they are <code>h3</code> only because the documentation page already owns <code>h2</code>. The mocks' inline <code>style="margin-top: 0; gap: var(--space-2)"</code> on topic grids is documented as <code>.form-grid--3</code> with the field gap; no new class was needed.</p>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

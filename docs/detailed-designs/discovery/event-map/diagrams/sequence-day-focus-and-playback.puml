@@ -1,0 +1,65 @@
+@startuml
+title UML sequence behaviour — Day focus and timeline playback
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "MapTimeline" as timeline
+  participant "TimelinePlayer" as player
+  participant "MapTimelineState" as state
+  participant "EventMap" as map
+  participant "EventsPage" as page
+end box
+== Day focus (L2-013) ==
+actor -> timeline : Pick Thursday, November 5
+timeline -> player : Stop if playing (L2-014)
+timeline -> state : pickDay(2026-11-05)
+alt day already focused
+  state -> state : clearFocus()
+  state --> map : All days shown
+  state --> page : Undim all day groups, plain result line
+else new day
+  state --> map : Only that day's dots and arcs; others faded, no motion
+  state --> page : focusedDay changed
+  page --> actor : Other day groups dimmed; result line "... showing Thursday, November 5"
+  opt viewport width 1024 px or more
+    page --> actor : Scroll list to the day heading (smooth unless reduced motion)
+  end
+end
+actor -> timeline : Show all dates
+timeline -> state : clearFocus()
+note over timeline : Days without events are disabled and cannot be picked
+== Playback (L2-014) ==
+actor -> timeline : Play the next two weeks
+timeline -> player : play(days with events)
+player -> state : playing = true; focusedDay = first day with events
+loop every 1,100 ms while playing
+  player -> state : focusedDay = next day with events, skipping empty days
+  state --> page : Result line "... playing: Tuesday, November 10"
+  state --> map : Map follows focus; still frame if reduced motion (L2-094)
+end
+alt visitor activates Pause
+  actor -> timeline : Pause
+  timeline -> player : pause()
+  player -> state : playing = false, focus kept on current day
+else visitor picks a day by hand
+  actor -> timeline : Pick a day
+  timeline -> player : pause()
+  timeline -> state : pickDay(date)
+else last day with events reached
+  player -> state : playing = false, focus kept on last day
+  state --> timeline : Control returns to "Play the next two weeks"
+end
+@enduml

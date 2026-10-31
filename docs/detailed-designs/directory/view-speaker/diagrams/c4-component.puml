@@ -1,0 +1,24 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — View a speaker
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "SpeakerDetailPage", "Angular page", "Header, bio, upcoming and past talks, facts, Invite to speak")
+  Component(row, "EventRow", "Angular component", "event-row block for each upcoming talk")
+  Component(client, "HttpSpeakersApi", "Angular service behind SPEAKERS_API", "Typed client for /api/speakers/{slug}")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "SpeakersController", "ASP.NET Core controller", "GET /api/speakers/{slug}; 404 when unknown")
+  Component(handler, "GetSpeakerQueryHandler", "MediatR handler", "Loads speaker, splits talks, exposes only the published contact")
+  Component(clock, "SystemClock", "IClock", "Current instant")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Speakers, event speakers, events, community organizers")
+
+Rel(page, client, "Loads the speaker")
+Rel(page, row, "Renders one per upcoming talk")
+Rel(client, ctrl, "GET /api/speakers/{slug}", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetSpeakerQuery")
+Rel(handler, clock, "Reads now")
+Rel(handler, db, "Queries speaker, talks and organizer roles", "EF Core")
+@enduml

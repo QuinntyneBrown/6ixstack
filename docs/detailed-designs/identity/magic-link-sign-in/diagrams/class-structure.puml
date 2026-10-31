@@ -1,0 +1,147 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Sign in with an emailed link
+
+package "SixStack.Domain" {
+  enum TokenPurpose {
+    SignIn
+    VerifyEmail
+    ChangeEmail
+  }
+  enum UserRole {
+    Organizer
+    Moderator
+  }
+  class SecurityToken {
+    +Guid Id
+    +string Email
+    +byte[] TokenHash
+    +TokenPurpose Purpose
+    +string? ReturnUrl
+    +DateTimeOffset ExpiresAtUtc
+    +DateTimeOffset? UsedAtUtc
+    +IsRedeemable(now: DateTimeOffset): bool
+    +MarkUsed(now: DateTimeOffset): void
+  }
+  class User {
+    +Guid Id
+    +string Email
+    +string Name
+    +UserRole Role
+    +DateTimeOffset? EmailVerifiedAtUtc
+    +DateTimeOffset? DeletedAtUtc
+    +{static} CreateOrganizer(email: string, now: DateTimeOffset): User
+  }
+  class Session {
+    +Guid Id
+    +Guid UserId
+    +byte[] TokenHash
+    +DateTimeOffset CreatedAtUtc
+    +DateTimeOffset LastSeenAtUtc
+    +DateTimeOffset? RevokedAtUtc
+    +{static} Start(userId: Guid, tokenHash: byte[], now: DateTimeOffset): Session
+  }
+}
+
+package "SixStack.Application" {
+  class RequestSignInLinkCommand {
+    +string Email
+    +string? ReturnUrl
+  }
+  class RequestSignInLinkCommandValidator
+  class RequestSignInLinkCommandHandler {
+    +Handle(command: RequestSignInLinkCommand): Task<Unit>
+  }
+  class RedeemSignInLinkCommand {
+    +string Token
+  }
+  class RedeemSignInLinkCommandHandler {
+    +Handle(command: RedeemSignInLinkCommand): Task<RedeemSignInLinkResult>
+  }
+  class RedeemSignInLinkResult {
+    +bool Succeeded
+    +string? SessionSecret
+    +UserRole? Role
+    +string? ReturnUrl
+  }
+  interface ISecurityTokenService {
+    +Issue(email: string, purpose: TokenPurpose, lifetime: TimeSpan): IssuedToken
+    +Hash(plaintext: string): byte[]
+    +NewSecret(): IssuedSecret
+  }
+  class IssuedSecret {
+    +string Plaintext
+    +byte[] Hash
+  }
+  class IssuedToken {
+    +SecurityToken Entity
+    +string Plaintext
+  }
+  interface IOutbox {
+    +Enqueue(type: string, payload: object): void
+  }
+  interface IClock {
+    +UtcNow: DateTimeOffset
+  }
+}
+
+package "SixStack.Api" {
+  class AuthController {
+    +RequestSignInLink(body: RequestSignInLinkCommand): Task<IActionResult>
+    +Redeem(token: string): Task<IActionResult>
+  }
+  class SessionCookie {
+    +Write(response: HttpResponse, secret: string): void
+    +Clear(response: HttpResponse): void
+  }
+}
+
+package "sixstack (Angular)" {
+  class SignInPage {
+    +email: FormControl<string>
+    +state: Signal<SignInState>
+    +requestLink(): void
+    +resend(): void
+  }
+  class ResendCountdown {
+    +remaining: Signal<number>
+    +start(seconds: number): void
+  }
+  interface AuthApi {
+    +requestSignInLink(email: string, returnUrl?: string): Observable<void>
+    +me(): Observable<CurrentUser>
+    +signOut(): Observable<void>
+  }
+  class HttpAuthApi
+}
+
+SecurityToken --> TokenPurpose
+User --> UserRole
+User "1" *-- "*" Session
+ISecurityTokenService ..> IssuedToken : returns
+ISecurityTokenService ..> IssuedSecret : returns
+IssuedToken --> SecurityToken
+RequestSignInLinkCommandValidator ..> RequestSignInLinkCommand : validates
+RequestSignInLinkCommandHandler ..> RequestSignInLinkCommand : handles
+RequestSignInLinkCommandHandler ..> ISecurityTokenService
+RequestSignInLinkCommandHandler ..> IOutbox
+RedeemSignInLinkCommandHandler ..> RedeemSignInLinkCommand : handles
+RedeemSignInLinkCommandHandler ..> SecurityToken : redeems
+RedeemSignInLinkCommandHandler ..> User : finds or creates
+RedeemSignInLinkCommandHandler ..> Session : creates
+RedeemSignInLinkCommandHandler ..> IClock
+RedeemSignInLinkCommandHandler ..> RedeemSignInLinkResult : returns
+AuthController ..> SessionCookie
+HttpAuthApi ..|> AuthApi
+SignInPage ..> AuthApi : AUTH_API
+SignInPage *-- ResendCountdown
+@enduml

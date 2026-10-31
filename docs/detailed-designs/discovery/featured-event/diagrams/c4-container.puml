@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Featured event
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Events page hero and feature card")
+  Container(api, "6ixstack API", "ASP.NET Core", "Public event queries")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Featured weeks and events")
+}
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/events/featured", "JSON/HTTPS")
+Rel(api, db, "Reads featured week and event", "EF Core")
+@enduml

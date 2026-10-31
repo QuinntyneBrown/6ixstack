@@ -1,0 +1,44 @@
+@startuml
+title UML sequence behaviour — Load, page and retry the speakers directory
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SpeakersPage" as page
+  participant "DelayedSkeleton" as sk
+  participant "HttpSpeakersApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "SpeakersController" as controller
+end box
+actor -> page : Open /speakers
+page -> page : Read q, topic, period from the URL; ignore unknown values (L2-005)
+page -> sk : Start 300 ms timer (L2-089)
+page -> client : list(query, page 1)
+client -> controller : GET /api/speakers
+opt no response within 300 ms
+  sk --> page : Skeleton cards and "Loading speakers…" (L2-089)
+end
+alt success
+  controller --> client : 200 SpeakerDirectoryDto
+  client --> page : SpeakerDirectory
+  page --> actor : 9 cards, "Showing 9 of 214 speakers", Show 24 more (L2-032)
+  opt more speakers than shown
+    actor -> page : Show 24 more
+    page -> client : list(query, next page)
+    client -> controller : GET /api/speakers?page=2
+    controller --> client : 200 next 24 cards
+    client --> page : SpeakerDirectory
+    page --> actor : Cards appended, caption "Showing 33 of 214 speakers" (L2-032)
+  end
+else failure or timeout
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : "We couldn't load speakers" with Try again; filters kept (L2-032, L2-077)
+  actor -> page : Try again
+  page -> client : list(same query, page 1)
+end
+@enduml

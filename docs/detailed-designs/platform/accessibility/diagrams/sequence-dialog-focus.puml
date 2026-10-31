@@ -1,0 +1,62 @@
+@startuml
+title UML sequence behaviour — Destructive dialog focus
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "OrganizerDashboardPage" as page
+  participant "DialogLauncher" as launcher
+  participant "CDK Dialog" as cdk
+  participant "CancelEventDialog\n(DialogShell)" as dialog
+  participant "HttpOrganizerEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "OrganizerEventsController" as controller
+end box
+actor -> page : Press "Cancel event" (keyboard)
+page -> launcher : openDestructive(CancelEventDialog)
+launcher -> cdk : open(autoFocus '[data-safe-action]', restoreFocus true)
+cdk -> dialog : Render with focus trap (L2-091)
+dialog --> actor : Focus on "Keep event" (L2-091)
+loop Tab or Shift+Tab
+  actor -> dialog : Tab
+  dialog --> actor : Focus cycles within the dialog (L2-091)
+end
+alt Escape while idle
+  actor -> dialog : Escape
+  dialog -> cdk : close()
+  cdk --> actor : Focus returns to "Cancel event" (L2-091)
+else confirm cancellation
+  actor -> dialog : Enter reason, press "Cancel event"
+  dialog -> dialog : busy = true: aria-busy, disableClose (L2-093)
+  dialog -> client : cancel(id, reason)
+  client -> controller : POST /api/organizer/events/{id}/cancel
+  opt Escape while busy
+    actor -> dialog : Escape
+    dialog --> actor : Ignored, dialog stays open (L2-091)
+  end
+  alt success
+    controller --> client : 200
+    client --> dialog : Cancelled
+    dialog -> cdk : close(result)
+    cdk --> actor : Focus returns to trigger; success toast announced
+  else failure
+    controller --> client : Problem details
+    client --> dialog : Error
+    dialog -> dialog : busy = false; failed alert, reason kept
+    dialog --> actor : Alert announced, focus stays in dialog
+  end
+end
+@enduml

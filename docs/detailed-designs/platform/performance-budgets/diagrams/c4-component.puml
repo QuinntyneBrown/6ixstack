@@ -1,0 +1,35 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Performance budgets
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(routes, "app.routes.ts", "Angular router", "loadComponent per page")
+  Component(page, "EventsPage", "Angular page", "@defer (on viewport) EventMap")
+  Component(delayed, "DelayedSkeleton", "Angular helper", "visible after 300 ms pending")
+  Component(skeleton, "Skeleton", "Angular component", "Size-matched placeholders")
+  Component(client, "HttpEventsApi", "Angular service behind EVENTS_API", "Typed client")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(events, "EventsController", "ASP.NET Core controller", "Public list and detail")
+  Component(queries, "Public query handlers", "MediatR handlers", "AsNoTracking projections to DTOs")
+  Component(feeds, "FeedsController", "ASP.NET Core controller", "GET /feeds/{feedSlug}.ics; ETag and 304")
+  Component(cache, "FeedCache", "IFeedCache, IMemoryCache", "Rendered ICS body and ETag per feed")
+  Component(regen, "RegenerateFeedsHandler", "Outbox message handler", "Rebuilds ready-made feeds; evicts custom feeds")
+  Component(log, "RequestLoggingMiddleware", "Middleware", "Duration per route template")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events (Status, StartsAtUtc) index")
+
+Rel(routes, page, "Lazy loads")
+Rel(page, delayed, "Starts per request")
+Rel(page, skeleton, "Renders when visible")
+Rel(page, client, "Requests data")
+Rel(client, events, "GET /api/events", "JSON/HTTPS")
+Rel(events, queries, "Sends query")
+Rel(queries, db, "Indexed projection", "EF Core")
+Rel(feeds, cache, "Reads entry")
+Rel(regen, cache, "Replaces or evicts entries")
+Rel(regen, db, "Reads published events", "EF Core")
+Rel(log, events, "Times")
+Rel(log, feeds, "Times")
+@enduml

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accordion — 6ixstack design system</title>
+<meta name="description" content="An accordion stacks questions or sections that open in place, so long reference pages like About and Code of conduct stay scannable.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers</p>
+      <h1>Accordion</h1>
+      <p class="ds-lead">An accordion stacks questions or sections that open in place, so long reference pages like About and Code of conduct stay scannable.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;details&gt;</code></span><span class="ds-pill">Not yet used in the mocks</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li></ul>
+    </header>
+
+<section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+<p>Use an accordion for reference content people scan for one answer: an FAQ on the About page, the long sections of the Code of conduct. Do not hide anything a person needs to complete a task (form fields, prices, the event time) inside one; and do not use an accordion for navigation, which belongs in <a href="tabs.html">tabs</a> or the <a href="sidebar-nav.html">settings navigation</a>.</p>
+<p>The mocks render About and Code of conduct as open prose; the accordion is the core-set option for when those pages grow.</p>
+</section>
+
+<section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+<div class="ds-anatomy"><figure class="ds-anatomy__figure"><div class="accordion" style="width: 100%; max-width: 36rem;"><details open><summary>Who can submit an event?</summary><div class="accordion__body"><p>Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.</p></div></details><details><summary>Why are all times in Toronto time?</summary><div class="accordion__body"><p>So the list sorts correctly. Streaming talks from other cities are converted to Eastern Time for you.</p></div></details><details><summary>Does 6ixstack sell tickets?</summary><div class="accordion__body"><p>No. Ticket and RSVP buttons link to the organizer's own page on Eventbrite, Meetup or Luma.</p></div></details></div><span class="ds-callout" style="left: 4%; top: 14%;" aria-hidden="true">1</span><span class="ds-callout" style="left: 40%; top: 14%;" aria-hidden="true">2</span><span class="ds-callout" style="left: 93%; top: 14%;" aria-hidden="true">3</span><span class="ds-callout" style="left: 40%; top: 34%;" aria-hidden="true">4</span></figure><ol class="ds-anatomy__list"><li><div><b>Container</b><small>1px <code>--color-border-default</code>, <code>--radius-md</code>, surface background.</small></div></li><li><div><b>Summary</b><small><code>--text-label</code>, at least 44px tall; the whole row is the toggle.</small></div></li><li><div><b>Indicator</b><small>“+” that rotates 45° into “×” when open.</small></div></li><li><div><b>Panel</b><small>Muted body text, 16px padding, no top padding.</small></div></li></ol></div>
+</section>
+
+<section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+<p>Multi-open is the default: each <code>&lt;details&gt;</code> is independent. Single-open groups give every <code>&lt;details&gt;</code> the same <code>name</code> attribute so the browser closes the others.</p><div class="ds-example">
+<div class="ds-example__canvas ">
+<div class="accordion" style="width: 100%; max-width: 36rem;"><details open><summary>Who can submit an event?</summary><div class="accordion__body"><p>Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.</p></div></details><details><summary>Why are all times in Toronto time?</summary><div class="accordion__body"><p>So the list sorts correctly. Streaming talks from other cities are converted to Eastern Time for you.</p></div></details><details><summary>Does 6ixstack sell tickets?</summary><div class="accordion__body"><p>No. Ticket and RSVP buttons link to the organizer's own page on Eventbrite, Meetup or Luma.</p></div></details></div>
+</div>
+<div class="ds-example__caption"><span>Multi-open FAQ.</span></div>
+<details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="accordion" style="width: 100%; max-width: 36rem;"&gt;&lt;details open&gt;&lt;summary&gt;Who can submit an event?&lt;/summary&gt;&lt;div class="accordion__body"&gt;&lt;p&gt;Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;&lt;details&gt;&lt;summary&gt;Why are all times in Toronto time?&lt;/summary&gt;&lt;div class="accordion__body"&gt;&lt;p&gt;So the list sorts correctly. Streaming talks from other cities are converted to Eastern Time for you.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;&lt;details&gt;&lt;summary&gt;Does 6ixstack sell tickets?&lt;/summary&gt;&lt;div class="accordion__body"&gt;&lt;p&gt;No. Ticket and RSVP buttons link to the organizer's own page on Eventbrite, Meetup or Luma.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;&lt;/div&gt;</code></pre></details>
+</div><div class="ds-example">
+<div class="ds-example__canvas ">
+<div class="accordion" style="width: 100%; max-width: 36rem;"><details name="faq"><summary>Who can submit an event?</summary><div class="accordion__body"><p>Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.</p></div></details><details name="faq" open><summary>Why are all times in Toronto time?</summary><div class="accordion__body"><p>So the list sorts correctly. Streaming talks from other cities are converted to Eastern Time for you.</p></div></details><details name="faq"><summary>Does 6ixstack sell tickets?</summary><div class="accordion__body"><p>No. Ticket and RSVP buttons link to the organizer's own page on Eventbrite, Meetup or Luma.</p></div></details></div>
+</div>
+<div class="ds-example__caption"><span>Single-open: <code>&lt;details name="faq"&gt;</code>.</span></div>
+<details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="accordion" style="width: 100%; max-width: 36rem;"&gt;&lt;details name="faq"&gt;&lt;summary&gt;Who can submit an event?&lt;/summary&gt;&lt;div class="accordion__body"&gt;&lt;p&gt;Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;&lt;details name="faq" open&gt;&lt;summary&gt;Why are all times in Toronto time?&lt;/summary&gt;&lt;div class="accordion__body"&gt;&lt;p&gt;So the list sorts correctly. Streaming talks from other cities are converted to Eastern Time for you.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;&lt;details name="faq"&gt;&lt;summary&gt;Does 6ixstack sell tickets?&lt;/summary&gt;&lt;div class="accordion__body"&gt;&lt;p&gt;No. Ticket and RSVP buttons link to the organizer's own page on Eventbrite, Meetup or Luma.&lt;/p&gt;&lt;/div&gt;&lt;/details&gt;&lt;/div&gt;</code></pre></details>
+</div>
+</section>
+
+<section class="ds-section" id="sizes" data-na="One size; the summary is always at least --target-comfortable (44px) tall."><h2><a href="#sizes">Sizes</a></h2>
+<p class="ds-na">One size; the summary is always at least --target-comfortable (44px) tall.</p>
+</section>
+
+<section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+<div class="ds-matrix"><table><thead><tr><th scope="col">Variant</th><th scope="col">Default (closed)</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Expanded</th></tr></thead><tbody><tr><th scope="row">Item</th><td><div class="accordion" style="min-width: 14rem;"><details><summary>Who can submit an event?</summary><div class="accordion__body"><p>Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.</p></div></details></div></td><td><div class="accordion" style="min-width: 14rem;"><details><summary data-state="hover">Who can submit an event?</summary><div class="accordion__body"><p>Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.</p></div></details></div></td><td><div class="accordion" style="min-width: 14rem;"><details><summary data-state="focus">Who can submit an event?</summary><div class="accordion__body"><p>Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.</p></div></details></div></td><td><div class="accordion" style="min-width: 14rem;"><details open><summary>Who can submit an event?</summary><div class="accordion__body"><p>Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.</p></div></details></div></td></tr></tbody></table></div><h3>Both themes</h3><div class="ds-themes"><div data-theme="light"><div class="ds-example__canvas" style="padding: 0;"><div class="accordion" style="width: 100%; max-width: 36rem;"><details open><summary>Who can submit an event?</summary><div class="accordion__body"><p>Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.</p></div></details><details><summary>Why are all times in Toronto time?</summary><div class="accordion__body"><p>So the list sorts correctly. Streaming talks from other cities are converted to Eastern Time for you.</p></div></details><details><summary>Does 6ixstack sell tickets?</summary><div class="accordion__body"><p>No. Ticket and RSVP buttons link to the organizer's own page on Eventbrite, Meetup or Luma.</p></div></details></div></div></div><div data-theme="dark"><div class="ds-example__canvas" style="padding: 0;"><div class="accordion" style="width: 100%; max-width: 36rem;"><details open><summary>Who can submit an event?</summary><div class="accordion__body"><p>Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.</p></div></details><details><summary>Why are all times in Toronto time?</summary><div class="accordion__body"><p>So the list sorts correctly. Streaming talks from other cities are converted to Eastern Time for you.</p></div></details><details><summary>Does 6ixstack sell tickets?</summary><div class="accordion__body"><p>No. Ticket and RSVP buttons link to the organizer's own page on Eventbrite, Meetup or Luma.</p></div></details></div></div></div></div><p>No disabled state: an item with nothing to show is removed.</p>
+</section>
+
+<section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+<ul><li>Full width of its container at every breakpoint, capped by the prose measure (<code>--layout-measure</code>).</li><li>Summaries wrap onto two lines rather than truncate; the indicator stays top-aligned with the first line.</li></ul>
+</section>
+
+<section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+<p>Reads <code>--color-bg-surface</code>, <code>--color-border-default</code>, <code>--color-bg-subtle</code> (hover) and <code>--color-fg-subtle</code> (indicator). Dark theme needs no overrides.</p>
+</section>
+
+<section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+<h3>Role and pattern</h3><p>Native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code>, which the browser exposes as a disclosure with its expanded state; equivalent to the APG <a href="https://www.w3.org/WAI/ARIA/apg/patterns/accordion/">Accordion</a> without any ARIA. Put a heading inside the summary only if the page outline needs it.</p><h3>Keyboard</h3><table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody><tr><td><kbd>Tab</kbd></td><td>Moves between summaries (and into an open panel's links).</td></tr><tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Opens or closes the focused item.</td></tr></tbody></table><h3>Focus</h3><p>The ring is inset (negative offset) so it is not clipped by the container's border radius.</p><h3>Labelling</h3><p>The summary text is the name; screen readers announce “expanded/collapsed” automatically.</p><h3>Contrast</h3><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);"><div class="ds-pair"><span>Summary text</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div><div class="ds-pair"><span>Summary on hover</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-subtle" data-min="4.5"></span></div><div class="ds-pair"><span>Panel text</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div></div><h3>Motion</h3><p>Only the indicator rotates (<code>--duration-base</code>); the panel opens instantly. Reduced motion stops the rotation.</p><h3>Touch</h3><p>Summaries are 44px tall full-width targets.</p>
+</section>
+
+<section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+<ul><li>Summaries are the question people would ask, ending with a question mark.</li><li>Answer in the first sentence; keep panels under 80 words.</li></ul>
+</section>
+
+<section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+<div class="ds-dodont"><figure class="ds-do"><div class="ds-example__canvas"><div class="accordion" style="width: 100%; max-width: 36rem;"><details open><summary>Who can submit an event?</summary><div class="accordion__body"><p>Anyone running a free or paid developer event in the GTA, or a talk Toronto developers can stream. Moderators review each submission within a day.</p></div></details><details><summary>Why are all times in Toronto time?</summary><div class="accordion__body"><p>So the list sorts correctly. Streaming talks from other cities are converted to Eastern Time for you.</p></div></details><details><summary>Does 6ixstack sell tickets?</summary><div class="accordion__body"><p>No. Ticket and RSVP buttons link to the organizer's own page on Eventbrite, Meetup or Luma.</p></div></details></div></div><figcaption>Short reference questions that open in place.</figcaption></figure><figure class="ds-dont"><div class="ds-example__canvas"><div class="accordion" style="width: 100%;"><details><summary>Ticket price</summary><div class="accordion__body"><p>$49</p></div></details></div></div><figcaption>Hiding a decision-critical fact (price, time) inside an accordion on the event page.</figcaption></figure></div>
+</section>
+
+<section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+<div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead><tbody><tr><td>Surface</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr><tr><td>Borders</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr><tr><td>Summary hover</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr><tr><td>Indicator</td><td><code>--color-fg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td></tr><tr><td>Radius</td><td><code>--radius-md</code></td><td colspan="2"><span data-token="--radius-md"></span></td></tr><tr><td>Padding</td><td><code>--space-4</code></td><td colspan="2"><span data-token="--space-4"></span></td></tr><tr><td>Min height</td><td><code>--target-comfortable</code></td><td colspan="2"><span data-token="--target-comfortable"></span></td></tr><tr><td>Rotation</td><td><code>--duration-base</code></td><td colspan="2"><span data-token="--duration-base"></span></td></tr></tbody></table></div>
+</section>
+
+<section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+<pre><code>&lt;div class="accordion"&gt;
+  &lt;details name="faq" open&gt;
+    &lt;summary&gt;Who can submit an event?&lt;/summary&gt;
+    &lt;div class="accordion__body"&gt;&lt;p&gt;Anyone running a developer event in the GTA…&lt;/p&gt;&lt;/div&gt;
+  &lt;/details&gt;
+  &lt;details name="faq"&gt;…&lt;/details&gt;
+&lt;/div&gt;</code></pre><table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody><tr><td><code>.accordion</code></td><td>Bordered group of <code>&lt;details&gt;</code>.</td></tr><tr><td><code>.accordion__body</code></td><td>Panel content.</td></tr><tr><td><code>open</code></td><td>Expanded.</td></tr><tr><td><code>name</code></td><td>Same value on siblings: single-open group.</td></tr><tr><td><code>data-state="hover|focus"</code> on <code>summary</code></td><td>Documentation only.</td></tr></tbody></table>
+</section>
+
+<section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+<p>Extracted from these mocks:</p><ul><li><a href="../../mocks/pages/about/default.html">pages/about/default</a> (FAQ-style content that may move into an accordion)</li><li><a href="../../mocks/pages/code-of-conduct/default.html">pages/code-of-conduct/default</a> (long sections)</li></ul><p>Drift fixed during extraction: none; no mock uses the accordion yet. Static hover and focus hooks were added for documentation.</p>
+</section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

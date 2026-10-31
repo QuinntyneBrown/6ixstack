@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour — Weekly summary email
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "WeeklySummaryJob" as job
+  participant "SystemClock" as clock
+  participant "Outbox" as outbox
+  database "6ixstack database" as db
+  participant "OutboxProcessor" as processor
+  participant "WeeklySummaryEmailHandler" as handler
+  participant "SmtpEmailSender" as sender
+end box
+participant "Email provider" as provider
+job -> clock : Now
+clock --> job : Scheduled weekly time reached (<TO SUPPLY>)
+job -> db : Organizers not deleted, with community
+db --> job : Organizers and Preferences
+loop each organizer
+  alt WeeklySummary on (default off) (L2-067)
+    job -> db : Going counts for upcoming events, feed-subscriber numbers
+    db --> job : Numbers for the week
+    job -> outbox : Enqueue(WeeklySummaryEmail, WeeklySummaryPayload)
+    outbox -> db : Add OutboxMessage
+  else WeeklySummary off
+    job -> job : Skip; no summary email (L2-067)
+  end
+end
+job -> db : SaveChanges
+== Delivery ==
+processor -> db : Claim due messages
+processor -> handler : Handle(WeeklySummaryEmail)
+handler -> db : Re-check recipient and WeeklySummary
+handler -> sender : Send(rendered summary)
+sender -> provider : Submit email
+alt accepted
+  processor -> db : ProcessedAtUtc = now
+else failure
+  processor -> db : Retry with exponential backoff, at most 5 attempts (L2-103)
+end
+@enduml

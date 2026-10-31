@@ -1,0 +1,67 @@
+@startuml
+title UML sequence behaviour — Validate input and encode output
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Submitter or visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SubmitEventPage\nEventDetailPage" as page
+  participant "DescriptionRenderer" as renderer
+  participant "HttpSubmissionsApi\nHttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ExceptionHandlingMiddleware" as ex
+  participant "SubmissionsController\nEventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "ValidationBehavior" as validation
+  participant "SubmitEventCommandValidator" as validator
+  participant "GetEventDetailQueryHandler" as query
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+== Submit ==
+actor -> page : Submit with ticket link javascript:alert(1)
+page -> client : submit(form)
+client -> ex : POST /api/submissions
+alt body over 64 KB
+  ex --> client : 413 problem details (L2-081)
+else body within limit
+  ex -> controller : next
+  controller -> validation : Send SubmitEventCommand
+  validation -> validator : Validate
+  validator -> validator : TicketUrl.MustBeHttpsUrl() fails (L2-081)
+  validator --> validation : Failure for ticketUrl
+  validation --> ex : ValidationException
+  ex --> client : 400 ValidationProblemDetails {errors.ticketUrl}
+end
+client --> page : Field errors
+page --> actor : Error summary linked to the ticket field (L2-092)
+== Display ==
+actor -> page : Open /events/{slug}
+page -> client : getDetail(slug)
+client -> controller : GET /api/events/{slug}
+controller -> query : Send GetEventDetailQuery
+query -> db : Load event
+db --> query : Description "<script>alert(1)</script> [slides](https://example.org)"
+query --> controller : EventDetailDto, description as stored
+controller --> client : 200 JSON
+client --> page : EventDetail
+page -> renderer : text = description
+renderer -> renderer : Parse into text and link segments
+renderer -> renderer : Keep link only if URL is https (L2-081)
+renderer --> page : "<script>…" as literal text; <a rel="noopener noreferrer nofollow">slides</a>
+page --> actor : Text shown literally, no script runs (L2-081)
+@enduml

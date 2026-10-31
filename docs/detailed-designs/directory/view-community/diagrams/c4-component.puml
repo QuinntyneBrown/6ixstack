@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — View a community
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "CommunityDetailPage", "Angular page", "Header, About, upcoming and past events, facts, organizers")
+  Component(dialog, "SubscribeFeedDialog", "Angular CDK dialog", "Creates a feed preset to this community")
+  Component(client, "HttpCommunitiesApi", "Angular service behind COMMUNITIES_API", "Typed client for /api/communities/{slug}")
+  Component(feeds, "HttpFeedsApi", "Angular service behind FEEDS_API", "Typed client for /api/feeds")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "CommunitiesController", "ASP.NET Core controller", "GET /api/communities/{slug}; 404 when unknown")
+  Component(handler, "GetCommunityQueryHandler", "MediatR handler", "Loads community, splits upcoming and past events, lists organizers")
+  Component(clock, "SystemClock", "IClock", "Current instant and Toronto date")
+  Component(feedsCtrl, "FeedsController", "ASP.NET Core controller", "POST /api/feeds (feeds-and-sharing)")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Communities, organizers, events, feeds")
+
+Rel(page, client, "Loads the community")
+Rel(page, dialog, "Opens with communitySlug")
+Rel(dialog, feeds, "Creates community feed")
+Rel(client, ctrl, "GET /api/communities/{slug}", "JSON/HTTPS")
+Rel(feeds, feedsCtrl, "POST /api/feeds", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetCommunityQuery")
+Rel(handler, clock, "Reads now")
+Rel(handler, db, "Queries community, organizers and events", "EF Core")
+Rel(feedsCtrl, db, "Stores feed definition", "EF Core")
+@enduml

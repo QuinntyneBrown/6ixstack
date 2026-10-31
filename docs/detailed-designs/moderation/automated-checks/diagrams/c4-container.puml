@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Automated submission checks
+
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Review cards show check results")
+  Container(api, "6ixstack API", "ASP.NET Core", "Schedules checks; OutboxProcessor runs them")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events, submission checks, outbox")
+}
+System_Ext(geo, "Geocoding service", "<TO SUPPLY>")
+System_Ext(sites, "Ticketing and streaming sites", "Organizer-owned links")
+Rel(moderator, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/moderation/queue", "JSON/HTTPS")
+Rel(api, db, "Writes Pending rows and outbox, then results", "EF Core")
+Rel(api, geo, "Geocodes venue addresses", "HTTPS")
+Rel(api, sites, "Checks link reachability", "HTTPS")
+@enduml

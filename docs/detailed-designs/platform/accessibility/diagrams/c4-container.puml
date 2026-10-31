@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Accessibility
+
+Person(visitor, "Visitor", "Anonymous developer browsing events, with any assistive technology")
+Person(organizer, "Organizer", "Signed-in community organizer")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, CDK a11y, components library", "Focus management, live regions, form errors, themes, reduced motion")
+  Container(api, "6ixstack API", "ASP.NET Core", "ValidationProblemDetails keyed by field name")
+}
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(spa, api, "Submits forms; reads field errors", "JSON/HTTPS")
+@enduml

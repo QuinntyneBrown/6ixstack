@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — View event detail
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(ticketing, "Ticketing and streaming sites", "Organizer-owned ticket, stream, recording and slides links")
+System_Ext(basemap, "Map basemap provider", "<TO SUPPLY>")
+
+Rel(visitor, sixstack, "Reads event details using", "HTTPS")
+Rel(visitor, ticketing, "Buys tickets, joins streams, watches recordings at", "HTTPS, new tab")
+Rel(sixstack, basemap, "Loads venue and origin basemap from", "HTTPS")
+@enduml

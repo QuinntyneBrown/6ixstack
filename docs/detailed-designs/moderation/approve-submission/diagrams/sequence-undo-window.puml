@@ -1,0 +1,75 @@
+@startuml
+title UML sequence behaviour — Undo an approval and send the held email
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Moderator" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ReviewQueuePage" as page
+  participant "HttpModerationApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ModerationController" as controller
+  participant "OutboxProcessor" as processor
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "UndoApprovalCommandHandler" as handler
+  participant "Event" as entity
+  participant "SubmissionApprovedNotificationHandler" as notify
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "IEmailSender" as sender
+  database "6ixstack database" as db
+end box
+participant "Email provider" as provider
+alt Undo activated within 8 s
+  actor -> page : Undo on the success toast
+  page -> client : undoApproval(eventId)
+  client -> controller : POST /api/moderation/submissions/{id}/undo-approval
+  controller -> handler : Send UndoApprovalCommand
+  handler -> db : Newest Approve decision not undone
+  alt now > DecidedAtUtc + 8 s
+    handler --> controller : Conflict
+    controller --> client : 409, window closed (L2-060)
+  else inside the window
+    handler -> entity : UndoApproval()
+    entity --> handler : Status In review, no longer public (L2-060)
+    handler -> db : Decision.UndoneAtUtc = now
+    handler -> db : Delete held SubmissionApprovedNotification if unprocessed, so no email (L2-060)
+    handler -> db : AuditLog ApprovalUndone, after SubmissionApproved (L2-086)
+    handler -> db : Commit in one unit of work
+    handler --> controller : Ok
+    controller --> client : 204
+    client --> page : Done
+    page -> client : getQueue()
+    page --> actor : Card back in the queue
+  end
+else window closes without Undo
+  processor -> db : Read due messages (NextAttemptAtUtc reached)
+  db --> processor : SubmissionApprovedNotification
+  processor -> notify : Dispatch
+  notify -> db : Decision still not undone and event Published?
+  notify -> db : Create in-app notification "“Rust in production at scale” is live" (L2-066)
+  opt organizer approval email preference on
+    notify -> sender : Send approval email (L2-067)
+    sender -> provider : Deliver
+    provider --> sender : Accepted or error
+  end
+  alt success
+    processor -> db : ProcessedAtUtc = now
+  else provider failure
+    processor -> db : Retry with exponential backoff, at most 5 attempts (L2-103)
+  end
+end
+@enduml

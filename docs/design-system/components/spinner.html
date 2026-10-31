@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spinner — 6ixstack design system</title>
+<meta name="description" content="Spinner sizes, busy buttons, status text and reduced-motion rules.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Spinner</h1>
+      <p class="ds-lead">Spinners say “working” when nothing more specific fits: in a busy button or a small panel.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">role=status</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>A spinner says "working" when there is nothing more specific to show: inside a busy button, next to a retry link, in a small panel that is fetching. It is the last resort among loading indicators.</p>
+      <ul>
+        <li>Inside buttons, use the button's busy state (<code>aria-busy="true"</code>), which draws the spinner for you. See <a href="button.html">button</a>.</li>
+        <li>For a list, card grid or page, use a <a href="skeleton.html">skeleton</a> that matches the layout. The events page never shows a full-page spinner.</li>
+        <li>For a long task with a known length, use a <a href="progress.html">progress bar</a>.</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <span role="status"><span class="spinner spinner--lg" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span>
+          <span class="ds-callout" style="left: 44%; top: 20%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 56%; top: 70%;" aria-hidden="true">2</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Arc</b><small>Top border in <code>--color-accent</code>; one turn per <code>--duration-spin</code>.</small></div></li>
+          <li><div><b>Track</b><small>Full ring in <code>--color-border-default</code>.</small></div></li>
+        </ol>
+      </div>
+    </section>
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<span role="status"><span class="spinner spinner--sm" aria-hidden="true"></span><span class="visually-hidden">Loading</span></span><span role="status"><span class="spinner" aria-hidden="true"></span><span class="visually-hidden">Loading</span></span><span role="status"><span class="spinner spinner--lg" aria-hidden="true"></span><span class="visually-hidden">Loading</span></span>
+        </div>
+        <div class="ds-example__caption"><span>Small 16px (inline with text), medium 20px (default), large 40px (panels).</span></div>
+      </div>
+      <h3>Inline with text</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<p class="inline-status" role="status"><span class="spinner spinner--sm" aria-hidden="true"></span>Checking the stream link…</p>
+        </div>
+        <div class="ds-example__caption"><span>Status text next to a small spinner, for automated checks in the review queue.</span></div>
+      </div>
+      <h3>In buttons</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<button class="btn btn--primary" type="button" aria-busy="true">Saving…</button><button class="btn" type="button" aria-busy="true">Sending link…</button>
+        </div>
+        <div class="ds-example__caption"><span>Busy buttons in the mocks: the spinner comes from <code>aria-busy</code>, the label says what is happening.</span></div>
+      </div>
+    </section>
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<span role="status"><span class="spinner spinner--sm" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span><span role="status"><span class="spinner" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span><span role="status"><span class="spinner spinner--lg" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span>
+        </div>
+        <div class="ds-example__caption"><span><code>.spinner--sm</code> 16px, <code>.spinner</code> 20px, <code>.spinner--lg</code> 40px. Match the size of the text or icon it replaces.</span></div>
+      </div>
+    </section>
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>A spinner has one state: spinning. It appears after 300 ms (so fast responses never flash it) and is removed when the work ends.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Surface</th><th scope="col">Small</th><th scope="col">Medium</th><th scope="col">Large</th></tr></thead>
+        <tbody><tr><th scope="row">Surface</th><td><span role="status"><span class="spinner spinner--sm" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span></td><td><span role="status"><span class="spinner" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span></td><td><span role="status"><span class="spinner spinner--lg" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span></td></tr><tr><th scope="row">On accent</th><td><span class="btn btn--primary" style="pointer-events: none;"><span class="spinner spinner--sm spinner--on-accent" aria-hidden="true"></span>Approving…</span></td><td><span class="btn btn--primary" style="pointer-events: none;"><span class="spinner spinner--on-accent" aria-hidden="true"></span>Approving…</span></td><td>—</td></tr></tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><span role="status"><span class="spinner" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span><span role="status"><span class="spinner spinner--lg" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><span role="status"><span class="spinner" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span><span role="status"><span class="spinner spinner--lg" aria-hidden="true"></span><span class="visually-hidden">Loading events</span></span></div></div>
+      </div>
+    </section>
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <p>Spinners do not change with the viewport. A panel spinner stays centred in its panel; it is never fixed to the screen.</p>
+    </section>
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>Arc <code>--color-accent</code>, track <code>--color-border-default</code>. On accent fills, <code>.spinner--on-accent</code> switches both to <code>--color-fg-on-accent</code> so the spinner stays visible on primary buttons in both themes.</p>
+    </section>
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The ring itself is <code>aria-hidden</code>. It sits inside a <code>role="status"</code> element with visually hidden text ("Loading events"), so the start is announced politely. In buttons, <code>aria-busy="true"</code> plus the changed label do the job.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody><tr><td>—</td><td>Not focusable.</td></tr></tbody></table>
+      <h3>Focus</h3>
+      <p>Never moves focus. If the spinner replaces a focused control (a Retry link), focus moves to the container and back to the result when loading ends.</p>
+      <h3>Labelling</h3>
+      <p>The hidden text names what is loading: "Loading events", not "Loading".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);"><div class="ds-pair"><span>Arc on surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div><div class="ds-pair"><span>Arc against track</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-border-default" data-min="3"></span></div><div class="ds-pair"><span>Arc on page</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-canvas" data-min="3"></span></div></div>
+      <h3>Motion</h3>
+      <p>Rotates continuously at <code>--duration-spin</code> (800 ms), linear. It is a status indicator, not decoration, so it keeps turning under <code>prefers-reduced-motion</code>; <code>--duration-spin</code> is deliberately not zeroed. Pair it with text so it is understood even if motion is disabled by the browser.</p>
+      <h3>Touch</h3>
+      <p>Not interactive.</p>
+    </section>
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Visible text, when there is any, says what is happening with an ellipsis: "Checking the stream link…", "Saving…".</li>
+        <li>Hidden text names the thing loading: "Loading notifications".</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><button class="btn btn--primary" type="button" aria-busy="true">Saving…</button></div><figcaption>The pressed button shows the spinner; the rest of the form stays usable.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="empty" style="padding: var(--space-6);"><span class="spinner spinner--lg" aria-hidden="true"></span></div></div><figcaption>A big spinner in place of the event list. pages/events/loading uses skeleton rows instead.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><span role="status"><span class="spinner" aria-hidden="true"></span><span class="visually-hidden">Loading notifications</span></span></div><figcaption>Hidden status text names what is loading.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><span class="spinner" aria-hidden="true"></span></div><figcaption>A bare spinner with no status text: nothing is announced.</figcaption></figure>
+      </div>
+    </section>
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Arc</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Track</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+          <tr><td>On accent</td><td><code>--color-fg-on-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-on-accent" data-swatch></i><span data-token="--color-fg-on-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-on-accent" data-swatch></i><span data-token="--color-fg-on-accent"></span></span></td></tr>
+          <tr><td>Rotation</td><td><code>--duration-spin</code></td><td colspan="2"><span data-token="--duration-spin"></span></td></tr>
+          <tr><td>Border width</td><td><code>--border-width-thick</code></td><td colspan="2"><span data-token="--border-width-thick"></span></td></tr>
+          <tr><td>Radius</td><td><code>--radius-full</code></td><td colspan="2"><span data-token="--radius-full"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;span role="status"&gt;
+  &lt;span class="spinner" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;span class="visually-hidden"&gt;Loading events&lt;/span&gt;
+&lt;/span&gt;
+
+&lt;button class="btn btn--primary" type="submit" aria-busy="true"&gt;Saving…&lt;/button&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody><tr><td><code>.spinner</code></td><td>20px spinner.</td></tr><tr><td><code>.spinner--sm</code> <code>.spinner--lg</code></td><td>16px and 40px.</td></tr><tr><td><code>.spinner--on-accent</code></td><td>For use on accent fills.</td></tr><tr><td><code>aria-busy="true"</code> on <code>.btn</code></td><td>Busy button with built-in spinner.</td></tr></tbody></table>
+    </section>
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/pages/settings/submitting.html">pages/settings/submitting</a> (Saving…)</li>
+        <li><a href="../../mocks/pages/contact/submitting.html">pages/contact/submitting</a> (Sending…)</li>
+        <li><a href="../../mocks/dialogs/add-to-calendar/busy.html">dialogs/add-to-calendar/busy</a> (option button busy)</li>
+        <li><a href="../../mocks/dialogs/subscribe-feed/busy.html">dialogs/subscribe-feed/busy</a> (Creating feed…)</li>
+      </ul>
+      <p>Drift fixed during extraction: the rotation was a raw <code>0.8s</code> in three places (button, spinner, option button); now <code>--duration-spin</code>. Added <code>.spinner--sm</code> to complete the size set and <code>.spinner--on-accent</code>.</p>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

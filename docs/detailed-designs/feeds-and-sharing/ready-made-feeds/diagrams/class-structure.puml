@@ -1,0 +1,107 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Ready-made calendar feeds
+
+package "SixStack.Domain" {
+  enum FeedScope {
+    All
+    GtaOnly
+    StreamingOnly
+  }
+  enum Topic {
+    Ai
+    DotNet
+    Azure
+    Angular
+    React
+    Aws
+  }
+  class FeedSlug <<value object>> {
+    +IReadOnlyList<Topic> Topics
+    +FeedScope Scope
+    +string? CommunitySlug
+    +ToString(): string
+  }
+  class Event {
+    +Guid Id
+    +EventFormat Format
+    +IReadOnlyCollection<Topic> Topics
+    +Guid CommunityId
+    +DateTimeOffset StartsAtUtc
+    +EventStatus Status
+  }
+}
+
+package "SixStack.Application" {
+  class GetReadyMadeFeedsQuery
+  class GetReadyMadeFeedsQueryHandler {
+    +Handle(query: GetReadyMadeFeedsQuery): Task<ReadyMadeFeedsDto>
+  }
+  class ReadyMadeFeedCatalogue <<static>> {
+    +IReadOnlyList<ReadyMadeFeedDefinition> All
+  }
+  class ReadyMadeFeedDefinition {
+    +string Key
+    +FeedSlug Slug
+  }
+  class FeedEventFilter <<static>> {
+    +Apply(events: IQueryable<Event>, slug: FeedSlug): IQueryable<Event>
+  }
+  class ReadyMadeFeedsDto {
+    +DateOnly RangeEnd
+    +IReadOnlyList<ReadyMadeFeedCountDto> Feeds
+  }
+  class ReadyMadeFeedCountDto {
+    +string Key
+    +string FeedSlug
+    +int UpcomingCount
+  }
+}
+
+package "sixstack (Angular)" {
+  class CalendarFeedsPage {
+    +feeds: ReadyMadeFeed[]
+    +counts: Signal<Record<string, number> | null>
+    +loadFailed: Signal<boolean>
+    +copy(feed: ReadyMadeFeed): void
+    +retry(): void
+  }
+  class ReadyMadeFeed {
+    +key: string
+    +name: string
+    +description: string
+    +feedSlug: string
+  }
+  class FeedLinkCopier {
+    +copy(webcalUrl: string): void
+  }
+  interface FeedsApi {
+    +getReadyMadeFeedCounts(): Observable<ReadyMadeFeedCounts>
+  }
+  class HttpFeedsApi
+}
+
+FeedSlug --> FeedScope
+FeedSlug "1" --> "*" Topic
+GetReadyMadeFeedsQueryHandler ..> GetReadyMadeFeedsQuery : handles
+GetReadyMadeFeedsQueryHandler ..> ReadyMadeFeedCatalogue : reads
+GetReadyMadeFeedsQueryHandler ..> FeedEventFilter : uses
+GetReadyMadeFeedsQueryHandler ..> ReadyMadeFeedsDto : returns
+ReadyMadeFeedCatalogue "1" *-- "6" ReadyMadeFeedDefinition
+ReadyMadeFeedDefinition *-- FeedSlug
+FeedEventFilter ..> Event : filters
+ReadyMadeFeedsDto "1" *-- "6" ReadyMadeFeedCountDto
+HttpFeedsApi ..|> FeedsApi
+CalendarFeedsPage ..> FeedsApi : FEEDS_API
+CalendarFeedsPage "1" --> "6" ReadyMadeFeed : READY_MADE_FEEDS
+CalendarFeedsPage ..> FeedLinkCopier
+@enduml

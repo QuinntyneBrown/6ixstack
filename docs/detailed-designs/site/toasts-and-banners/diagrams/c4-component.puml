@@ -1,0 +1,34 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Toasts and site banners
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(features, "Feature pages and dialogs", "Angular", "Raise toasts: copy, add to calendar, approve, clear filters")
+  Component(toasts, "ToastService", "Angular service", "Max three, 8 s countdown, pause on hover or focus")
+  Component(region, "ToastRegion / Toast", "Angular components (components)", "role=status aria-live=polite; danger role=alert")
+  Component(banners, "BannerService", "Angular service", "Active banner per source")
+  Component(outlet, "SiteBannerOutlet", "Angular component", "Banners under the header")
+  Component(conn, "ConnectivityService", "Angular service", "online and apiReachable signals, 30 s probe")
+  Component(interceptor, "ApiErrorInterceptor", "Angular HTTP interceptor", "Reports requests with no response")
+  Component(version, "VersionUpdateWatcher", "Angular service over SwUpdate", "VERSION_READY to banner, Refresh")
+  Component(maint, "MaintenanceNoticeSource", "Angular service", "Current maintenance window")
+  Component(dismiss, "BannerDismissalStore", "Angular service, localStorage", "Dismissed maintenance window ids")
+  Component(saved, "SavedEventsStore", "Angular service (site/status-pages)", "Saved-at time of the cached list")
+  Component(header, "SiteHeader", "Angular component", "Submit event disabled while offline")
+}
+Container(api, "6ixstack API", "ASP.NET Core", "/health/live, maintenance notice")
+
+Rel(features, toasts, "show(options)")
+Rel(toasts, region, "Renders entries")
+Rel(interceptor, conn, "Request failed without response")
+Rel(conn, banners, "Offline, back online, unreachable")
+Rel(conn, saved, "Reads saved-at time")
+Rel(conn, header, "online signal")
+Rel(conn, api, "GET /health/live", "HTTPS")
+Rel(version, banners, "New version")
+Rel(maint, api, "Reads notice", "JSON/HTTPS")
+Rel(maint, dismiss, "Checks window id")
+Rel(maint, banners, "Maintenance")
+Rel(banners, outlet, "Active banners")
+@enduml

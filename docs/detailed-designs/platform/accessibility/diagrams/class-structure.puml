@@ -1,0 +1,102 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Accessibility
+
+package "components (Angular)" {
+  class DialogShell {
+    +title: InputSignal<string>
+    +busy: InputSignal<boolean>
+    -dialogRef: DialogRef
+    +ngOnChanges(): void
+  }
+  class FormField {
+    +label: InputSignal<string>
+    +hint: InputSignal<string?>
+    +error: Signal<string?>
+    +messageId: string
+    -applyAria(control): void
+  }
+  class ErrorSummary {
+    +items: InputSignal<ErrorSummaryItem[]>
+    +focus(): void
+    +activate(item: ErrorSummaryItem): void
+  }
+  class ErrorSummaryItem {
+    +controlId: string
+    +message: string
+  }
+  class Button {
+    +busy: InputSignal<boolean>
+    +appearance: InputSignal<string>
+  }
+  class TopicChip {
+    +topic: InputSignal<Topic>
+    +pressed: ModelSignal<boolean>
+  }
+  class Skeleton {
+    +shape: InputSignal<string>
+  }
+  class SkipLink {
+    +target: InputSignal<string> = "#main"
+  }
+}
+
+package "sixstack (Angular)" {
+  class AppShell {
+    -focusPageHeading(): void
+  }
+  class DialogLauncher {
+    +open(component, config): DialogRef
+    +openDestructive(component, config): DialogRef
+  }
+  class FormErrorFocus {
+    +afterFailedSubmit(form: FormGroup, context: 'page' | 'dialog'): void
+  }
+  class ProblemDetailsFormMapper {
+    +apply(problem: ValidationProblem, form: FormGroup): ErrorSummaryItem[]
+  }
+  class MotionPreference {
+    +reduced: Signal<boolean>
+    +scrollBehavior(): ScrollBehavior
+  }
+}
+
+package "SixStack.Application" {
+  class "ValidationBehavior<TRequest, TResponse>" as VB {
+    +Handle(request, next, ct): Task<TResponse>
+  }
+  class ValidationException {
+    +IReadOnlyDictionary<string, string[]> Errors
+  }
+}
+
+package "@angular/cdk" {
+  class Dialog
+  class DialogRef {
+    +disableClose: boolean
+    +close(): void
+  }
+}
+
+DialogLauncher ..> Dialog : autoFocus '[data-safe-action]', restoreFocus
+Dialog ..> DialogRef : creates
+DialogShell --> DialogRef : busy sets disableClose
+DialogShell ..> Button : busy action
+ErrorSummary "1" *-- "*" ErrorSummaryItem
+FormErrorFocus ..> ErrorSummary : focus in page forms
+FormErrorFocus ..> FormField : first control of group in dialogs
+FormErrorFocus ..> ProblemDetailsFormMapper
+ProblemDetailsFormMapper ..> ErrorSummaryItem : builds
+VB ..> ValidationException : throws, keyed by property
+AppShell *-- SkipLink
+Skeleton ..> MotionPreference : shimmer only when not reduced
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Organizer dashboard
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Dashboard page, stats, events table and submission banners")
+  Container(api, "6ixstack API", "ASP.NET Core", "Organizer queries behind OrganizerPolicy")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events, moderation decisions, communities and users")
+}
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/organizer/events", "JSON/HTTPS, session cookie")
+Rel(api, db, "Reads the community's events and decisions", "EF Core")
+@enduml

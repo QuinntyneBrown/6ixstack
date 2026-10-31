@@ -1,0 +1,58 @@
+@startuml
+title UML sequence behaviour — Join a stream
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventDetailPage" as page
+  participant "StreamJoinTimer" as timer
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetEventDetailQueryHandler" as handler
+  participant "EventDetailPolicy" as policy
+end box
+actor -> page : Open the Reactor stream page on Monday
+page -> client : getDetail(slug)
+client -> controller : GET /api/events/{slug}
+controller -> handler : Send GetEventDetailQuery
+handler -> policy : Decide actions at now
+policy --> handler : JoinStream with JoinOpensAtUtc, no StreamUrl (L2-019)
+handler --> controller : EventDetailDto
+controller --> client : 200 JSON without stream URL
+client --> page : EventDetail
+page --> actor : "12:00 PM – 1:30 PM ET · 9:00 AM PT where it's hosted", platform, "Where it streams from" map (L2-019, L2-079)
+page --> actor : Info alert "Starts in 2 days"; Join the stream inactive (L2-019)
+page -> timer : scheduleAt(JoinOpensAtUtc, reload)
+... page stays open until 11:45 AM ET Wednesday ...
+timer -> page : Reload
+page -> client : getDetail(slug)
+client -> controller : GET /api/events/{slug}
+controller -> handler : Send GetEventDetailQuery
+handler -> policy : Decide actions at now
+alt inside join window and event not ended
+  policy --> handler : JoinStream with StreamUrl (L2-019)
+  handler --> controller : EventDetailDto
+  controller --> client : 200 JSON with stream URL
+  client --> page : EventDetail
+  page --> actor : "Join the stream" links to the stream URL in a new tab (L2-019)
+else reload failed
+  client --> page : Error
+  page --> actor : Current content kept; inline retry (L2-077)
+end
+@enduml

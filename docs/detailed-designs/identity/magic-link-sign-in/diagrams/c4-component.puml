@@ -1,0 +1,36 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Sign in with an emailed link
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "SignInPage", "Angular page", "Email form, submitting, success with resend countdown, expired alert")
+  Component(client, "HttpAuthApi", "Angular service behind AUTH_API", "Typed client for /api/auth")
+  Component(store, "SessionStore", "Angular service", "Current user after redemption")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "AuthController", "ASP.NET Core controller", "POST /api/auth/sign-in-links, GET /auth/redeem")
+  Component(limiter, "RateLimiter", "ASP.NET Core rate limiting", "5 per hour per email, 20 per hour per IP")
+  Component(request, "RequestSignInLinkCommandHandler", "MediatR handler", "Issues a SignIn token and queues the email")
+  Component(redeem, "RedeemSignInLinkCommandHandler", "MediatR handler", "Checks the token, finds or creates the user, creates a session")
+  Component(tokens, "SecurityTokenService", "ISecurityTokenService", "256-bit tokens stored as SHA-256 hashes")
+  Component(cookie, "SessionCookie", "API helper", "Secure, HttpOnly, SameSite=Lax cookie")
+  Component(outbox, "OutboxProcessor", "Hosted service", "Sends outbox emails with retries")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "SecurityTokens, Users, Sessions, OutboxMessages")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(page, client, "Requests link")
+Rel(page, store, "Loads current user")
+Rel(client, ctrl, "POST /api/auth/sign-in-links", "JSON/HTTPS")
+Rel(ctrl, limiter, "Passes")
+Rel(ctrl, request, "Sends RequestSignInLinkCommand")
+Rel(ctrl, redeem, "Sends RedeemSignInLinkCommand")
+Rel(ctrl, cookie, "Writes session cookie")
+Rel(request, tokens, "Issues token")
+Rel(redeem, tokens, "Hashes token")
+Rel(request, db, "Writes token and outbox message", "EF Core")
+Rel(redeem, db, "Reads token, writes user and session", "EF Core")
+Rel(outbox, db, "Reads pending messages", "EF Core")
+Rel(outbox, email, "Sends emails", "<TO SUPPLY>")
+@enduml

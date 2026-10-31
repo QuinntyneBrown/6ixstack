@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Browse speakers
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+
+Rel(visitor, sixstack, "Searches and filters the speakers directory using", "HTTPS")
+@enduml

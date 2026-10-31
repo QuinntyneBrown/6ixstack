@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theming — 6ixstack design system</title>
+<meta name="description" content="Light and dark from one semantic tier, OS preference by default, and a recipe for adding a theme without touching component CSS.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Theming</h1>
+      <p class="ds-lead">Light and dark from one semantic tier, OS preference by default, and a recipe for adding a theme without touching component CSS.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Source: tokens/tokens.css</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#how">How themes work</a></li><li><a href="#dark">How dark is built</a></li><li><a href="#adding">Adding a theme</a></li><li><a href="#json">Consuming tokens.json</a></li><li><a href="#do-dont">Do and don't</a></li></ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>6ixstack ships a light and a dark theme from one set of semantic tokens. Light is the default on <code>:root</code>; dark applies when the page or a subtree sets <code>data-theme="dark"</code>, or automatically when the operating system prefers dark and the page has not forced <code>data-theme="light"</code>.</p><div class="ds-themes"><div data-theme="light"><div class="cluster"><button class="btn btn--primary" type="button">Submit an event</button><span class="badge badge--success">Published</span><span class="topic-tag"><span class="topic-dot topic-dot--react" aria-hidden="true"></span>React</span></div></div><div data-theme="dark"><div class="cluster"><button class="btn btn--primary" type="button">Submit an event</button><span class="badge badge--success">Published</span><span class="topic-tag"><span class="topic-dot topic-dot--react" aria-hidden="true"></span>React</span></div></div></div>
+    </section>
+    <section class="ds-section" id="how"><h2><a href="#how">How themes work</a></h2>
+      <ul><li><b>Tiers.</b> Primitives (<code>--palette-*</code>) hold raw values; semantic tokens (<code>--color-*</code>, <code>--shadow-*</code>) give them meaning; component tokens (<code>--btn-bg</code>, <code>--alert-fg</code>) scope them to one component. A theme overrides the semantic tier only.</li><li><b>Selection.</b> <code>[data-theme="dark"]</code> and <code>@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { … } }</code> carry identical declarations, so a forced choice and the OS preference behave the same.</li><li><b>Native controls.</b> Each theme sets <code>color-scheme</code>, so scrollbars, date pickers and form controls follow.</li><li><b>Preferences.</b> <code>prefers-contrast: more</code> strengthens borders and muted text; <code>forced-colors: active</code> hands borders and the focus ring to system colours; <code>prefers-reduced-motion</code> zeroes durations.</li><li><b>Fixed-dark regions.</b> The event map stays ink in both themes; it reads <code>--color-map-*</code>, which only changes its border and depth in dark.</li></ul>
+    </section>
+    <section class="ds-section" id="dark"><h2><a href="#dark">How dark is built</a></h2>
+      <ul><li>Surfaces lighten as they rise: canvas &lt; surface &lt; raised &lt; subtle.</li><li>The ink accent flips to near-white with ink text on it, so primary buttons stay the highest-contrast element.</li><li>Topic colours switch to the <code>-bright</code> set; status backgrounds become deep tints with light text.</li><li>The featured card stops being ink-on-canvas (which would vanish) and becomes a raised surface with a visible border.</li><li>Shadows get darker and stronger, but separation comes mainly from the surface steps.</li></ul>
+    </section>
+    <section class="ds-section" id="adding"><h2><a href="#adding">Adding a theme</a></h2>
+      <p>A partner or event-specific theme is another <code>[data-theme]</code> block that overrides semantic colour tokens. It must not touch primitives or component CSS.</p><pre><code>/* tokens.css */
+[data-theme="pride"] {
+  --color-accent: var(--palette-gray-950);
+  --color-brand: var(--palette-topic-dotnet);
+  --color-fg-brand: var(--palette-topic-dotnet);
+  --color-focus-ring: var(--palette-topic-dotnet);
+  color-scheme: light;
+}</code></pre><ol><li>Override only <code>--color-*</code> (and <code>--shadow-color</code> if surfaces change).</li><li>Add every pair the theme changes to <code>tokens/contrast-pairs.json</code> with <code>"themes": ["pride"]</code> where it differs.</li><li>Run <code>check_contrast.py tokens/tokens.css</code>; it must exit 0.</li><li>Regenerate <code>tokens.json</code> with <code>tokens_to_json.py</code>.</li></ol>
+    </section>
+    <section class="ds-section" id="json"><h2><a href="#json">Consuming tokens.json</a></h2>
+      <p><code>tokens/tokens.json</code> is a <a href="https://www.designtokens.org/tr/drafts/format/">DTCG</a> export generated from <code>tokens.css</code>: each token has <code>$type</code> and <code>$value</code>, aliases are written as <code>{group.token}</code>, and dark overrides live under <code>$extensions</code>. The Angular front end consumes the CSS directly; other platforms (e-mail templates, the ICS feed's HTML description, native wrappers) can generate constants from the JSON with Style Dictionary or a small script.</p><pre><code>python .claude/skills/extracting-design-systems/scripts/tokens_to_json.py docs/design-system/tokens/tokens.css</code></pre>
+    </section>
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont"><figure class="ds-do"><div class="ds-example__canvas"><code>background: var(--color-bg-surface);</code></div><figcaption>Read a semantic token so the theme can change it.</figcaption></figure><figure class="ds-dont"><div class="ds-example__canvas"><code>background: var(--palette-white);</code></div><figcaption>Reference a primitive in a component; it will stay white in dark theme.</figcaption></figure><figure class="ds-do"><div class="ds-example__canvas"><code>[data-theme="dark"] { --color-accent: … }</code></div><figcaption>Override semantic tokens inside the theme block.</figcaption></figure><figure class="ds-dont"><div class="ds-example__canvas"><code>[data-theme="dark"] .btn--primary { … }</code></div><figcaption>Write per-component dark rules; they drift from the tokens.</figcaption></figure></div>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

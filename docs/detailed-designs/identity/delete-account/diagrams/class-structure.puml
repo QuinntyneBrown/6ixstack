@@ -1,0 +1,106 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Delete an organizer account
+
+package "SixStack.Domain" {
+  class User {
+    +Guid Id
+    +string? Email
+    +string? Name
+    +string? PendingEmail
+    +string? WebsiteUrl
+    +DateTimeOffset? DeletedAtUtc
+    +Delete(now: DateTimeOffset): void
+  }
+  class Session {
+    +Guid Id
+    +Guid UserId
+    +DateTimeOffset? RevokedAtUtc
+    +Revoke(now: DateTimeOffset): void
+  }
+  class CommunityOrganizer {
+    +Guid CommunityId
+    +Guid UserId
+    +string Role
+  }
+  class Community {
+    +Guid Id
+    +string Slug
+    +string Name
+  }
+  class Event {
+    +Guid Id
+    +Guid CommunityId
+    +EventStatus Status
+  }
+  class AuditEntry {
+    +Guid Id
+    +Guid ActorId
+    +DateTimeOffset AtUtc
+    +string Action
+    +string Target
+  }
+}
+
+package "SixStack.Application" {
+  class DeleteAccountCommand {
+    +string ConfirmEmail
+  }
+  class DeleteAccountCommandValidator {
+    +EmailMatches(typed: string, accountEmail: string): bool
+  }
+  class DeleteAccountCommandHandler {
+    +Handle(command: DeleteAccountCommand): Task<Unit>
+  }
+  interface IAuditLog {
+    +Record(actorId: Guid, action: string, target: string): void
+  }
+  interface ICurrentUser {
+    +Guid? UserId
+  }
+}
+
+package "sixstack (Angular)" {
+  class DeleteAccountDialog {
+    +confirmEmail: FormControl<string>
+    +canDelete: Signal<boolean>
+    +state: Signal<DeleteDialogState>
+    +delete(): void
+  }
+  class emailMatches <<function>>
+  interface AccountApi {
+    +deleteAccount(confirmEmail: string): Observable<void>
+  }
+  class HttpAccountApi
+  class SessionStore {
+    +clear(): void
+  }
+}
+
+User "1" *-- "*" Session
+User "1" o-- "0..1" CommunityOrganizer
+Community "1" *-- "*" CommunityOrganizer
+Community "1" o-- "*" Event : events stay after deletion
+AuditEntry ..> User : target id, no email
+DeleteAccountCommandValidator ..> DeleteAccountCommand : validates
+DeleteAccountCommandHandler ..> DeleteAccountCommand : handles
+DeleteAccountCommandHandler ..> ICurrentUser
+DeleteAccountCommandHandler ..> User : Delete(now)
+DeleteAccountCommandHandler ..> Session : revokes all
+DeleteAccountCommandHandler ..> CommunityOrganizer : removes
+DeleteAccountCommandHandler ..> IAuditLog
+IAuditLog ..> AuditEntry : writes
+HttpAccountApi ..|> AccountApi
+DeleteAccountDialog ..> AccountApi : ACCOUNT_API
+DeleteAccountDialog ..> emailMatches
+DeleteAccountDialog ..> SessionStore
+@enduml

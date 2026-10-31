@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Review queue
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(guard, "authGuard", "Angular route guard", "Sends anonymous visitors to sign in")
+  Component(page, "ReviewQueuePage", "Angular page", "Summary, cards, states, toasts")
+  Component(card, "ReviewCard", "Angular component", "One submission with checks and actions")
+  Component(keys, "ReviewQueueShortcuts", "Angular directive", "J, K, A, R and ? outside fields")
+  Component(help, "KeyboardShortcutsDialog", "Angular CDK dialog", "Lists the shortcuts")
+  Component(client, "HttpModerationApi", "Angular service behind MODERATION_API", "Typed client for /api/moderation")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "ModerationController", "ASP.NET Core controller", "GET /api/moderation/queue")
+  Component(policy, "ModeratorPolicy", "Authorization policy", "401 anonymous, 403 without Moderator role")
+  Component(handler, "GetReviewQueueQueryHandler", "MediatR handler", "Oldest-first cards and summary")
+  Component(clock, "SystemClock", "IClock", "Current instant")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events, submission checks, decisions")
+
+Rel(guard, page, "Activates")
+Rel(page, card, "Renders one per submission")
+Rel(page, keys, "Attaches to the card list")
+Rel(keys, help, "Opens on ?", "CDK Dialog")
+Rel(page, client, "Requests the queue")
+Rel(client, ctrl, "GET /api/moderation/queue", "JSON/HTTPS")
+Rel(ctrl, policy, "Authorizes with")
+Rel(ctrl, handler, "Sends GetReviewQueueQuery")
+Rel(handler, clock, "Reads now")
+Rel(handler, db, "Queries In review events, checks, decisions", "EF Core")
+@enduml

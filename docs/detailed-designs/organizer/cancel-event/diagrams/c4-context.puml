@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Cancel an event
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>; delivers cancellation emails")
+System_Ext(calendars, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+
+Rel(organizer, sixstack, "Cancels a listing with a reason using", "HTTPS")
+Rel(sixstack, email, "Sends cancellation emails via", "<TO SUPPLY>")
+Rel(calendars, sixstack, "Requests feeds with STATUS:CANCELLED from", "HTTPS, iCalendar")
+@enduml

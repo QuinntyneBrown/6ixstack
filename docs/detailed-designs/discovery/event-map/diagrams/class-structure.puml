@@ -1,0 +1,170 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Event map and timeline
+
+package "SixStack.Domain" {
+  enum EventFormat {
+    InPerson
+    Streaming
+    Hybrid
+  }
+  class Event {
+    +string Slug
+    +string Title
+    +EventFormat Format
+    +IReadOnlyCollection<Topic> Topics
+    +DateTimeOffset StartsAtUtc
+    +string TimeZoneId
+    +Venue? Venue
+    +string? StreamOriginCity
+    +EventStatus Status
+  }
+  class Venue <<value object>> {
+    +string Name
+    +string City
+    +double? Latitude
+    +double? Longitude
+  }
+}
+
+package "SixStack.Application" {
+  class GetEventMapQuery {
+    +FormatFilter Format
+    +IReadOnlyList<Topic> Topics
+    +string? Search
+  }
+  class GetEventMapQueryHandler {
+    +Handle(query: GetEventMapQuery): Task<EventMapDto>
+  }
+  class EventMapDto {
+    +int GtaCount
+    +int StreamCount
+    +IReadOnlyList<MapPointDto> Points
+    +IReadOnlyList<MapStreamDto> Streams
+    +IReadOnlyList<MapDayDto> Days
+  }
+  class MapPointDto {
+    +string Slug
+    +string Title
+    +DateOnly Date
+    +Topic FirstTopic
+    +double Latitude
+    +double Longitude
+    +bool IsHybrid
+    +string CardLabel
+  }
+  class MapStreamDto {
+    +string Slug
+    +string Title
+    +DateOnly Date
+    +Topic FirstTopic
+    +string OriginCity
+    +OriginSide OriginSide
+    +string SourceTime
+    +string CardLabel
+  }
+  class MapDayDto {
+    +DateOnly Date
+    +string DayLabel
+    +int EventCount
+    +IReadOnlyList<Topic> DotTopics
+  }
+  enum OriginSide {
+    West
+    East
+  }
+}
+
+package "api (Angular)" {
+  interface EventsApi {
+    +getMap(filters: EventFilters): Observable<EventMapData>
+  }
+  class HttpEventsApi
+}
+
+package "sixstack (Angular)" {
+  class EventsPage {
+    +revealEvent(slug: string): void
+    +revealDay(date: string): void
+  }
+  class EventMapPanel {
+    +status: Signal<MapStatus>
+    +data: Signal<EventMapData | null>
+    +retry(): void
+  }
+  class MapTimelineState {
+    +focusedDay: WritableSignal<string | null>
+    +playing: WritableSignal<boolean>
+    +hoveredSlug: WritableSignal<string | null>
+    +pickDay(date: string): void
+    +clearFocus(): void
+  }
+  class TimelinePlayer {
+    +stepMs = 1100
+    +play(days: MapDay[]): void
+    +pause(): void
+  }
+  class MotionPreference {
+    +reduced: Signal<boolean>
+  }
+  enum MapStatus {
+    loading
+    ready
+    empty
+    waiting
+    failed
+  }
+}
+
+package "components (Angular)" {
+  class EventMap {
+    +data: InputSignal<EventMapData>
+    +focusedDay: InputSignal<string | null>
+    +hoveredSlug: InputSignal<string | null>
+    +reducedMotion: InputSignal<boolean>
+    +dotActivated: OutputEmitterRef<string>
+    +dotHovered: OutputEmitterRef<string | null>
+  }
+  class MapTimeline {
+    +days: InputSignal<MapDay[]>
+    +playing: InputSignal<boolean>
+    +dayPicked: OutputEmitterRef<string>
+    +playToggled: OutputEmitterRef<void>
+    +showAllDates: OutputEmitterRef<void>
+  }
+  class GtaProjection <<module>> {
+    +project(lng: number, lat: number): Point
+  }
+}
+
+Event --> EventFormat
+Event *-- Venue
+GetEventMapQueryHandler ..> GetEventMapQuery : handles
+GetEventMapQueryHandler ..> Event : reads
+GetEventMapQueryHandler ..> EventMapDto : returns
+EventMapDto "1" *-- "*" MapPointDto
+EventMapDto "1" *-- "*" MapStreamDto
+EventMapDto "1" *-- "14" MapDayDto
+MapStreamDto --> OriginSide
+HttpEventsApi ..|> EventsApi
+EventMapPanel ..> EventsApi : EVENTS_API
+EventMapPanel --> MapStatus
+EventMapPanel ..> EventMap : renders deferred
+EventMap *-- MapTimeline
+EventMap ..> GtaProjection
+EventsPage *-- MapTimelineState : provides
+EventsPage *-- EventMapPanel
+EventMapPanel ..> MapTimelineState
+EventMapPanel ..> MotionPreference
+TimelinePlayer ..> MapTimelineState : advances
+EventsPage ..> MotionPreference : scroll behaviour
+@enduml

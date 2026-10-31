@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Browse communities
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Communities page, toolbar and card grid")
+  Container(api, "6ixstack API", "ASP.NET Core", "Public community queries")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Communities and events")
+}
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/communities", "JSON/HTTPS")
+Rel(api, db, "Reads communities and next events", "EF Core")
+@enduml

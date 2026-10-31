@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendar — 6ixstack design system</title>
+<meta name="description" content="The month calendar lays a month of events on a seven-column grid, with a toolbar to move between months and a legend for topic colours. The agenda is the one-day version on an event page.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Calendar</h1>
+      <p class="ds-lead">The month calendar lays a month of events on a seven-column grid, with a toolbar to move between months and a legend for topic colours. The agenda is the one-day version on an event page.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">APG Grid</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li></ul>
+    </header>
+
+<section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+<p>Use the month grid when people plan around dates (“what’s on the week of the 9th?”). It is one of two views of the same events; the list view (<a href="event-row.html">event rows</a>) is the default and is better for reading details. Use the <b>agenda</b> for the timetable inside a single event.</p>
+</section>
+<section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+<div class="ds-anatomy"><figure class="ds-anatomy__figure" style="display: block; width: 100%;"><div class="cal" role="grid" aria-label="November 2026" style="width: 100%;"><div class="cal__week" role="row"><div class="cal__dow" role="columnheader"><abbr title="Sunday">Sun</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Monday">Mon</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Tuesday">Tue</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Wednesday">Wed</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Thursday">Thu</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Friday">Fri</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Saturday">Sat</abbr></div></div><div class="cal__week" role="row"><div class="cal__day" role="gridcell" aria-label="November 1, no events"><span class="cal__num" aria-hidden="true">1</span><div class="cal__events"></div></div><div class="cal__day cal__day--today" role="gridcell" aria-label="November 2, today, no events"><span class="cal__num" aria-hidden="true">2</span><div class="cal__events"></div></div><div class="cal__day" role="gridcell" aria-label="November 3, 1 event"><span class="cal__num" aria-hidden="true">3</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>What’s new in the .NET 11 previews</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 4, 2 events"><span class="cal__num" aria-hidden="true">4</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span><span>Azure AI Foundry: shipping agents to production</span></a><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--angular" aria-hidden="true"></span><span>Signals all the way down</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 5, 2 events"><span class="cal__num" aria-hidden="true">5</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--azure" aria-hidden="true"></span><span>Azure Data &amp; AI Day GTA</span></a><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--aws" aria-hidden="true"></span><span>Bedrock in the real world</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 6, 1 event"><span class="cal__num" aria-hidden="true">6</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>.NET Aspire deep dive</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 7, 1 event"><span class="cal__num" aria-hidden="true">7</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span><span>GTA AI Builders Hackathon</span></a></div></div></div></div>
+<span class="ds-callout" style="left: 4%; top: 6%;" aria-hidden="true">1</span><span class="ds-callout" style="left: 18%; top: 30%;" aria-hidden="true">2</span><span class="ds-callout" style="left: 32%; top: 50%;" aria-hidden="true">3</span><span class="ds-callout" style="left: 60%; top: 30%;" aria-hidden="true">4</span></figure>
+<ol class="ds-anatomy__list"><li><div><b>Weekday header</b><small>Sunday-first, three-letter <code>abbr</code> with the full name as <code>title</code>; sunken surface.</small></div></li><li><div><b>Today</b><small>The day number in an ink circle (<code>.cal__day--today</code>).</small></div></li><li><div><b>Event chip</b><small><code>.cal__event</code>: topic dot + truncated title; a link to the event.</small></div></li><li><div><b>Day cell</b><small>Surface, 1px hairlines between cells (the grid gap shows the border colour), 72px tall (120px from 768px).</small></div></li></ol></div>
+</section>
+<section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+<h3>Month view with toolbar and legend</h3><div class="ds-example">
+<div class="ds-example__canvas ds-example__canvas--stack">
+<div class="cal-toolbar"><div class="cluster"><a class="btn btn--icon" href="../../mocks/pages/calendar/default.html" aria-label="Previous month, October 2026"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></a><h2 aria-live="polite">November 2026</h2><a class="btn btn--icon" href="../../mocks/pages/calendar/empty.html" aria-label="Next month, December 2026"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></a><a class="btn btn--sm" href="../../mocks/pages/calendar/default.html">Today</a></div><div class="btn-group" role="group" aria-label="View"><a class="btn btn--sm" href="../../mocks/pages/events/default.html"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 12h.01M3 18h.01M3 6h.01M8 12h13M8 18h13M8 6h13"/></svg>List</a><a class="btn btn--sm" href="../../mocks/pages/calendar/default.html" aria-pressed="true" aria-current="page"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>Month</a></div></div><div class="cal" role="grid" aria-label="November 2026" style="width: 100%;"><div class="cal__week" role="row"><div class="cal__dow" role="columnheader"><abbr title="Sunday">Sun</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Monday">Mon</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Tuesday">Tue</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Wednesday">Wed</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Thursday">Thu</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Friday">Fri</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Saturday">Sat</abbr></div></div><div class="cal__week" role="row"><div class="cal__day cal__day--outside" role="gridcell" aria-label="October 25, no events"><span class="cal__num" aria-hidden="true">25</span><div class="cal__events"></div></div><div class="cal__day cal__day--outside" role="gridcell" aria-label="October 26, no events"><span class="cal__num" aria-hidden="true">26</span><div class="cal__events"></div></div><div class="cal__day cal__day--outside" role="gridcell" aria-label="October 27, no events"><span class="cal__num" aria-hidden="true">27</span><div class="cal__events"></div></div><div class="cal__day cal__day--outside" role="gridcell" aria-label="October 28, no events"><span class="cal__num" aria-hidden="true">28</span><div class="cal__events"></div></div><div class="cal__day cal__day--outside" role="gridcell" aria-label="October 29, no events"><span class="cal__num" aria-hidden="true">29</span><div class="cal__events"></div></div><div class="cal__day cal__day--outside" role="gridcell" aria-label="October 30, no events"><span class="cal__num" aria-hidden="true">30</span><div class="cal__events"></div></div><div class="cal__day cal__day--outside" role="gridcell" aria-label="October 31, no events"><span class="cal__num" aria-hidden="true">31</span><div class="cal__events"></div></div></div><div class="cal__week" role="row"><div class="cal__day" role="gridcell" aria-label="November 1, no events"><span class="cal__num" aria-hidden="true">1</span><div class="cal__events"></div></div><div class="cal__day cal__day--today" role="gridcell" aria-label="November 2, today, no events"><span class="cal__num" aria-hidden="true">2</span><div class="cal__events"></div></div><div class="cal__day" role="gridcell" aria-label="November 3, 1 event"><span class="cal__num" aria-hidden="true">3</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>What’s new in the .NET 11 previews</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 4, 2 events"><span class="cal__num" aria-hidden="true">4</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span><span>Azure AI Foundry: shipping agents to production</span></a><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--angular" aria-hidden="true"></span><span>Signals all the way down</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 5, 2 events"><span class="cal__num" aria-hidden="true">5</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--azure" aria-hidden="true"></span><span>Azure Data &amp; AI Day GTA</span></a><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--aws" aria-hidden="true"></span><span>Bedrock in the real world</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 6, 1 event"><span class="cal__num" aria-hidden="true">6</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>.NET Aspire deep dive</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 7, 1 event"><span class="cal__num" aria-hidden="true">7</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span><span>GTA AI Builders Hackathon</span></a></div></div></div></div><div class="cal-legend"><span class="topic-tag"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span>AI</span><span class="topic-tag"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span>.NET</span><span class="topic-tag"><span class="topic-dot topic-dot--azure" aria-hidden="true"></span>Azure</span><span class="topic-tag"><span class="topic-dot topic-dot--angular" aria-hidden="true"></span>Angular</span><span class="topic-tag"><span class="topic-dot topic-dot--react" aria-hidden="true"></span>React</span><span class="topic-tag"><span class="topic-dot topic-dot--aws" aria-hidden="true"></span>AWS</span></div>
+</div>
+<div class="ds-example__caption"><span>Toolbar (previous, month, next, Today, List/Month), the grid with outside-month days, and the topic legend.</span></div>
+</div><h3>Agenda</h3><div class="ds-example">
+<div class="ds-example__canvas">
+<ol class="agenda"><li><span class="agenda__time">9:00 AM</span><span>Registration and coffee</span></li><li><span class="agenda__time">9:30 AM</span><span><strong>Keynote:</strong> Fabric one year later — Priya Natarajan</span></li><li><span class="agenda__time">11:00 AM</span><span>Grounding Azure OpenAI on your lakehouse — Aisha Rahman</span></li><li><span class="agenda__time">12:30 PM</span><span>Lunch</span></li><li><span class="agenda__time">1:30 PM</span><span>Lab: build a real-time dashboard with Eventstream</span></li><li><span class="agenda__time">4:15 PM</span><span>Panel: data teams in Canadian banks — Marcus Bell, Kenji Watanabe</span></li></ol>
+</div>
+<div class="ds-example__caption"><span>Event timetable: mono times, one line per session.</span></div>
+<details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;ol class="agenda"&gt;&lt;li&gt;&lt;span class="agenda__time"&gt;9:00 AM&lt;/span&gt;&lt;span&gt;Registration and coffee&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span class="agenda__time"&gt;9:30 AM&lt;/span&gt;&lt;span&gt;&lt;strong&gt;Keynote:&lt;/strong&gt; Fabric one year later — Priya Natarajan&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span class="agenda__time"&gt;11:00 AM&lt;/span&gt;&lt;span&gt;Grounding Azure OpenAI on your lakehouse — Aisha Rahman&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span class="agenda__time"&gt;12:30 PM&lt;/span&gt;&lt;span&gt;Lunch&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span class="agenda__time"&gt;1:30 PM&lt;/span&gt;&lt;span&gt;Lab: build a real-time dashboard with Eventstream&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span class="agenda__time"&gt;4:15 PM&lt;/span&gt;&lt;span&gt;Panel: data teams in Canadian banks — Marcus Bell, Kenji Watanabe&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;</code></pre></details>
+</div>
+</section>
+<section class="ds-section" id="sizes" data-na="One size; day cells grow from 72px to 120px tall at 768px (see Responsive)."><h2><a href="#sizes">Sizes</a></h2>
+<p>One size; day cells grow from 72px to 120px tall at 768px (see Responsive).</p>
+</section>
+<section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+<div class="ds-matrix"><table>
+<thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Today</th><th scope="col">Outside month</th></tr></thead>
+<tbody>
+<tr><th scope="row">Event chip</th><td><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--azure" aria-hidden="true"></span><span>Azure Data &amp; AI Day GTA</span></a></td><td><a class="cal__event" href="../../mocks/pages/event-detail/default.html" data-state="hover"><span class="topic-dot topic-dot--azure" aria-hidden="true"></span><span>Azure Data &amp; AI Day GTA</span></a></td><td><a class="cal__event" href="../../mocks/pages/event-detail/default.html" data-state="focus"><span class="topic-dot topic-dot--azure" aria-hidden="true"></span><span>Azure Data &amp; AI Day GTA</span></a></td><td>–</td><td>–</td></tr>
+<tr><th scope="row">Day cell</th><td><div class="cal" style="grid-template-columns: 6rem;"><div class="cal__day" role="gridcell" aria-label="November 3, 1 event"><span class="cal__num" aria-hidden="true">3</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>.NET 11 previews</span></a></div></div></div></td><td>–</td><td>–</td><td><div class="cal" style="grid-template-columns: 6rem;"><div class="cal__day cal__day--today" role="gridcell" aria-label="November 2, today, no events"><span class="cal__num" aria-hidden="true">2</span><div class="cal__events"></div></div></div></td><td><div class="cal" style="grid-template-columns: 6rem;"><div class="cal__day cal__day--outside" role="gridcell" aria-label="October 31, no events"><span class="cal__num" aria-hidden="true">31</span><div class="cal__events"></div></div></div></td></tr>
+</tbody>
+</table></div><p>The whole calendar also has loading (skeleton chips), empty (“Nothing on the calendar in December yet”) and error states; see <code>pages/calendar/*</code>.</p><h3>Both themes</h3><div class="ds-themes">
+<div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+<div class="cal" role="grid" aria-label="November 2026, theme example" style="width: 100%;"><div class="cal__week" role="row"><div class="cal__dow" role="columnheader"><abbr title="Sunday">Sun</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Monday">Mon</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Tuesday">Tue</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Wednesday">Wed</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Thursday">Thu</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Friday">Fri</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Saturday">Sat</abbr></div></div><div class="cal__week" role="row"><div class="cal__day" role="gridcell" aria-label="November 1, no events"><span class="cal__num" aria-hidden="true">1</span><div class="cal__events"></div></div><div class="cal__day cal__day--today" role="gridcell" aria-label="November 2, today, no events"><span class="cal__num" aria-hidden="true">2</span><div class="cal__events"></div></div><div class="cal__day" role="gridcell" aria-label="November 3, 1 event"><span class="cal__num" aria-hidden="true">3</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>What’s new in the .NET 11 previews</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 4, 2 events"><span class="cal__num" aria-hidden="true">4</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span><span>Azure AI Foundry: shipping agents to production</span></a><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--angular" aria-hidden="true"></span><span>Signals all the way down</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 5, 2 events"><span class="cal__num" aria-hidden="true">5</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--azure" aria-hidden="true"></span><span>Azure Data &amp; AI Day GTA</span></a><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--aws" aria-hidden="true"></span><span>Bedrock in the real world</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 6, 1 event"><span class="cal__num" aria-hidden="true">6</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>.NET Aspire deep dive</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 7, 1 event"><span class="cal__num" aria-hidden="true">7</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span><span>GTA AI Builders Hackathon</span></a></div></div></div></div>
+</div></div>
+<div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+<div class="cal" role="grid" aria-label="November 2026, theme example" style="width: 100%;"><div class="cal__week" role="row"><div class="cal__dow" role="columnheader"><abbr title="Sunday">Sun</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Monday">Mon</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Tuesday">Tue</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Wednesday">Wed</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Thursday">Thu</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Friday">Fri</abbr></div><div class="cal__dow" role="columnheader"><abbr title="Saturday">Sat</abbr></div></div><div class="cal__week" role="row"><div class="cal__day" role="gridcell" aria-label="November 1, no events"><span class="cal__num" aria-hidden="true">1</span><div class="cal__events"></div></div><div class="cal__day cal__day--today" role="gridcell" aria-label="November 2, today, no events"><span class="cal__num" aria-hidden="true">2</span><div class="cal__events"></div></div><div class="cal__day" role="gridcell" aria-label="November 3, 1 event"><span class="cal__num" aria-hidden="true">3</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>What’s new in the .NET 11 previews</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 4, 2 events"><span class="cal__num" aria-hidden="true">4</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span><span>Azure AI Foundry: shipping agents to production</span></a><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--angular" aria-hidden="true"></span><span>Signals all the way down</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 5, 2 events"><span class="cal__num" aria-hidden="true">5</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--azure" aria-hidden="true"></span><span>Azure Data &amp; AI Day GTA</span></a><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--aws" aria-hidden="true"></span><span>Bedrock in the real world</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 6, 1 event"><span class="cal__num" aria-hidden="true">6</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>.NET Aspire deep dive</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 7, 1 event"><span class="cal__num" aria-hidden="true">7</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span><span>GTA AI Builders Hackathon</span></a></div></div></div></div>
+</div></div>
+</div>
+</section>
+<section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive</a></h2>
+<ul><li>Below 768px event chips collapse to their topic dot; the title stays in the accessible name (visually hidden), and the legend explains the dots.</li><li>From 768px day cells are 120px tall and chips show truncated titles.</li><li>The toolbar wraps: month navigation on the first line, the List/Month switch below it on phones.</li><li>The grid never scrolls sideways; seven <code>minmax(0, 1fr)</code> columns shrink to fit 360px.</li></ul>
+</section>
+<section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+<p>Day cells use <code>--color-bg-surface</code>, outside-month cells <code>--color-bg-surface-sunken</code>, and hairlines show <code>--color-border-default</code> through the 1px grid gap. Today uses the accent pair, so it inverts in dark theme.</p>
+</section>
+<section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+<h3>Role and pattern</h3><p><a href="https://www.w3.org/WAI/ARIA/apg/patterns/grid/">APG Grid</a> (data grid): <code>role="grid"</code> labelled with the month, <code>role="row"</code> per week, <code>role="columnheader"</code> for weekdays and <code>role="gridcell"</code> per day with an <code>aria-label</code> that gives the date, “today” and the event count. Week rows use <code>.cal__week</code> (<code>display: contents</code>) so the 7-column layout survives.</p>
+<h3>Keyboard</h3><table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+<tr><td><kbd>Tab</kbd></td><td>Enters the grid on today (or the first day with events); a second Tab leaves it.</td></tr>
+<tr><td>Arrow keys</td><td>Move one day left/right or one week up/down.</td></tr>
+<tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>First / last day of the week.</td></tr>
+<tr><td><kbd>Page Up</kbd> / <kbd>Page Down</kbd></td><td>Previous / next month (same as the toolbar buttons).</td></tr>
+<tr><td><kbd>Enter</kbd></td><td>Moves focus into the day’s first event chip; <kbd>Tab</kbd> walks its chips, <kbd>Esc</kbd> returns to the cell.</td></tr>
+</tbody></table>
+<h3>Focus</h3><p>Roving <code>tabindex</code>: one cell is focusable at a time. The focused cell gets the shared ring; chips get their own ring.</p>
+<h3>Labelling</h3><p>The toolbar heading has <code>aria-live="polite"</code> so “December 2026” is announced after navigation; previous/next buttons name the month they go to (“Previous month, October 2026”). Topic dots are hidden; the chip text names the event.</p>
+<h3>Contrast</h3><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+<div class="ds-pair"><span>Chip text</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-subtle" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Chip text, hover</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-subtle-hover" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Weekday header</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface-sunken" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Today number</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-accent|--color-accent" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Outside-month number</span><span class="ds-pair__ratio" data-contrast="--color-fg-subtle|--color-bg-surface-sunken" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Agenda time</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-canvas" data-min="4.5"></span></div>
+</div>
+<h3>Motion</h3><p>Chip hover is a colour change over <code>--duration-fast</code>.</p><h3>Touch</h3><p>On phones chips are dot-sized; the whole day cell is the touch target and opens the day in the list view.</p>
+</section>
+<section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+<ul><li>Month title: “November 2026”. Weekday headers: “Sun”–“Sat” with full names in <code>title</code>.</li><li>Day labels: “November 4, 2 events”; “November 2, today, no events”.</li><li>Agenda: “9:30 AM” times; bold the session type (“Keynote:”) and end with the speaker after an em dash.</li></ul>
+</section>
+<section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+<div class="ds-dodont">
+<figure class="ds-do"><div class="ds-example__canvas"><div class="cal" role="grid" aria-label="Example" style="width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr));"><div class="cal__week" role="row"><div class="cal__day" role="gridcell" aria-label="November 3, 1 event"><span class="cal__num" aria-hidden="true">3</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>.NET 11</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 4, no events"><span class="cal__num" aria-hidden="true">4</span><div class="cal__events"></div></div></div></div></div><figcaption>Gridcells inside <code>role="row"</code> wrappers.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><div class="cal" role="grid" aria-label="Example" style="width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr));"><div class="cal__day" role="gridcell" aria-label="November 3, 1 event"><span class="cal__num" aria-hidden="true">3</span><div class="cal__events"><a class="cal__event" href="../../mocks/pages/event-detail/default.html"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span><span>.NET 11</span></a></div></div><div class="cal__day" role="gridcell" aria-label="November 4, no events"><span class="cal__num" aria-hidden="true">4</span><div class="cal__events"></div></div></div></div><figcaption>Gridcells directly in the grid, as the calendar mock had them: invalid ARIA, and screen readers cannot navigate by week.</figcaption></figure>
+<figure class="ds-do"><div class="ds-example__canvas"><div class="cal-legend"><span class="topic-tag"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span>AI</span><span class="topic-tag"><span class="topic-dot topic-dot--dotnet" aria-hidden="true"></span>.NET</span><span class="topic-tag"><span class="topic-dot topic-dot--azure" aria-hidden="true"></span>Azure</span><span class="topic-tag"><span class="topic-dot topic-dot--angular" aria-hidden="true"></span>Angular</span><span class="topic-tag"><span class="topic-dot topic-dot--react" aria-hidden="true"></span>React</span><span class="topic-tag"><span class="topic-dot topic-dot--aws" aria-hidden="true"></span>AWS</span></div></div><figcaption>Show the legend under the grid; on phones the chips are dots only.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><div class="cal__events"><span class="cal__event"><span class="topic-dot topic-dot--ai" aria-hidden="true"></span></span></div></div><figcaption>A dot-only chip with no hidden title; as a link it would have no accessible name. Keep the title in the markup and hide it visually below 768px.</figcaption></figure>
+</div>
+</section>
+<section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+<div class="ds-table-wrap"><table class="ds-table">
+<thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+<tbody>
+<tr><td>Day cell</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+<tr><td>Outside-month cell, weekday header</td><td><code>--color-bg-surface-sunken</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td></tr>
+<tr><td>Hairlines</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+<tr><td>Event chip</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+<tr><td>Event chip hover</td><td><code>--color-bg-subtle-hover</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle-hover" data-swatch></i><span data-token="--color-bg-subtle-hover"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle-hover" data-swatch></i><span data-token="--color-bg-subtle-hover"></span></span></td></tr>
+<tr><td>Today circle</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+<tr><td>Outside-month number</td><td><code>--color-fg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td></tr>
+<tr><td>Grid radius</td><td><code>--radius-lg</code></td><td colspan="2"><span data-token="--radius-lg"></span></td></tr>
+<tr><td>Chip radius</td><td><code>--radius-sm</code></td><td colspan="2"><span data-token="--radius-sm"></span></td></tr>
+<tr><td>Chip font</td><td><code>--text-caption</code></td><td colspan="2"><span data-token="--text-caption"></span></td></tr>
+<tr><td>Agenda rule</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+</tbody>
+</table></div>
+</section>
+<section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+<pre><code>&lt;div class="cal" role="grid" aria-label="November 2026"&gt;
+  &lt;div class="cal__week" role="row"&gt;&lt;div class="cal__dow" role="columnheader"&gt;&lt;abbr title="Sunday"&gt;Sun&lt;/abbr&gt;&lt;/div&gt;…&lt;/div&gt;
+  &lt;div class="cal__week" role="row"&gt;
+    &lt;div class="cal__day cal__day--today" role="gridcell" aria-label="November 2, today, no events" tabindex="0"&gt;
+      &lt;span class="cal__num" aria-hidden="true"&gt;2&lt;/span&gt;&lt;div class="cal__events"&gt;&lt;/div&gt;
+    &lt;/div&gt;…
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre><table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+<tr><td><code>.cal</code></td><td>Seven-column grid with hairline gaps.</td></tr>
+<tr><td><code>.cal__week</code></td><td><code>role="row"</code> wrapper; <code>display: contents</code>.</td></tr>
+<tr><td><code>.cal__dow</code></td><td>Weekday header.</td></tr>
+<tr><td><code>.cal__day</code> / <code>--today</code> / <code>--outside</code></td><td>Day cell and its states.</td></tr>
+<tr><td><code>.cal__num</code></td><td>Day number.</td></tr>
+<tr><td><code>.cal__event</code></td><td>Event chip link; dot-only below 768px.</td></tr>
+<tr><td><code>.cal__more</code></td><td>“+2 more” overflow line.</td></tr>
+<tr><td><code>.cal-toolbar</code></td><td>Month navigation and view switch.</td></tr>
+<tr><td><code>.cal-legend</code></td><td>Topic legend.</td></tr>
+<tr><td><code>.agenda</code> / <code>.agenda__time</code></td><td>Timetable list with a left rule.</td></tr>
+</tbody></table>
+</section>
+<section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+<p>Extracted from these mocks:</p>
+<ul>
+<li><a href="../../mocks/pages/calendar/default.html">pages/calendar/default</a> (month grid, toolbar, legend)</li>
+<li><a href="../../mocks/pages/calendar/empty.html">pages/calendar/empty</a> (empty month)</li>
+<li><a href="../../mocks/pages/calendar/loading.html">pages/calendar/loading</a> (loading)</li>
+<li><a href="../../mocks/pages/calendar/error.html">pages/calendar/error</a> (error)</li>
+<li><a href="../../mocks/pages/calendar/no-results.html">pages/calendar/no-results</a> (filters with no matches)</li>
+<li><a href="../../mocks/pages/event-detail/default.html">pages/event-detail/default</a> (agenda)</li>
+</ul>
+<p>Drift fixed during extraction: the mock grid placed <code>role="gridcell"</code> directly under <code>role="grid"</code> with no rows; the system adds <code>.cal__week</code> row wrappers (<code>display: contents</code>) and documents the APG grid keyboard model the mock did not specify.</p>
+</section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

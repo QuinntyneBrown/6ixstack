@@ -1,0 +1,188 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — View event detail
+
+package "SixStack.Domain" {
+  class Event {
+    +string Slug
+    +string Title
+    +string Description
+    +Guid CommunityId
+    +EventFormat Format
+    +DateTimeOffset StartsAtUtc
+    +DateTimeOffset EndsAtUtc
+    +string TimeZoneId
+    +string? StreamUrl
+    +string? TicketUrl
+    +EventStatus Status
+    +int GoingCount
+    +int? Capacity
+    +bool IsSoldOut
+    +string? CancellationReason
+    +DateTimeOffset? CancelledAtUtc
+    +DateTimeOffset? TimeChangedAtUtc
+    +string? RecordingUrl
+    +string? SlidesUrl
+    +IsPast(now: DateTimeOffset): bool
+  }
+  class Venue <<value object>>
+  class Price <<value object>>
+  class AgendaItem <<value object>> {
+    +TimeOnly StartsAt
+    +string Title
+  }
+  class EventSpeaker
+  class Speaker {
+    +string Slug
+    +string Name
+    +string Role
+  }
+  class Community {
+    +string Slug
+    +string Name
+  }
+}
+
+package "SixStack.Application" {
+  class GetEventDetailQuery {
+    +string Slug
+  }
+  class GetEventDetailQueryHandler {
+    +Handle(query: GetEventDetailQuery): Task<Result<EventDetailDto>>
+  }
+  class EventDetailPolicy {
+    +StateOf(e: Event, now: DateTimeOffset): EventDetailState
+    +ActionsFor(e: Event, next: Event?, now: DateTimeOffset): EventActionsDto
+    +AlertsFor(e: Event, next: Event?, now: DateTimeOffset): IReadOnlyList<EventAlertDto>
+    +DockedBarFor(e: Event, actions: EventActionsDto): DockedBarDto?
+  }
+  enum EventDetailState {
+    Upcoming
+    Past
+    Cancelled
+  }
+  enum AlertKind {
+    Info
+    Success
+    Warning
+    Danger
+  }
+  class EventDetailDto {
+    +string Slug
+    +string Title
+    +EventDetailState State
+    +EventFormat Format
+    +string MonthLabel
+    +int DayOfMonth
+    +CommunityLinkDto Community
+    +IReadOnlyList<Topic> Topics
+    +EventFactsDto Facts
+    +string? AboutMarkdown
+    +IReadOnlyList<AgendaItemDto> Agenda
+    +IReadOnlyList<SpeakerSummaryDto> Speakers
+    +VenueDto? Venue
+    +StreamOriginDto? StreamOrigin
+    +EventActionsDto Actions
+    +IReadOnlyList<EventAlertDto> Alerts
+    +DockedBarDto? DockedBar
+  }
+  class EventFactsDto {
+    +string DateLabel
+    +string TimeRangeEt
+    +string? SourceTime
+    +bool IsTimeStruck
+    +string? LivestreamLabel
+    +string PriceLabel
+    +string GoingLabel
+    +string? CapacityLabel
+  }
+  class EventActionsDto {
+    +ActionLinkDto? Tickets
+    +JoinStreamDto? JoinStream
+    +bool AddToCalendar
+    +bool Share
+    +bool ReportProblem
+    +ActionLinkDto? Recording
+    +ActionLinkDto? Slides
+    +ActionLinkDto? NextCommunityEvent
+    +ActionLinkDto? FindAnother
+    +ActionLinkDto? FollowCommunity
+  }
+  class JoinStreamDto {
+    +DateTimeOffset JoinOpensAtUtc
+    +string? StreamUrl
+  }
+  class EventAlertDto {
+    +AlertKind Kind
+    +string Title
+    +string Text
+    +DateTimeOffset? ChangedAtUtc
+    +ActionLinkDto? Action
+  }
+  class DockedBarDto {
+    +string WhenLabel
+    +string SummaryLabel
+    +ActionLinkDto Action
+  }
+  class VenueDto
+  class StreamOriginDto
+  class AgendaItemDto
+  class SpeakerSummaryDto
+}
+
+package "api (Angular)" {
+  interface EventsApi {
+    +getDetail(slug: string): Observable<EventDetail | NotFound>
+  }
+  class HttpEventsApi
+}
+
+package "sixstack (Angular)" {
+  class EventDetailPage {
+    +status: Signal<'loading' | 'ready' | 'error'>
+    +event: Signal<EventDetail | null>
+    +retry(): void
+    +openAddToCalendar(): void
+    +openShare(): void
+    +openReport(): void
+  }
+  class StreamJoinTimer {
+    +scheduleAt(opensAt: Date, reload: () => void): void
+    +cancel(): void
+  }
+}
+
+Event *-- Venue
+Event *-- Price
+Event "1" *-- "*" AgendaItem
+Event "1" *-- "*" EventSpeaker
+EventSpeaker --> Speaker
+Event --> Community
+GetEventDetailQueryHandler ..> GetEventDetailQuery : handles
+GetEventDetailQueryHandler ..> Event : reads
+GetEventDetailQueryHandler ..> EventDetailPolicy : delegates rules
+GetEventDetailQueryHandler ..> EventDetailDto : returns
+EventDetailPolicy ..> EventDetailState
+EventDetailDto *-- EventFactsDto
+EventDetailDto *-- EventActionsDto
+EventDetailDto "1" *-- "*" EventAlertDto
+EventDetailDto *-- DockedBarDto
+EventDetailDto *-- VenueDto
+EventDetailDto *-- StreamOriginDto
+EventDetailDto "1" *-- "*" AgendaItemDto
+EventDetailDto "1" *-- "*" SpeakerSummaryDto
+EventActionsDto *-- JoinStreamDto
+EventAlertDto --> AlertKind
+HttpEventsApi ..|> EventsApi
+EventDetailPage ..> EventsApi : EVENTS_API
+EventDetailPage ..> StreamJoinTimer
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Add an event to a personal calendar
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Add to my calendar dialog, prefilled links, file download")
+  Container(api, "6ixstack API", "ASP.NET Core", "Single-event iCalendar file")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events")
+}
+System_Ext(calapps, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/events/{slug}/ics", "HTTPS, text/calendar")
+Rel(api, db, "Reads the public event", "EF Core")
+Rel(spa, calapps, "Opens Google Calendar or Outlook prefilled page", "HTTPS, new tab")
+@enduml

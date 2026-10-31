@@ -1,0 +1,63 @@
+@startuml
+title UML sequence behaviour — Select and dismiss submission banners
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "OrganizerDashboardPage" as page
+  participant "BannerDismissalStore" as store
+  participant "SubmissionBanner" as banner
+  participant "HttpOrganizerEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "OrganizerEventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetOrganizerDashboardQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /organize
+page -> client : getDashboard()
+client -> controller : GET /api/organizer/events
+controller -> handler : Send GetOrganizerDashboardQuery
+handler -> db : Caller's User.EmailVerifiedAtUtc
+db --> handler : Verification state
+alt email unverified
+  handler -> handler : Banner EmailUnverified, Dismissible = false (L2-053)
+else email verified
+  handler -> db : Newest decision not undone, newest submission in review
+  db --> handler : Review outcome
+  handler -> handler : Map Published to Live, NeedsChanges to warning, Rejected to NotApproved with reason and moderator first name (L2-053)
+end
+handler --> controller : OrganizerDashboardDto with Banner
+controller --> client : 200 JSON
+client --> page : OrganizerDashboard
+alt Dismissible
+  page -> store : isDismissed(banner.Key)
+  store --> page : true or false
+  opt not dismissed
+    page -> banner : Render info, success, warning or danger alert
+    banner --> actor : For example "“Fabric for Power BI developers” is live" with View the listing and Share it
+    actor -> banner : Dismiss
+    banner -> page : dismissed(Key)
+    page -> store : dismiss(Key) in localStorage (L2-053)
+  end
+else not dismissible
+  page -> banner : Render warning without close button
+  banner --> actor : "Verify priya@gtaazure.ca to publish events" with Resend verification email (L2-053)
+end
+@enduml

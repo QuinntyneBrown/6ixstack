@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Badge and status — 6ixstack design system</title>
+<meta name="description" content="Badges label an item with a short, uppercase tag; status labels say where an event submission is in review. Both pair a dot with words.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Badge and status</h1>
+      <p class="ds-lead">Badges label an item with a short, uppercase tag; status labels say where an event submission is in review. Both pair a dot with words.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Dot + text</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li></ul>
+    </header>
+
+<section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+<p>Use a <b>badge</b> for a short property of an item that people should notice while scanning: “Cancelled”, “Waitlist open”, “Live now”. Use a <b>status</b> label for workflow state in tables and cards: an organizer’s submission is Draft, In review, Published, Needs changes, Cancelled or Past. Use a <b>count badge</b> on an icon button for unread notifications. For topics, use <a href="topic-chip.html">topic tags</a>, not badges.</p>
+</section>
+<section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+<div class="ds-anatomy"><figure class="ds-anatomy__figure"><span class="badge badge--warning">Waitlist open</span><span class="status status--review">In review</span>
+<span class="ds-callout" style="left: 18%; top: 15%;" aria-hidden="true">1</span><span class="ds-callout" style="left: 34%; top: 72%;" aria-hidden="true">2</span><span class="ds-callout" style="left: 66%; top: 15%;" aria-hidden="true">3</span></figure>
+<ol class="ds-anatomy__list"><li><div><b>Dot</b><small>6px (badge) or 8px (status) in <code>currentColor</code>; repeats the meaning visually.</small></div></li><li><div><b>Pill</b><small>22px tall, <code>--radius-full</code>, tone background, overline type in uppercase.</small></div></li><li><div><b>Status</b><small>No pill: dot + sentence-case label in the tone’s foreground colour.</small></div></li></ol></div>
+</section>
+<section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+<h3>Badge tones</h3><div class="ds-example">
+<div class="ds-example__canvas">
+<span class="badge">Free</span><span class="badge badge--info">Hybrid</span><span class="badge badge--success">Approved</span><span class="badge badge--warning">Waitlist open</span><span class="badge badge--danger">Cancelled</span><span class="badge badge--solid">New</span><span class="badge badge--brand">Live now</span>
+</div>
+<div class="ds-example__caption"><span>Neutral, info, success, warning, danger, solid, brand.</span></div>
+<details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span class="badge"&gt;Free&lt;/span&gt;&lt;span class="badge badge--info"&gt;Hybrid&lt;/span&gt;&lt;span class="badge badge--success"&gt;Approved&lt;/span&gt;&lt;span class="badge badge--warning"&gt;Waitlist open&lt;/span&gt;&lt;span class="badge badge--danger"&gt;Cancelled&lt;/span&gt;&lt;span class="badge badge--solid"&gt;New&lt;/span&gt;&lt;span class="badge badge--brand"&gt;Live now&lt;/span&gt;</code></pre></details>
+</div><h3>Submission status</h3><div class="ds-example">
+<div class="ds-example__canvas">
+<span class="status status--published">Published</span><span class="status status--review">In review</span><span class="status status--draft">Draft</span><span class="status status--rejected">Needs changes</span><span class="status status--cancelled">Cancelled</span><span class="status status--past">Past</span>
+</div>
+<div class="ds-example__caption"><span>The six states an organizer sees on the dashboard and in edit-event.</span></div>
+<details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span class="status status--published"&gt;Published&lt;/span&gt;&lt;span class="status status--review"&gt;In review&lt;/span&gt;&lt;span class="status status--draft"&gt;Draft&lt;/span&gt;&lt;span class="status status--rejected"&gt;Needs changes&lt;/span&gt;&lt;span class="status status--cancelled"&gt;Cancelled&lt;/span&gt;&lt;span class="status status--past"&gt;Past&lt;/span&gt;</code></pre></details>
+</div><h3>Count</h3><div class="ds-example">
+<div class="ds-example__canvas">
+<a class="btn btn--ghost btn--icon has-tooltip" href="../../mocks/pages/notifications/default.html" aria-label="Notifications, 3 unread" style="position: relative;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg><span class="badge badge--count" aria-hidden="true">3</span></a>
+</div>
+<div class="ds-example__caption"><span>Unread count on the header bell; the button label carries the number.</span></div>
+<details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;a class="btn btn--ghost btn--icon has-tooltip" href="../../mocks/pages/notifications/default.html" aria-label="Notifications, 3 unread" style="position: relative;"&gt;&lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="M10.268 21a2 2 0 0 0 3.464 0"/&gt;&lt;path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/&gt;&lt;/svg&gt;&lt;span class="badge badge--count" aria-hidden="true"&gt;3&lt;/span&gt;&lt;/a&gt;</code></pre></details>
+</div>
+</section>
+<section class="ds-section" id="sizes" data-na="Badges and status labels have one size (22px pill, label font). Count badges shrink to 18px only when pinned to an icon button."><h2><a href="#sizes">Sizes</a></h2>
+<p>Badges and status labels have one size (22px pill, label font). Count badges shrink to 18px only when pinned to an icon button.</p>
+</section>
+<section class="ds-section" id="states" data-na="Badges are static labels and have no interactive states. When a badge seems to need hover, it is really a chip or a link; see topic chip."><h2><a href="#states">States</a></h2>
+<p>Badges are static labels and have no interactive states. When a badge seems to need hover, it is really a chip or a link; see topic chip.</p>
+</section>
+<section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive</a></h2>
+<ul><li>Badges never wrap (<code>white-space: nowrap</code>); in an <a href="event-row.html">event row</a> meta line they wrap as a unit with the other meta items.</li><li>Day-group headings push their badge to the right edge at every width.</li></ul>
+</section>
+<section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+<p>Each tone reads the status token family (<code>--color-*-bg</code> and <code>--color-*-fg</code>). Dark theme swaps to deep tinted backgrounds with light text. The brand badge uses <code>--color-brand</code> with ink text in both themes.</p><div class="ds-themes">
+<div data-theme="light"><div class="ds-example__canvas" style="padding: 0;">
+<span class="badge">Free</span><span class="badge badge--info">Hybrid</span><span class="badge badge--success">Approved</span><span class="badge badge--warning">Waitlist open</span><span class="badge badge--danger">Cancelled</span><span class="badge badge--solid">New</span><span class="badge badge--brand">Live now</span><span class="status status--published">Published</span><span class="status status--review">In review</span><span class="status status--draft">Draft</span><span class="status status--rejected">Needs changes</span><span class="status status--cancelled">Cancelled</span><span class="status status--past">Past</span>
+</div></div>
+<div data-theme="dark"><div class="ds-example__canvas" style="padding: 0;">
+<span class="badge">Free</span><span class="badge badge--info">Hybrid</span><span class="badge badge--success">Approved</span><span class="badge badge--warning">Waitlist open</span><span class="badge badge--danger">Cancelled</span><span class="badge badge--solid">New</span><span class="badge badge--brand">Live now</span><span class="status status--published">Published</span><span class="status status--review">In review</span><span class="status status--draft">Draft</span><span class="status status--rejected">Needs changes</span><span class="status status--cancelled">Cancelled</span><span class="status status--past">Past</span>
+</div></div>
+</div>
+</section>
+<section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+<h3>Role and pattern</h3><p>Plain text in a <code>span</code>; no role. The dot is a pseudo-element, so it is never announced. Status is never colour alone: every badge has words.</p>
+<h3>Keyboard</h3><table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+<tr><td>—</td><td>Badges are not focusable.</td></tr>
+<tr><td><kbd>Tab</kbd></td><td>A count badge’s parent button is focusable; the badge itself is <code>aria-hidden</code>.</td></tr>
+</tbody></table>
+<h3>Focus</h3><p>None on the badge; the ring draws on the parent control.</p>
+<h3>Labelling</h3><p>Count badges are <code>aria-hidden</code> and the parent button’s <code>aria-label</code> says “Notifications, 3 unread”. When the count changes live, update the label; do not announce the badge.</p>
+<h3>Contrast</h3><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+<div class="ds-pair"><span>Neutral badge</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-subtle" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Info badge</span><span class="ds-pair__ratio" data-contrast="--color-info-fg|--color-info-bg" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Success badge</span><span class="ds-pair__ratio" data-contrast="--color-success-fg|--color-success-bg" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Warning badge</span><span class="ds-pair__ratio" data-contrast="--color-warning-fg|--color-warning-bg" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Danger badge</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-danger-bg" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Brand badge</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-brand|--color-brand" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Count badge</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-danger|--color-danger-solid" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Draft / past status</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+</div>
+<h3>Motion</h3><p>None. The “Live now” pulse belongs to the <code>.dot--pulse</code> indicator, not the badge, and stops under reduced motion.</p><h3>Touch</h3><p>Not a target.</p>
+</section>
+<section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+<ul><li>One or two words. Badges read uppercase through CSS; write them in sentence case in the markup (“Waitlist open”) so screen readers do not spell them out.</li><li>Status labels are actionable for the organizer: “Needs changes”, not “Rejected”.</li><li>Counts above 99 show “99+”; the label keeps the real number.</li></ul>
+</section>
+<section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+<div class="ds-dodont">
+<figure class="ds-do"><div class="ds-example__canvas"><span class="badge badge--danger">Cancelled</span></div><figcaption>One clear badge on a cancelled event row, with the title struck through.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><span class="badge badge--danger">Cancelled</span> <span class="event-row__price">Cancelled</span></div><figcaption>Say it twice: the edge-case mock repeated “Cancelled” in the badge and the price slot. The price slot now shows the original price or nothing.</figcaption></figure>
+<figure class="ds-do"><div class="ds-example__canvas"><a class="btn btn--ghost btn--icon has-tooltip" href="../../mocks/pages/notifications/default.html" aria-label="Notifications, 3 unread" style="position: relative;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg><span class="badge badge--count" aria-hidden="true">3</span></a></div><figcaption>The count is in the button label; the badge is decoration.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><span class="badge badge--count">3</span></div><figcaption>A floating count with no context; screen readers hear “3”.</figcaption></figure>
+</div>
+</section>
+<section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+<div class="ds-table-wrap"><table class="ds-table">
+<thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+<tbody>
+<tr><td>Neutral background</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+<tr><td>Neutral text</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+<tr><td>Info background / text</td><td><code>--color-info-bg</code> / <code>--color-info-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-info-bg" data-swatch></i><span data-token="--color-info-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-info-bg" data-swatch></i><span data-token="--color-info-bg"></span></span></td></tr>
+<tr><td>Success background / text</td><td><code>--color-success-bg</code> / <code>--color-success-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-success-bg" data-swatch></i><span data-token="--color-success-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-success-bg" data-swatch></i><span data-token="--color-success-bg"></span></span></td></tr>
+<tr><td>Warning background / text</td><td><code>--color-warning-bg</code> / <code>--color-warning-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-warning-bg" data-swatch></i><span data-token="--color-warning-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-warning-bg" data-swatch></i><span data-token="--color-warning-bg"></span></span></td></tr>
+<tr><td>Danger background / text</td><td><code>--color-danger-bg</code> / <code>--color-danger-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-bg" data-swatch></i><span data-token="--color-danger-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-bg" data-swatch></i><span data-token="--color-danger-bg"></span></span></td></tr>
+<tr><td>Count background</td><td><code>--color-danger-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+<tr><td>Brand background</td><td><code>--color-brand</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-brand" data-swatch></i><span data-token="--color-brand"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-brand" data-swatch></i><span data-token="--color-brand"></span></span></td></tr>
+<tr><td>Pill radius</td><td><code>--radius-full</code></td><td colspan="2"><span data-token="--radius-full"></span></td></tr>
+<tr><td>Badge font</td><td><code>--text-overline</code></td><td colspan="2"><span data-token="--text-overline"></span></td></tr>
+<tr><td>Letter spacing</td><td><code>--letter-spacing-wide</code></td><td colspan="2"><span data-token="--letter-spacing-wide"></span></td></tr>
+<tr><td>Status font</td><td><code>--text-label</code></td><td colspan="2"><span data-token="--text-label"></span></td></tr>
+</tbody>
+</table></div>
+</section>
+<section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+<pre><code>&lt;span class="badge badge--warning"&gt;Waitlist open&lt;/span&gt;
+&lt;span class="status status--review"&gt;In review&lt;/span&gt;
+&lt;a class="btn btn--ghost btn--icon" href="…" aria-label="Notifications, 3 unread"&gt;
+  &lt;svg class="icon" aria-hidden="true"…/&gt;&lt;span class="badge badge--count" aria-hidden="true"&gt;3&lt;/span&gt;
+&lt;/a&gt;</code></pre><table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+<tr><td><code>.badge</code></td><td>Neutral pill with dot.</td></tr>
+<tr><td><code>.badge--info|success|warning|danger</code></td><td>Tone.</td></tr>
+<tr><td><code>.badge--solid</code></td><td>Solid info fill for “New”.</td></tr>
+<tr><td><code>.badge--brand</code></td><td>Orange fill for “Live now”.</td></tr>
+<tr><td><code>.badge--count</code></td><td>Numeric count, no dot; pinned to the corner inside <code>.btn--icon</code>.</td></tr>
+<tr><td><code>.status</code> + <code>.status--published|review|draft|rejected|cancelled|past</code></td><td>Workflow status dot + label.</td></tr>
+</tbody></table>
+</section>
+<section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+<p>Extracted from these mocks:</p>
+<ul>
+<li><a href="../../mocks/pages/organizer-dashboard/default.html">pages/organizer-dashboard/default</a> (status column)</li>
+<li><a href="../../mocks/pages/edit-event/default.html">pages/edit-event/default</a> (status in the editor header)</li>
+<li><a href="../../mocks/pages/events/edge.html">pages/events/edge</a> (cancelled and waitlist badges)</li>
+<li><a href="../../mocks/pages/settings/default.html">pages/settings/default</a> (header count badge)</li>
+<li><a href="../../mocks/pages/notifications/default.html">pages/notifications/default</a> (count badge)</li>
+</ul>
+<p>Drift fixed during extraction: <code>pages/events/edge</code> showed “Cancelled” in both a badge and the price slot; the price slot is no longer reused for status. Status colours were already token-based.</p>
+</section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+@startuml
+title UML sequence behaviour — Load, page and retry the communities directory
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "CommunitiesPage" as page
+  participant "DelayedSkeleton" as sk
+  participant "HttpCommunitiesApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "CommunitiesController" as controller
+end box
+actor -> page : Open /communities
+page -> page : Read q, topic, city, sort from the URL; ignore unknown values (L2-005)
+page -> sk : Start 300 ms timer (L2-089)
+page -> client : list(query, page 1)
+client -> controller : GET /api/communities
+opt no response within 300 ms
+  sk --> page : Six skeleton cards and "Loading communities…" (L2-030)
+end
+alt success
+  controller --> client : 200 CommunityDirectoryDto
+  client --> page : CommunityDirectory
+  page --> actor : 10 cards, "Showing 10 of 86 communities", Show 20 more (L2-029)
+  opt more communities than shown
+    actor -> page : Show 20 more
+    page -> client : list(query, next page)
+    client -> controller : GET /api/communities?page=2
+    controller --> client : 200 next 20 cards
+    client --> page : CommunityDirectory
+    page --> actor : Cards appended, caption "Showing 30 of 86 communities" (L2-029)
+  end
+else failure or timeout
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : "We couldn't load communities" with Try again; search and filters kept (L2-030, L2-077)
+  actor -> page : Try again
+  page -> client : list(same query, page 1)
+end
+@enduml

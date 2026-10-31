@@ -1,0 +1,33 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Accessibility
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(shell, "AppShell", "Angular component", "SkipLink, main#main, route focus to h1")
+  Component(pages, "Pages", "Angular pages", "EventsPage, SubmitEventPage, OrganizerDashboardPage")
+  Component(launcher, "DialogLauncher", "App service over CDK Dialog", "Shared options; safe-action autofocus")
+  Component(dialogs, "Dialogs", "CDK Dialog content", "CancelEventDialog, DeleteAccountDialog, ReportEventDialog")
+  Component(errfocus, "FormErrorFocus", "App service", "Focus summary or first control of the invalid group")
+  Component(mapper, "ProblemDetailsFormMapper", "App service", "Server field errors to form controls")
+  Component(motion, "MotionPreference", "App service", "prefers-reduced-motion signal")
+  Component(lib, "DialogShell, FormField, ErrorSummary, Button, TopicChip, Skeleton, EventMap", "components library", "Roles, states, focus ring, aria-busy, aria-invalid")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(validation, "ValidationBehavior", "MediatR behavior", "Failures keyed by property name")
+  Component(ex, "ExceptionHandlingMiddleware", "Middleware", "400 ValidationProblemDetails")
+}
+
+Rel(shell, pages, "Hosts routed pages")
+Rel(pages, launcher, "Opens dialogs")
+Rel(launcher, dialogs, "Opens with focus options")
+Rel(dialogs, lib, "Composes DialogShell, FormField")
+Rel(pages, lib, "Composes components")
+Rel(pages, errfocus, "After failed submit")
+Rel(dialogs, errfocus, "After failed submit")
+Rel(errfocus, mapper, "Applies server errors")
+Rel(pages, motion, "Reads reduced")
+Rel(lib, motion, "EventMap reads reduced")
+Rel(pages, ex, "Form submit", "JSON/HTTPS")
+Rel(ex, validation, "Wraps")
+@enduml

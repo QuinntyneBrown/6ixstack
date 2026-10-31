@@ -1,0 +1,45 @@
+@startuml
+title UML sequence behaviour — Resolve a short link
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Recipient" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventDetailPage" as page
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ShortLinksController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "ResolveShortLinkQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> controller : GET https://6ixstack.dev/e/azure-data-ai-day
+controller -> controller : Allow anonymous caller (L2-080)
+controller -> handler : Send ResolveShortLinkQuery
+handler -> db : Event by slug
+alt Published or Cancelled event
+  db --> handler : Event
+  handler --> controller : ShortLinkTargetDto /events/azure-data-ai-day
+  controller --> actor : 301 Moved Permanently, Location /events/azure-data-ai-day (L2-038)
+  actor -> page : GET /events/azure-data-ai-day
+  page --> actor : Event detail page
+else unknown slug or event not public
+  db --> handler : none or other status
+  handler --> controller : null
+  controller --> actor : 404, not-found page (L2-076)
+end
+@enduml

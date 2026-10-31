@@ -1,0 +1,72 @@
+@startuml
+title UML sequence behaviour — Approve a submission
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Moderator" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ReviewQueuePage" as page
+  participant "ToastService" as toasts
+  participant "HttpModerationApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ModerationController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "ApproveSubmissionCommandHandler" as handler
+  participant "Event" as entity
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "AuditLog" as audit
+  database "6ixstack database" as db
+end box
+actor -> page : Approve "Rust in production at scale" (button or A)
+page -> client : approve(eventId)
+client -> controller : POST /api/moderation/submissions/{id}/approve
+controller -> controller : ModeratorPolicy (L2-080)
+controller -> handler : Send ApproveSubmissionCommand
+handler -> db : Load event with row version, newest decision, Duplicate check row
+alt not In review or approval not undone exists
+  handler --> controller : Conflict
+  controller --> client : 409 DecisionConflictProblem (L2-063)
+else In review
+  handler -> db : Submitter verified? (User.EmailVerifiedAtUtc for SubmitterEmail)
+  alt verified
+    handler -> entity : Approve(moderatorId, now)
+    entity --> handler : Status Published, visible in list, calendar and matching feeds (L2-060)
+  else unverified
+    handler -> handler : Keep In review; pending approval until verification (L2-085)
+  end
+  handler -> db : Insert ModerationDecision(Approve, DecidedAtUtc = now)
+  handler -> audit : Record(moderator, SubmissionApproved, event) (L2-086)
+  handler -> db : IOutbox.Enqueue(SubmissionApprovedNotification, notBefore now + 8 s) (L2-060)
+  handler -> db : Commit in one unit of work, row version checked
+  db --> handler : Commit
+  handler --> controller : ApprovalResultDto(UndoDeadlineUtc, PossibleDuplicate)
+  controller --> client : 200 JSON
+  client --> page : ApprovalResult
+  page -> page : Remove the card, update the summary
+  alt PossibleDuplicate present
+    page -> toasts : Warning "Approved with a possible duplicate", Compare (L2-060)
+  else no duplicate
+    page -> toasts : Success "Approved “Rust in production at scale”", Undo for 8 s (L2-060, L2-074)
+  end
+  toasts --> actor : Toast in polite live region
+end
+opt 5xx or network error
+  client --> page : Error
+  page -> toasts : Danger "Couldn't approve “Rust in production at scale”", still in the queue, Try again, role="alert" (L2-060)
+  toasts --> actor : Persistent toast, card kept
+end
+@enduml

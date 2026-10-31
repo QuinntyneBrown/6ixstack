@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Browse upcoming events
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "EventsPage", "Angular page", "Hero, filter bar, day-grouped list, load more")
+  Component(store, "FilterStateStore", "Angular service", "Format, topics and search in URL and localStorage")
+  Component(client, "HttpEventsApi", "Angular service behind EVENTS_API", "Typed client for /api/events")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "EventsController", "ASP.NET Core controller", "GET /api/events")
+  Component(validator, "GetUpcomingEventsQueryValidator", "FluentValidation", "Bounds search length, page size and enum values")
+  Component(handler, "GetUpcomingEventsQueryHandler", "MediatR handler", "Filters, counts, groups and pages published events")
+  Component(clock, "SystemClock", "IClock", "Current instant and Toronto date")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events indexed by status and start")
+
+Rel(page, store, "Reads and writes filter state")
+Rel(page, client, "Requests event pages")
+Rel(client, ctrl, "GET /api/events", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates query")
+Rel(ctrl, handler, "Sends GetUpcomingEventsQuery")
+Rel(handler, clock, "Reads today")
+Rel(handler, db, "Queries published events", "EF Core")
+@enduml

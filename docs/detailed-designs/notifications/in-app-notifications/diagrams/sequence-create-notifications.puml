@@ -1,0 +1,60 @@
+@startuml
+title UML sequence behaviour — Create notifications from a trigger
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ModerationController / SubmissionsController / ReportsController" as source
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "Trigger handler" as handler
+  participant "MilestoneDetector" as milestone
+  participant "NotificationPublisher" as publisher
+  participant "NotificationTemplates" as templates
+  participant "NotificationEmailPolicy" as emailPolicy
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+source -> handler : Approve, reject, report, submit or resubmit command
+handler -> db : Load event and apply its state change
+alt approved, needs changes or rejected
+  handler -> publisher : Publish(EventApproved | EventNeedsChanges | EventRejected, CommunityOrganizers) (L2-066)
+else non-conduct report filed
+  handler -> publisher : Publish(ReportFiled, CommunityOrganizers, details without reporter) (L2-066, L2-099)
+else submission enters the queue
+  handler -> publisher : Publish(SubmissionQueued, AllModerators) (L2-066)
+else going count or feed subscribers changed
+  handler -> milestone : OnGoingCountChanged / OnFeedSubscribersChanged(old, new)
+  opt going count reaches 75% of capacity
+    milestone -> publisher : Publish(GoingMilestone, DedupeKey "going-75:{eventId}") (L2-066)
+  end
+  opt subscribers cross a multiple of 100
+    milestone -> publisher : Publish(FeedSubscribersMilestone, DedupeKey "feed:{communityId}:{multiple}") (L2-066)
+  end
+end
+publisher -> db : Resolve recipients: community organizers or all moderators, not deleted
+db --> publisher : Recipient user ids
+publisher -> db : Recipients already holding the dedupe key
+db --> publisher : Existing keys
+publisher -> templates : Build title, text, link per type
+templates --> publisher : NotificationCopy
+loop each recipient without the dedupe key
+  publisher -> db : Add Notification (unread)
+  publisher -> emailPolicy : Consider email for this notification (L2-067)
+end
+handler -> db : SaveChanges: event change and notifications in one unit of work
+db --> handler : Commit result
+handler --> source : Command result
+@enduml

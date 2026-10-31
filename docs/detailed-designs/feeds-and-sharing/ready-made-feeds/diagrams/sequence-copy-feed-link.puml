@@ -1,0 +1,41 @@
+@startuml
+title UML sequence behaviour — Copy a ready-made feed link
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "CalendarFeedsPage" as page
+  participant "FeedLinkCopier" as copier
+  participant "CDK Clipboard" as clip
+  participant "ToastService" as toasts
+end box
+actor -> page : Activate "Copy link" (aria-label "Copy the AI feed link") (L2-034)
+page -> page : Build webcal://{feed origin}/feeds/{AI feed slug}.ics
+page -> copier : copy(webcalUrl)
+copier -> clip : copy(webcalUrl)
+alt copy succeeds
+  clip --> copier : true
+  copier -> toasts : Success "Feed link copied", action "How to subscribe" (L2-034)
+  toasts --> actor : Polite toast, auto-dismiss after 8 s (L2-074)
+else copy fails
+  clip --> copier : false
+  copier -> toasts : Danger "Couldn't copy the link", action "Try again" (L2-034)
+  toasts --> actor : role="alert" toast, stays until dismissed (L2-074)
+  opt Try again
+    actor -> toasts : Try again
+    toasts -> copier : copy(webcalUrl)
+  end
+end
+@enduml

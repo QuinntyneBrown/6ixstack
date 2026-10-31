@@ -1,0 +1,28 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Browse speakers
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "SpeakersPage", "Angular page", "Toolbar, card grid, result states, Show 24 more")
+  Component(router, "Router", "Angular router", "q, topic and period query parameters")
+  Component(card, "DirectoryCard", "Angular component", "dir-card block with a stretched link")
+  Component(client, "HttpSpeakersApi", "Angular service behind SPEAKERS_API", "Typed client for /api/speakers")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "SpeakersController", "ASP.NET Core controller", "GET /api/speakers")
+  Component(validator, "GetSpeakersQueryValidator", "FluentValidation", "Bounds search length, page and enum values")
+  Component(handler, "GetSpeakersQueryHandler", "MediatR handler", "Searches, filters and pages speakers")
+  Component(clock, "SystemClock", "IClock", "Current instant, Toronto month and year")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Speakers indexed by name; event speakers; events")
+
+Rel(page, router, "Reads and writes the query")
+Rel(page, card, "Renders one per speaker")
+Rel(page, client, "Requests directory pages")
+Rel(client, ctrl, "GET /api/speakers", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates query")
+Rel(ctrl, handler, "Sends GetSpeakersQuery")
+Rel(handler, clock, "Reads now and current month")
+Rel(handler, db, "Queries speakers and talks", "EF Core")
+@enduml

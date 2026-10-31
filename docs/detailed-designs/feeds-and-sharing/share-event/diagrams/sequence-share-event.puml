@@ -1,0 +1,56 @@
+@startuml
+title UML sequence behaviour — Share an event
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventDetailPage" as page
+  participant "ShareLauncher" as launcher
+  participant "ShareEventDialog" as dialog
+  participant "CDK Clipboard" as clip
+  participant "ToastService" as toasts
+end box
+participant "Browser and OS" as os
+actor -> page : Share
+page -> launcher : share(event)
+alt navigator.share exists and viewport below 768 px
+  launcher -> os : navigator.share({ title, url: https://6ixstack.dev/e/azure-data-ai-day }) (L2-038)
+  os --> actor : System share sheet
+  opt visitor dismisses the sheet
+    os --> launcher : AbortError, ignored
+  end
+else otherwise
+  launcher -> dialog : Dialog.open(ShareEventDialog, { slug, title, summaryLine })
+  dialog --> actor : "Share this event", Event link, Copy focused, LinkedIn, Bluesky, Email (L2-038)
+  alt Copy
+    actor -> dialog : Copy
+    dialog -> clip : copy(shortLink)
+    alt copy succeeds
+      clip --> dialog : true
+      dialog --> actor : Button reads "Copied" for 2 s in a polite live region, no toast (L2-038, L2-093)
+    else copy fails
+      clip --> dialog : false
+      dialog -> toasts : Danger "Couldn't copy the link" with Try again (L2-038)
+      toasts --> actor : role="alert" toast, stays until dismissed (L2-074)
+    end
+  else LinkedIn or Bluesky
+    actor -> dialog : LinkedIn or Bluesky
+    dialog -> os : Open share-offsite or compose intent in a new tab, rel="noopener noreferrer"
+  else Email
+    actor -> dialog : Email
+    dialog -> os : Open mailto:?subject={title}&body={short link}
+  end
+end
+@enduml

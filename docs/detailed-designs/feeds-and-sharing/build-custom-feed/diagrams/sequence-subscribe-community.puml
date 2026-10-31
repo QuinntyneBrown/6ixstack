@@ -1,0 +1,61 @@
+@startuml
+title UML sequence behaviour — Subscribe to a community feed
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "CommunityDetailPage" as page
+  participant "SubscribeFeedDialog" as dialog
+  participant "FeedBuilder" as builder
+  participant "HttpFeedsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "FeedsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "CreateFeedCommandValidator" as validator
+  participant "CreateFeedCommandHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Subscribe to this group
+page -> dialog : Dialog.open(SubscribeFeedDialog, { communitySlug, communityName })
+dialog -> builder : communitySlug input
+note right of builder : Whether topic and scope fieldsets show here is <TO SUPPLY>
+actor -> builder : Create feed link
+builder -> client : createFeed({ communitySlug, topics, scope })
+client -> controller : POST /api/feeds
+controller -> validator : Validate
+validator -> db : Community with this slug exists
+alt unknown community
+  db --> validator : none
+  validator --> controller : Validation failure
+  controller --> client : 400 problem details
+  client --> builder : Error
+  builder --> actor : "We couldn't create your feed", Try again (L2-077)
+else community exists
+  db --> validator : found
+  controller -> handler : Send CreateFeedCommand
+  handler -> handler : FeedSlug with CommunitySlug, limited to that community (L2-031)
+  handler -> db : Count that community's matching published events
+  db --> handler : Count
+  handler --> controller : FeedLinkDto
+  controller --> client : 200 JSON
+  client --> builder : FeedLink
+  builder --> dialog : created(FeedLink)
+  dialog --> actor : Feed link with Copy, Google Calendar, Outlook, Apple Calendar (L2-035)
+end
+@enduml

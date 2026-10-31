@@ -1,0 +1,129 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Privacy and retention
+
+package "SixStack.Domain" {
+  class Report {
+    +Guid Id
+    +Guid EventId
+    +ReportReason Reason
+    +string? ReporterEmail
+    +DateTimeOffset CreatedAtUtc
+    +DateTimeOffset? ResolvedAtUtc
+  }
+  class ContactMessage {
+    +Guid Id
+    +string Name
+    +string Email
+    +string Message
+    +DateTimeOffset ReceivedAtUtc
+  }
+  class User {
+    +Guid Id
+    +string Email
+    +string Name
+    +DateTimeOffset? DeletedAtUtc
+  }
+  class Event {
+    +Guid Id
+    +string SubmitterEmail
+  }
+  class AuditEntry {
+    +Guid? ActorId
+    +DateTimeOffset OccurredAtUtc
+    +AuditAction Action
+    +Guid TargetId
+  }
+  class Speaker {
+    +string? PublicContactEmail
+  }
+}
+
+package "SixStack.Application" {
+  class RetentionPolicy <<static>> {
+    +ReporterEmailAfterResolution = 90 days
+    +ContactMessage = 1 year
+    +DeletedAccount = 30 days
+    +AuditEntry = 2 years
+  }
+  class ApplyRetentionCommand {
+    +DateTimeOffset Now
+  }
+  class ApplyRetentionCommandHandler {
+    +Handle(cmd: ApplyRetentionCommand): Task<RetentionResult>
+  }
+  class RetentionResult {
+    +int ReporterEmailsCleared
+    +int ContactMessagesDeleted
+    +int AccountsPurged
+    +int AuditEntriesDeleted
+  }
+  class AccountPurger {
+    +PurgeAsync(user: User, ct): Task
+  }
+  class ReportNotificationFactory {
+    +Create(report: Report, ev: Event): Notification
+  }
+  class EventDetailDto <<public>> {
+    no email fields
+  }
+  class SpeakerDto <<public>> {
+    +string? PublicContactEmail
+  }
+  class NotificationDto <<organizer>> {
+    +string Title
+    +string Text
+  }
+  class ReportDto <<moderator>> {
+    +ReportReason Reason
+    +string? ReporterEmail
+  }
+  class ReviewQueueItemDto <<moderator>> {
+    +string SubmitterEmail
+  }
+}
+
+package "SixStack.Infrastructure" {
+  class RetentionJob {
+    +ExecuteAsync(ct): Task
+  }
+}
+
+package "sixstack (Angular)" {
+  class BrowserStorage {
+    +storageAvailable: boolean
+    +get(key: StorageKey): string | null
+    +set(key: StorageKey, value: string): void
+    +remove(key: StorageKey): void
+  }
+  enum StorageKeys {
+    Filters = "sixstack.filters"
+    Draft = "sixstack.draft.<form>"
+    BannerDismissals = "sixstack.banner-dismissals"
+  }
+}
+
+RetentionJob ..> ApplyRetentionCommand : sends daily
+ApplyRetentionCommandHandler ..> ApplyRetentionCommand : handles
+ApplyRetentionCommandHandler ..> RetentionPolicy
+ApplyRetentionCommandHandler ..> RetentionResult : returns
+ApplyRetentionCommandHandler ..> Report : clears ReporterEmail
+ApplyRetentionCommandHandler ..> ContactMessage : deletes
+ApplyRetentionCommandHandler ..> AuditEntry : deletes after 2 years
+ApplyRetentionCommandHandler --> AccountPurger
+AccountPurger ..> User : deletes
+AccountPurger ..> Event : clears SubmitterEmail
+ReportNotificationFactory ..> Report : reads reason only
+ReportNotificationFactory ..> NotificationDto
+SpeakerDto ..> Speaker
+BrowserStorage --> StorageKeys
+@enduml

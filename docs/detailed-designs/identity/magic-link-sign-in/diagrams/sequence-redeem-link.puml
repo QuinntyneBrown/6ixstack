@@ -1,0 +1,67 @@
+@startuml
+title UML sequence behaviour — Redeem a sign-in link
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SignInPage" as page
+  participant "SessionStore" as store
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "AuthController" as controller
+  participant "SessionCookie" as cookie
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "RedeemSignInLinkCommandHandler" as handler
+  participant "SecurityTokenService" as tokens
+  participant "User" as user
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> controller : Open link: GET /auth/redeem?token=...
+controller -> handler : Send RedeemSignInLinkCommand
+handler -> tokens : Hash(token)
+tokens --> handler : SHA-256 hash (L2-084)
+handler -> db : Load SecurityToken by hash, purpose SignIn
+db --> handler : Token or nothing
+alt missing, already used, or issued more than 15 minutes ago (L2-047, L2-084)
+  handler --> controller : Refused, no session
+  controller --> actor : 302 to /sign-in?link=expired
+  actor -> page : Load /sign-in?link=expired
+  page --> actor : "That sign-in link has expired", form prefilled from sx.sign-in.email (L2-047)
+else valid and unused
+  handler -> handler : MarkUsed(now) (L2-084)
+  handler -> db : Load User by email
+  alt first sign-in for this address
+    handler -> user : CreateOrganizer(email, now): no community (L2-047)
+  end
+  handler -> tokens : NewSecret(): 256-bit session secret and its hash
+  handler -> db : Add Session with secret hash; save token and session in one unit of work
+  db --> handler : Commit result
+  handler --> controller : Session secret, role, return URL
+  controller -> cookie : Write Secure, HttpOnly, SameSite=Lax cookie (L2-083)
+  alt return URL present
+    controller --> actor : 302 to return URL, for example /organize (L2-048)
+  else moderator
+    controller --> actor : 302 to /admin/review (L2-047)
+  else organizer
+    controller --> actor : 302 to /organize (L2-047)
+  end
+  actor -> store : App starts, load current user
+  store -> controller : GET /api/auth/me
+  controller --> store : CurrentUserDto
+end
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+title UML sequence behaviour — Cancel an event from the dialog
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "OrganizerDashboardPage" as page
+  participant "CancelEventDialog" as dialog
+  participant "HttpOrganizerEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "OrganizerEventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "CancelEventCommandHandler" as handler
+  participant "Event" as entity
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "AuditLog" as audit
+  database "6ixstack database" as db
+end box
+actor -> page : Cancel on "Azure Data & AI Day GTA"
+page -> dialog : Open with EventId, Title, IsPaid, GoingCount
+dialog --> actor : "Cancel “Azure Data & AI Day GTA”?", email option checked, focus on Keep event (L2-056, L2-091)
+opt paid or 100 or more going
+  dialog --> actor : "Type the event name to confirm", Cancel event disabled (L2-056)
+  actor -> dialog : Type "azure data & ai day gta"
+  dialog -> dialog : Trimmed, case-insensitive match enables Cancel event (L2-056)
+end
+actor -> dialog : Cancel event
+alt reason empty
+  dialog --> actor : "Tell attendees why, in a sentence or two.", focus on reason (L2-056)
+else reason given
+  dialog --> actor : Inputs disabled, "Cancelling…", Keep event enabled (L2-056)
+  dialog -> client : cancelEvent(id, reason, notifyAttendees, confirmationName)
+  client -> controller : POST /api/organizer/events/{id}/cancel
+  controller -> controller : Authenticate session, OrganizerPolicy, validate reason (L2-080, L2-081)
+  controller -> handler : Send CancelEventCommand
+  handler -> db : Load event
+  handler -> handler : EventAccessChecker, 403 if not allowed (L2-055)
+  handler -> handler : High-impact event requires matching ConfirmationName, else 400 (L2-056)
+  handler -> entity : Cancel(reason, now)
+  entity -> entity : Status = Cancelled, CancellationReason, CancelledAtUtc, Sequence + 1 (L2-036)
+  entity --> handler : Cancelled
+  handler -> audit : Record(actor, EventCancelled, event) (L2-086)
+  opt NotifyAttendees
+    handler -> db : IOutbox.Enqueue(EventCancelledEmail), recipients <TO SUPPLY>
+  end
+  handler -> db : Commit event, audit entry and outbox in one unit of work
+  db --> handler : Commit
+  alt success
+    handler --> controller : EventCancelledDto
+    controller --> client : 200 JSON
+    client --> dialog : EventCancelled
+    dialog --> page : Close with result
+    page --> actor : Row status Cancelled, Cancel action removed
+  else failure (5xx, network, 409)
+    controller --> client : Problem details or network error
+    client --> dialog : Error
+    dialog --> actor : "The event wasn't cancelled", still published, nobody emailed, reason kept, "Try again" (L2-056)
+  end
+end
+@enduml

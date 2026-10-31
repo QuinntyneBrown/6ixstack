@@ -1,0 +1,135 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Reject a submission
+
+package "SixStack.Domain" {
+  enum EventStatus {
+    InReview
+    NeedsChanges
+    Rejected
+  }
+  class Event {
+    +Guid Id
+    +string Title
+    +EventStatus Status
+    +string SubmitterEmail
+    +DateTimeOffset SubmittedAtUtc
+    +byte[] RowVersion
+    +RequestChanges(reason: RejectionReason): void
+    +Reject(reason: RejectionReason): void
+  }
+  enum RejectionReason {
+    MissingVenueAddress
+    NotDeveloperEvent
+    Duplicate
+    SpamOrAdvertising
+    CodeOfConduct
+  }
+  enum DecisionKind {
+    Approve
+    Reject
+    RequestChanges
+  }
+  class ModerationDecision {
+    +Guid Id
+    +Guid EventId
+    +Guid ModeratorId
+    +DecisionKind DecisionKind
+    +RejectionReason? RejectionReason
+    +string Message
+    +DateTimeOffset DecidedAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  class RejectSubmissionCommand {
+    +Guid EventId
+    +RejectionReason? Reason
+    +string? Message
+  }
+  class RejectSubmissionCommandValidator
+  class RejectSubmissionCommandHandler {
+    +Handle(command: RejectSubmissionCommand): Task<Result<RejectionResultDto>>
+  }
+  class RejectionResultDto {
+    +Guid EventId
+    +string Title
+    +string OrganizerName
+    +EventStatus Status
+    +EmailPreviewDto EmailPreview
+  }
+  class EmailPreviewDto {
+    +string Subject
+    +string Body
+  }
+  class SubmissionRejectedEmail {
+    +Guid EventId
+    +Guid DecisionId
+  }
+  class SubmissionRejectedEmailHandler {
+    +Handle(message: SubmissionRejectedEmail): Task
+  }
+  interface IOutbox {
+    +Enqueue(message: object, notBeforeUtc: DateTimeOffset?): Guid
+  }
+  interface IAuditLog {
+    +Record(actorId: Guid, action: string, targetId: Guid, details: object): void
+  }
+  interface IEmailSender {
+    +Send(message: EmailMessage): Task
+  }
+}
+
+package "sixstack (Angular)" {
+  class RejectSubmissionDialog {
+    +data: RejectSubmissionDialogData
+    +reason: FormControl<RejectionReason | null>
+    +message: FormControl<string>
+    +busy: Signal<boolean>
+    +failed: Signal<boolean>
+    +submit(): void
+    +cancel(): void
+  }
+  class RejectSubmissionDialogData {
+    +string eventId
+    +string title
+    +string organizerName
+    +string submitterEmail
+  }
+  class SentEmailDialog {
+    +data: EmailPreview
+  }
+  interface ModerationApi {
+    +reject(id: string, request: RejectRequest): Observable<RejectionResult>
+  }
+  class HttpModerationApi
+}
+
+Event --> EventStatus
+ModerationDecision --> DecisionKind
+ModerationDecision --> RejectionReason
+ModerationDecision --> Event
+RejectSubmissionCommandValidator ..> RejectSubmissionCommand : validates
+RejectSubmissionCommandHandler ..> RejectSubmissionCommand : handles
+RejectSubmissionCommandHandler --> Event : loads / mutates
+RejectSubmissionCommandHandler ..> ModerationDecision : creates
+RejectSubmissionCommandHandler ..> IAuditLog
+RejectSubmissionCommandHandler ..> IOutbox
+RejectSubmissionCommandHandler ..> SubmissionRejectedEmail : enqueues
+RejectSubmissionCommandHandler ..> RejectionResultDto : returns
+RejectionResultDto *-- EmailPreviewDto
+SubmissionRejectedEmailHandler ..> SubmissionRejectedEmail : handles
+SubmissionRejectedEmailHandler ..> IEmailSender
+HttpModerationApi ..|> ModerationApi
+RejectSubmissionDialog --> RejectSubmissionDialogData
+RejectSubmissionDialog ..> ModerationApi : MODERATION_API
+@enduml

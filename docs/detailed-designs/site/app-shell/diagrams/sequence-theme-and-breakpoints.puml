@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour — Apply theme and breakpoints
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+participant "Operating system" as os
+participant "Browser" as browser
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "_tokens.scss (generated)" as tokens
+  participant "AppShell" as shell
+  participant "EventMap" as map
+  participant "Featured card" as feature
+end box
+== Build time ==
+tokens -> tokens : npm run tokens: Fluent v9 light and dark themes to :root and prefers-color-scheme: dark
+== Run time ==
+actor -> browser : Open any page
+os --> browser : prefers-color-scheme: dark
+browser -> tokens : Match @media (prefers-color-scheme: dark)
+tokens --> shell : Dark role tokens (--colorNeutralBackground1, --colorBrandForeground1, ...) (L2-097)
+shell --> actor : Every surface in dark tokens, contrast per L2-090
+tokens --> feature : --sx-feature-card-background = raised surface (L2-097)
+tokens --> map : --sx-map-* hold dark values in both themes (L2-097)
+opt operating system switches to light
+  os --> browser : prefers-color-scheme: light
+  browser -> tokens : :root light values apply, no reload
+  tokens --> feature : --sx-feature-card-background = ink fill
+  map --> actor : Map stays dark
+end
+alt width below 576 px
+  browser --> actor : Single column, menu button, map above list (L2-095)
+else 576 to 767 px
+  browser --> actor : Two-column card grids (L2-095)
+else 768 to 991 px
+  browser --> actor : Calendar titles in cells, no docked bar (L2-095)
+else 992 to 1199 px
+  browser --> actor : Header navigation, list beside sticky map, detail side panel (L2-095)
+else 1200 px and up
+  browser --> actor : Content capped at --sx-content-max-width 1280 px (L2-095)
+end
+@enduml

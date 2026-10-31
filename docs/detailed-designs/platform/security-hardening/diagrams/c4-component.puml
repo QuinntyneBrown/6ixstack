@@ -1,0 +1,48 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+title Components — Security hardening
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(http, "HttpClient with withXsrfConfiguration", "Angular", "Copies XSRF-TOKEN cookie to X-XSRF-TOKEN header")
+  Component(desc, "DescriptionRenderer", "Angular component", "Text plus https-only links with rel noopener noreferrer nofollow")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(log, "RequestLoggingMiddleware", "Middleware 1", "Outermost; logs every status")
+  Component(headers, "SecurityHeadersMiddleware", "Middleware 2", "CSP, nosniff, Referrer-Policy, frame-ancestors")
+  Component(ex, "ExceptionHandlingMiddleware", "Middleware 3", "400, 403, 404, 413, 429, 500 problem details")
+  Component(https, "UseHsts, UseHttpsRedirection", "Middleware 4", "HTTPS only with HSTS")
+  Component(swagger, "Swagger", "Middleware 5", "Before authentication")
+  Component(limiter, "RateLimiter", "Middleware 7", "IP policies from RateLimitPolicies")
+  Component(authn, "SessionAuthenticationHandler", "Middleware 8", "Session cookie to principal")
+  Component(authz, "OrganizerPolicy, ModeratorPolicy, CommunityMemberRequirement", "Middleware 9", "Fallback policy requires authentication")
+  Component(csrf, "CsrfProtectionMiddleware", "Middleware 10", "Validates X-XSRF-TOKEN with XsrfTokenService")
+  Component(ctrl, "Controllers", "ASP.NET Core controllers", "Send MediatR requests")
+  Component(validation, "ValidationBehavior", "MediatR behavior", "Runs FluentValidation validators, MustBeHttpsUrl")
+  Component(handler, "Command handlers", "MediatR handlers", "Business rules")
+  Component(emaillimit, "EmailRateLimiter", "IEmailRateLimiter", "Per-email limits from existing rows")
+  Component(audit, "AuditLog", "IAuditLog", "Adds AuditEntry to the unit of work")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Sessions, tokens, memberships, audit entries")
+
+Rel(http, log, "Every API request", "JSON/HTTPS")
+Rel(log, headers, "next")
+Rel(headers, ex, "next")
+Rel(ex, https, "next")
+Rel(https, swagger, "next")
+Rel(swagger, limiter, "next, after UseRouting")
+Rel(limiter, authn, "next")
+Rel(authn, authz, "next")
+Rel(authz, csrf, "next")
+Rel(csrf, ctrl, "next")
+Rel(ctrl, validation, "Sends request")
+Rel(validation, handler, "Valid request")
+Rel(handler, emaillimit, "Checks per-email limit")
+Rel(handler, audit, "Records privileged action")
+Rel(authn, db, "Loads session", "EF Core")
+Rel(authz, db, "Reads event CommunityId", "EF Core")
+Rel(emaillimit, db, "Counts tokens and submissions", "EF Core")
+Rel(audit, db, "Commits with the change", "EF Core")
+Rel(ctrl, desc, "Event JSON rendered by")
+@enduml

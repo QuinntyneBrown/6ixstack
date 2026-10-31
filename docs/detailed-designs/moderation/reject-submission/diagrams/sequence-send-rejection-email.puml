@@ -1,0 +1,49 @@
+@startuml
+title UML sequence behaviour — Send the rejection email through the outbox
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+box "Backend — 6ixstack API application" #D1FADF
+  participant "OutboxProcessor" as processor
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "SubmissionRejectedEmailHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "IEmailSender" as sender
+  database "6ixstack database" as db
+end box
+participant "Email provider" as provider
+processor -> db : Read due OutboxMessage rows
+db --> processor : SubmissionRejectedEmail(EventId, DecisionId)
+processor -> handler : Dispatch
+handler -> db : Load event, decision reason and message
+opt submitter has an account
+  handler -> db : Create notification "needs changes" or "wasn't approved" (L2-066)
+end
+handler -> handler : Compose email to SubmitterEmail with reason label and message (L2-061)
+handler -> sender : Send(email)
+sender -> provider : Deliver
+alt delivered
+  provider --> sender : Accepted
+  sender --> handler : Sent
+  handler --> processor : Done
+  processor -> db : ProcessedAtUtc = now
+else provider failure
+  provider --> sender : Error
+  sender --> handler : Failure
+  handler --> processor : Failed, decision unchanged
+  processor -> db : AttemptCount + 1, exponential backoff, at most 5 attempts (L2-103)
+end
+@enduml

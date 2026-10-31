@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Build a custom calendar feed
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Feed builder on /feeds and in the Subscribe dialog")
+  Container(api, "6ixstack API", "ASP.NET Core", "Feed link creation, rate limited")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events and communities")
+}
+System_Ext(calapps, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "POST /api/feeds", "JSON/HTTPS")
+Rel(api, db, "Counts matching events, checks community", "EF Core")
+Rel(visitor, calapps, "Adds the feed link to")
+@enduml

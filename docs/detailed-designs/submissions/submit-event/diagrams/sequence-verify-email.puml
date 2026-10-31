@@ -1,0 +1,51 @@
+@startuml
+title UML sequence behaviour — Verify a submitter's contact email
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Submitter" as actor
+box "Backend — 6ixstack API application" #D1FADF
+  participant "AuthController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "VerifyEmailCommandHandler" as handler
+  participant "SecurityTokenService" as tokens
+  participant "Event" as entity
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> controller : GET /auth/verify-email?token=...
+controller -> handler : Send VerifyEmailCommand
+handler -> tokens : Hash(token)
+tokens --> handler : SHA-256 hash (L2-084)
+handler -> db : Load SecurityToken by hash, purpose VerifyEmail
+db --> handler : Token or nothing
+alt missing, used or older than 24 hours (L2-084)
+  handler --> controller : Expired result
+  controller --> actor : Redirect to verification failed page <TO SUPPLY>
+else valid
+  handler -> handler : MarkUsed(now) (L2-084)
+  handler -> db : Add VerifiedEmail; set User.EmailVerifiedAtUtc when an account exists
+  handler -> db : Load events from this address with an approval not undone
+  db --> handler : Approved, unpublished events
+  loop each approved event
+    handler -> entity : Publish at this moment (L2-085)
+  end
+  handler -> db : Save changes in one unit of work
+  db --> handler : Commit result
+  handler --> controller : Verified result
+  controller --> actor : Redirect to verification confirmed page <TO SUPPLY>
+end
+@enduml

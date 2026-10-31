@@ -1,0 +1,149 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+scale max 3800 width
+title Class structure — Security hardening
+
+package "SixStack.Domain" {
+  class AuditEntry {
+    +Guid Id
+    +Guid? ActorId
+    +string ActorRole
+    +DateTimeOffset OccurredAtUtc
+    +AuditAction Action
+    +string TargetType
+    +Guid TargetId
+    +string? Detail
+  }
+  enum AuditAction {
+    Approve
+    Reject
+    UndoApproval
+    Edit
+    Cancel
+    FeaturedChange
+    RoleChange
+    AccountDeletion
+  }
+  class CommunityOrganizer {
+    +Guid CommunityId
+    +Guid UserId
+    +string Role
+  }
+  enum UserRole {
+    Organizer
+    Moderator
+  }
+}
+
+package "SixStack.Application" {
+  interface ICurrentUser {
+    +Guid? UserId
+    +UserRole? Role
+    +IReadOnlySet<Guid> CommunityIds
+  }
+  interface IAuditLog {
+    +Record(action: AuditAction, targetType: string, targetId: Guid, detail: string?): void
+  }
+  interface IEmailRateLimiter {
+    +EnsureWithinLimit(email: string, kind: EmailLimitKind, ct): Task
+  }
+  enum EmailLimitKind {
+    SignInLink
+    Submission
+  }
+  class ValidationBehavior<TRequest, TResponse> {
+    +Handle(request, next, ct): Task<TResponse>
+  }
+  class HttpsUrlRuleExtensions <<static>> {
+    +MustBeHttpsUrl(rule): IRuleBuilderOptions
+  }
+  class RateLimitExceededException {
+    +TimeSpan RetryAfter
+  }
+  class ValidationException
+  class ForbiddenAccessException
+  class NotFoundException
+}
+
+package "SixStack.Infrastructure" {
+  class AuditLog
+  class EmailRateLimiter {
+    -IAppDbContext db
+    -IClock clock
+  }
+}
+
+package "SixStack.Api" {
+  class SecurityHeadersMiddleware {
+    +InvokeAsync(context, next): Task
+  }
+  class ContentSecurityPolicyBuilder {
+    +Build(): string
+  }
+  class CsrfProtectionMiddleware {
+    +InvokeAsync(context, next): Task
+  }
+  class XsrfTokenService {
+    +Issue(context, sessionId: Guid): void
+    +IsValid(sessionId: Guid, headerValue: string): bool
+  }
+  class ExceptionHandlingMiddleware {
+    +InvokeAsync(context, next): Task
+  }
+  class RateLimitPolicies <<static>> {
+    +SignInIp = "sign-in-ip" : 20 / h
+    +ReportsIp = "reports-ip" : 10 / h
+    +ContactIp = "contact-ip" : 5 / h
+    +FeedsIp = "feeds-ip" : 30 / h
+  }
+  class OrganizerPolicy
+  class ModeratorPolicy
+  class CommunityMemberRequirement
+  class CommunityMemberAuthorizationHandler {
+    +HandleRequirementAsync(context, requirement): Task
+  }
+  class SessionAuthenticationHandler
+}
+
+package "components (Angular)" {
+  class DescriptionRenderer {
+    +text: InputSignal<string>
+    +segments: Signal<DescriptionSegment[]>
+  }
+  class DescriptionSegment {
+    +kind: 'text' | 'break' | 'link'
+    +text: string
+    +href?: string
+  }
+}
+
+AuditEntry --> AuditAction
+AuditLog ..|> IAuditLog
+AuditLog ..> AuditEntry : creates
+AuditLog ..> ICurrentUser : actor
+EmailRateLimiter ..|> IEmailRateLimiter
+EmailRateLimiter ..> RateLimitExceededException : throws
+IEmailRateLimiter ..> EmailLimitKind
+ValidationBehavior ..> ValidationException : throws
+SecurityHeadersMiddleware ..> ContentSecurityPolicyBuilder
+CsrfProtectionMiddleware ..> XsrfTokenService
+SessionAuthenticationHandler ..> XsrfTokenService : issues on session start
+CommunityMemberAuthorizationHandler ..> CommunityMemberRequirement : handles
+CommunityMemberAuthorizationHandler ..> CommunityOrganizer : membership via ICurrentUser
+ExceptionHandlingMiddleware ..> RateLimitExceededException : 429 Retry-After
+ExceptionHandlingMiddleware ..> ValidationException : 400
+ExceptionHandlingMiddleware ..> ForbiddenAccessException : 403
+ExceptionHandlingMiddleware ..> NotFoundException : 404
+OrganizerPolicy ..> UserRole
+ModeratorPolicy ..> UserRole
+DescriptionRenderer "1" *-- "*" DescriptionSegment
+@enduml

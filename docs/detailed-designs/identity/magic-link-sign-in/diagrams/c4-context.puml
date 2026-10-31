@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Sign in with an emailed link
+
+Person(organizer, "Organizer", "Community organizer signing in")
+Person(moderator, "Moderator", "6ixstack volunteer moderator signing in")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>; delivers sign-in links")
+
+Rel(organizer, sixstack, "Requests and redeems sign-in links using", "HTTPS")
+Rel(moderator, sixstack, "Requests and redeems sign-in links using", "HTTPS")
+Rel(sixstack, email, "Sends sign-in links via", "<TO SUPPLY>")
+Rel(email, organizer, "Delivers link to")
+Rel(email, moderator, "Delivers link to")
+@enduml

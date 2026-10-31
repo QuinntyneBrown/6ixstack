@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Cancel an event
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Cancel event dialog")
+  Container(api, "6ixstack API", "ASP.NET Core", "Cancel endpoint and OutboxProcessor hosted service")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events, audit entries, outbox messages")
+}
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(spa, api, "POST /api/organizer/events/{id}/cancel", "JSON/HTTPS, session cookie")
+Rel(api, db, "Writes event, audit entry and outbox message", "EF Core")
+Rel(api, email, "Sends cancellation emails", "<TO SUPPLY>")
+@enduml

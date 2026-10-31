@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Report a problem with an event
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(detail, "EventDetailPage", "Angular page", "Opens the dialog")
+  Component(dialog, "ReportProblemDialog", "Angular CDK Dialog", "Reason, details, reply email; invalid, busy, failed, success")
+  Component(client, "HttpReportsApi", "Angular service behind REPORTS_API", "Typed client for report posts")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "ReportsController", "ASP.NET Core controller", "POST /api/events/{slug}/reports")
+  Component(limiter, "RateLimiter", "ASP.NET Core rate limiting", "reports policy: 10 per hour per IP")
+  Component(validator, "FileReportCommandValidator", "FluentValidation", "Reason, details length, reply email")
+  Component(handler, "FileReportCommandHandler", "MediatR handler", "Stores the report, creates notifications and outbox messages")
+  Component(routing, "ReportRouting", "Domain service", "Recipients by reason")
+  Component(outbox, "OutboxProcessor", "Hosted service", "Sends outbox emails with retries")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events, CommunityOrganizers, Reports, Notifications, OutboxMessages")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(detail, dialog, "Opens")
+Rel(dialog, client, "Sends report")
+Rel(client, ctrl, "POST /api/events/{slug}/reports", "JSON/HTTPS")
+Rel(ctrl, limiter, "Passes")
+Rel(ctrl, validator, "Validates command")
+Rel(ctrl, handler, "Sends FileReportCommand")
+Rel(handler, routing, "Asks for recipients")
+Rel(handler, db, "Writes report, notifications, outbox", "EF Core")
+Rel(outbox, db, "Reads pending messages", "EF Core")
+Rel(outbox, email, "Sends emails", "<TO SUPPLY>")
+@enduml

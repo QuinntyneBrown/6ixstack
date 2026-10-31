@@ -1,0 +1,68 @@
+@startuml
+title UML sequence behaviour — Rate-limit a sign-in request
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SignInPage" as page
+  participant "HttpAuthApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ExceptionHandlingMiddleware" as ex
+  participant "RateLimiter\n(sign-in-ip policy)" as limiter
+  participant "AuthController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "RequestSignInLinkCommandHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "EmailRateLimiter" as emaillimit
+  participant "IOutbox" as outbox
+  database "6ixstack database" as db
+end box
+actor -> page : Request sign-in link for ada@example.org
+page -> client : requestLink(email)
+client -> ex : POST /api/auth/sign-in-links
+ex -> limiter : next (after UseRouting)
+limiter -> limiter : Sliding 1 h window for client IP
+alt 20 requests from this IP in the last hour
+  limiter --> client : 429 problem details, Retry-After (L2-082)
+else within IP limit
+  limiter -> controller : next
+  controller -> handler : Send RequestSignInLinkCommand
+  handler -> emaillimit : EnsureWithinLimit(email, SignInLink)
+  emaillimit -> db : Count SignIn tokens for email issued in last hour
+  db --> emaillimit : Count and oldest issue time
+  alt count is 5
+    emaillimit --> handler : RateLimitExceededException(retryAfter)
+    handler --> ex : Exception propagates, no token, no email (L2-082)
+    ex --> client : 429 problem details, Retry-After
+  else under limit
+    emaillimit --> handler : OK
+    handler -> outbox : Enqueue sign-in email
+    handler -> db : Save hashed token and outbox message in one unit of work
+    db --> handler : Commit result
+    handler --> controller : Accepted
+    controller --> client : 202
+  end
+end
+alt 429
+  client --> page : Rate-limited problem
+  page --> actor : Failed state with plain-language message (L2-082)
+else 202
+  client --> page : Link requested
+  page --> actor : Check your email state
+end
+@enduml

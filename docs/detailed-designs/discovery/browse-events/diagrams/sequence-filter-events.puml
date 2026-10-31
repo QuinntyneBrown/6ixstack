@@ -1,0 +1,56 @@
+@startuml
+title UML sequence behaviour — Filter and search upcoming events
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventsPage" as page
+  participant "FilterStateStore" as store
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetUpcomingEventsQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Press AI chip, select In the GTA, search "signals"
+page -> store : Write filters to URL and localStorage (L2-005)
+opt storage blocked
+  store --> page : storageAvailable = false
+  page --> actor : Warning toast "We can't remember your filters"
+end
+page -> client : getUpcoming(filters, page 1)
+client -> controller : GET /api/events?format=gta&topics=ai&q=signals
+controller -> controller : Validate query, search capped at 100 characters (L2-004)
+controller -> handler : Send GetUpcomingEventsQuery
+handler -> db : Published, not cancelled, start in 14-day window (L2-001)
+db --> handler : Candidate events
+handler -> handler : Match title, organizer, venue, city, description (L2-004)
+handler -> handler : Count All, In the GTA, Streaming; hybrid in both (L2-002)
+handler -> handler : Keep events with any selected topic (L2-003)
+handler -> handler : Group by Toronto day and page (L2-001, L2-009)
+handler --> controller : UpcomingEventsDto
+controller --> client : 200 JSON
+client --> page : UpcomingEvents
+alt Total is 0
+  page --> actor : "No events match those filters" with Clear filters (L2-004)
+else results
+  page --> actor : Day groups, counts and polite result line (L2-003, L2-093)
+end
+@enduml

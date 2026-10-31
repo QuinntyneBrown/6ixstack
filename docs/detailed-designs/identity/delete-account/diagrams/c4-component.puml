@@ -1,0 +1,31 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Delete an organizer account
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "SettingsPage", "Angular page", "Opens the dialog")
+  Component(dialog, "DeleteAccountDialog", "Angular CDK Dialog", "Email match, confirm, invalid, busy, failed")
+  Component(client, "HttpAccountApi", "Angular service behind ACCOUNT_API", "Typed client for /api/account")
+  Component(store, "SessionStore", "Angular service", "Cleared after deletion")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "AccountController", "ASP.NET Core controller", "DELETE /api/account, OrganizerPolicy")
+  Component(validator, "DeleteAccountCommandValidator", "FluentValidation", "Confirm email matches, trimmed and case-insensitive")
+  Component(handler, "DeleteAccountCommandHandler", "MediatR handler", "Deletes user data, revokes sessions, removes community assignment")
+  Component(audit, "AuditLog", "IAuditLog", "AccountDeleted entry without email")
+  Component(cookie, "SessionCookie", "API helper", "Clears the session cookie")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Users, Sessions, CommunityOrganizers, SecurityTokens, Notifications, AuditEntries")
+
+Rel(page, dialog, "Opens")
+Rel(dialog, client, "deleteAccount(confirmEmail)")
+Rel(dialog, store, "Clears")
+Rel(client, ctrl, "DELETE /api/account", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates command")
+Rel(ctrl, handler, "Sends DeleteAccountCommand")
+Rel(ctrl, cookie, "Clears cookie")
+Rel(handler, audit, "Records deletion")
+Rel(handler, db, "Writes in one unit of work", "EF Core")
+Rel(audit, db, "Writes AuditEntry", "EF Core")
+@enduml

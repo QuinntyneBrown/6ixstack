@@ -1,0 +1,86 @@
+@startuml
+title UML sequence behaviour — Submit an event for review
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SubmitEventPage" as page
+  participant "DraftStore" as draft
+  participant "HttpSubmissionsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "SubmissionsController" as controller
+  participant "RateLimiter" as limiter
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "SubmitEventCommandValidator" as validator
+  participant "SubmitEventCommandHandler" as handler
+  participant "Event" as entity
+  participant "SecurityTokenService" as tokens
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+  participant "OutboxProcessor" as outbox
+end box
+actor -> page : Submit for review
+page -> page : Run EventFormModel validators (L2-041)
+alt client-side errors
+  page --> actor : "Fix 3 things before you continue", focus on summary, inline errors (L2-041)
+else form valid
+  page -> page : Disable fields, button "Submitting…" with aria-busy (L2-043)
+  page -> client : submit(form value without hidden fields) (L2-042)
+  client -> controller : POST /api/submissions with anti-forgery token
+  controller -> limiter : submissions policy, 10 per day per email
+  alt limit exceeded
+    limiter --> client : 429 with Retry-After
+    client --> page : Error
+    page --> actor : "We couldn't submit your event", values kept
+  else within limit
+    controller -> validator : Validate SubmitEventCommand (L2-041, L2-042)
+    alt invalid
+      validator --> controller : Field errors
+      controller --> client : 400 problem details with errors map
+      client --> page : FieldErrors keyed by control
+      page --> actor : Same summary and inline messages as the client (L2-041)
+    else valid
+      controller -> handler : Send SubmitEventCommand
+      handler -> entity : Event.Submit(details, contact email, now)
+      entity --> handler : Event with Status InReview (L2-043)
+      handler -> db : Any VerifiedEmail or earlier event for this address?
+      db --> handler : Address status
+      opt first submission from an unverified address (L2-085)
+        handler -> tokens : Issue VerifyEmail token, 24 hours (L2-084)
+        tokens --> handler : Plaintext once, SHA-256 hash on SecurityToken
+        handler -> db : Add SecurityToken and verification email OutboxMessage
+      end
+      handler -> db : Add Event, Pending SubmissionChecks, outbox messages for checks, confirmation email and moderator notification (L2-043)
+      handler -> db : Save changes in one unit of work
+      db --> handler : Commit result
+      handler --> controller : SubmissionReceivedDto
+      controller --> client : 201 JSON
+      client --> page : SubmissionReceived
+      page -> draft : clear(sx.draft.submit-event) (L2-044)
+      page --> actor : "Thanks — “Fabric for Power BI developers” is in review", email and three next steps (L2-043)
+    end
+  end
+end
+alt server failure or timeout
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : "We couldn't submit your event" at the top, every input kept (L2-043)
+end
+outbox -> db : Read pending OutboxMessages
+outbox -> outbox : Send through IEmailSender, retry with backoff up to 5 attempts (L2-103)
+@enduml

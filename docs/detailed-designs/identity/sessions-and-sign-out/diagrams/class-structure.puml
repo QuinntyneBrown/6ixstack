@@ -1,0 +1,118 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Sessions, sign-out and the signed-in header
+
+package "SixStack.Domain" {
+  enum UserRole {
+    Organizer
+    Moderator
+  }
+  class User {
+    +Guid Id
+    +string Email
+    +string Name
+    +UserRole Role
+    +DateTimeOffset? DeletedAtUtc
+  }
+  class Session {
+    +Guid Id
+    +Guid UserId
+    +byte[] TokenHash
+    +DateTimeOffset CreatedAtUtc
+    +DateTimeOffset LastSeenAtUtc
+    +DateTimeOffset? RevokedAtUtc
+    +IsActive(now: DateTimeOffset): bool
+    +Touch(now: DateTimeOffset): void
+    +Revoke(now: DateTimeOffset): void
+  }
+}
+
+package "SixStack.Application" {
+  interface ICurrentUser {
+    +Guid? UserId
+    +UserRole? Role
+    +Guid? SessionId
+  }
+  class GetCurrentUserQueryHandler {
+    +Handle(query: GetCurrentUserQuery): Task<CurrentUserDto>
+  }
+  class CurrentUserDto {
+    +string Name
+    +string Initials
+    +UserRole Role
+    +int UnreadNotificationCount
+  }
+  class SignOutCommand
+  class SignOutCommandHandler {
+    +Handle(command: SignOutCommand): Task<Unit>
+  }
+}
+
+package "SixStack.Api" {
+  class SessionAuthenticationHandler {
+    #HandleAuthenticateAsync(): Task<AuthenticateResult>
+  }
+  class AuthController {
+    +Me(): Task<ActionResult<CurrentUserDto>>
+    +SignOut(): Task<IActionResult>
+  }
+  class SessionCookie {
+    +Write(response: HttpResponse, secret: string): void
+    +Clear(response: HttpResponse): void
+  }
+}
+
+package "sixstack (Angular)" {
+  class SessionStore {
+    +user: Signal<CurrentUser | null>
+    +unreadCount: Signal<number>
+    +load(): void
+    +clear(): void
+  }
+  class SiteHeader {
+    +notificationsLabel: Signal<string>
+    +homeLink: Signal<string>
+    +showSubmit: Signal<boolean>
+  }
+  class SignOutDialog {
+    +busy: Signal<boolean>
+    +confirm(): void
+  }
+  class authGuard <<CanMatchFn>>
+  class unauthorizedInterceptor <<HttpInterceptorFn>>
+  interface AuthApi {
+    +me(): Observable<CurrentUser>
+    +signOut(): Observable<void>
+  }
+  class HttpAuthApi
+}
+
+User --> UserRole
+User "1" *-- "*" Session : one per device
+SessionAuthenticationHandler ..> Session : loads by hash, touches
+SessionAuthenticationHandler ..> SessionCookie : re-issues
+AuthController ..> GetCurrentUserQueryHandler
+AuthController ..> SignOutCommandHandler
+AuthController ..> SessionCookie
+GetCurrentUserQueryHandler ..> ICurrentUser
+GetCurrentUserQueryHandler ..> CurrentUserDto : returns
+SignOutCommandHandler ..> SignOutCommand : handles
+SignOutCommandHandler ..> ICurrentUser
+SignOutCommandHandler ..> Session : revokes current
+HttpAuthApi ..|> AuthApi
+SessionStore ..> AuthApi : AUTH_API
+SignOutDialog ..> AuthApi : AUTH_API
+SignOutDialog ..> SessionStore
+SiteHeader ..> SessionStore
+authGuard ..> SessionStore
+unauthorizedInterceptor ..> SessionStore
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Contact form
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "ContactPage", "Angular page", "Reactive form, invalid, submitting, success, error states")
+  Component(summary, "ErrorSummary / FormField", "Angular components (components)", "Summary links and field errors")
+  Component(client, "HttpContactApi", "Angular service behind CONTACT_API", "Typed client for /api/contact")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(limiter, "RateLimiter", "ASP.NET Core rate limiting, policy contact", "5 per IP per hour, then 429")
+  Component(ctrl, "ContactController", "ASP.NET Core controller", "POST /api/contact")
+  Component(validator, "SendContactMessageCommandValidator", "FluentValidation", "Required fields, email format, topic, 5,000 characters")
+  Component(handler, "SendContactMessageCommandHandler", "MediatR handler", "Stores message, picks inbox, enqueues email")
+  Component(outbox, "Outbox", "IOutbox", "Adds OutboxMessage in the same unit of work")
+  Component(processor, "OutboxProcessor", "Hosted service", "Dispatches due messages, retries")
+  Component(emailHandler, "ContactEmailHandler", "Outbox handler", "Renders and sends to the team inbox")
+  Component(sender, "SmtpEmailSender", "IEmailSender", "Provider adapter")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "ContactMessages, OutboxMessages")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(page, summary, "Renders errors")
+Rel(page, client, "send(message)")
+Rel(client, limiter, "POST /api/contact", "JSON/HTTPS")
+Rel(limiter, ctrl, "Admits request")
+Rel(ctrl, validator, "Validates")
+Rel(ctrl, handler, "Sends SendContactMessageCommand")
+Rel(handler, outbox, "Enqueue ContactEmail")
+Rel(handler, db, "Adds ContactMessage", "EF Core")
+Rel(outbox, db, "Adds OutboxMessage", "EF Core")
+Rel(processor, db, "Claims due messages", "EF Core")
+Rel(processor, emailHandler, "Dispatches")
+Rel(emailHandler, sender, "Send(EmailMessage)")
+Rel(sender, email, "Sends", "SMTP or provider API")
+@enduml

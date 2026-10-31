@@ -1,0 +1,48 @@
+@startuml
+title UML sequence behaviour — Schedule submission checks
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Moderator" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ReviewQueuePage" as page
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ModerationController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "SubmitEventCommandHandler\nor UpdateOrganizerEventCommandHandler" as caller
+  participant "SubmissionCheckScheduler" as scheduler
+  participant "GetReviewQueueQueryHandler" as query
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+caller -> caller : Event stored In review, or Resubmit() after Needs changes
+caller -> scheduler : Schedule(eventId) (L2-059)
+scheduler -> scheduler : Applicable kinds: venue (in person, hybrid), ticket link, stream link, duplicate, history, topic
+scheduler -> db : Delete previous SubmissionCheck rows for the event
+scheduler -> db : Insert one Pending row per applicable kind (L2-059)
+scheduler -> db : IOutbox.Enqueue(RunSubmissionChecks(eventId))
+caller -> db : Commit event, check rows and outbox in one unit of work
+db --> caller : Commit
+actor -> page : Open /admin/review
+page -> controller : GET /api/moderation/queue
+controller -> query : Send GetReviewQueueQuery
+query -> db : Submissions with check rows
+db --> query : Rows, some Pending
+query --> controller : ReviewQueueDto
+controller --> page : 200 JSON
+page --> actor : Pending checks shown, Approve, Edit and Reject available (L2-059)
+@enduml

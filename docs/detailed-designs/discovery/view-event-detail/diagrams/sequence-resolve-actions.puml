@@ -1,0 +1,67 @@
+@startuml
+title UML sequence behaviour — Decide detail state, actions and alerts
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetEventDetailQueryHandler" as handler
+  participant "EventDetailPolicy" as policy
+  participant "Event" as entity
+  participant "SystemClock" as clock
+end box
+handler -> policy : Decide for event and next community event
+policy -> clock : UtcNow
+clock --> policy : now
+alt Status is Cancelled
+  policy -> policy : State = Cancelled
+  policy -> policy : Danger alert first: "Cancelled by the organizer on {date}" with quoted reason (L2-021)
+  policy -> policy : Facts time struck through with "cancelled" (L2-021)
+  policy -> policy : Actions: "Find another {topics} event" to /?topics=..., "Follow {community}"; no ticket, stream, calendar or share (L2-021)
+else
+  policy -> entity : IsPast(now)
+  entity --> policy : EndsAtUtc has passed?
+  alt past
+    policy -> policy : State = Past; facts "... · ended", attended count (L2-020)
+    policy -> policy : Info alert "This event has ended" linking to next community event (L2-020)
+    policy -> policy : Actions: Watch the recording and Slides and code when links exist; no ticket or calendar (L2-020)
+  else upcoming
+    policy -> policy : State = Upcoming
+    policy -> policy : Add to my calendar, Share, Report a problem (L2-018)
+    alt in person or hybrid with TicketUrl
+      policy -> policy : "Get tickets · {price}" or "Register" when free, new tab, rel="noopener noreferrer" (L2-018)
+    else streaming
+      policy -> policy : JoinOpensAtUtc = start - 15 min (L2-019)
+      alt now >= JoinOpensAtUtc
+        policy -> policy : Include StreamUrl in "Join the stream" (L2-019)
+      else
+        policy -> policy : Omit StreamUrl from the response (L2-019)
+        policy -> policy : Info alert "Starts in {n} days", link appears 15 minutes before start (L2-019)
+      end
+    end
+    opt TimeChangedAtUtc within the last 7 days
+      policy -> policy : Warning alert "Start time changed to {time}", "Updated by {community}", Update my calendar (L2-022)
+    end
+    opt IsSoldOut
+      policy -> policy : Danger alert "Sold out" with "Join the waitlist" (L2-022)
+    end
+    opt organizer confirmed or organizer note (source <TO SUPPLY>)
+      policy -> policy : Success "Confirmed by the organizer" or info note alert (L2-022)
+    end
+    opt primary action present
+      policy -> policy : Docked bar: day and start, price and going, primary action (L2-023)
+    end
+  end
+end
+policy --> handler : State, actions, alerts, docked bar
+@enduml

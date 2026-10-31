@@ -1,0 +1,137 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Toasts and site banners
+
+package "sixstack (Angular app)" {
+  enum ToastKind {
+    info
+    success
+    warning
+    danger
+  }
+  class ToastOptions {
+    +kind: ToastKind
+    +title: string
+    +text?: string
+    +action?: ToastAction
+  }
+  class ToastAction {
+    +label: string
+    +run: () => void
+  }
+  class ToastService {
+    +MaxVisible: number = 3
+    +AutoDismissMs: number = 8000
+    +toasts: Signal<ToastEntry[]>
+    +show(options: ToastOptions): ToastRef
+    +dismiss(id: string): void
+  }
+  class ToastEntry {
+    +id: string
+    +options: ToastOptions
+    +countdown: ToastCountdown | null
+  }
+  class ToastCountdown {
+    +remainingMs: number
+    +pause(): void
+    +resume(): void
+  }
+  class ToastRef {
+    +dismiss(): void
+    +afterDismissed: Observable<void>
+  }
+
+  enum BannerSource {
+    connectivity
+    version
+    maintenance
+  }
+  enum BannerKind {
+    info
+    success
+    warning
+    danger
+  }
+  class SiteBanner {
+    +id: string
+    +kind: BannerKind
+    +title: string
+    +text: string
+    +actions: BannerAction[]
+    +dismissible: boolean
+    +role: "status" | "alert" | null
+  }
+  class BannerService {
+    +banners: Signal<SiteBanner[]>
+    +set(source: BannerSource, banner: SiteBanner): void
+    +clear(source: BannerSource): void
+    +dismiss(id: string): void
+  }
+  class ConnectivityService {
+    +online: Signal<boolean>
+    +apiReachable: Signal<boolean>
+    +ProbeIntervalMs: number = 30000
+    +reportNoResponse(): void
+    +retryNow(): void
+  }
+  class ApiErrorInterceptor
+  class VersionUpdateWatcher {
+    +refresh(): Promise<void>
+  }
+  class MaintenanceNotice {
+    +windowId: string
+    +startsAtUtc: string
+    +endsAtUtc: string
+    +title: string
+    +text: string
+  }
+  class MaintenanceNoticeSource {
+    +load(): void
+  }
+  class BannerDismissalStore {
+    +isDismissed(windowId: string): boolean
+    +remember(windowId: string): void
+  }
+  class SiteBannerOutlet <<sx-site-banner-outlet>>
+}
+
+package "components (Angular library)" {
+  class ToastRegion <<sx-toast-region>>
+  class Toast <<sx-toast>>
+  class Alert <<sx-alert>>
+}
+
+package "@angular/service-worker" {
+  class SwUpdate
+}
+
+ToastService "1" *-- "0..3" ToastEntry
+ToastEntry --> ToastOptions
+ToastEntry *-- ToastCountdown
+ToastOptions --> ToastKind
+ToastOptions o-- ToastAction
+ToastService ..> ToastRef : returns
+ToastRegion ..> ToastService : reads toasts
+ToastRegion *-- Toast
+BannerService "1" *-- "0..3" SiteBanner
+SiteBanner --> BannerKind
+BannerService ..> BannerSource
+SiteBannerOutlet ..> BannerService
+SiteBannerOutlet ..> Alert
+ConnectivityService ..> BannerService
+ApiErrorInterceptor ..> ConnectivityService
+VersionUpdateWatcher ..> SwUpdate
+VersionUpdateWatcher ..> BannerService
+MaintenanceNoticeSource ..> MaintenanceNotice
+MaintenanceNoticeSource ..> BannerDismissalStore
+MaintenanceNoticeSource ..> BannerService
+@enduml

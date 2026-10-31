@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Toasts and site banners
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Toast region, banner slot, connectivity and version watching")
+  Container(api, "6ixstack API", "ASP.NET Core", "Liveness probe and maintenance notice")
+}
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /health/live every 30 s while unreachable", "HTTPS")
+Rel(spa, api, "Maintenance notice (route <TO SUPPLY>)", "JSON/HTTPS")
+@enduml

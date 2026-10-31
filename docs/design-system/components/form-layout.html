@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form layout — 6ixstack design system</title>
+<meta name="description" content="Form sections, grids, actions bar and the error summary.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Form layout</h1>
+      <p class="ds-lead">How fields are arranged into forms: sections with headings, one- and two-column grids, the actions bar and the error summary.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill"><code>novalidate</code> + custom messages</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+<p>6ixstack's long forms (submit event, edit event, settings) are a <code>.form-card</code> holding <code>.form-section</code>s, each with a heading, one sentence of context and a <code>.form-grid</code>. Short forms (sign-in, contact, dialogs) are a single grid. All end in <code>.form-actions</code>. See the <a href="../patterns/forms.html">forms pattern</a> for validation timing.</p>
+    </section>
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+<div class="ds-anatomy"><figure class="ds-anatomy__figure"><form class="form-card" style="width: 100%;" novalidate><section class="form-section" aria-labelledby="an-h"><h2 id="an-h">When</h2><p>Times are shown in Toronto time.</p><div class="form-grid form-grid--2"><div class="field"><label class="field__label" for="an-d">Date</label><input class="input" id="an-d" type="date" value="2026-11-18"></div><div class="field"><label class="field__label" for="an-s">Starts</label><input class="input" id="an-s" type="time" value="18:30"></div></div></section><div class="form-actions"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button">Submit for review</button></div></form>
+<span class="ds-callout" style="left: 2%; top: 4%;" aria-hidden="true">1</span><span class="ds-callout" style="left: 2%; top: 22%;" aria-hidden="true">2</span><span class="ds-callout" style="left: 50%; top: 40%;" aria-hidden="true">3</span><span class="ds-callout" style="left: 60%; top: 84%;" aria-hidden="true">4</span></figure>
+<ol class="ds-anatomy__list"><li><div><b>Form card</b><small>Surface with <code>--space-6</code> padding.</small></div></li><li><div><b>Section heading and context</b><small><code>--text-h4</code> + muted body-sm.</small></div></li><li><div><b>Grid</b><small>One column; two or three from 640px; <code>--space-5</code> gap.</small></div></li><li><div><b>Actions</b><small>Right-aligned, primary last, <code>--space-3</code> gap.</small></div></li></ol></div>
+    </section>
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+<div class="ds-example">
+  <div class="ds-example__canvas">
+<form class="stack" style="width: 100%; max-width: 24rem;" novalidate><div class="field"><label class="field__label" for="v-e">Email</label><input class="input" id="v-e" type="email" autocomplete="email" aria-describedby="v-e-help"><span class="field__help" id="v-e-help">Use the address you list events with.</span></div><button class="btn btn--primary btn--lg btn--block" type="button">Email me a sign-in link</button></form>
+  </div>
+  <div class="ds-example__caption"><span>Single column (sign-in).</span></div>
+  <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;form class="stack" style="width: 100%; max-width: 24rem;" novalidate&gt;&lt;div class="field"&gt;&lt;label class="field__label" for="v-e"&gt;Email&lt;/label&gt;&lt;input class="input" id="v-e" type="email" autocomplete="email" aria-describedby="v-e-help"&gt;&lt;span class="field__help" id="v-e-help"&gt;Use the address you list events with.&lt;/span&gt;&lt;/div&gt;&lt;button class="btn btn--primary btn--lg btn--block" type="button"&gt;Email me a sign-in link&lt;/button&gt;&lt;/form&gt;</code></pre></details>
+</div>
+<div class="ds-example">
+  <div class="ds-example__canvas">
+<div class="form-grid form-grid--2" style="width: 100%;"><div class="field"><label class="field__label" for="v-v">Venue name</label><input class="input" id="v-v" type="text"></div><div class="field"><label class="field__label" for="v-c">City</label><select class="select" id="v-c"><option>Toronto</option><option>Mississauga</option></select></div><div class="span-2"><div class="field"><label class="field__label" for="v-a">Street address</label><input class="input" id="v-a" type="text"></div></div></div>
+  </div>
+  <div class="ds-example__caption"><span>Two columns for short related fields; <code>.span-2</code> for long ones.</span></div>
+  <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="form-grid form-grid--2" style="width: 100%;"&gt;&lt;div class="field"&gt;&lt;label class="field__label" for="v-v"&gt;Venue name&lt;/label&gt;&lt;input class="input" id="v-v" type="text"&gt;&lt;/div&gt;&lt;div class="field"&gt;&lt;label class="field__label" for="v-c"&gt;City&lt;/label&gt;&lt;select class="select" id="v-c"&gt;&lt;option&gt;Toronto&lt;/option&gt;&lt;option&gt;Mississauga&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;&lt;div class="span-2"&gt;&lt;div class="field"&gt;&lt;label class="field__label" for="v-a"&gt;Street address&lt;/label&gt;&lt;input class="input" id="v-a" type="text"&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</code></pre></details>
+</div>
+<div class="ds-example">
+  <div class="ds-example__canvas ds-example__canvas--stack">
+<div class="alert alert--danger form-summary" role="alert" tabindex="-1"><div class="alert__body"><p class="alert__title">Fix 2 things before you continue</p><ul><li><a href="#fl-title">Enter a title for the event.</a></li><li><a href="#fl-end">End time must be after the 6:30 PM start.</a></li></ul></div></div><div class="form-grid" style="width: 100%;"><div class="field"><label class="field__label" for="fl-title">Event title</label><input class="input" id="fl-title" type="text" aria-invalid="true" aria-describedby="fl-title-error"><span class="field__error" id="fl-title-error">Enter a title for the event.</span></div><div class="field"><label class="field__label" for="fl-end">Ends</label><input class="input" id="fl-end" type="time" value="17:30" aria-invalid="true" aria-describedby="fl-end-error"><span class="field__error" id="fl-end-error">End time must be after the 6:30 PM start.</span></div></div>
+  </div>
+  <div class="ds-example__caption"><span>Error summary above the form; each link moves focus to its field.</span></div>
+  <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="alert alert--danger form-summary" role="alert" tabindex="-1"&gt;&lt;div class="alert__body"&gt;&lt;p class="alert__title"&gt;Fix 2 things before you continue&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="#fl-title"&gt;Enter a title for the event.&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="#fl-end"&gt;End time must be after the 6:30 PM start.&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="form-grid" style="width: 100%;"&gt;&lt;div class="field"&gt;&lt;label class="field__label" for="fl-title"&gt;Event title&lt;/label&gt;&lt;input class="input" id="fl-title" type="text" aria-invalid="true" aria-describedby="fl-title-error"&gt;&lt;span class="field__error" id="fl-title-error"&gt;Enter a title for the event.&lt;/span&gt;&lt;/div&gt;&lt;div class="field"&gt;&lt;label class="field__label" for="fl-end"&gt;Ends&lt;/label&gt;&lt;input class="input" id="fl-end" type="time" value="17:30" aria-invalid="true" aria-describedby="fl-end-error"&gt;&lt;span class="field__error" id="fl-end-error"&gt;End time must be after the 6:30 PM start.&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;</code></pre></details>
+</div>
+    </section>
+    <section class="ds-section" id="sizes" data-na="Form layout has no sizes; width comes from the page container."><h2><a href="#sizes">Sizes</a></h2>
+<p>Long forms sit in <code>.page--narrow</code>; dialogs give forms their panel width.</p>
+    </section>
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+<p>A form is idle, submitting, invalid, failed or succeeded.</p>
+<div class="ds-matrix"><table>
+<thead><tr><th scope="col">Variant</th><th scope="col">Idle</th><th scope="col">Submitting</th><th scope="col">Invalid</th><th scope="col">Failed</th></tr></thead>
+<tbody>
+<tr><th scope="row">Actions bar</th><td><div class="form-actions"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button">Send message</button></div></td><td><div class="form-actions"><button class="btn" type="button" disabled>Cancel</button><button class="btn btn--primary" type="button" aria-busy="true">Send message</button></div></td><td><div class="form-actions"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button">Send message</button></div></td><td><div class="alert alert--danger" role="alert"><div class="alert__body"><p class="alert__title">Message not sent</p><p>Check your connection and try again.</p></div></div></td></tr>
+</tbody>
+</table></div>
+<ul><li><b>Submitting</b>: the primary is busy, the fieldset is disabled, a live region says “Sending your message…”.</li><li><b>Invalid</b>: the summary appears, takes focus and lists each error as a link.</li><li><b>Failed</b> (server): a danger alert above the actions; the values are kept.</li><li><b>Success</b>: a success panel replaces the form, or the page navigates and a toast confirms.</li></ul>
+<h3>Both themes</h3>
+<div class="ds-themes">
+<div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="alert alert--danger form-summary" role="alert" tabindex="-1"><div class="alert__body"><p class="alert__title">Fix 2 things before you continue</p><ul><li><a href="#fl-title">Enter a title for the event.</a></li><li><a href="#fl-end">End time must be after the 6:30 PM start.</a></li></ul></div></div></div></div>
+<div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="alert alert--danger form-summary" role="alert" tabindex="-1"><div class="alert__body"><p class="alert__title">Fix 2 things before you continue</p><ul><li><a href="#fl-title">Enter a title for the event.</a></li><li><a href="#fl-end">End time must be after the 6:30 PM start.</a></li></ul></div></div></div></div>
+</div>
+    </section>
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+<ul><li>Grids are one column below 640px and two or three above; never use two columns for unrelated fields.</li><li>Below 768px the actions bar stacks: primary on top and full width.</li><li>On long forms on phones the primary may move into a sticky bottom bar.</li></ul>
+    </section>
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+<p>Reads <code>--color-bg-surface</code> (card), <code>--color-border-default</code> (section dividers) and the alert danger tokens for the summary.</p>
+    </section>
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+<h3>Role and pattern</h3>
+<p>A <code>&lt;form novalidate&gt;</code> with custom messages; sections are <code>&lt;section aria-labelledby&gt;</code>; groups are <code>&lt;fieldset&gt;</code>. The summary is <code>role="alert"</code> with <code>tabindex="-1"</code>.</p>
+<h3>Keyboard</h3>
+<table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+<tr><td><kbd>Tab</kbd></td><td>Moves through fields in visual order.</td></tr>
+<tr><td><kbd>Enter</kbd></td><td>In a text field: submits the form.</td></tr>
+<tr><td><kbd>Enter</kbd> on a summary link</td><td>Moves focus to that field.</td></tr>
+</tbody></table>
+<h3>Focus</h3>
+<p>On a failed submit, focus moves to the summary; its links move focus to fields. After success, focus moves to the success panel heading.</p>
+<h3>Labelling</h3>
+<p>Section headings name groups of fields; the summary title counts the errors (“Fix 3 things before you continue”).</p>
+<h3>Contrast</h3>
+<div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+<div class="ds-pair"><span>Summary text</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-danger-bg" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Section context</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Divider</span><span class="ds-pair__ratio" data-contrast="--color-border-default|--color-bg-surface" data-min="1"></span></div>
+</div>
+<h3>Motion</h3>
+<p>None beyond the busy spinner.</p>
+<h3>Touch</h3>
+<p>Actions are full width on phones; fields are 40px.</p>
+    </section>
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+<ul><li>Section headings are nouns: “Event basics”, “When”, “Where”, “Tickets”.</li><li>One sentence of context under each heading when it helps.</li><li>Summary title counts: “Fix 2 things before you continue”.</li><li>The primary action names the outcome: “Submit for review”, “Save changes”, “Send message”.</li></ul>
+    </section>
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+<div class="ds-dodont">
+<figure class="ds-do"><div class="ds-example__canvas"><div class="form-grid form-grid--2" style="width: 100%;"><div class="field"><label class="field__label" for="dd1">Starts</label><input class="input" id="dd1" type="time"></div><div class="field"><label class="field__label" for="dd2">Ends</label><input class="input" id="dd2" type="time"></div></div></div><figcaption>Two columns for a short pair.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><div class="form-grid form-grid--2" style="width: 100%;"><div class="field"><label class="field__label" for="dd3">Event title</label><input class="input" id="dd3" type="text"></div><div class="field"><label class="field__label" for="dd4">Email</label><input class="input" id="dd4" type="email"></div></div></div><figcaption>Unrelated fields side by side are read in the wrong order.</figcaption></figure>
+<figure class="ds-do"><div class="ds-example__canvas"><div class="form-grid" style="width: 100%;"><div class="field"><label class="field__label" for="dd5">Venue name</label><input class="input" id="dd5" type="text"></div></div></div><figcaption>Grid gap does the spacing.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><fieldset style="margin-top: var(--space-5);"><legend>Format</legend></fieldset></div><figcaption>Inline margins per fieldset (submit-event mock) drift out of rhythm.</figcaption></figure>
+</div>
+    </section>
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+<div class="ds-table-wrap"><table class="ds-table">
+<thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+<tbody>
+<tr><td>Card</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+<tr><td>Section divider</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+<tr><td>Field gap</td><td><code>--space-5</code></td><td colspan="2"><span data-token="--space-5"></span></td></tr>
+<tr><td>Section gap</td><td><code>--space-8</code></td><td colspan="2"><span data-token="--space-8"></span></td></tr>
+<tr><td>Actions gap</td><td><code>--space-3</code></td><td colspan="2"><span data-token="--space-3"></span></td></tr>
+<tr><td>Two-column from</td><td><code>--layout-breakpoint-sm</code></td><td colspan="2"><span data-token="--layout-breakpoint-sm"></span></td></tr>
+</tbody>
+</table></div>
+    </section>
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+<pre><code>&lt;form class="form-card" novalidate&gt;
+  &lt;section class="form-section" aria-labelledby="sec-when"&gt;
+    &lt;h2 id="sec-when"&gt;When&lt;/h2&gt;
+    &lt;p&gt;Times are shown in Toronto time.&lt;/p&gt;
+    &lt;div class="form-grid form-grid--2"&gt;…fields…&lt;/div&gt;
+  &lt;/section&gt;
+  &lt;div class="form-actions"&gt;
+    &lt;a class="btn" href="/events"&gt;Cancel&lt;/a&gt;
+    &lt;button class="btn btn--primary" type="submit"&gt;Submit for review&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/form&gt;</code></pre>
+<table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+<tr><td><code>.form-card</code></td><td>Surface for long forms.</td></tr>
+<tr><td><code>.form-section</code></td><td>Heading + context + grid; divided from the next.</td></tr>
+<tr><td><code>.form-grid</code> <code>--2</code> <code>--3</code></td><td>Field grid.</td></tr>
+<tr><td><code>.span-2</code></td><td>Full-width cell in a two-column grid.</td></tr>
+<tr><td><code>.form-actions</code></td><td>Actions bar.</td></tr>
+<tr><td><code>.form-summary</code></td><td>Error summary on an <code>.alert--danger</code>.</td></tr>
+</tbody></table>
+    </section>
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+<p>Extracted from these mocks:</p>
+<ul>
+<li><a href="../../mocks/pages/submit-event/default.html">pages/submit-event/default</a> (sections and grids)</li>
+<li><a href="../../mocks/pages/submit-event/invalid.html">pages/submit-event/invalid</a> (error summary)</li>
+<li><a href="../../mocks/pages/contact/submitting.html">pages/contact/submitting</a> (submitting)</li>
+<li><a href="../../mocks/pages/contact/error.html">pages/contact/error</a> (server failure)</li>
+<li><a href="../../mocks/pages/sign-in/default.html">pages/sign-in/default</a> (single column)</li>
+</ul>
+<p>Drift fixed during extraction: the submit-event mocks spaced fieldsets and grids with inline <code>style</code> margins and a <code>display: block</code> fieldset; the system uses <code>.form-grid</code> gaps and a plain <code>&lt;fieldset&gt;</code>.</p>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

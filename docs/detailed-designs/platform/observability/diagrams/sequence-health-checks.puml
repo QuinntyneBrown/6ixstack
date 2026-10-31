@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour — Health checks
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Maintainer or orchestrator" as actor
+box "Backend — 6ixstack API application" #D1FADF
+  participant "RequestLoggingMiddleware" as log
+  participant "HealthChecks" as health
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "AppDbContext check" as dbcheck
+  database "6ixstack database" as db
+end box
+actor -> log : GET /health/live
+log -> health : Anonymous, no rate limit
+health -> health : Tag live: no checks
+health --> log : 200 Healthy (L2-103)
+log -> log : Log at Debug
+log --> actor : 200 Healthy
+actor -> log : GET /health/ready
+log -> health : Anonymous, no rate limit
+health -> dbcheck : Tag ready
+dbcheck -> db : CanConnectAsync
+alt database reachable
+  db --> dbcheck : Connected
+  dbcheck --> health : Healthy
+  health --> log : 200 Healthy
+else database unreachable
+  db --> dbcheck : Timeout or error
+  dbcheck --> health : Unhealthy
+  health --> log : 503 Unhealthy, liveness still Healthy (L2-103)
+end
+log --> actor : Status only, no details
+@enduml

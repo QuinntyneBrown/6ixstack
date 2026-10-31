@@ -1,0 +1,43 @@
+@startuml
+title UML sequence behaviour — Toronto time notice
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventsPage" as page
+  participant "FilterStateStore" as store
+  participant "TimeZoneNotice" as notice
+  participant "ToastService" as toast
+end box
+actor -> page : Change a filter (first time)
+page -> store : write(filters)
+store -> notice : notifyOnce()
+alt already shown in this page load
+  notice --> store : No action
+else not yet shown
+  notice -> notice : Read browser zone from Intl resolvedOptions()
+  alt browser zone is America/Toronto
+    notice -> notice : Mark shown
+  else browser zone differs
+    notice -> toast : Info toast "Times are in Toronto time (ET)" (L2-079)
+    toast --> actor : app-toast/info, polite announcement (L2-093)
+    notice -> notice : Mark shown in memory
+  end
+end
+actor -> page : Change a filter again
+page -> store : write(filters)
+store -> notice : notifyOnce()
+notice --> store : No action
+@enduml

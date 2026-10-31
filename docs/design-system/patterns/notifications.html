@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notifications — 6ixstack design system</title>
+<meta name="description" content="How 6ixstack tells people what happened: toasts for the moment, banners for lasting conditions, and the notification list as history — with priority, grouping and dismissal rules.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Notifications</h1>
+      <p class="ds-lead">How 6ixstack tells people what happened: toasts for the moment, banners for lasting conditions, and the notification list as history — with priority, grouping and dismissal rules.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Composes toast, alert, notification item, badge</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li></ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>6ixstack tells people about things that happen to <i>their</i> events (approved, reported, needs changes, milestones) and about the state of the site (offline, unverified email). Three surfaces carry these messages, ranked by how long they matter: a <a href="../components/toast.html">toast</a> for the moment, a <a href="../components/alert.html">banner or inline alert</a> for as long as a condition lasts, and the <a href="../components/notification-item.html">notification list</a> as the durable history. Email mirrors the list for organizers who opt in under Settings → Email notifications.</p>
+    </section>
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Message</th><th scope="col">Surface</th><th scope="col">Lifetime</th><th scope="col">Mock</th></tr></thead><tbody><tr><td>Result of something the person just did</td><td>Toast</td><td>≥ 8 s, then gone; errors persist</td><td><a href="../../mocks/notifications/moderation-toast/with-action.html">moderation-toast</a>, <a href="../../mocks/notifications/app-toast/success.html">app-toast</a></td></tr><tr><td>Site-wide condition</td><td>Site banner under the header</td><td>Until the condition ends</td><td><a href="../../mocks/notifications/site-banner/warning.html">site-banner</a></td></tr><tr><td>Condition scoped to the organizer's work</td><td>Inline alert at the top of the dashboard</td><td>Until resolved</td><td><a href="../../mocks/notifications/submission-banner/persistent.html">submission-banner</a></td></tr><tr><td>An event-level alert on its page (cancelled, moved, starting soon)</td><td>Inline alert on event detail</td><td>While true</td><td><a href="../../mocks/notifications/event-alert/warning.html">event-alert</a></td></tr><tr><td>Something happened while they were away</td><td>Notification list + header badge</td><td>Until read; kept as history</td><td><a href="../../mocks/pages/notifications/default.html">notifications</a></td></tr></tbody></table></div>
+    </section>
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <h3>Notification list</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<ul class="notif-list" style="width: 100%;"><li class="notif notif--unread"><span class="notif__icon notif__icon--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="notif__title"><a href="#structure">“Fabric for Power BI developers” is live</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Approved by a moderator. It’s in the list, the calendar and 41 feeds.</p></div><span class="notif__time">12 min ago</span></li><li class="notif notif--unread"><span class="notif__icon notif__icon--warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><div><p class="notif__title"><a href="#structure">Someone reported the time on Azure Data &amp; AI Day GTA</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">“The ticket page says 9:30 AM.” Check and update the listing if needed.</p></div><span class="notif__time">2 h ago</span></li><li class="notif"><span class="notif__icon notif__icon--danger"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></span><div><p class="notif__title"><a href="#structure">“Azure Bicep clinic” needs changes</a></p><p class="notif__text">Reason: the listing is missing a venue address. Edit it and resubmit.</p></div><span class="notif__time">Oct 29</span></li></ul>
+        </div>
+        <div class="ds-example__caption"><span>Unread items have a brand dot and a semibold title; each title links to the thing it is about; time on the right from <code>sm</code>.</span></div>
+      </div>
+      <h3>Site banner and inline alert</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="stack" style="width: 100%;"><div class="alert alert--warning site-banner" role="status" style="width: 100%;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="alert__body"><p class="alert__title">You're offline</p><div>Showing events saved at 9:42 AM. Submitting and feeds need a connection.</div></div></div><div class="alert alert--warning" style="width: 100%;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="alert__body"><p class="alert__title">Verify priya@gtaazure.ca to publish events</p><div>Your submissions wait in review until you click the link we sent.</div><div class="alert__actions"><button type="button">Resend verification email</button></div></div></div></div>
+        </div>
+        <div class="ds-example__caption"><span>Banner: full width, no radius, centred text. Inline alert: inside the page column with an action.</span></div>
+      </div>
+      <h3>Moderation toast</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="toast toast--info" style="max-width: 24rem;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div class="toast__body"><div class="toast__title">Rejected “Free crypto trading masterclass”</div><div class="toast__text">WealthFast Academy was emailed your reason.</div><button class="toast__action" type="button">View email</button></div><button class="close" type="button" aria-label="Dismiss"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><span class="toast__progress" aria-hidden="true"></span></div>
+        </div>
+        <div class="ds-example__caption"><span>A toast with a follow-up action; the same event also lands in the organizer's notification list.</span></div>
+      </div>
+    </section>
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Notification items are <b>unread</b> or <b>read</b>; “Mark all as read” moves every item to read without removing it (<a href="../../mocks/pages/notifications/read.html">notifications/read</a>). Banners and alerts come in info, success, warning and danger, plus <b>persistent</b> (no dismiss) for conditions the person cannot dismiss away.</p>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack"><div class="alert alert--warning site-banner" role="status" style="width: 100%;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="alert__body"><p class="alert__title">You're offline</p><div>Showing events saved at 9:42 AM. Submitting and feeds need a connection.</div></div></div></div></div>
+        <div data-theme="dark"><div class="stack"><div class="alert alert--warning site-banner" role="status" style="width: 100%;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="alert__body"><p class="alert__title">You're offline</p><div>Showing events saved at 9:42 AM. Submitting and feeds need a connection.</div></div></div></div></div>
+      </div>
+      <h3>Priority and grouping</h3>
+      <ol>
+        <li><b>Danger</b> (needs changes, rejected, couldn't save) — persistent; toasts use <code>role="alert"</code>.</li>
+        <li><b>Warning</b> (reported, offline, unverified) — persistent until resolved.</li>
+        <li><b>Success</b> (live, saved, added) — auto-dismiss.</li>
+        <li><b>Info</b> (milestones, follower counts) — list only, no toast.</li>
+      </ol>
+      <p>At most three toasts show at once; older ones collapse into the notification history (<a href="../../mocks/notifications/app-toast/stacked.html">app-toast/stacked</a>). Repeated events about one listing (several reports) group into one notification with a count.</p>
+    </section>
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive</a></h2>
+      <ul>
+        <li>Notification items put the time on its own line below <code>sm</code> and to the right above it.</li>
+        <li>Site banners wrap title, text and action onto separate lines on phones.</li>
+        <li>Toasts follow <a href="feedback-and-loading.html#responsive">feedback and loading</a>: full width on phones, 24rem bottom right above <code>sm</code>.</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <p>Unread state is not colour-only: the dot is paired with a semibold title and visually hidden “(unread)” text. The header badge has a label with meaning (“3 unread notifications”). Banners are <code>role="status"</code>; only new danger toasts use <code>role="alert"</code>. Nothing auto-dismisses that requires action (2.2.1).</p>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody><tr><td><kbd>Tab</kbd></td><td>Moves through notification titles in order, then Mark all as read.</td></tr><tr><td><kbd>Enter</kbd></td><td>Opens the event or page the notification is about and marks it read.</td></tr><tr><td><kbd>Esc</kbd></td><td>Dismisses a focused toast.</td></tr></tbody></table>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);"><div class="ds-pair"><span>Unread title</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div><div class="ds-pair"><span>Read title and time</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div><div class="ds-pair"><span>Warning banner text</span><span class="ds-pair__ratio" data-contrast="--color-warning-fg|--color-warning-bg" data-min="4.5"></span></div><div class="ds-pair"><span>Unread dot (decorative, paired with text)</span><span class="ds-pair__ratio" data-contrast="--color-brand|--color-bg-surface" data-min="1"></span></div></div>
+    </section>
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Kind</th><th scope="col">Formula</th><th scope="col">Example</th></tr></thead><tbody><tr><td>Approved</td><td>“&lt;Event&gt;” is live + where it appears</td><td>“Fabric for Power BI developers” is live · It’s in the list, the calendar and 41 feeds.</td></tr><tr><td>Reported</td><td>Someone reported &lt;what&gt; on &lt;event&gt; + the quote + what to do</td><td>Someone reported the time on Azure Data &amp; AI Day GTA · “The ticket page says 9:30 AM.”</td></tr><tr><td>Needs changes</td><td>“&lt;Event&gt;” needs changes + Reason: … + next step</td><td>Reason: the listing is missing a venue address. Edit it and resubmit.</td></tr><tr><td>Milestone</td><td>Number + fact</td><td>1,204 people now follow your events in a feed · Up 86 this month.</td></tr><tr><td>Time</td><td>Relative under a day, then date</td><td>12 min ago · 2 h ago · Yesterday · Oct 29</td></tr></tbody></table></div>
+    </section>
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><p class="notif__title" style="color: var(--color-fg-default); font-weight: var(--font-weight-semibold);">“Azure Bicep clinic” needs changes</p></div><figcaption>Name the event and the outcome in the title.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p class="notif__title">Your submission status has been updated</p></div><figcaption>A generic title that makes people open it to learn anything.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="alert alert--warning site-banner" role="status" ><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="alert__body"><p class="alert__title">You're offline</p><div>Showing events saved at 9:42 AM. Submitting and feeds need a connection.</div></div></div></div><figcaption>Keep a lasting condition in a persistent banner.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="toast toast--warning" style="max-width: 22rem;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="toast__body"><div class="toast__title">You're offline</div></div></div></div><figcaption>Announce a lasting condition in a toast that disappears while it is still true.</figcaption></figure>
+      </div>
+    </section>
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul><li><a href="../../mocks/pages/notifications/default.html">pages/notifications/default</a> — list, unread</li><li><a href="../../mocks/pages/notifications/read.html">pages/notifications/read</a> — read state</li><li><a href="../../mocks/pages/notifications/empty.html">pages/notifications/empty</a> — empty history</li><li><a href="../../mocks/notifications/site-banner/warning.html">notifications/site-banner/warning</a> — offline banner</li><li><a href="../../mocks/notifications/submission-banner/persistent.html">notifications/submission-banner/persistent</a> — verify email</li><li><a href="../../mocks/notifications/event-alert/warning.html">notifications/event-alert/warning</a> — event alert</li><li><a href="../../mocks/notifications/moderation-toast/with-action.html">notifications/moderation-toast/with-action</a> — moderation toast</li><li><a href="../../mocks/notifications/app-toast/stacked.html">notifications/app-toast/stacked</a> — stack limit</li></ul>
+      <p>Drift fixed during extraction: the submission banner mock is an inline <code>.alert</code> wrapped in a <code>div</code> with an inline bottom margin, not a <code>.site-banner</code>; it is documented as an inline alert, and the name “banner” is reserved for full-width site banners.</p>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

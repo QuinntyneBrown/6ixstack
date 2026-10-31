@@ -1,0 +1,86 @@
+@startuml
+title UML sequence behaviour — Confirm and delete an organizer account
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SettingsPage" as page
+  participant "DeleteAccountDialog" as dialog
+  participant "SessionStore" as store
+  participant "HttpAccountApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "AccountController" as controller
+  participant "SessionCookie" as cookie
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "DeleteAccountCommandValidator" as validator
+  participant "DeleteAccountCommandHandler" as handler
+  participant "User" as user
+  participant "AuditLog" as audit
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Delete account
+page -> dialog : Dialog.open(DeleteAccountDialog, email, community, co-organizer count)
+dialog --> actor : What is lost and what stays; email field; Delete account disabled (L2-071)
+actor -> dialog : Type email
+alt typed text matches after trim, ignoring case
+  dialog --> actor : Delete account enabled, Keep account available (L2-071)
+else no match, for example "priya@gtaazure.com", and Delete account activated
+  dialog --> actor : "That doesn't match. Type priya@gtaazure.ca exactly.", input kept and focused (L2-071)
+end
+alt Keep account
+  actor -> dialog : Keep account
+  dialog --> page : Closed, nothing changes
+else confirm
+  actor -> dialog : Delete account
+  dialog -> dialog : Field disabled, button "Deleting…", disableClose on (L2-071)
+  dialog -> client : deleteAccount(typed email)
+  client -> controller : DELETE /api/account with X-XSRF-TOKEN (OrganizerPolicy, L2-080, L2-083)
+  controller -> validator : ConfirmEmail matches account email (L2-071)
+  alt mismatch
+    validator --> controller : Field error
+    controller --> client : 400 problem details
+    client --> dialog : FieldErrors
+    dialog --> actor : Same mismatch message (L2-071)
+  else match
+    controller -> handler : Send DeleteAccountCommand
+    handler -> db : Load user, sessions, CommunityOrganizer, tokens, notifications
+    handler -> user : Delete(now): clear name, emails, website, preferences
+    handler -> db : Revoke every Session of the user (L2-071)
+    handler -> db : Remove CommunityOrganizer; events keep CommunityId (L2-071)
+    handler -> db : Delete unused SecurityTokens and Notifications
+    handler -> audit : Record AccountDeleted, user id, no email (L2-086)
+    handler -> db : Save changes in one unit of work
+    alt commit fails
+      db --> handler : Error, transaction rolled back
+      handler --> controller : Failure
+      controller --> client : 5xx problem details
+      client --> dialog : Error
+      dialog --> actor : "Your account wasn't deleted", nothing changed, link to contact, "Try again" (L2-071)
+    else committed
+      db --> handler : Commit result
+      handler --> controller : Done
+      controller -> cookie : Clear()
+      controller --> client : 204 No Content
+      client --> dialog : Done
+      dialog -> store : clear()
+      dialog --> actor : Events page opens signed out; community's published events stay public (L2-071)
+    end
+  end
+end
+@enduml

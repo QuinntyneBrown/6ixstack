@@ -1,0 +1,60 @@
+@startuml
+title UML sequence behaviour — Serve a calendar feed
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+participant "Calendar app" as calapp
+box "Backend — 6ixstack API application" #D1FADF
+  participant "FeedsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetCalendarFeedQueryHandler" as handler
+  participant "FeedEventFilter" as filter
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "MemoryFeedCache" as cache
+  participant "IcsWriter" as writer
+  database "6ixstack database" as db
+end box
+calapp -> controller : GET /feeds/ai.ics (If-None-Match optional)
+controller -> controller : Allow anonymous caller (L2-080)
+controller -> handler : Send GetCalendarFeedQuery
+handler -> handler : FeedSlug.TryParse
+alt slug does not parse or community unknown
+  handler --> controller : NotFound
+  controller --> calapp : 404
+else valid slug
+  handler -> cache : TryGet(slug)
+  alt cached snapshot
+    cache --> handler : FeedSnapshot
+  else cache miss or expired
+    handler -> filter : Apply topics, scope, community
+    handler -> db : Status Published or Cancelled, end >= now - 30 days, ordered by start (L2-036)
+    db --> handler : Events (never Draft, InReview, NeedsChanges, Rejected)
+    handler -> writer : WriteCalendar(feed name, events)
+    writer -> writer : VTIMEZONE America/Toronto; per VEVENT UID from Event.Id, DTSTART/DTEND TZID=America/Toronto, URL /events/{slug}, SEQUENCE (L2-036, L2-079)
+    writer -> writer : STATUS:CANCELLED for cancelled events; no personal email (L2-036, L2-099)
+    writer -> writer : Escape text and fold lines at 75 octets (L2-081)
+    writer --> handler : Calendar text
+    handler -> cache : Set(slug, snapshot with content hash ETag)
+  end
+  alt If-None-Match equals ETag
+    handler --> controller : NotModified
+    controller --> calapp : 304, no body (L2-087)
+  else changed or no validator
+    handler --> controller : Content and ETag
+    controller --> calapp : 200 text/calendar; charset=utf-8, ETag (L2-036)
+  end
+end
+@enduml

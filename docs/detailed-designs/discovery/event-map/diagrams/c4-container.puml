@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Event map and timeline
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Events page map panel, deferred map chunk, timeline")
+  Container(api, "6ixstack API", "ASP.NET Core", "Public event queries")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events and venue coordinates")
+}
+System_Ext(basemap, "Map basemap provider", "<TO SUPPLY>")
+
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/events/map", "JSON/HTTPS")
+Rel(spa, basemap, "Loads basemap", "HTTPS")
+Rel(api, db, "Reads published events and coordinates", "EF Core")
+@enduml

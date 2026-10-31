@@ -1,0 +1,42 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Edit an event
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "EditEventPage", "Angular page", "Status line, form, save, discard, read-only, states")
+  Component(form, "EventForm", "Angular component", "Shared event form with format-dependent fields")
+  Component(draft, "DraftStore", "Angular service", "Submission draft for Duplicate as a new event")
+  Component(forbidden, "ForbiddenPage", "Angular page", "Names owning community and signed-in account")
+  Component(client, "HttpOrganizerEventsApi", "Angular service behind ORGANIZER_EVENTS_API", "Typed client for /api/organizer/events/{id}")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "OrganizerEventsController", "ASP.NET Core controller", "GET and PUT /api/organizer/events/{id}")
+  Component(validator, "UpdateOrganizerEventCommandValidator", "FluentValidation", "EventDetailsValidator rules from L2-041 and L2-081")
+  Component(query, "GetOrganizerEventQueryHandler", "MediatR handler", "Loads event for editing")
+  Component(handler, "UpdateOrganizerEventCommandHandler", "MediatR handler", "Edits, applies status rule, audits")
+  Component(access, "EventAccessChecker", "Application service", "CommunityMemberRequirement or Moderator role")
+  Component(entity, "Event", "Domain entity", "Edit, Resubmit, Sequence, TimeChangedAtUtc")
+  Component(audit, "IAuditLog", "Application port", "Actor, time, action, target, changed fields")
+  Component(checks, "ISubmissionCheckScheduler", "Application port", "Schedules automated checks on resubmission")
+  Component(feeds, "IFeedMatchCounter", "Application service", "Counts feeds that include the event")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events, community organizers, audit entries, outbox")
+
+Rel(page, form, "Renders and reads")
+Rel(page, client, "Loads and saves the event")
+Rel(page, draft, "Writes duplicate draft")
+Rel(page, forbidden, "Navigates on 403")
+Rel(client, ctrl, "GET and PUT /api/organizer/events/{id}", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates PUT body")
+Rel(ctrl, query, "Sends GetOrganizerEventQuery")
+Rel(ctrl, handler, "Sends UpdateOrganizerEventCommand")
+Rel(query, access, "Checks access")
+Rel(handler, access, "Checks access")
+Rel(handler, entity, "Calls Edit and Resubmit")
+Rel(handler, audit, "Records EventEdited")
+Rel(handler, checks, "Schedules checks")
+Rel(handler, feeds, "Counts matching feeds")
+Rel(handler, db, "Saves in one unit of work", "EF Core")
+Rel(query, db, "Reads event", "EF Core")
+@enduml

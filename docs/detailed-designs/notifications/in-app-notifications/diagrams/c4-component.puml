@@ -1,0 +1,35 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — In-app notifications
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "NotificationsPage", "Angular page", "List, lead, Mark all as read, states")
+  Component(item, "NotificationItem", "Angular component", "Icon, linked title, text, relative time, unread cue")
+  Component(session, "SessionStore", "Angular service", "Current user and unread count for the header")
+  Component(client, "HttpNotificationsApi", "Angular service behind NOTIFICATIONS_API", "Typed client for /api/notifications")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "NotificationsController", "ASP.NET Core controller", "GET list, POST read, POST read-all")
+  Component(query, "GetNotificationsQueryHandler", "MediatR handler", "Newest-first list and unread count")
+  Component(mark, "MarkNotificationReadCommandHandler / MarkAllNotificationsReadCommandHandler", "MediatR handlers", "Set ReadAtUtc for the current user")
+  Component(triggers, "Trigger handlers", "MediatR handlers", "Approve, reject, report, submit, resubmit; MilestoneDetector")
+  Component(publisher, "NotificationPublisher", "INotificationPublisher", "Resolves recipients, dedupes, adds notifications")
+  Component(templates, "NotificationTemplates", "Application service", "Title, text and link per type")
+  Component(user, "SessionAuthenticationHandler", "ASP.NET Core auth handler", "Resolves the signed-in user")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Notifications indexed by user and creation time")
+
+Rel(page, item, "Renders one per notification")
+Rel(page, client, "Loads and marks read")
+Rel(page, session, "Writes unread count")
+Rel(client, ctrl, "JSON/HTTPS", "anti-forgery token on POST")
+Rel(ctrl, user, "Requires signed-in user")
+Rel(ctrl, query, "Sends GetNotificationsQuery")
+Rel(ctrl, mark, "Sends mark-read commands")
+Rel(triggers, publisher, "Publish(NotificationRequest)")
+Rel(publisher, templates, "Builds copy")
+Rel(query, db, "Reads", "EF Core")
+Rel(mark, db, "Updates ReadAtUtc", "EF Core")
+Rel(publisher, db, "Adds notifications in caller's unit of work", "EF Core")
+@enduml

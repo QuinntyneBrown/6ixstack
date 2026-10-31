@@ -1,0 +1,123 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Browse speakers
+
+package "SixStack.Domain" {
+  enum Topic {
+    Ai
+    DotNet
+    Azure
+    Angular
+    React
+    Aws
+  }
+  class Speaker {
+    +Guid Id
+    +string Slug
+    +string Name
+    +string Initials
+    +string Role
+    +string Affiliation
+    +IReadOnlyCollection<Topic> Topics
+  }
+  class EventSpeaker {
+    +Guid EventId
+    +Guid SpeakerId
+    +string? TalkTitle
+    +DateTimeOffset? TalkStartsAtUtc
+  }
+  class Event {
+    +Guid Id
+    +string Slug
+    +string Title
+    +DateTimeOffset StartsAtUtc
+    +EventStatus Status
+  }
+}
+
+package "SixStack.Application" {
+  enum SpeakingPeriod {
+    AnyTime
+    SpeakingThisMonth
+    SpokeThisYear
+  }
+  class GetSpeakersQuery {
+    +string? Search
+    +Topic? Topic
+    +SpeakingPeriod Period
+    +int Page
+  }
+  class GetSpeakersQueryValidator {
+    +MaxSearchLength = 100
+  }
+  class GetSpeakersQueryHandler {
+    +FirstPageSize = 9
+    +NextPageSize = 24
+    +Handle(query: GetSpeakersQuery): Task<SpeakerDirectoryDto>
+  }
+  class SpeakerDirectoryDto {
+    +int ListedTotal
+    +int MatchCount
+    +int Page
+    +IReadOnlyList<SpeakerCardDto> Items
+  }
+  class SpeakerCardDto {
+    +string Slug
+    +string Name
+    +string Initials
+    +string RoleLine
+    +IReadOnlyList<Topic> Topics
+    +NextTalkDto? NextTalk
+  }
+  class NextTalkDto {
+    +string EventSlug
+    +string Title
+    +string DateLabel
+  }
+}
+
+package "sixstack (Angular)" {
+  class SpeakersPage {
+    +query: Signal<SpeakerQuery>
+    +result: Signal<SpeakerDirectory | null>
+    +shownCount: Signal<number>
+    +search(text: string): void
+    +setTopic(topic: Topic | null): void
+    +setPeriod(period: SpeakingPeriod): void
+    +loadMore(): void
+    +clearSearch(): void
+    +retry(): void
+  }
+  interface SpeakersApi {
+    +list(query: SpeakerQuery, page: number): Observable<SpeakerDirectory>
+  }
+  class HttpSpeakersApi
+  class DirectoryCard {
+    +href: string
+  }
+}
+
+Speaker "1" --> "1..*" Topic
+Speaker "1" *-- "*" EventSpeaker
+EventSpeaker "*" --> "1" Event
+GetSpeakersQuery --> SpeakingPeriod
+GetSpeakersQueryValidator ..> GetSpeakersQuery : validates
+GetSpeakersQueryHandler ..> GetSpeakersQuery : handles
+GetSpeakersQueryHandler ..> Speaker : reads
+GetSpeakersQueryHandler ..> EventSpeaker : reads talks
+GetSpeakersQueryHandler ..> SpeakerDirectoryDto : returns
+SpeakerDirectoryDto "1" *-- "*" SpeakerCardDto
+SpeakerCardDto *-- "0..1" NextTalkDto
+HttpSpeakersApi ..|> SpeakersApi
+SpeakersPage ..> SpeakersApi : SPEAKERS_API
+SpeakersPage ..> DirectoryCard : renders
+@enduml

@@ -1,0 +1,532 @@
+{
+  "project": "6ixstack",
+  "source": "https://project-6ixstack-event-platform-597.magicpatterns.app",
+  "required_states": {
+    "page": [
+      "default",
+      "loading",
+      "empty",
+      "error"
+    ],
+    "dialog": [
+      "default",
+      "busy",
+      "invalid"
+    ],
+    "notification": [
+      "info",
+      "success",
+      "warning",
+      "danger"
+    ]
+  },
+  "screens": [
+    {
+      "id": "events",
+      "kind": "page",
+      "title": "Events",
+      "route": "/",
+      "states": [
+        "default",
+        "hover",
+        "day-focus",
+        "playing",
+        "loading",
+        "empty",
+        "error",
+        "filtered",
+        "no-results",
+        "partial",
+        "long",
+        "edge"
+      ]
+    },
+    {
+      "id": "event-detail",
+      "kind": "page",
+      "title": "Event detail",
+      "route": "/events/:id",
+      "states": [
+        "default",
+        "loading",
+        "error",
+        "streaming",
+        "past",
+        "cancelled"
+      ],
+      "not_applicable": {
+        "empty": "An event always has content; an unknown or removed event shows the not-found page."
+      }
+    },
+    {
+      "id": "calendar",
+      "kind": "page",
+      "title": "Calendar",
+      "route": "/calendar",
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "error",
+        "no-results"
+      ]
+    },
+    {
+      "id": "mobile-nav",
+      "kind": "dialog",
+      "title": "Mobile menu",
+      "opens_from": "events",
+      "states": [
+        "default"
+      ],
+      "not_applicable": {
+        "busy": "Navigation only; nothing is submitted.",
+        "invalid": "The menu has no inputs."
+      }
+    },
+    {
+      "id": "subscribe-feed",
+      "kind": "dialog",
+      "title": "Subscribe to a feed",
+      "opens_from": "events",
+      "states": [
+        "default",
+        "busy",
+        "invalid",
+        "failed",
+        "success"
+      ]
+    },
+    {
+      "id": "add-to-calendar",
+      "kind": "dialog",
+      "title": "Add to my calendar",
+      "opens_from": "event-detail",
+      "states": [
+        "default",
+        "busy",
+        "failed"
+      ],
+      "not_applicable": {
+        "invalid": "One-tap choices; there is nothing to validate."
+      }
+    },
+    {
+      "id": "share-event",
+      "kind": "dialog",
+      "title": "Share event",
+      "opens_from": "event-detail",
+      "states": [
+        "default",
+        "success"
+      ],
+      "not_applicable": {
+        "busy": "Copying and share links are instant and local.",
+        "invalid": "Nothing to fill in."
+      }
+    },
+    {
+      "id": "report-event",
+      "kind": "dialog",
+      "title": "Report a problem",
+      "opens_from": "event-detail",
+      "states": [
+        "default",
+        "busy",
+        "invalid",
+        "failed",
+        "success"
+      ]
+    },
+    {
+      "id": "app-toast",
+      "kind": "notification",
+      "title": "Toast",
+      "opens_from": "events",
+      "states": [
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "with-action",
+        "stacked"
+      ]
+    },
+    {
+      "id": "event-alert",
+      "kind": "notification",
+      "title": "Event status alert",
+      "opens_from": "event-detail",
+      "states": [
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
+    },
+    {
+      "id": "site-banner",
+      "kind": "notification",
+      "title": "Site banner",
+      "opens_from": "events",
+      "states": [
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "persistent"
+      ]
+    },
+    {
+      "id": "communities",
+      "kind": "page",
+      "title": "Communities",
+      "route": "/communities",
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "error",
+        "no-results"
+      ]
+    },
+    {
+      "id": "community-detail",
+      "kind": "page",
+      "title": "Community detail",
+      "route": "/communities/:id",
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ]
+    },
+    {
+      "id": "speakers",
+      "kind": "page",
+      "title": "Speakers",
+      "route": "/speakers",
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "error",
+        "no-results"
+      ]
+    },
+    {
+      "id": "speaker-detail",
+      "kind": "page",
+      "title": "Speaker detail",
+      "route": "/speakers/:id",
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ]
+    },
+    {
+      "id": "calendar-feeds",
+      "kind": "page",
+      "title": "Calendar feeds",
+      "route": "/feeds",
+      "states": [
+        "default",
+        "loading",
+        "error",
+        "success"
+      ],
+      "not_applicable": {
+        "empty": "Ready-made feeds always exist."
+      }
+    },
+    {
+      "id": "about",
+      "kind": "page",
+      "title": "About",
+      "route": "/about",
+      "states": [
+        "default"
+      ],
+      "not_applicable": {
+        "loading": "Static content ships with the page; there is nothing to fetch.",
+        "empty": "Static content is never empty.",
+        "error": "Static content cannot fail to load independently; a server failure shows the server-error page."
+      }
+    },
+    {
+      "id": "code-of-conduct",
+      "kind": "page",
+      "title": "Code of conduct",
+      "route": "/code-of-conduct",
+      "states": [
+        "default"
+      ],
+      "not_applicable": {
+        "loading": "Static content ships with the page; there is nothing to fetch.",
+        "empty": "Static content is never empty.",
+        "error": "Static content cannot fail to load independently; a server failure shows the server-error page."
+      }
+    },
+    {
+      "id": "contact",
+      "kind": "page",
+      "title": "Contact",
+      "route": "/contact",
+      "states": [
+        "default",
+        "invalid",
+        "submitting",
+        "success",
+        "error"
+      ],
+      "not_applicable": {
+        "loading": "The form is static; nothing loads before it can be used.",
+        "empty": "A contact form has no collection."
+      }
+    },
+    {
+      "id": "not-found",
+      "kind": "page",
+      "title": "Not found (404)",
+      "route": "*",
+      "states": [
+        "default"
+      ],
+      "not_applicable": {
+        "loading": "Status pages are served immediately with no data to fetch.",
+        "empty": "A status page has no collection.",
+        "error": "This page is itself the error state."
+      }
+    },
+    {
+      "id": "forbidden",
+      "kind": "page",
+      "title": "Forbidden (403)",
+      "route": "/organize/events/:id/edit",
+      "states": [
+        "default"
+      ],
+      "not_applicable": {
+        "loading": "Status pages are served immediately with no data to fetch.",
+        "empty": "A status page has no collection.",
+        "error": "This page is itself the error state."
+      }
+    },
+    {
+      "id": "server-error",
+      "kind": "page",
+      "title": "Server error (500)",
+      "route": "*",
+      "states": [
+        "default"
+      ],
+      "not_applicable": {
+        "loading": "Status pages are served immediately with no data to fetch.",
+        "empty": "A status page has no collection.",
+        "error": "This page is itself the error state."
+      }
+    },
+    {
+      "id": "offline",
+      "kind": "page",
+      "title": "Offline",
+      "route": "*",
+      "states": [
+        "default"
+      ],
+      "not_applicable": {
+        "loading": "Status pages are served immediately with no data to fetch.",
+        "empty": "A status page has no collection.",
+        "error": "This page is itself the error state."
+      }
+    },
+    {
+      "id": "sign-in",
+      "kind": "page",
+      "title": "Organizer sign in",
+      "route": "/sign-in",
+      "states": [
+        "default",
+        "invalid",
+        "submitting",
+        "success",
+        "error"
+      ],
+      "not_applicable": {
+        "loading": "Nothing to load; the form renders immediately.",
+        "empty": "Single form, no collection."
+      }
+    },
+    {
+      "id": "submit-event",
+      "kind": "page",
+      "title": "Submit an event",
+      "route": "/submit",
+      "states": [
+        "default",
+        "loading",
+        "error",
+        "invalid",
+        "submitting",
+        "success"
+      ],
+      "not_applicable": {
+        "empty": "A form with no collection to be empty."
+      }
+    },
+    {
+      "id": "organizer-dashboard",
+      "kind": "page",
+      "title": "Your events",
+      "route": "/organize",
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "error"
+      ]
+    },
+    {
+      "id": "edit-event",
+      "kind": "page",
+      "title": "Edit event",
+      "route": "/organize/events/:id/edit",
+      "states": [
+        "default",
+        "loading",
+        "error",
+        "invalid",
+        "submitting",
+        "success",
+        "read-only"
+      ],
+      "not_applicable": {
+        "empty": "Editing always starts from an existing event."
+      }
+    },
+    {
+      "id": "review-queue",
+      "kind": "page",
+      "title": "Review queue",
+      "route": "/admin/review",
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "error",
+        "forbidden"
+      ]
+    },
+    {
+      "id": "notifications",
+      "kind": "page",
+      "title": "Notifications",
+      "route": "/notifications",
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "error",
+        "read"
+      ]
+    },
+    {
+      "id": "settings",
+      "kind": "page",
+      "title": "Settings",
+      "route": "/settings",
+      "states": [
+        "default",
+        "loading",
+        "error",
+        "invalid",
+        "submitting",
+        "success"
+      ],
+      "not_applicable": {
+        "empty": "Settings always has values; there is no collection."
+      }
+    },
+    {
+      "id": "cancel-event",
+      "kind": "dialog",
+      "title": "Cancel event",
+      "opens_from": "organizer-dashboard",
+      "states": [
+        "default",
+        "busy",
+        "invalid",
+        "failed",
+        "confirm"
+      ]
+    },
+    {
+      "id": "reject-submission",
+      "kind": "dialog",
+      "title": "Reject submission",
+      "opens_from": "review-queue",
+      "states": [
+        "default",
+        "busy",
+        "invalid",
+        "failed"
+      ]
+    },
+    {
+      "id": "sign-out",
+      "kind": "dialog",
+      "title": "Sign out",
+      "opens_from": "settings",
+      "states": [
+        "default",
+        "busy"
+      ],
+      "not_applicable": {
+        "invalid": "No inputs; a single confirmation."
+      }
+    },
+    {
+      "id": "delete-account",
+      "kind": "dialog",
+      "title": "Delete account",
+      "opens_from": "settings",
+      "states": [
+        "default",
+        "busy",
+        "invalid",
+        "failed",
+        "confirm"
+      ]
+    },
+    {
+      "id": "submission-banner",
+      "kind": "notification",
+      "title": "Submission status banner",
+      "opens_from": "organizer-dashboard",
+      "states": [
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "persistent"
+      ]
+    },
+    {
+      "id": "moderation-toast",
+      "kind": "notification",
+      "title": "Moderation toast",
+      "opens_from": "review-queue",
+      "states": [
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "with-action",
+        "stacked"
+      ]
+    }
+  ]
+}

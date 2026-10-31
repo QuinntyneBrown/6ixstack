@@ -1,0 +1,42 @@
+@startuml
+title UML sequence behaviour — Validate the contact form
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ContactPage" as page
+  participant "ErrorSummary" as summary
+  participant "FormField" as field
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ContactController" as controller
+end box
+actor -> page : Email "priya@gtaazure", empty message, Send message
+page -> page : Run required, email and 5,000-character rules (L2-073)
+alt invalid
+  page -> field : aria-invalid="true", aria-describedby error id (L2-092)
+  page -> summary : "Fix 2 things before sending" with links to Email and Message
+  summary --> actor : Focus moves to the summary (L2-073, L2-092)
+  actor -> summary : Activate "Enter an email address like name@example.com"
+  summary -> field : Focus the email field
+else valid
+  page -> controller : POST /api/contact (see Send a message)
+end
+opt client rules bypassed
+  controller -> controller : SendContactMessageCommandValidator
+  controller --> page : 400 problem details keyed by field
+  page -> summary : Same summary from server errors (L2-092)
+end
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Automated submission checks
+
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(geo, "Geocoding service", "<TO SUPPLY>; resolves street addresses")
+System_Ext(sites, "Ticketing and streaming sites", "Organizer-owned links")
+
+Rel(moderator, sixstack, "Reads check results on review cards in", "HTTPS")
+Rel(sixstack, geo, "Looks up venue addresses with", "HTTPS")
+Rel(sixstack, sites, "Requests ticket and stream links, 5 s timeout", "HTTPS")
+@enduml

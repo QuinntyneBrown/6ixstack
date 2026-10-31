@@ -1,0 +1,142 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Month calendar
+
+package "SixStack.Domain" {
+  enum EventFormat {
+    InPerson
+    Streaming
+    Hybrid
+  }
+  enum Topic {
+    Ai
+    DotNet
+    Azure
+    Angular
+    React
+    Aws
+  }
+  class Event {
+    +string Slug
+    +string Title
+    +EventFormat Format
+    +IReadOnlyCollection<Topic> Topics
+    +DateTimeOffset StartsAtUtc
+    +EventStatus Status
+  }
+}
+
+package "SixStack.Application" {
+  class GetMonthCalendarQuery {
+    +int Year
+    +int Month
+    +FormatFilter Format
+    +IReadOnlyList<Topic> Topics
+  }
+  class GetMonthCalendarQueryHandler {
+    +Handle(query: GetMonthCalendarQuery): Task<MonthCalendarDto>
+  }
+  class MonthCalendarDto {
+    +string Month
+    +string MonthLabel
+    +MonthTotalsDto Totals
+    +FormatCountsDto Counts
+    +int MatchCount
+    +IReadOnlyList<CalendarDayDto> Days
+  }
+  class MonthTotalsDto {
+    +int All
+    +int Gta
+    +int Streamable
+  }
+  class FormatCountsDto {
+    +int All
+    +int Gta
+    +int Streaming
+  }
+  class CalendarDayDto {
+    +DateOnly Date
+    +IReadOnlyList<CalendarEventDto> Events
+  }
+  class CalendarEventDto {
+    +string Slug
+    +string Title
+    +Topic FirstTopic
+    +string StartTimeEt
+  }
+}
+
+package "api (Angular)" {
+  interface EventsApi {
+    +getMonth(month: string, filters: EventFilters): Observable<MonthCalendar>
+  }
+  class HttpEventsApi
+}
+
+package "sixstack (Angular)" {
+  class CalendarPage {
+    +month: Signal<string>
+    +state: Signal<'loading' | 'ready' | 'empty' | 'filtered' | 'error'>
+    +pickedDay: Signal<string | null>
+    +previousMonth(): void
+    +nextMonth(): void
+    +today(): void
+    +showList(): void
+    +clearFilters(): void
+    +retry(): void
+  }
+  class FilterStateStore {
+    +read(): EventFilters
+    +write(filters: EventFilters): void
+  }
+}
+
+package "components (Angular)" {
+  class MonthGrid {
+    +cells: InputSignal<GridCell[]>
+    +eventsByDate: InputSignal<Map<string, CalendarEvent[]>>
+    +loading: InputSignal<boolean>
+    +dayPicked: OutputEmitterRef<string>
+  }
+  class GridCell {
+    +date: string
+    +dayOfMonth: number
+    +isToday: boolean
+    +isOutside: boolean
+  }
+  class MonthGridLayout <<module>> {
+    +build(month: string, today: string): GridCell[]
+  }
+  class CalendarDayList {
+    +date: InputSignal<string>
+    +events: InputSignal<CalendarEvent[]>
+  }
+}
+
+Event --> EventFormat
+Event "1" --> "1..*" Topic
+GetMonthCalendarQueryHandler ..> GetMonthCalendarQuery : handles
+GetMonthCalendarQueryHandler ..> Event : reads
+GetMonthCalendarQueryHandler ..> MonthCalendarDto : returns
+MonthCalendarDto *-- MonthTotalsDto
+MonthCalendarDto *-- FormatCountsDto
+MonthCalendarDto "1" *-- "*" CalendarDayDto
+CalendarDayDto "1" *-- "*" CalendarEventDto
+HttpEventsApi ..|> EventsApi
+CalendarPage ..> EventsApi : EVENTS_API
+CalendarPage ..> FilterStateStore
+CalendarPage ..> MonthGridLayout
+CalendarPage ..> MonthGrid : renders
+CalendarPage ..> CalendarDayList : renders
+MonthGridLayout ..> GridCell : creates
+MonthGrid "1" o-- "28..42" GridCell
+@enduml

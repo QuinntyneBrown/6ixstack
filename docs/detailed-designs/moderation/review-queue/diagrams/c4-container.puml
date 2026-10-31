@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Review queue
+
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Review queue page, cards and shortcuts")
+  Container(api, "6ixstack API", "ASP.NET Core", "Moderation queries behind ModeratorPolicy")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events, submission checks, moderation decisions")
+}
+Rel(moderator, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/moderation/queue", "JSON/HTTPS, session cookie")
+Rel(api, db, "Reads submissions, checks and decisions", "EF Core")
+@enduml

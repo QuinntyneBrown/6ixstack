@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Ready-made calendar feeds
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Calendar feeds page, ready-made list and copy actions")
+  Container(api, "6ixstack API", "ASP.NET Core", "Ready-made feed counts")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events and communities")
+}
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/feeds", "JSON/HTTPS")
+Rel(api, db, "Counts published events in the upcoming window", "EF Core")
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Report a problem with an event
+
+Person(visitor, "Visitor", "Anonymous developer reporting a problem")
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>; delivers report emails")
+
+Rel(visitor, sixstack, "Reports a problem with an event using", "HTTPS")
+Rel(sixstack, organizer, "Notifies of non-conduct reports, without reporter identity")
+Rel(sixstack, moderator, "Notifies of every report")
+Rel(sixstack, email, "Sends report emails via", "<TO SUPPLY>")
+@enduml

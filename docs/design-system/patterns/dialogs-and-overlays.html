@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dialogs and overlays — 6ixstack design system</title>
+<meta name="description" content="When 6ixstack interrupts with a dialog, and when a popover, tooltip, menu or a full page does the job better.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Dialogs and overlays</h1>
+      <p class="ds-lead">When 6ixstack interrupts with a dialog, and when a popover, tooltip, menu or a full page does the job better.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Composes dialog, drawer, popover, tooltip, menu</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li></ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Overlays interrupt, so 6ixstack uses them only when the person has to decide or supply something before continuing, and keeps everything else on the page. The mocks have nine dialogs — add to calendar, subscribe to a feed, share, report, cancel event, reject submission, sign out, delete account and the phone menu — all built from one <a href="../components/dialog.html">dialog</a> panel: header (optional status icon, title, description, close), body, sticky footer with the actions. <a href="../components/popover.html">Popovers</a> and <a href="../components/tooltip.html">tooltips</a> cover the small, non-blocking cases; <a href="../components/menu.html">menus</a> offer a list of actions from one trigger.</p>
+    </section>
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Need</th><th scope="col">Use</th><th scope="col">6ixstack example</th></tr></thead><tbody><tr><td>Confirm a destructive, irreversible action</td><td>Danger dialog: red icon, consequence in the description, safe action focused first</td><td><a href="../../mocks/dialogs/cancel-event/default.html">cancel-event</a>, <a href="../../mocks/dialogs/delete-account/default.html">delete-account</a></td></tr><tr><td>Short task that belongs to the current page (a few fields)</td><td>Form dialog</td><td><a href="../../mocks/dialogs/report-event/default.html">report-event</a>, <a href="../../mocks/dialogs/reject-submission/default.html">reject-submission</a></td></tr><tr><td>Pick one of a few destinations</td><td>Dialog with an option list</td><td><a href="../../mocks/dialogs/add-to-calendar/default.html">add-to-calendar</a></td></tr><tr><td>Configure something with many options</td><td>Large dialog (<code>.dialog__panel--lg</code>)</td><td><a href="../../mocks/dialogs/subscribe-feed/default.html">subscribe-feed</a></td></tr><tr><td>Navigation on phones</td><td>Menu dialog</td><td><a href="../../mocks/dialogs/mobile-nav/default.html">mobile-nav</a></td></tr><tr><td>A long task, or one with its own URL</td><td>A page, not a dialog</td><td>Submit an event, Edit event</td></tr><tr><td>Explain a control</td><td>Tooltip on hover and focus</td><td>Icon-only buttons in the event map</td></tr><tr><td>A list of actions on one item</td><td>Menu</td><td>Row actions overflow</td></tr></tbody></table></div>
+    </section>
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="grid grid--auto" style="width: 100%; align-items: start;"><div class="dialog__panel" role="dialog" aria-modal="false" aria-labelledby="ex-dlg-title" aria-describedby="ex-dlg-desc" style="width: 100%;"><div class="dialog__header"><div class="dialog__icon dialog__icon--danger" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div><div style="flex: 1;"><h3 class="dialog__title" id="ex-dlg-title">Cancel “Azure Data &amp; AI Day GTA”?</h3><p id="ex-dlg-desc" class="text-muted" style="margin-top: var(--space-1);">It stays on 6ixstack marked as cancelled, ticket links are removed and feeds update. This can’t be undone.</p></div><button class="btn btn--ghost btn--icon" type="button" aria-label="Close"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div><div class="dialog__body stack"><div class="field"><label class="field__label" for="ex-cancel-reason">Reason for attendees</label><textarea class="textarea" id="ex-cancel-reason" rows="3" aria-describedby="ex-cancel-help"></textarea><span class="field__help" id="ex-cancel-help">Shown on the listing and emailed to everyone going.</span></div><label class="choice"><input type="checkbox" checked><span class="choice__text">Email the 318 people going<small>Sent from 6ixstack on your behalf</small></span></label></div><div class="dialog__footer"><button class="btn" type="button">Keep event</button><button class="btn btn--danger" type="button">Cancel event</button></div></div><div class="dialog__panel" role="dialog" aria-modal="false" aria-labelledby="ex-sub-title" style="width: 100%;"><div class="dialog__header"><div style="flex: 1;"><h3 class="dialog__title" id="ex-sub-title">Subscribe to a calendar feed</h3></div><button class="btn btn--ghost btn--icon" type="button" aria-label="Close"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div><div class="dialog__body stack"><div class="alert alert--danger" role="alert"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg><div class="alert__body"><p class="alert__title">We couldn't create your feed</p><div>Your choices are saved. Try again, or use the full feed for all events.</div></div></div></div><div class="dialog__footer"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button" aria-busy="true">Create feed</button></div></div></div>
+        </div>
+        <div class="ds-example__caption"><span>Shown in flow. In the product the panel sits in a fixed <code>.dialog</code> over a <code>.backdrop</code>, centred from <code>sm</code> and as a bottom sheet on phones.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="backdrop"&gt;&lt;/div&gt;
+&lt;div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-title" aria-describedby="dlg-desc"&gt;
+  &lt;div class="dialog__panel"&gt;
+    &lt;div class="dialog__header"&gt;…&lt;h2 class="dialog__title" id="dlg-title"&gt;…&lt;/h2&gt;…&lt;/div&gt;
+    &lt;div class="dialog__body stack"&gt;…&lt;/div&gt;
+    &lt;div class="dialog__footer"&gt;…&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Part</th><th scope="col">Rule</th></tr></thead><tbody><tr><td>Title</td><td>A question for confirmations (“Cancel “Azure Data &amp; AI Day GTA”?”), a task name otherwise (“Subscribe to a calendar feed”).</td></tr><tr><td>Description</td><td>The consequence, in one or two sentences; linked with <code>aria-describedby</code>.</td></tr><tr><td>Close button</td><td>Ghost icon button, top right, <code>aria-label=&quot;Close&quot;</code>; same as Esc.</td></tr><tr><td>Footer</td><td>Secondary first, primary or danger last; the safe action carries <code>autofocus</code> in destructive dialogs.</td></tr><tr><td>Sizes</td><td><code>--sm</code> 24rem (sign out), default 32rem, <code>--lg</code> 48rem (subscribe feed).</td></tr></tbody></table></div>
+      <h3>Stacking</h3>
+      <p>One dialog at a time. A dialog never opens another dialog; toasts may appear above it (<code>--z-toast</code> &gt; <code>--z-modal</code>) and tooltips above both.</p>
+    </section>
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">State</th><th scope="col">What changes</th><th scope="col">Mock</th></tr></thead><tbody><tr><td>Default</td><td>Fields empty or pre-filled; focus on the first field or the safe action.</td><td><a href="../../mocks/dialogs/report-event/default.html">report-event/default</a></td></tr><tr><td>Confirm</td><td>Second step for irreversible actions: restates the consequence.</td><td><a href="../../mocks/dialogs/cancel-event/confirm.html">cancel-event/confirm</a></td></tr><tr><td>Invalid</td><td>Field errors in the body; footer unchanged.</td><td><a href="../../mocks/dialogs/delete-account/invalid.html">delete-account/invalid</a></td></tr><tr><td>Busy</td><td>Primary button busy; Close and Cancel stay enabled.</td><td><a href="../../mocks/dialogs/subscribe-feed/busy.html">subscribe-feed/busy</a></td></tr><tr><td>Failed</td><td>Danger alert at the top of the body; choices kept.</td><td><a href="../../mocks/dialogs/subscribe-feed/failed.html">subscribe-feed/failed</a></td></tr><tr><td>Success</td><td>Success panel replaces the body; one primary action to return.</td><td><a href="../../mocks/dialogs/report-event/success.html">report-event/success</a></td></tr></tbody></table></div>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="dialog__panel" style="width: 100%;"><div class="dialog__body"><div class="success-panel"><div class="success-panel__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div><p>Thanks — a moderator will check it today.</p></div></div><div class="dialog__footer"><button class="btn btn--primary" type="button">Back to the event</button></div></div></div>
+        <div data-theme="dark"><div class="dialog__panel" style="width: 100%;"><div class="dialog__body"><div class="success-panel"><div class="success-panel__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div><p>Thanks — a moderator will check it today.</p></div></div><div class="dialog__footer"><button class="btn btn--primary" type="button">Back to the event</button></div></div></div>
+      </div>
+    </section>
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive</a></h2>
+      <ul>
+        <li><b>&lt; sm (640px):</b> the panel is a full-width bottom sheet with <code>--radius-xl</code> top corners; the footer is sticky so actions stay visible above the keyboard.</li>
+        <li><b>≥ sm:</b> centred with <code>--space-6</code> around it and <code>--radius-lg</code> corners; max height is the viewport minus <code>--space-12</code>, and the body scrolls.</li>
+        <li>Footer buttons wrap; when they wrap the primary stays last.</li>
+        <li>Popovers and menus flip to stay inside the viewport; on phones a menu with more than five items becomes a dialog.</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>WAI-ARIA <a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">Dialog (Modal)</a>: <code>role="dialog"</code>, <code>aria-modal="true"</code>, <code>aria-labelledby</code> the title, <code>aria-describedby</code> the description. The page behind is <code>inert</code> (the mobile-nav mock wraps it in <code>&lt;div inert aria-hidden="true"&gt;</code>).</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody><tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Cycles through the dialog's controls only (focus is trapped).</td></tr><tr><td><kbd>Esc</kbd></td><td>Closes the dialog (<code>data-dismiss-on-escape</code>), except while busy.</td></tr><tr><td><kbd>Enter</kbd></td><td>Activates the focused button; submits a form dialog from a single-line field.</td></tr></tbody></table>
+      <h3>Focus</h3>
+      <p>On open, focus goes to the first field, or to the safe action (“Keep event”, “Keep account”) in destructive dialogs. On close it returns to the control that opened the dialog. Busy dialogs keep focus on the busy button.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);"><div class="ds-pair"><span>Text in dialog</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface-raised" data-min="4.5"></span></div><div class="ds-pair"><span>Description in dialog</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface-raised" data-min="4.5"></span></div><div class="ds-pair"><span>Danger icon on its circle</span><span class="ds-pair__ratio" data-contrast="--color-danger-icon|--color-danger-bg" data-min="3"></span></div><div class="ds-pair"><span>Danger button label</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-danger|--color-danger-solid" data-min="4.5"></span></div></div>
+      <h3>Motion</h3>
+      <p>Backdrop fades and the panel scales in (<code>--duration-slow</code>, <code>--ease-enter</code>); bottom sheets slide up. Reduced motion removes both.</p>
+    </section>
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Element</th><th scope="col">Rule</th><th scope="col">Example</th></tr></thead><tbody><tr><td>Title</td><td>Question naming the object for confirmations</td><td>“Cancel “Azure Data &amp; AI Day GTA”?”, “Sign out of 6ixstack?”</td></tr><tr><td>Description</td><td>Consequence first; say if it can’t be undone</td><td>“It stays on 6ixstack marked as cancelled, ticket links are removed and feeds update. This can’t be undone.”</td></tr><tr><td>Danger action</td><td>Repeat the verb from the title</td><td>“Cancel event”, “Delete account”</td></tr><tr><td>Safe action</td><td>Keep + object, never “No”</td><td>“Keep event”, “Keep account”</td></tr><tr><td>Confirm by typing</td><td>Show the exact value to type</td><td>“Type your email, priya@gtaazure.ca, to confirm”</td></tr></tbody></table></div>
+    </section>
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="cluster"><button class="btn" type="button">Keep event</button><button class="btn btn--danger" type="button">Cancel event</button></div></div><figcaption>Name both outcomes; the danger action repeats the title's verb.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="cluster"><button class="btn" type="button">No</button><button class="btn btn--danger" type="button">Yes</button></div></div><figcaption>“Yes / No” buttons that only make sense after re-reading the title.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><p>Submit an event opens a page with its own URL.</p></div><figcaption>Put long tasks on a page that can be bookmarked and resumed.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p>Submit an event in a dialog with five sections and a scrollbar.</p></div><figcaption>Squeeze a long form into a dialog.</figcaption></figure>
+      </div>
+    </section>
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul><li><a href="../../mocks/dialogs/cancel-event/default.html">dialogs/cancel-event/default</a> — danger confirmation</li><li><a href="../../mocks/dialogs/cancel-event/confirm.html">dialogs/cancel-event/confirm</a> — second step</li><li><a href="../../mocks/dialogs/delete-account/invalid.html">dialogs/delete-account/invalid</a> — confirm by typing</li><li><a href="../../mocks/dialogs/subscribe-feed/failed.html">dialogs/subscribe-feed/failed</a> — failed state</li><li><a href="../../mocks/dialogs/subscribe-feed/busy.html">dialogs/subscribe-feed/busy</a> — busy</li><li><a href="../../mocks/dialogs/report-event/success.html">dialogs/report-event/success</a> — success</li><li><a href="../../mocks/dialogs/add-to-calendar/default.html">dialogs/add-to-calendar/default</a> — option list</li><li><a href="../../mocks/dialogs/sign-out/default.html">dialogs/sign-out/default</a> — small dialog</li><li><a href="../../mocks/dialogs/mobile-nav/default.html">dialogs/mobile-nav/default</a> — menu dialog, inert page</li></ul>
+      <p>Drift fixed during extraction: <code>.dialog__title</code> is declared twice in the mock kit (<code>--text-h3</code>, then overridden to <code>--text-h4</code>); the mocks render at h4 size, so that is the documented size. The description margin is inline (<code>margin-top: var(--space-1)</code>) in every dialog mock and is kept as written.</p>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

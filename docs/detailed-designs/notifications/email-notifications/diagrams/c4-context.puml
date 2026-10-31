@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Email notifications
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>: delivers transactional email")
+
+Rel(organizer, sixstack, "Chooses email preferences and reads notifications using", "HTTPS")
+Rel(sixstack, email, "Sends notification and summary emails via", "SMTP or provider API")
+Rel(email, organizer, "Delivers email to")
+@enduml

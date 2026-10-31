@@ -1,0 +1,28 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Browse communities
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "CommunitiesPage", "Angular page", "Toolbar, card grid, result states, Show 20 more")
+  Component(router, "Router", "Angular router", "q, topic, city and sort query parameters")
+  Component(card, "DirectoryCard", "Angular component", "dir-card block with a stretched link")
+  Component(client, "HttpCommunitiesApi", "Angular service behind COMMUNITIES_API", "Typed client for /api/communities")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "CommunitiesController", "ASP.NET Core controller", "GET /api/communities")
+  Component(validator, "GetCommunitiesQueryValidator", "FluentValidation", "Bounds search length, page and enum values")
+  Component(handler, "GetCommunitiesQueryHandler", "MediatR handler", "Searches, filters, sorts and pages communities")
+  Component(clock, "SystemClock", "IClock", "Current instant")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Communities indexed by name and city; events")
+
+Rel(page, router, "Reads and writes the directory query")
+Rel(page, card, "Renders one per community")
+Rel(page, client, "Requests directory pages")
+Rel(client, ctrl, "GET /api/communities", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates query")
+Rel(ctrl, handler, "Sends GetCommunitiesQuery")
+Rel(handler, clock, "Reads now")
+Rel(handler, db, "Queries communities and next events", "EF Core")
+@enduml

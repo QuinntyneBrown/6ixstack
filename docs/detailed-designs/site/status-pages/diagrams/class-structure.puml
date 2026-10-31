@@ -1,0 +1,116 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Status pages, inline failures and offline events
+
+package "api (Angular library)" {
+  enum ApiErrorKind {
+    Network
+    NotFound
+    Forbidden
+    RateLimited
+    Validation
+    Server
+  }
+  class ApiError {
+    +kind: ApiErrorKind
+    +status: number | null
+    +fieldErrors: Record<string, string[]>
+    +referenceCode: string | null
+    +ownerName: string | null
+    +resourceTitle: string | null
+  }
+  class ApiErrorInterceptor {
+    +intercept(req, next): Observable<HttpEvent>
+  }
+}
+
+package "components (Angular library)" {
+  class StatusPage <<sx-status-page>> {
+    +code: input<string | null>
+    +heading: input<string>
+  }
+  class Alert <<sx-alert>>
+}
+
+package "sixstack (Angular app)" {
+  class "LoadState<T>" as LoadState {
+    +status: "idle" | "loading" | "loaded" | "empty" | "failed"
+    +value?: T
+    +error?: ApiError
+    +retry?: () => void
+  }
+  class StatusPageNavigator {
+    +notFound(): void
+    +forbidden(error: ApiError): void
+    +serverError(referenceCode: string): void
+    +offline(): void
+  }
+  class NotFoundPage
+  class ForbiddenPage {
+    +ownerName: string
+    +resourceTitle: string
+    +signedInEmail: string
+    +signedInCommunity: string
+  }
+  class ServerErrorPage {
+    +referenceCode: string
+    +tryAgain(): void
+  }
+  class OfflinePage {
+    +tryAgain(): void
+    +openSavedEvents(): void
+  }
+  class SavedEventsStore {
+    +save(list: UpcomingEvents, filters: EventFilters): Promise<void>
+    +load(): Promise<SavedEvents | null>
+  }
+  class SavedEvents {
+    +list: UpcomingEvents
+    +filters: EventFilters
+    +savedAt: string
+  }
+  class OfflineFallback {
+    +canShow(route: string): Promise<boolean>
+  }
+}
+
+package "SixStack.Api" {
+  class ExceptionHandlingMiddleware {
+    +InvokeAsync(context: HttpContext): Task
+  }
+  class RequestLoggingMiddleware {
+    +InvokeAsync(context: HttpContext): Task
+  }
+  class ReferenceCode <<value type>> {
+    +string Value
+    +New(): ReferenceCode
+  }
+}
+
+ApiError --> ApiErrorKind
+ApiErrorInterceptor ..> ApiError : maps to
+LoadState o-- ApiError
+LoadState ..> Alert : failed renders
+StatusPageNavigator ..> NotFoundPage
+StatusPageNavigator ..> ForbiddenPage
+StatusPageNavigator ..> ServerErrorPage
+StatusPageNavigator ..> OfflinePage
+NotFoundPage *-- StatusPage
+ForbiddenPage *-- StatusPage
+ServerErrorPage *-- StatusPage
+OfflinePage *-- StatusPage
+SavedEventsStore ..> SavedEvents
+OfflineFallback ..> SavedEventsStore
+OfflineFallback ..> StatusPageNavigator
+ExceptionHandlingMiddleware ..> ReferenceCode : creates and logs
+RequestLoggingMiddleware ..> ExceptionHandlingMiddleware : wraps
+@enduml

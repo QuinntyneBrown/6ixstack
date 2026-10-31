@@ -1,0 +1,49 @@
+@startuml
+title UML sequence behaviour — Open and close the mobile menu
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SiteHeader" as header
+  participant "MenuController" as ctl
+  participant "CDK Dialog" as dialog
+  participant "MobileMenuDialog" as menu
+  participant "Router" as router
+  participant "BreakpointObserver" as bp
+end box
+actor -> header : Activate "Open menu" on / at 360 px (L2-095)
+header -> ctl : open(menu button)
+ctl -> dialog : open(MobileMenuDialog, bottom-sheet panel)
+dialog -> menu : Create
+menu -> router : Read current URL
+menu --> actor : Sheet "Menu": Events (aria-current="page"), Calendar, Communities, Speakers, Calendar feeds, Organizer sign in, Submit event (L2-096)
+dialog -> dialog : Trap focus inside the sheet (L2-091)
+ctl -> bp : Observe width >= 992 px
+alt link activated
+  actor -> menu : Activate Communities
+  menu -> router : navigateByUrl('/communities')
+  router --> ctl : NavigationEnd
+  ctl -> dialog : close()
+  dialog --> actor : Communities page, menu closed (L2-096)
+else Escape or Close
+  actor -> dialog : Escape
+  dialog -> dialog : Close and restore focus
+  dialog --> actor : Focus on the menu button (L2-091)
+else viewport widens to 992 px or more
+  bp --> ctl : matches lg
+  ctl -> dialog : close()
+  dialog --> actor : Header navigation replaces the menu button (L2-095)
+end
+@enduml

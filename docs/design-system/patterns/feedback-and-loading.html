@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feedback and loading — 6ixstack design system</title>
+<meta name="description" content="Which feedback answers which action — inline, toast, banner or dialog — and how 6ixstack shows loading with skeletons, spinners and progress.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Feedback and loading</h1>
+      <p class="ds-lead">Which feedback answers which action — inline, toast, banner or dialog — and how 6ixstack shows loading with skeletons, spinners and progress.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Composes toast, alert, skeleton, spinner, progress</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li></ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Every action on 6ixstack gets an answer, and the answer is as small as it can be while still being noticed. This pattern decides <i>which</i> component answers: an inline message next to the thing that changed, a <a href="../components/toast.html">toast</a> for a completed action somewhere else on screen, an <a href="../components/alert.html">alert or banner</a> for a condition that persists, or a <a href="../components/dialog.html">dialog</a> only when the person must decide something. Loading follows the same principle: show the shape of what is coming (<a href="../components/skeleton.html">skeleton</a>), not a blank page with a spinner.</p>
+    </section>
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Situation</th><th scope="col">Feedback</th><th scope="col">Example from the mocks</th></tr></thead><tbody><tr><td>An action completed and the result is not visible where the person is</td><td>Toast, auto-dismiss ≥ 8 s, optional Undo/View</td><td>“Added to Google Calendar”</td></tr><tr><td>An action completed and the result is visible</td><td>Nothing extra, or an inline status</td><td>Copy link → “Copied” inline in share dialog</td></tr><tr><td>A reversible bulk change (filters cleared, submission rejected)</td><td>Toast with an action</td><td>“Filters cleared · Showing all 14 events · Undo”</td></tr><tr><td>A condition that lasts until something changes (offline, unverified email)</td><td>Banner or inline alert, persistent, no timer</td><td>“You're offline · Showing events saved at 9:42 AM”</td></tr><tr><td>A request failed for the region it was loading</td><td>Danger alert in that region with Try again and an alternative</td><td>“We couldn't load events … Use a calendar feed instead”</td></tr><tr><td>An action failed and the person can retry</td><td>Danger toast with <code>role=&quot;alert&quot;</code>, never auto-dismisses</td><td>“Couldn't copy the link · Try again”</td></tr><tr><td>A form was saved</td><td>Success alert above the form with the time</td><td>“Settings saved · Saved at 10:42 AM”</td></tr><tr><td>The person must confirm or choose</td><td>Dialog</td><td>“Cancel “Azure Data &amp; AI Day GTA”?”</td></tr></tbody></table></div>
+    </section>
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <h3>Toasts for completed actions</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="stack" style="width: 100%; max-width: 24rem;">
+            <div class="toast toast--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><div class="toast__body"><div class="toast__title">Added to Google Calendar</div><div class="toast__text">Azure Data &amp; AI Day GTA, Thu Nov 5.</div></div><button class="close" type="button" aria-label="Dismiss"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><span class="toast__progress" aria-hidden="true"></span></div>
+            <div class="toast toast--info"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div class="toast__body"><div class="toast__title">Filters cleared</div><div class="toast__text">Showing all 14 events.</div><button class="toast__action" type="button">Undo</button></div><button class="close" type="button" aria-label="Dismiss"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><span class="toast__progress" aria-hidden="true"></span></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Toasts render in a fixed <code>.toast-region</code> (bottom right ≥ sm, full width on phones). Shown here in flow.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="toast-region" role="status" aria-live="polite"&gt; &lt;div class="toast toast--success"&gt;…&lt;/div&gt; &lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Skeletons for loading content</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <ul class="event-list" aria-busy="true" aria-label="Loading events" style="width: 100%;">
+            <li><div class="event-row" aria-hidden="true"><div class="event-row__time"><span class="skeleton skeleton--text" style="width: 3.5rem;"></span></div><div><span class="skeleton skeleton--title" style="width: 70%;"></span><span class="skeleton skeleton--text" style="width: 40%;"></span><span class="skeleton skeleton--text" style="width: 55%;"></span></div><div class="event-row__aside"><span class="skeleton skeleton--text" style="width: 2.5rem;"></span></div></div></li>
+            <li><div class="event-row" aria-hidden="true"><div class="event-row__time"><span class="skeleton skeleton--text" style="width: 3.5rem;"></span></div><div><span class="skeleton skeleton--title" style="width: 60%;"></span><span class="skeleton skeleton--text" style="width: 35%;"></span><span class="skeleton skeleton--text" style="width: 50%;"></span></div><div class="event-row__aside"><span class="skeleton skeleton--text" style="width: 2.5rem;"></span></div></div></li>
+          </ul>
+        </div>
+        <div class="ds-example__caption"><span>Loading events: the list keeps its layout; the container carries <code>aria-busy=&quot;true&quot;</code> and a label, the skeleton rows are <code>aria-hidden</code>.</span></div>
+      </div>
+      <h3>Choosing a loading indicator</h3>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Indicator</th><th scope="col">Use for</th><th scope="col">Mock</th></tr></thead><tbody><tr><td><a href="../components/skeleton.html">Skeleton</a></td><td>Page or region content whose shape is known: event rows, directory cards, dashboard stats.</td><td><a href="../../mocks/pages/events/loading.html">events/loading</a></td></tr><tr><td><a href="../components/spinner.html">Spinner</a> in a button</td><td>The action that was pressed: Submitting…, Sending…, Creating feed…</td><td><a href="../../mocks/dialogs/subscribe-feed/busy.html">subscribe-feed/busy</a></td></tr><tr><td><a href="../components/progress.html">Progress bar</a></td><td>Work with a known length; the toast timer uses <code>.toast__progress</code>.</td><td><a href="../../mocks/notifications/app-toast/success.html">app-toast/success</a></td></tr></tbody></table></div>
+    </section>
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>A region moves through the same states everywhere: <b>loading</b> (skeleton) → <b>default</b> → optionally <b>empty</b>, <b>no results</b>, <b>error</b> or <b>partial</b>. Actions move through <b>idle</b> → <b>busy</b> → <b>success</b> (toast or inline) or <b>failed</b> (danger alert in context, values kept).</p>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="alert alert--danger" role="alert"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg><div class="alert__body"><p class="alert__title">We couldn't load events</p><div>6ixstack didn't respond in time. Your filters are kept; try again in a moment.</div><div class="alert__actions"><button type="button">Try again</button></div></div></div></div>
+        <div data-theme="dark"><div class="alert alert--danger" role="alert"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg><div class="alert__body"><p class="alert__title">We couldn't load events</p><div>6ixstack didn't respond in time. Your filters are kept; try again in a moment.</div><div class="alert__actions"><button type="button">Try again</button></div></div></div></div>
+      </div>
+      <h3>Optimistic updates and undo</h3>
+      <p>Clearing filters, marking notifications read and rejecting a submission apply immediately and offer Undo or View in the toast, rather than asking first. Deleting an account and cancelling an event are not reversible, so they confirm in a dialog instead.</p>
+    </section>
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive</a></h2>
+      <ul>
+        <li>Toasts: bottom right, 24rem wide from <code>--layout-breakpoint-sm</code>; full width with <code>--space-4</code> margins on phones. They never cover the sticky RSVP bar; on event detail the region moves to the top (<code>.toast-region--top</code>).</li>
+        <li>Banners span the full viewport under the site header at every width; their actions wrap below the text on phones.</li>
+        <li>Skeleton rows match the responsive layout of the content they stand in for, so nothing jumps when data arrives.</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Live regions (4.1.3)</h3>
+      <p>The toast region is <code>role="status" aria-live="polite"</code>; a danger toast adds <code>role="alert"</code>. Inline failures that replace content use <code>role="alert"</code> once; persistent banners use <code>role="status"</code> so they are announced but do not interrupt.</p>
+      <h3>Timing (2.2.1)</h3>
+      <p>Success and info toasts stay at least 8 seconds and pause on hover and focus; the <code>.toast__progress</code> bar shows the time left. Danger toasts and anything with a Try again action never auto-dismiss.</p>
+      <h3>Focus</h3>
+      <p>Feedback never steals focus, except the form error summary, which receives it on submit. Busy buttons keep focus and their name; <code>aria-busy="true"</code> blocks repeat activation.</p>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody><tr><td><kbd>Tab</kbd></td><td>Reaches the toast action and Dismiss in DOM order after the page content.</td></tr><tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Activates Undo, Try again or Dismiss.</td></tr><tr><td><kbd>Esc</kbd></td><td>Dismisses the focused toast.</td></tr></tbody></table>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);"><div class="ds-pair"><span>Toast text (light)</span><span class="ds-pair__ratio" data-contrast="--color-fg-inverse|--color-bg-inverse" data-min="4.5"></span></div><div class="ds-pair"><span>Danger alert text</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-danger-bg" data-min="4.5"></span></div><div class="ds-pair"><span>Success icon on alert</span><span class="ds-pair__ratio" data-contrast="--color-success-icon|--color-success-bg" data-min="3"></span></div></div>
+      <h3>Motion</h3>
+      <p>Toasts slide in over <code>--duration-base</code> and fade out on leave; skeleton shimmer runs on <code>--duration-shimmer</code>. Reduced motion zeroes both through the tokens; the busy spinner keeps turning because it is status, not decoration.</p>
+    </section>
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Feedback</th><th scope="col">Formula</th><th scope="col">Example</th></tr></thead><tbody><tr><td>Success toast</td><td>Past-tense result + the object</td><td>“Added to Google Calendar” · “Azure Data &amp; AI Day GTA, Thu Nov 5.”</td></tr><tr><td>Undo toast</td><td>What happened + new state + Undo</td><td>“Filters cleared” · “Showing all 14 events.” · Undo</td></tr><tr><td>Failure</td><td>What failed (we, not you) + what is safe + what to do</td><td>“We couldn't create your feed. Your choices are saved. Try again, or use the full feed for all events.”</td></tr><tr><td>Busy</td><td>Verb in -ing with an ellipsis</td><td>“Submitting…”, “Sending…”</td></tr><tr><td>Persistent condition</td><td>State + consequence</td><td>“You're offline. Showing events saved at 9:42 AM. Submitting and feeds need a connection.”</td></tr></tbody></table></div>
+    </section>
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="toast toast--info" style="max-width: 22rem;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div class="toast__body"><div class="toast__title">Filters cleared</div><div class="toast__text">Showing all 14 events.</div><button class="toast__action" type="button">Undo</button></div><button class="close" type="button" aria-label="Dismiss"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div></div><figcaption>Apply the change and offer Undo in the toast.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><p>Clear all filters?</p><div class="cluster"><button class="btn" type="button">No</button><button class="btn btn--primary" type="button">Yes</button></div></div></div><figcaption>Ask “Are you sure?” before a reversible action.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><ul class="event-list" aria-busy="true" aria-label="Loading events (example)" style="width: 100%;"><li><div class="event-row" aria-hidden="true"><div class="event-row__time"><span class="skeleton skeleton--text" style="width: 3.5rem;"></span></div><div><span class="skeleton skeleton--title" style="width: 70%;"></span><span class="skeleton skeleton--text" style="width: 40%;"></span></div><div class="event-row__aside"><span class="skeleton skeleton--text" style="width: 2.5rem;"></span></div></div></li></ul></div><figcaption>Show skeleton rows in the shape of the content.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="ds-example__canvas" role="status" style="padding: 0;"><span class="spinner spinner--lg" aria-hidden="true"></span><span class="visually-hidden">Loading</span></div></div><figcaption>Replace the whole list with a lone spinner; the page jumps when data arrives.</figcaption></figure>
+      </div>
+    </section>
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <ul><li><a href="../../mocks/notifications/app-toast/stacked.html">notifications/app-toast/stacked</a> — stacking, undo, danger toast</li><li><a href="../../mocks/notifications/app-toast/with-action.html">notifications/app-toast/with-action</a> — toast action</li><li><a href="../../mocks/notifications/site-banner/warning.html">notifications/site-banner/warning</a> — offline banner</li><li><a href="../../mocks/pages/events/loading.html">pages/events/loading</a> — skeleton rows</li><li><a href="../../mocks/pages/events/error.html">pages/events/error</a> — region error with alternative</li><li><a href="../../mocks/dialogs/subscribe-feed/busy.html">dialogs/subscribe-feed/busy</a> — busy button</li><li><a href="../../mocks/pages/settings/success.html">pages/settings/success</a> — save confirmation</li></ul>
+      <p>Drift fixed during extraction: the mocks size skeleton lines with one-off inline heights (<code>0.9rem</code>, <code>0.85rem</code>, <code>1.1rem</code>, <code>1.3rem</code>); the system uses <code>.skeleton--text</code> and <code>.skeleton--title</code> heights and only sets widths inline.</p>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

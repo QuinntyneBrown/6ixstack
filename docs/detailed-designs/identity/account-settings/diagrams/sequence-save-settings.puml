@@ -1,0 +1,84 @@
+@startuml
+title UML sequence behaviour — Load and save account settings
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SettingsPage" as page
+  participant "HttpAccountApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "AccountController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetAccountSettingsQueryHandler" as query
+  participant "UpdateAccountSettingsCommandValidator" as validator
+  participant "UpdateAccountSettingsCommandHandler" as handler
+  participant "User" as user
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /settings
+page --> actor : Form skeleton, "Loading your settings…"
+page -> client : getSettings()
+client -> controller : GET /api/account/settings (OrganizerPolicy, L2-080)
+controller -> query : Send GetAccountSettingsQuery
+query -> db : Load user, CommunityOrganizer, community, other organizers
+db --> query : Rows
+query --> controller : AccountSettingsDto
+alt load fails
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : "We couldn't load your settings", nothing changed, Try again (L2-068)
+else loaded
+  controller --> client : 200 JSON
+  client --> page : AccountSettings
+  alt community assigned
+    page --> actor : Profile, four switches with role="switch" (L2-069), "You manage GTA Azure Community with 2 co-organizers." (L2-070)
+  else no community
+    page --> actor : Profile, switches, no community assigned yet (L2-070)
+  end
+end
+actor -> page : Edit fields or switches, Save settings
+alt blank name or website without https://
+  page --> actor : Summary "Enter your name.", "Enter a full link like https://gtaazure.ca", input kept (L2-068)
+else valid
+  page -> page : Fields disabled, button "Saving…" (L2-068)
+  page -> client : saveSettings(profile and preferences)
+  client -> controller : PUT /api/account/settings with X-XSRF-TOKEN (L2-083)
+  controller -> validator : Validate (L2-068, L2-081)
+  alt invalid
+    validator --> controller : Field errors
+    controller --> client : 400 problem details
+    client --> page : FieldErrors
+    page --> actor : Same summary and inline errors (L2-068)
+  else valid
+    controller -> handler : Send UpdateAccountSettingsCommand
+    handler -> db : Load current user
+    handler -> user : UpdateProfile(name, website)
+    handler -> user : SetPreferences(four switches) (L2-069)
+    opt email differs from current address
+      handler -> handler : Start email change (see change-email sequence) (L2-068)
+    end
+    handler -> db : Save changes in one unit of work
+    db --> handler : Commit result
+    handler --> controller : AccountSettingsSavedDto with SavedAtEt
+    controller --> client : 200 JSON
+    client --> page : Saved
+    page --> actor : "Settings saved", "Saved at 10:42 AM." (L2-068)
+  end
+end
+@enduml

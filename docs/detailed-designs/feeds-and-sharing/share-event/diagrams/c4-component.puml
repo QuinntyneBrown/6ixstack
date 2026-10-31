@@ -1,0 +1,28 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Share an event
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "EventDetailPage", "Angular page", "Share button in the action panel")
+  Component(launcher, "ShareLauncher", "Angular service", "Web Share below 768 px, otherwise the dialog")
+  Component(dialog, "ShareEventDialog", "CDK Dialog", "Event link, Copy, LinkedIn, Bluesky, Email")
+  Component(links, "ShareLinkBuilder", "Angular service", "Short link and share target URLs")
+  Component(clip, "Clipboard", "Angular CDK", "Copies text")
+  Component(toasts, "ToastService", "Angular service", "Copy failure toast")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "ShortLinksController", "ASP.NET Core controller", "GET /e/{slug}, anonymous")
+  Component(handler, "ResolveShortLinkQueryHandler", "MediatR handler", "Finds a Published or Cancelled event")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events")
+
+Rel(page, launcher, "share(event)")
+Rel(launcher, dialog, "Dialog.open when Web Share does not apply")
+Rel(launcher, links, "Short link for the share sheet")
+Rel(dialog, links, "Builds short link and target URLs")
+Rel(dialog, clip, "copy(shortLink)")
+Rel(dialog, toasts, "Couldn't copy the link")
+Rel(ctrl, handler, "Sends ResolveShortLinkQuery")
+Rel(handler, db, "Reads event by slug", "EF Core")
+@enduml

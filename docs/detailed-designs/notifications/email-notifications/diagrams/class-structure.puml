@@ -1,0 +1,139 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Email notifications
+
+package "SixStack.Domain" {
+  class User {
+    +Guid Id
+    +string Email
+    +UserRole Role
+    +DateTimeOffset? EmailVerifiedAtUtc
+    +DateTimeOffset? DeletedAtUtc
+    +NotificationPreferences Preferences
+  }
+  class NotificationPreferences <<value object>> {
+    +bool EventDecisions = true
+    +bool ProblemReports = true
+    +bool WeeklySummary = false
+    +bool FollowedCommunities = false
+  }
+  enum NotificationType {
+    EventApproved
+    EventNeedsChanges
+    EventRejected
+    ReportFiled
+    FeedSubscribersMilestone
+    GoingMilestone
+    SubmissionQueued
+  }
+  class Notification {
+    +Guid Id
+    +Guid UserId
+    +NotificationType Type
+  }
+  class OutboxMessage {
+    +Guid Id
+    +string Type
+    +string Payload
+    +int AttemptCount
+    +DateTimeOffset NextAttemptAtUtc
+    +DateTimeOffset? ProcessedAtUtc
+    +string? LastError
+  }
+}
+
+package "SixStack.Application" {
+  class NotificationEmailPolicy {
+    +Consider(notification: Notification, recipient: User): void
+    -PreferenceFor(type: NotificationType): EmailPreference?
+  }
+  enum EmailPreference {
+    EventDecisions
+    ProblemReports
+    WeeklySummary
+    FollowedCommunities
+  }
+  interface IOutbox {
+    +Enqueue(type: string, payload: object, notBeforeUtc: DateTimeOffset?): void
+  }
+  class NotificationEmailPayload {
+    +Guid NotificationId
+    +Guid UserId
+    +NotificationType Type
+    +IReadOnlyDictionary<string, string> Arguments
+  }
+  class WeeklySummaryPayload {
+    +Guid UserId
+    +Guid CommunityId
+    +DateOnly WeekStart
+  }
+  interface IEmailSender {
+    +Send(message: EmailMessage, ct: CancellationToken): Task
+  }
+  class EmailMessage {
+    +string To
+    +string Subject
+    +string TextBody
+    +string HtmlBody
+  }
+  interface IOutboxHandler {
+    +MessageType: string
+    +Handle(message: OutboxMessage, ct: CancellationToken): Task
+  }
+  interface IClock
+}
+
+package "SixStack.Infrastructure" {
+  class Outbox
+  class OutboxProcessor {
+    +ExecuteAsync(ct: CancellationToken): Task
+    -ClaimDue(now: DateTimeOffset): Task<IReadOnlyList<OutboxMessage>>
+  }
+  class RetrySchedule {
+    +MaxAttempts: int = 5
+    +NextAttempt(attemptCount: int, now: DateTimeOffset): DateTimeOffset
+  }
+  class NotificationEmailHandler
+  class WeeklySummaryEmailHandler
+  class WeeklySummaryJob {
+    +ExecuteAsync(ct: CancellationToken): Task
+  }
+  class EmailTemplateRenderer {
+    +Render(type: string, model: object): EmailMessage
+  }
+  class SmtpEmailSender
+}
+
+User *-- NotificationPreferences
+Notification --> NotificationType
+NotificationEmailPolicy ..> NotificationPreferences : reads
+NotificationEmailPolicy ..> EmailPreference
+NotificationEmailPolicy ..> IOutbox : enqueues NotificationEmailPayload
+Outbox ..|> IOutbox
+Outbox ..> OutboxMessage : adds
+OutboxProcessor ..> OutboxMessage : claims, updates
+OutboxProcessor ..> RetrySchedule
+OutboxProcessor "1" o-- "*" IOutboxHandler
+OutboxProcessor ..> IClock
+NotificationEmailHandler ..|> IOutboxHandler
+WeeklySummaryEmailHandler ..|> IOutboxHandler
+NotificationEmailHandler ..> NotificationEmailPayload
+WeeklySummaryEmailHandler ..> WeeklySummaryPayload
+NotificationEmailHandler ..> EmailTemplateRenderer
+WeeklySummaryEmailHandler ..> EmailTemplateRenderer
+NotificationEmailHandler ..> IEmailSender
+WeeklySummaryEmailHandler ..> IEmailSender
+EmailTemplateRenderer ..> EmailMessage : builds
+SmtpEmailSender ..|> IEmailSender
+WeeklySummaryJob ..> IOutbox : enqueues WeeklySummaryPayload
+WeeklySummaryJob ..> IClock
+@enduml

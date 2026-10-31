@@ -1,0 +1,34 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Email notifications
+
+Container_Boundary(api, "6ixstack API") {
+  Component(publisher, "NotificationPublisher", "INotificationPublisher", "Adds in-app notifications")
+  Component(policy, "NotificationEmailPolicy", "Application service", "Maps type to preference, enqueues when enabled")
+  Component(outbox, "Outbox", "IOutbox", "Adds OutboxMessage in the caller's unit of work")
+  Component(weekly, "WeeklySummaryJob", "Hosted service", "Weekly; enqueues summaries for opted-in organizers")
+  Component(processor, "OutboxProcessor", "Hosted service", "Claims due messages, dispatches, schedules retries")
+  Component(retry, "RetrySchedule", "Infrastructure service", "Exponential backoff, at most 5 attempts")
+  Component(handler, "NotificationEmailHandler / WeeklySummaryEmailHandler", "Outbox handlers", "Re-check recipient and preference, render, send")
+  Component(renderer, "EmailTemplateRenderer", "Infrastructure service", "Subject, text and HTML bodies")
+  Component(sender, "SmtpEmailSender", "IEmailSender", "Provider adapter")
+  Component(clock, "SystemClock", "IClock", "Current instant")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Users, notifications, outbox")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(publisher, policy, "Consider email for notification")
+Rel(policy, db, "Reads recipient preferences", "EF Core")
+Rel(policy, outbox, "Enqueue NotificationEmail")
+Rel(weekly, db, "Reads opted-in organizers and numbers", "EF Core")
+Rel(weekly, outbox, "Enqueue WeeklySummaryEmail")
+Rel(outbox, db, "Adds OutboxMessage", "EF Core")
+Rel(processor, db, "Claims due messages, records outcome", "EF Core")
+Rel(processor, handler, "Dispatches by message type")
+Rel(processor, retry, "Next attempt after failure")
+Rel(processor, clock, "Reads now")
+Rel(handler, renderer, "Renders email")
+Rel(handler, sender, "Send(EmailMessage)")
+Rel(sender, email, "Sends", "SMTP or provider API")
+@enduml

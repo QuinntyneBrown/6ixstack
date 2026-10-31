@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Share an event
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person_Ext(recipient, "Recipient", "Person who receives the shared link")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Share dialog, share sheet, copy")
+  Container(api, "6ixstack API", "ASP.NET Core", "Short link redirect")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events")
+}
+System_Ext(social, "LinkedIn, Bluesky and email client", "Share targets")
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, social, "Opens share target URL", "HTTPS or mailto")
+Rel(recipient, api, "GET /e/{slug}", "HTTPS")
+Rel(api, db, "Finds public event by slug", "EF Core")
+Rel(recipient, spa, "Follows the 301 to /events/{slug}", "HTTPS")
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Review queue
+
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+Person(organizer, "Organizer", "Signed-in community organizer")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+
+Rel(moderator, sixstack, "Reviews waiting submissions using", "HTTPS")
+Rel(organizer, sixstack, "Is refused the queue by", "HTTPS")
+@enduml

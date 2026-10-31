@@ -1,0 +1,130 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Serve a calendar feed
+
+package "SixStack.Domain" {
+  enum EventStatus {
+    Draft
+    InReview
+    NeedsChanges
+    Rejected
+    Published
+    Cancelled
+  }
+  class Event {
+    +Guid Id
+    +string Slug
+    +string Title
+    +string Description
+    +Guid CommunityId
+    +EventFormat Format
+    +DateTimeOffset StartsAtUtc
+    +DateTimeOffset EndsAtUtc
+    +Venue? Venue
+    +string? StreamUrl
+    +EventStatus Status
+    +int Sequence
+    +DateTimeOffset? CancelledAtUtc
+  }
+  class FeedSlug <<value object>> {
+    +IReadOnlyList<Topic> Topics
+    +FeedScope Scope
+    +string? CommunitySlug
+    +{static} TryParse(text: string, out slug: FeedSlug): bool
+  }
+  class OutboxMessage {
+    +Guid Id
+    +string Type
+    +string Payload
+    +int AttemptCount
+    +DateTimeOffset NextAttemptAtUtc
+    +DateTimeOffset? ProcessedAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  class GetCalendarFeedQuery {
+    +string FeedSlug
+    +string? IfNoneMatch
+  }
+  class GetCalendarFeedQueryHandler {
+    +Handle(query: GetCalendarFeedQuery): Task<CalendarFeedResult>
+  }
+  class CalendarFeedResult {
+    +CalendarFeedOutcome Outcome
+    +string? Content
+    +string? ETag
+  }
+  enum CalendarFeedOutcome {
+    Content
+    NotModified
+    NotFound
+  }
+  interface IIcsWriter {
+    +WriteCalendar(name: string, events: IReadOnlyList<Event>): string
+    +WriteSingleEvent(event: Event): string
+  }
+  interface IFeedCache {
+    +TryGet(slug: FeedSlug, out snapshot: FeedSnapshot): bool
+    +Set(slug: FeedSlug, snapshot: FeedSnapshot): void
+    +EvictMatching(event: Event): IReadOnlyList<FeedSlug>
+  }
+  class FeedSnapshot {
+    +string Content
+    +string ETag
+    +DateTimeOffset GeneratedAtUtc
+  }
+  class FeedEventFilter <<static>> {
+    +Apply(events: IQueryable<Event>, slug: FeedSlug): IQueryable<Event>
+  }
+  class RegenerateFeedsCommand {
+    +Guid EventId
+  }
+  class RegenerateFeedsCommandHandler {
+    +Handle(command: RegenerateFeedsCommand): Task
+  }
+}
+
+package "SixStack.Infrastructure" {
+  class IcsWriter
+  class MemoryFeedCache
+  class OutboxProcessor {
+    +ExecuteAsync(stoppingToken: CancellationToken): Task
+  }
+}
+
+package "SixStack.Api" {
+  class FeedsController {
+    +GetFeed(feedSlug: string): Task<IActionResult>
+  }
+}
+
+Event --> EventStatus
+FeedsController ..> GetCalendarFeedQuery : sends
+GetCalendarFeedQueryHandler ..> GetCalendarFeedQuery : handles
+GetCalendarFeedQueryHandler ..> FeedSlug : parses
+GetCalendarFeedQueryHandler ..> IFeedCache
+GetCalendarFeedQueryHandler ..> IIcsWriter
+GetCalendarFeedQueryHandler ..> FeedEventFilter
+GetCalendarFeedQueryHandler ..> Event : reads
+GetCalendarFeedQueryHandler ..> CalendarFeedResult : returns
+CalendarFeedResult --> CalendarFeedOutcome
+IFeedCache "1" o-- "*" FeedSnapshot
+IcsWriter ..|> IIcsWriter
+MemoryFeedCache ..|> IFeedCache
+IcsWriter ..> Event : writes VEVENT from
+OutboxProcessor ..> OutboxMessage : processes
+OutboxProcessor ..> RegenerateFeedsCommand : sends
+RegenerateFeedsCommandHandler ..> RegenerateFeedsCommand : handles
+RegenerateFeedsCommandHandler ..> IFeedCache
+RegenerateFeedsCommandHandler ..> IIcsWriter
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Serve a calendar feed
+
+Person(visitor, "Visitor", "Anonymous developer subscribed to a feed")
+Person(organizer, "Organizer", "Signed-in community organizer")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(calapps, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+
+Rel(visitor, calapps, "Reads subscribed events in")
+Rel(calapps, sixstack, "GET /feeds/{feedSlug}.ics on a refresh schedule", "HTTPS, text/calendar")
+Rel(organizer, sixstack, "Edits and cancels events that feeds reflect", "HTTPS")
+@enduml

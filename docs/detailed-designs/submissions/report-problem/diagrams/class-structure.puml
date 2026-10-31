@@ -1,0 +1,110 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Report a problem with an event
+
+package "SixStack.Domain" {
+  enum ReportReason {
+    WrongDetails
+    Cancelled
+    BrokenLink
+    Spam
+    CodeOfConduct
+  }
+  enum NotificationType {
+    ReportFiled
+    ConductReport
+    ...
+  }
+  class Event {
+    +Guid Id
+    +string Slug
+    +string Title
+    +Guid CommunityId
+    +EventStatus Status
+  }
+  class Report {
+    +Guid Id
+    +Guid EventId
+    +ReportReason Reason
+    +string? Details
+    +string? ReporterEmail
+    +DateTimeOffset CreatedAtUtc
+    +DateTimeOffset? ResolvedAtUtc
+  }
+  class CommunityOrganizer {
+    +Guid CommunityId
+    +Guid UserId
+    +string Role
+  }
+  class Notification {
+    +Guid Id
+    +Guid UserId
+    +NotificationType Type
+    +string Title
+    +string Text
+    +string LinkUrl
+    +DateTimeOffset CreatedAtUtc
+    +DateTimeOffset? ReadAtUtc
+  }
+  class ReportRouting <<domain service>> {
+    +Recipients(report: Report, organizers: IReadOnlyList<CommunityOrganizer>, moderatorIds: IReadOnlyList<Guid>): ReportRecipients
+  }
+  class ReportRecipients {
+    +IReadOnlyList<Guid> OrganizerIds
+    +IReadOnlyList<Guid> ModeratorIds
+  }
+}
+
+package "SixStack.Application" {
+  class FileReportCommand {
+    +string EventSlug
+    +ReportReason Reason
+    +string? Details
+    +string? ReporterEmail
+  }
+  class FileReportCommandValidator
+  class FileReportCommandHandler {
+    +Handle(command: FileReportCommand): Task<Unit>
+  }
+  interface IOutbox {
+    +Enqueue(type: string, payload: object): void
+  }
+}
+
+package "sixstack (Angular)" {
+  class ReportProblemDialog {
+    +form: FormGroup<ReportControls>
+    +state: Signal<ReportDialogState>
+    +send(): void
+  }
+  interface ReportsApi {
+    +file(slug: string, request: FileReportRequest): Observable<void>
+  }
+  class HttpReportsApi
+}
+
+Report --> ReportReason
+Event "1" o-- "*" Report
+Notification --> NotificationType
+ReportRouting ..> Report
+ReportRouting ..> ReportRecipients : returns
+FileReportCommandValidator ..> FileReportCommand : validates
+FileReportCommandHandler ..> FileReportCommand : handles
+FileReportCommandHandler ..> Event : loads by slug
+FileReportCommandHandler ..> Report : creates
+FileReportCommandHandler ..> ReportRouting
+FileReportCommandHandler ..> CommunityOrganizer : reads
+FileReportCommandHandler ..> Notification : creates
+FileReportCommandHandler ..> IOutbox
+HttpReportsApi ..|> ReportsApi
+ReportProblemDialog ..> ReportsApi : REPORTS_API
+@enduml

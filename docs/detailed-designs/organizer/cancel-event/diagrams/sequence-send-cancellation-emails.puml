@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour — Send cancellation emails through the outbox
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+box "Backend — 6ixstack API application" #D1FADF
+  participant "OutboxProcessor" as processor
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "EventCancelledEmailHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "IEmailSender" as sender
+  database "6ixstack database" as db
+end box
+participant "Email provider" as provider
+processor -> db : Read due OutboxMessage rows (NextAttemptAtUtc <= now, not processed)
+db --> processor : EventCancelledEmail(EventId, Reason)
+processor -> handler : Dispatch message
+handler -> db : Load event title, date, reason and community
+handler -> handler : Resolve recipients among people going <TO SUPPLY>
+handler -> handler : Compose email with the reason (L2-056)
+handler -> sender : Send(messages)
+sender -> provider : Deliver
+alt delivered
+  provider --> sender : Accepted
+  sender --> handler : Sent
+  handler --> processor : Done
+  processor -> db : ProcessedAtUtc = now
+else provider failure
+  provider --> sender : Error
+  sender --> handler : Failure
+  handler --> processor : Failed
+  processor -> db : AttemptCount + 1, NextAttemptAtUtc with exponential backoff, at most 5 attempts (L2-103)
+end
+@enduml

@@ -1,0 +1,73 @@
+@startuml
+title UML sequence behaviour — Protect contact details
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Moderator" as mod
+actor "Organizer" as org
+actor "Visitor" as visitor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ReviewQueuePage\nNotificationsPage\nEventDetailPage" as page
+  participant "HttpModerationApi\nHttpNotificationsApi\nHttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ModerationController" as modctrl
+  participant "NotificationsController" as notctrl
+  participant "EventsController" as evctrl
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "Query handlers" as handlers
+  participant "ReportNotificationFactory" as factory
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+== Report filed ==
+factory -> db : Read report reason and event title
+factory -> db : Write organizer Notification with title and reason only (L2-099)
+== Moderator ==
+mod -> page : Open review queue
+page -> client : getQueue()
+client -> modctrl : GET /api/moderation/queue
+modctrl -> modctrl : ModeratorPolicy (L2-080)
+modctrl -> handlers : Send GetReviewQueueQuery
+handlers -> db : Project ReviewQueueItemDto with SubmitterEmail, ReportDto with ReporterEmail
+db --> handlers : Rows
+handlers --> modctrl : DTOs with contact details (L2-099)
+modctrl --> client : 200 JSON
+client --> page : Queue
+page --> mod : Submitter and reporter emails visible
+== Organizer ==
+org -> page : Open notifications
+page -> client : list()
+client -> notctrl : GET /api/notifications
+notctrl -> handlers : Send GetNotificationsQuery
+handlers -> db : Project NotificationDto (title, text, link)
+db --> handlers : Rows
+handlers --> notctrl : No reporter email or identity (L2-099)
+notctrl --> client : 200 JSON
+client --> page : Notifications
+page --> org : "Problem reported: wrong venue"
+== Visitor ==
+visitor -> page : Open event detail
+page -> client : getDetail(slug)
+client -> evctrl : GET /api/events/{slug}
+evctrl -> handlers : Send GetEventDetailQuery
+handlers -> db : Project EventDetailDto without SubmitterEmail
+db --> handlers : Row
+handlers --> evctrl : Public DTO; speakers expose PublicContactEmail only (L2-099)
+evctrl --> client : 200 JSON
+client --> page : EventDetail
+page --> visitor : Event without personal email
+@enduml

@@ -1,0 +1,70 @@
+@startuml
+title UML sequence behaviour — Load the event detail page
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventDetailPage" as page
+  participant "DelayedSkeleton" as sk
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetEventDetailQueryHandler" as handler
+  participant "EventDetailPolicy" as policy
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /events/azure-data-ai-day
+page -> sk : Start 300 ms timer (L2-089)
+page -> client : getDetail(slug)
+client -> controller : GET /api/events/azure-data-ai-day
+opt no response within 300 ms
+  sk --> page : Show skeleton of final columns; aside aria-busy="true" (L2-024)
+end
+controller -> handler : Send GetEventDetailQuery
+handler -> db : Event by slug with community, agenda, speakers, venue
+db --> handler : Event or none
+alt unknown slug or status Draft, InReview, NeedsChanges, Rejected (L2-024)
+  handler --> controller : NotFound
+  controller --> client : 404 ProblemDetails
+  client --> page : NotFound
+  page --> actor : Not-found page "We can't find that page" (L2-076)
+else Published or Cancelled
+  opt event has ended
+    handler -> db : Community's next published upcoming event
+    db --> handler : Next event or none
+  end
+  handler -> policy : State, actions, alerts, docked bar
+  policy --> handler : Decisions (see resolve-actions)
+  handler -> handler : Project labels, sanitize description (L2-017, L2-081)
+  handler --> controller : EventDetailDto
+  controller --> client : 200 JSON
+  client --> page : EventDetail
+  page --> actor : Hero, alerts, facts panel, About, Agenda, Speakers, Venue when data exists (L2-017)
+  opt viewport below 768 px and DockedBar present
+    page --> actor : Docked bar "Thu, Nov 5 · 9:00 AM", "$49 · 318 going", Get tickets (L2-023)
+  end
+else request failed or timed out
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : "This event didn't load" with Try again and Back to all events (L2-024, L2-077)
+  actor -> page : Try again
+  page -> client : getDetail(slug)
+end
+@enduml

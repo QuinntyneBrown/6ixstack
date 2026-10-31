@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Email notifications
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Settings switches and notifications page")
+  Container(api, "6ixstack API", "ASP.NET Core", "Trigger handlers, OutboxProcessor and WeeklySummaryJob hosted services")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Users with preferences, notifications, outbox")
+}
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Writes notifications and outbox messages; claims due messages", "EF Core")
+Rel(api, email, "Sends email", "SMTP or provider API")
+Rel(email, organizer, "Delivers email to")
+@enduml

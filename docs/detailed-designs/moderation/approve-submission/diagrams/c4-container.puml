@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Approve a submission
+
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Review queue, moderation toasts, presence")
+  Container(api, "6ixstack API", "ASP.NET Core", "Approve, undo and presence endpoints; OutboxProcessor")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events, decisions, presence, audit entries, outbox")
+}
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+Rel(moderator, spa, "Uses", "HTTPS")
+Rel(spa, api, "POST approve, undo-approval, presence", "JSON/HTTPS, session cookie")
+Rel(api, db, "Writes decision, event, audit and held outbox message", "EF Core")
+Rel(api, email, "Sends approval email after 8 s", "<TO SUPPLY>")
+@enduml

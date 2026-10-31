@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour — Send a report from the dialog
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventDetailPage" as page
+  participant "ReportProblemDialog" as dialog
+  participant "HttpReportsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ReportsController" as controller
+  participant "RateLimiter" as limiter
+end box
+actor -> page : Report a problem
+page -> dialog : Dialog.open(ReportProblemDialog, event slug)
+dialog --> actor : "Report a problem" with five reasons, details, reply email
+actor -> dialog : Send report
+alt no reason chosen
+  dialog --> actor : "Choose what is wrong so we can route it to the right person.", focus on first reason (L2-039)
+else reply email malformed
+  dialog --> actor : Inline error asking for an address like name@example.com (L2-039)
+else form valid
+  dialog -> dialog : Disable fields, button "Sending…", Cancel stays enabled (L2-039)
+  dialog -> client : file(slug, reason, details, email)
+  client -> controller : POST /api/events/{slug}/reports
+  controller -> limiter : reports policy, 10 per hour per IP (L2-082)
+  alt 11th report within the hour
+    limiter --> client : 429 with Retry-After
+    client --> dialog : Error
+    dialog --> actor : "Your report didn't send", reason and details kept, "Try again" (L2-040, L2-039)
+  else server failure or network error
+    controller --> client : 5xx or no response
+    client --> dialog : Error
+    dialog --> actor : "Your report didn't send", reason and details kept, "Try again" (L2-039)
+  else accepted
+    controller --> client : 202 Accepted
+    client --> dialog : Done
+    dialog --> actor : "Report sent", a moderator will check it today, focus on "Back to the event" (L2-039)
+  end
+end
+@enduml

@@ -1,0 +1,59 @@
+@startuml
+title UML sequence behaviour — Offline saved events
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "Angular service worker" as sw
+  participant "EventsPage" as page
+  participant "SavedEventsStore" as saved
+  participant "OfflineFallback" as fallback
+  participant "ConnectivityService" as conn
+  participant "StatusPageNavigator" as nav
+  participant "OfflinePage" as offline
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+== Online visit ==
+actor -> sw : Open / online
+sw -> sw : Prefetch app shell asset group (L2-078)
+page -> controller : GET /api/events
+controller --> page : 200 UpcomingEventsDto
+page -> saved : save(list, filters, savedAt 9:42 AM) (L2-078)
+== Later, offline ==
+actor -> sw : Open a 6ixstack URL offline
+sw --> actor : Cached index.html and bundles (L2-078)
+page -> conn : online?
+conn --> page : false
+alt route is / and a list was saved
+  page -> saved : load()
+  saved --> page : Saved list, savedAt 9:42 AM
+  page --> actor : Saved list, "14 events saved at 9:42 AM", offline banner (L2-078, L2-075)
+else route is / and nothing was saved
+  page -> fallback : canShow("/")
+  fallback -> saved : load()
+  saved --> fallback : null
+  fallback -> nav : offline()
+  nav -> offline : Render, URL kept
+  offline --> actor : "You're offline", Try again, Open saved events (L2-076, L2-078)
+else any other route
+  fallback -> nav : offline()
+  nav -> offline : Render, URL kept
+  offline --> actor : "This page hasn't been saved on this device yet." (L2-076)
+  actor -> offline : Open saved events
+  offline -> page : Navigate to /
+end
+@enduml

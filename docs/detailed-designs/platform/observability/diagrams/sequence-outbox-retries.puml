@@ -1,0 +1,68 @@
+@startuml
+title UML sequence behaviour — Outbox retries
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Moderator" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ReviewQueuePage" as page
+  participant "HttpModerationApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ModerationController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "ApproveSubmissionCommandHandler" as handler
+  participant "SendEmailHandler" as sender
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "Outbox" as outbox
+  participant "OutboxProcessor" as processor
+  participant "RetrySchedule" as retry
+  database "6ixstack database" as db
+end box
+participant "Email provider" as email
+actor -> page : Approve submission
+page -> client : approve(id)
+client -> controller : POST /api/moderation/submissions/{id}/approve
+controller -> handler : Send ApproveSubmissionCommand
+handler -> outbox : Enqueue(ApprovalEmail) with CorrelationId
+handler -> db : Save approval, audit entry and OutboxMessage in one unit of work
+db --> handler : Commit result
+handler --> controller : Approved
+controller --> client : 200
+client --> page : Approved
+page --> actor : Approval succeeds immediately (L2-103)
+loop poll every <TO SUPPLY> seconds
+  processor -> db : Claim due messages: set LockedUntilUtc
+  db --> processor : OutboxMessage (attempt 1)
+  processor -> sender : HandleAsync(message) in CorrelationId scope
+  sender -> email : Send with idempotency key = message Id
+  alt provider fails (attempts 1 and 2)
+    email --> sender : Error
+    sender --> processor : Exception
+    processor -> retry : NextDelay(attemptCount)
+    retry --> processor : base x 2^(n-1) (L2-103)
+    processor -> db : AttemptCount++, NextAttemptAtUtc, LastError, release lock
+  else provider succeeds (attempt 3)
+    email --> sender : Accepted
+    sender --> processor : Done
+    processor -> db : Set ProcessedAtUtc; email delivered once (L2-103)
+  end
+end
+opt fifth attempt fails
+  processor -> db : Set FailedAtUtc, keep LastError
+  processor -> processor : Log Error with CorrelationId (L2-101)
+end
+@enduml

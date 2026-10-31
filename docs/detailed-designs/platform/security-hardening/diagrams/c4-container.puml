@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Security hardening
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Escapes user content; renders safe links; sends X-XSRF-TOKEN")
+  Container(api, "6ixstack API", "ASP.NET Core", "HTTPS, headers, rate limits, authorization, CSRF, validation, audit")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Sessions, security tokens, community memberships, audit entries")
+}
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(moderator, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls with session and anti-forgery cookies", "JSON/HTTPS")
+Rel(api, db, "Reads sessions and memberships; writes audit entries", "EF Core")
+Rel(api, email, "Sends email after limits pass", "<TO SUPPLY>")
+@enduml

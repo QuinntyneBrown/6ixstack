@@ -1,0 +1,24 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Featured event
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "EventsPage", "Angular page", "Hero with feature card")
+  Component(card, "FeatureCard", "Angular component (components)", "Featured event or invitation to submit")
+  Component(client, "HttpEventsApi", "Angular service behind EVENTS_API", "Typed client for /api/events/featured")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "EventsController", "ASP.NET Core controller", "GET /api/events/featured")
+  Component(handler, "GetFeaturedEventQueryHandler", "MediatR handler", "Resolves the featured week and its event")
+  Component(clock, "SystemClock", "IClock", "Current instant and Toronto date")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "FeaturedEvents keyed by week start, Events")
+
+Rel(page, client, "Requests featured event")
+Rel(page, card, "Renders event or invitation")
+Rel(client, ctrl, "GET /api/events/featured", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetFeaturedEventQuery")
+Rel(handler, clock, "Reads Toronto date")
+Rel(handler, db, "Reads featured week and event", "EF Core")
+@enduml

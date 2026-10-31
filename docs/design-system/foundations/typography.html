@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typography — 6ixstack design system</title>
+<meta name="description" content="Geist for everything, Geist Mono for times and codes, twelve role shorthands and a rem scale that respects the reader&#x27;s font size.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Typography</h1>
+      <p class="ds-lead">Geist for everything, Geist Mono for times and codes, twelve role shorthands and a rem scale that respects the reader's font size.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Source: tokens/tokens.css</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#families">Families</a></li><li><a href="#roles">Role shorthands</a></li><li><a href="#scale">Size scale</a></li><li><a href="#weights">Weights</a></li><li><a href="#line-heights">Line heights</a></li><li><a href="#letter-spacing">Letter spacing</a></li><li><a href="#usage">Usage</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#tokens">Tokens</a></li></ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>6ixstack sets everything in <b>Geist</b> (with Inter and the system stack as fallbacks) and uses <b>Geist Mono</b> for times in the map, feed URLs and the large numerals on error pages. Type is set from twelve role shorthands (<code>--text-*</code>), each a full <code>font</code> value, so components never mix sizes, weights and line heights by hand.</p><ul><li>Body text is 16px (<code>--font-size-md</code>); nothing a person must read is below 12px.</li><li>Headings use the tight line height and a slight negative letter spacing; page titles and the wordmark use <code>--letter-spacing-tighter</code>.</li><li>The hero headline and status codes are the only fluid sizes (<code>--font-size-hero</code>, a <code>clamp()</code> from 48 to 72px).</li></ul>
+    </section>
+    <section class="ds-section" id="families"><h2><a href="#families">Families</a></h2>
+      <div class="ds-specimen"><div class="ds-specimen__meta">--font-family-sans<br><span data-token="--font-family-sans"></span></div><p style="font-family: var(--font-family-sans); font-size: var(--font-size-2xl);">Every dev event in the 6ix</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-family-mono<br><span data-token="--font-family-mono"></span></div><p style="font-family: var(--font-family-mono); font-size: var(--font-size-2xl);">6ix · 404 · 09:00</p></div>
+    </section>
+    <section class="ds-section" id="roles"><h2><a href="#roles">Role shorthands</a></h2>
+      <p>Use these in components: <code>font: var(--text-label)</code>. Each specimen uses real 6ixstack copy.</p><div class="ds-specimen"><div class="ds-specimen__meta">--text-display<br><span data-token="--text-display"></span></div><p style="font: var(--text-display);">Every dev event in the 6ix</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-h1<br><span data-token="--text-h1"></span></div><p style="font: var(--text-h1);">Azure Data &amp; AI Day GTA</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-h2<br><span data-token="--text-h2"></span></div><p style="font: var(--text-h2);">Where it’s happening</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-h3<br><span data-token="--text-h3"></span></div><p style="font: var(--text-h3);">Featured this week</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-h4<br><span data-token="--text-h4"></span></div><p style="font: var(--text-h4);">Add to your calendar</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-body-lg<br><span data-token="--text-body-lg"></span></div><p style="font: var(--text-body-lg);">Meetups and conferences across Toronto and the GTA, plus global talks you can stream.</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-body<br><span data-token="--text-body"></span></div><p style="font: var(--text-body);">A full day of Fabric, Azure OpenAI and data platform sessions from local MVPs, with a hands-on lab track.</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-body-sm<br><span data-token="--text-body-sm"></span></div><p style="font: var(--text-body-sm);">Microsoft Canada, 81 Bay St, Toronto · 142 going</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-caption<br><span data-token="--text-caption"></span></div><p style="font: var(--text-caption);">Times are in Toronto time (ET)</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-label<br><span data-token="--text-label"></span></div><p style="font: var(--text-label);">Event title</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-overline<br><span data-token="--text-overline"></span></div><p style="font: var(--text-overline); text-transform: uppercase; letter-spacing: var(--letter-spacing-wide);">Thu · Nov 5</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--text-code<br><span data-token="--text-code"></span></div><p style="font: var(--text-code);">webcal://6ixstack.dev/feeds/azure.ics</p></div>
+    </section>
+    <section class="ds-section" id="scale"><h2><a href="#scale">Size scale</a></h2>
+      <p>A 1.125–1.25 modular scale on a 16px base, in <code>rem</code> so it follows the reader's font size. <code>--font-size-map-label</code> (10px) exists only for decorative labels inside the event map's <code>role="img"</code> SVG, which carries its own text alternative.</p><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-map-label · <span data-token="--font-size-map-label"></span></div><p style="font-size: var(--font-size-map-label); line-height: var(--line-height-tight);">GTA</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-xs · <span data-token="--font-size-xs"></span></div><p style="font-size: var(--font-size-xs); line-height: var(--line-height-tight);">6ixstack</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-sm · <span data-token="--font-size-sm"></span></div><p style="font-size: var(--font-size-sm); line-height: var(--line-height-tight);">6ixstack</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-md · <span data-token="--font-size-md"></span></div><p style="font-size: var(--font-size-md); line-height: var(--line-height-tight);">6ixstack</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-lg · <span data-token="--font-size-lg"></span></div><p style="font-size: var(--font-size-lg); line-height: var(--line-height-tight);">6ixstack</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-xl · <span data-token="--font-size-xl"></span></div><p style="font-size: var(--font-size-xl); line-height: var(--line-height-tight);">6ixstack</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-2xl · <span data-token="--font-size-2xl"></span></div><p style="font-size: var(--font-size-2xl); line-height: var(--line-height-tight);">6ixstack</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-3xl · <span data-token="--font-size-3xl"></span></div><p style="font-size: var(--font-size-3xl); line-height: var(--line-height-tight);">6ixstack</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-4xl · <span data-token="--font-size-4xl"></span></div><p style="font-size: var(--font-size-4xl); line-height: var(--line-height-tight);">6ixstack</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-5xl · <span data-token="--font-size-5xl"></span></div><p style="font-size: var(--font-size-5xl); line-height: var(--line-height-tight);">6ixstack</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-size-hero · <span data-token="--font-size-hero"></span></div><p style="font-size: var(--font-size-hero); line-height: var(--line-height-tight);">6ixstack</p></div>
+    </section>
+    <section class="ds-section" id="weights"><h2><a href="#weights">Weights</a></h2>
+      <p>Four weights. Regular for reading, medium for labels and controls, semibold for headings and selected states, bold for page titles and numerals.</p><div class="ds-specimen"><div class="ds-specimen__meta">--font-weight-regular · <span data-token="--font-weight-regular"></span></div><p style="font-weight: var(--font-weight-regular); font-size: var(--font-size-xl);">Toronto .NET User Group</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-weight-medium · <span data-token="--font-weight-medium"></span></div><p style="font-weight: var(--font-weight-medium); font-size: var(--font-size-xl);">Toronto .NET User Group</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-weight-semibold · <span data-token="--font-weight-semibold"></span></div><p style="font-weight: var(--font-weight-semibold); font-size: var(--font-size-xl);">Toronto .NET User Group</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--font-weight-bold · <span data-token="--font-weight-bold"></span></div><p style="font-weight: var(--font-weight-bold); font-size: var(--font-size-xl);">Toronto .NET User Group</p></div>
+    </section>
+    <section class="ds-section" id="line-heights"><h2><a href="#line-heights">Line heights</a></h2>
+      <p><code>none</code> for single-line numerals and tiles, <code>tight</code> for display and h1–h2, <code>snug</code> for h3–h4 and card titles, <code>normal</code> for body, <code>relaxed</code> for long-form prose (about, code of conduct).</p><div class="ds-specimen"><div class="ds-specimen__meta">--line-height-none · <span data-token="--line-height-none"></span></div><p style="line-height: var(--line-height-none); max-width: 32ch;">Move your Power BI reports onto Fabric without rewriting them, with time for your questions.</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--line-height-tight · <span data-token="--line-height-tight"></span></div><p style="line-height: var(--line-height-tight); max-width: 32ch;">Move your Power BI reports onto Fabric without rewriting them, with time for your questions.</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--line-height-snug · <span data-token="--line-height-snug"></span></div><p style="line-height: var(--line-height-snug); max-width: 32ch;">Move your Power BI reports onto Fabric without rewriting them, with time for your questions.</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--line-height-normal · <span data-token="--line-height-normal"></span></div><p style="line-height: var(--line-height-normal); max-width: 32ch;">Move your Power BI reports onto Fabric without rewriting them, with time for your questions.</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--line-height-relaxed · <span data-token="--line-height-relaxed"></span></div><p style="line-height: var(--line-height-relaxed); max-width: 32ch;">Move your Power BI reports onto Fabric without rewriting them, with time for your questions.</p></div>
+    </section>
+    <section class="ds-section" id="letter-spacing"><h2><a href="#letter-spacing">Letter spacing</a></h2>
+      <p>Display tracking tightens as size grows; all-caps overlines open up so they stay legible.</p><div class="ds-specimen"><div class="ds-specimen__meta">--letter-spacing-display · <span data-token="--letter-spacing-display"></span></div><p style="letter-spacing: var(--letter-spacing-display); font-size: var(--font-size-3xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight);">Submit an event</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--letter-spacing-tighter · <span data-token="--letter-spacing-tighter"></span></div><p style="letter-spacing: var(--letter-spacing-tighter); font-size: var(--font-size-3xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight);">Submit an event</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--letter-spacing-tight · <span data-token="--letter-spacing-tight"></span></div><p style="letter-spacing: var(--letter-spacing-tight); font-size: var(--font-size-3xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight);">Submit an event</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--letter-spacing-normal · <span data-token="--letter-spacing-normal"></span></div><p style="letter-spacing: var(--letter-spacing-normal); font-size: var(--font-size-3xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight);">Submit an event</p></div><div class="ds-specimen"><div class="ds-specimen__meta">--letter-spacing-wide · <span data-token="--letter-spacing-wide"></span></div><p style="letter-spacing: var(--letter-spacing-wide); font-size: var(--font-size-3xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight);">Submit an event</p></div>
+    </section>
+    <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
+      <ul><li>One <code>&lt;h1&gt;</code> per page (the page title); headings never skip a level.</li><li>Prose is capped at <code>--layout-measure</code> (65ch); paragraphs use <code>text-wrap: pretty</code>, headings <code>text-wrap: balance</code>.</li><li>Event times, prices and counts use tabular figures (<code>.num</code>) so columns of times line up in the agenda and table.</li><li>Overlines (“Featured this week”, day headings) are uppercase via CSS only; the source text stays sentence case for screen readers.</li><li>On phones the detail-page title drops from 36px to 30px (<code>--font-size-3xl</code>); no other size changes by breakpoint.</li><li>Don't set <code>font-size</code> in px or with viewport units outside <code>--font-size-hero</code>.</li></ul>
+    </section>
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <ul><li>All sizes are rem, so 200% browser zoom and larger default font sizes scale text without clipping (1.4.4).</li><li>Layouts survive the 1.4.12 text-spacing overrides: line height 1.5×, paragraph spacing 2×, letter spacing 0.12em, word spacing 0.16em.</li><li>Minimum readable size is 12px (<code>--font-size-xs</code>) for captions and badges; 10px map labels are decorative and duplicated in the map's accessible list.</li><li>Muted and subtle text colours are checked at 4.5:1 on every surface they sit on; see <a href="color.html#contrast">contrast pairs</a>.</li></ul>
+    </section>
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <p>Every token in this category. Values resolve live from tokens.css for the current theme.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Usage</th></tr></thead>
+        <tbody>
+          <tr><td><code>--font-family-sans</code></td><td><span data-token="--font-family-sans"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--font-family-mono</code></td><td><span data-token="--font-family-mono"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--font-size-map-label</code></td><td><span data-token="--font-size-map-label"></span></td><td>same</td><td>10px decorative map labels inside role=&quot;img&quot; SVG only</td></tr>
+          <tr><td><code>--font-size-xs</code></td><td><span data-token="--font-size-xs"></span></td><td>same</td><td>12px  captions, badges</td></tr>
+          <tr><td><code>--font-size-sm</code></td><td><span data-token="--font-size-sm"></span></td><td>same</td><td>14px  secondary text, table cells</td></tr>
+          <tr><td><code>--font-size-md</code></td><td><span data-token="--font-size-md"></span></td><td>same</td><td>16px  body</td></tr>
+          <tr><td><code>--font-size-lg</code></td><td><span data-token="--font-size-lg"></span></td><td>same</td><td>18px  lead paragraph, large body</td></tr>
+          <tr><td><code>--font-size-xl</code></td><td><span data-token="--font-size-xl"></span></td><td>same</td><td>20px  h4</td></tr>
+          <tr><td><code>--font-size-2xl</code></td><td><span data-token="--font-size-2xl"></span></td><td>same</td><td>24px  h3</td></tr>
+          <tr><td><code>--font-size-3xl</code></td><td><span data-token="--font-size-3xl"></span></td><td>same</td><td>30px  h2</td></tr>
+          <tr><td><code>--font-size-4xl</code></td><td><span data-token="--font-size-4xl"></span></td><td>same</td><td>36px  h1</td></tr>
+          <tr><td><code>--font-size-5xl</code></td><td><span data-token="--font-size-5xl"></span></td><td>same</td><td>48px  display</td></tr>
+          <tr><td><code>--font-size-hero</code></td><td><span data-token="--font-size-hero"></span></td><td>same</td><td>48-72px hero headline (v2: text-5xl to text-7xl)</td></tr>
+          <tr><td><code>--font-weight-regular</code></td><td><span data-token="--font-weight-regular"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--font-weight-medium</code></td><td><span data-token="--font-weight-medium"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--font-weight-semibold</code></td><td><span data-token="--font-weight-semibold"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--font-weight-bold</code></td><td><span data-token="--font-weight-bold"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--line-height-none</code></td><td><span data-token="--line-height-none"></span></td><td>same</td><td>single-line numerals, wordmark, tiles</td></tr>
+          <tr><td><code>--line-height-tight</code></td><td><span data-token="--line-height-tight"></span></td><td>same</td><td>display, h1-h2</td></tr>
+          <tr><td><code>--line-height-snug</code></td><td><span data-token="--line-height-snug"></span></td><td>same</td><td>h3-h4</td></tr>
+          <tr><td><code>--line-height-normal</code></td><td><span data-token="--line-height-normal"></span></td><td>same</td><td>body</td></tr>
+          <tr><td><code>--line-height-relaxed</code></td><td><span data-token="--line-height-relaxed"></span></td><td>same</td><td>long-form reading</td></tr>
+          <tr><td><code>--letter-spacing-display</code></td><td><span data-token="--letter-spacing-display"></span></td><td>same</td><td>hero and status-code numerals</td></tr>
+          <tr><td><code>--letter-spacing-tighter</code></td><td><span data-token="--letter-spacing-tighter"></span></td><td>same</td><td>page titles, wordmark, CTA headings</td></tr>
+          <tr><td><code>--letter-spacing-tight</code></td><td><span data-token="--letter-spacing-tight"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--letter-spacing-normal</code></td><td><span data-token="--letter-spacing-normal"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--letter-spacing-wide</code></td><td><span data-token="--letter-spacing-wide"></span></td><td>same</td><td>all-caps labels</td></tr>
+          <tr><td><code>--text-display</code></td><td><span data-token="--text-display"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-h1</code></td><td><span data-token="--text-h1"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-h2</code></td><td><span data-token="--text-h2"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-h3</code></td><td><span data-token="--text-h3"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-h4</code></td><td><span data-token="--text-h4"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-body-lg</code></td><td><span data-token="--text-body-lg"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-body</code></td><td><span data-token="--text-body"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-body-sm</code></td><td><span data-token="--text-body-sm"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-caption</code></td><td><span data-token="--text-caption"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-label</code></td><td><span data-token="--text-label"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-overline</code></td><td><span data-token="--text-overline"></span></td><td>same</td><td></td></tr>
+          <tr><td><code>--text-code</code></td><td><span data-token="--text-code"></span></td><td>same</td><td></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

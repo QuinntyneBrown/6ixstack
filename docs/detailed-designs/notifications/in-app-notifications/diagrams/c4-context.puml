@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — In-app notifications
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+
+Rel(organizer, sixstack, "Reads review outcomes, reports and milestones using", "HTTPS")
+Rel(moderator, sixstack, "Reads new-submission notifications using", "HTTPS")
+@enduml

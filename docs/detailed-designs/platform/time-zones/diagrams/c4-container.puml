@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Time zones
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Shows server-formatted time labels; formats client-computed times in America/Toronto")
+  Container(api, "6ixstack API", "ASP.NET Core", "Converts local times to UTC; formats ET and source time labels")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events with UTC instants and IANA time zone")
+}
+System_Ext(calendars, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(spa, api, "Sends local time and zone; reads time labels", "JSON/HTTPS")
+Rel(api, db, "Reads and writes UTC instants", "EF Core")
+Rel(calendars, api, "GET /feeds/{feedSlug}.ics", "HTTPS")
+@enduml

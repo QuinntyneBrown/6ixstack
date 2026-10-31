@@ -1,0 +1,67 @@
+@startuml
+title UML sequence behaviour — Load and filter a month
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "CalendarPage" as page
+  participant "FilterStateStore" as store
+  participant "MonthGrid" as grid
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetMonthCalendarQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /calendar?format=gta&topics=react
+page -> store : Read format and topics (L2-005)
+page -> grid : Frame from MonthGridLayout: Sunday-first, today marked, adjacent days greyed (L2-025)
+page -> client : getMonth(2026-11, filters)
+client -> controller : GET /api/events/calendar?month=2026-11&format=gta&topics=react
+opt no response within 300 ms (L2-089)
+  page --> actor : Skeleton chip per day, grid aria-busy, "Loading November…" (L2-027)
+end
+controller -> controller : Validate month and enum values
+controller -> handler : Send GetMonthCalendarQuery
+handler -> handler : Month bounds in America/Toronto converted to UTC
+handler -> db : Published events starting in the month
+db --> handler : Events
+handler -> handler : Month totals: all, GTA, streamable (L2-025)
+handler -> handler : Keep events with any selected topic; count formats, hybrid in both (L2-027)
+handler -> handler : Apply format; group by Toronto date, order by start
+handler --> controller : MonthCalendarDto
+controller --> client : 200 JSON
+alt request failed
+  client --> page : Error
+  page --> actor : "We couldn't load November's events", days empty because the request failed, Try again (L2-027, L2-077)
+else Totals.All = 0
+  client --> page : MonthCalendar
+  page --> actor : "Nothing listed for December yet" with Submit an event and subscribe to a feed (L2-027)
+else filters active
+  client --> page : MonthCalendar
+  page -> grid : Days with matching events
+  page --> actor : "2 events match React in the GTA", "Include streaming to see 1 more", Clear filters (L2-027)
+else no filters
+  client --> page : MonthCalendar
+  page -> grid : Days with events
+  grid --> actor : Up to 3 links per day by start time, "+N more" (L2-025)
+  page --> actor : "21 events this month · 12 in the GTA · 9 streamable" (L2-025)
+end
+@enduml

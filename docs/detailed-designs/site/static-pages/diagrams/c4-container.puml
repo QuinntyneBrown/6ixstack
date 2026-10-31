@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — About and Code of Conduct pages
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "About and Code of Conduct prose, stats row")
+  Container(api, "6ixstack API", "ASP.NET Core", "Site stats query")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Communities, events, users")
+}
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/site/stats", "JSON/HTTPS")
+Rel(api, db, "Counts communities, events and moderators", "EF Core")
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Privacy and retention
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(stores, "FilterStateStore, DraftStore, BannerService", "Angular services", "Functional state")
+  Component(storage, "BrowserStorage", "Angular service", "localStorage limited to StorageKeys")
+  Component(sw, "Angular service worker", "ngsw", "Shell and last events list only")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(public, "EventsController, CommunitiesController, SpeakersController, FeedsController", "ASP.NET Core controllers", "Public DTOs without email")
+  Component(org, "OrganizerEventsController, NotificationsController", "ASP.NET Core controllers", "OrganizerPolicy; no reporter identity")
+  Component(mod, "ModerationController", "ASP.NET Core controller", "ModeratorPolicy; submitter and reporter email")
+  Component(factory, "ReportNotificationFactory", "Application service", "Title and reason only")
+  Component(job, "RetentionJob", "BackgroundService", "Runs every 24 hours")
+  Component(handler, "ApplyRetentionCommandHandler", "MediatR handler", "Applies RetentionPolicy")
+  Component(purger, "AccountPurger", "Application service", "Removes a deleted account's personal data")
+  Component(clock, "SystemClock", "IClock", "Current instant")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Personal data and audit entries")
+
+Rel(stores, storage, "Reads and writes allowed keys")
+Rel(public, db, "Projects public fields", "EF Core")
+Rel(org, db, "Projects organizer fields", "EF Core")
+Rel(mod, db, "Projects moderator fields", "EF Core")
+Rel(factory, db, "Writes organizer notification", "EF Core")
+Rel(job, clock, "Reads now")
+Rel(job, handler, "Sends ApplyRetentionCommand")
+Rel(handler, purger, "Purges accounts deleted 30+ days ago")
+Rel(handler, db, "Nulls reporter emails; deletes messages and old audit entries", "EF Core")
+Rel(purger, db, "Deletes user, sessions, tokens, notifications", "EF Core")
+@enduml

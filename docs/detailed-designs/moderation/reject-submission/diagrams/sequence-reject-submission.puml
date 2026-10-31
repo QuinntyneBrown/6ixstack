@@ -1,0 +1,79 @@
+@startuml
+title UML sequence behaviour — Reject a submission
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Moderator" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ReviewQueuePage" as page
+  participant "RejectSubmissionDialog" as dialog
+  participant "HttpModerationApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ModerationController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "RejectSubmissionCommandHandler" as handler
+  participant "Event" as entity
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "AuditLog" as audit
+  database "6ixstack database" as db
+end box
+actor -> page : Reject "Free crypto trading masterclass" (button or R)
+page -> dialog : Open with EventId, Title, OrganizerName, SubmitterEmail
+dialog --> actor : "Reject “Free crypto trading masterclass”?", five reasons, optional message, focus on Cancel (L2-061, L2-091)
+actor -> dialog : Reject submission
+alt no reason
+  dialog --> actor : "Choose a reason. The organizer sees it in their email.", focus on first reason (L2-061)
+else reason chosen
+  dialog --> actor : Choices disabled, "Rejecting…" (L2-061)
+  dialog -> client : reject(id, Spam, message)
+  client -> controller : POST /api/moderation/submissions/{id}/reject
+  controller -> controller : ModeratorPolicy, validate reason (L2-080, L2-081)
+  controller -> handler : Send RejectSubmissionCommand
+  handler -> db : Load event with row version and newest decision
+  alt not In review or approved
+    handler --> controller : Conflict
+    controller --> client : 409 DecisionConflictProblem (L2-063)
+  else In review
+    alt reason MissingVenueAddress
+      handler -> entity : RequestChanges(reason)
+      entity --> handler : Status Needs changes, SubmittedAtUtc kept for resubmission (L2-061)
+    else any other reason
+      handler -> entity : Reject(reason)
+      entity --> handler : Status Rejected (L2-061)
+    end
+    handler -> db : Insert ModerationDecision(kind, reason, message)
+    handler -> audit : Record(moderator, SubmissionRejected, event) (L2-086)
+    handler -> db : IOutbox.Enqueue(SubmissionRejectedEmail) (L2-061)
+    handler -> db : Commit in one unit of work
+    db --> handler : Commit
+    handler --> controller : RejectionResultDto with EmailPreview
+    controller --> client : 200 JSON
+  end
+  alt success
+    client --> dialog : RejectionResult
+    dialog --> page : Close with result
+    page -> page : Remove the card, update the summary
+    page --> actor : Info toast "Rejected “Free crypto trading masterclass”" with View email (L2-061)
+  else 409
+    client --> dialog : Conflict
+    dialog --> page : Close; card removed with already-decided message <TO SUPPLY> (L2-063)
+  else 5xx or network error
+    client --> dialog : Error
+    dialog --> actor : "The submission wasn't rejected", still in the queue, nobody emailed, choices kept, "Try again" (L2-061)
+  end
+end
+@enduml

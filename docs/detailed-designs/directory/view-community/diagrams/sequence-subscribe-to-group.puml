@@ -1,0 +1,37 @@
+@startuml
+title UML sequence behaviour — Subscribe to this group
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "CommunityDetailPage" as page
+  participant "SubscribeFeedDialog" as dialog
+  participant "HttpFeedsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "FeedsController" as controller
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+participant "Calendar app" as calendar
+actor -> page : Activate "Subscribe to this group"
+page -> dialog : Open CDK Dialog with communitySlug and communityName (L2-031)
+dialog --> actor : Dialog with focus trapped (L2-091)
+actor -> dialog : Create feed link
+dialog -> client : create(feed choices, community)
+client -> controller : POST /api/feeds { community: "gta-azure-community", ... }
+controller -> db : Find or store feed definition with community (L2-035)
+db --> controller : FeedSlug
+controller --> client : 200 feed link
+client --> dialog : Feed link
+dialog --> actor : "Your feed is ready" with Copy, Google, Outlook, Apple (L2-035)
+actor -> calendar : Add feed link
+calendar -> controller : GET /feeds/{feedSlug}.ics
+controller --> calendar : Only this community's published events (L2-036)
+actor -> dialog : Close
+dialog --> page : Closed; focus returns to "Subscribe to this group" (L2-091)
+@enduml

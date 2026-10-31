@@ -1,0 +1,25 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — About and Code of Conduct pages
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(about, "AboutPage", "Angular page", "Title, stats row, prose sections")
+  Component(coc, "CodeOfConductPage", "Angular page", "Expected and unacceptable behaviour, reporting, last updated")
+  Component(stats, "StatsRow", "Angular component (components)", "Four labelled counts")
+  Component(client, "HttpSiteApi", "Angular service behind SITE_API", "Typed client for /api/site")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "SiteController", "ASP.NET Core controller", "GET /api/site/stats, anonymous")
+  Component(handler, "GetSiteStatsQueryHandler", "MediatR handler", "Counts communities, events this year, feed subscribers, moderators")
+  Component(clock, "SystemClock", "IClock", "Current Toronto year")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Communities, events, users")
+
+Rel(about, stats, "Renders on success")
+Rel(about, client, "getStats()")
+Rel(client, ctrl, "GET /api/site/stats", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetSiteStatsQuery")
+Rel(handler, clock, "Reads current year")
+Rel(handler, db, "Counts rows", "EF Core")
+@enduml

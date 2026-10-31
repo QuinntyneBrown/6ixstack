@@ -1,0 +1,70 @@
+@startuml
+title UML sequence behaviour — Concurrent review of one submission
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Sam (moderator)" as sam
+actor "Jordan (moderator)" as jordan
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ReviewPresenceTracker" as tracker
+  participant "ReviewQueuePage" as page
+  participant "HttpModerationApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ModerationController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "RecordReviewPresenceCommandHandler" as presence
+  participant "ApproveSubmissionCommandHandler\nor RejectSubmissionCommandHandler" as decide
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+sam -> tracker : Opens "Kubernetes on a budget" (interaction <TO SUPPLY>)
+tracker -> client : recordPresence(id)
+client -> controller : POST /api/moderation/submissions/{id}/presence
+controller -> presence : Send RecordReviewPresenceCommand
+presence -> db : Upsert ReviewPresence(Sam), read others within timeout <TO SUPPLY>
+presence --> controller : []
+controller --> client : 200 []
+jordan -> tracker : Opens the same submission
+tracker -> client : recordPresence(id)
+client -> controller : POST /api/moderation/submissions/{id}/presence
+controller -> presence : Send RecordReviewPresenceCommand
+presence -> db : Upsert ReviewPresence(Jordan), read others
+presence --> controller : [Sam]
+controller --> client : 200 [Sam]
+client --> tracker : Co-reviewers
+tracker --> jordan : Info toast "Sam is also reviewing “Kubernetes on a budget”" (L2-063)
+tracker --> sam : Next presence post returns [Jordan]; info toast naming Jordan (L2-063)
+sam -> page : Approve
+page -> client : approve(id)
+client -> controller : POST .../approve
+controller -> decide : ApproveSubmissionCommand
+decide -> db : Status In review, commit with row version
+db --> decide : Committed, first decision wins (L2-063)
+decide --> controller : ApprovalResultDto
+controller --> client : 200
+jordan -> page : Reject with a reason
+page -> client : reject(id, reason)
+client -> controller : POST .../reject
+controller -> decide : RejectSubmissionCommand
+decide -> db : Load event
+db --> decide : Status Published by Sam's approval
+decide --> controller : Conflict
+controller --> client : 409 DecisionConflictProblem(decision approved, Sam) (L2-063)
+client --> page : Conflict
+page -> page : Remove the card from Jordan's queue
+page --> jordan : Message that it was already approved, copy <TO SUPPLY> (L2-063)
+@enduml

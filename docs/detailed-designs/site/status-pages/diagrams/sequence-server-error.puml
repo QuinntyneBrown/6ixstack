@@ -1,0 +1,55 @@
+@startuml
+title UML sequence behaviour — Server error and inline failure
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "Feature page" as page
+  participant "ApiErrorInterceptor" as interceptor
+  participant "StatusPageNavigator" as nav
+  participant "ServerErrorPage" as status
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "RequestLoggingMiddleware" as logging
+  participant "ExceptionHandlingMiddleware" as exceptions
+  participant "Controller and handler" as controller
+end box
+actor -> page : Load a page or run an action
+page -> interceptor : HTTP request
+interceptor -> logging : HTTPS request with correlation id
+logging -> exceptions : next
+exceptions -> controller : next
+controller --> exceptions : Unhandled exception
+exceptions -> exceptions : ReferenceCode.New() = 7F3A-21C9
+exceptions -> exceptions : Log exception with reference code and correlation id (L2-102)
+exceptions --> logging : 500 application/problem+json, referenceCode, no stack trace (L2-102)
+logging -> logging : Log method, route, status 500, duration (L2-101)
+logging --> interceptor : 500 response
+interceptor -> interceptor : Keep status and referenceCode only, drop title and detail (L2-077)
+interceptor --> page : ApiError Server(7F3A-21C9)
+alt route's primary data failed before any content (rule <TO SUPPLY>)
+  page -> nav : serverError("7F3A-21C9")
+  nav -> status : Render, URL kept
+  status --> actor : "Something broke on our side", "mention Ref 7F3A-21C9", Try again (L2-076)
+  actor -> status : Try again
+  status -> page : Re-run the same navigation
+else list load inside a page
+  page --> actor : Frame, filters and search kept; danger alert role=alert with Try again (L2-077)
+  actor -> page : Try again
+  page -> interceptor : Reload only that list (L2-077)
+else form submission
+  page --> actor : Every field keeps its value; button reads "Try again" (L2-077)
+end
+@enduml

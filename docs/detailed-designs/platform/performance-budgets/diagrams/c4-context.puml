@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Performance budgets
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(calendars, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+System_Ext(basemap, "Map basemap provider", "<TO SUPPLY>")
+
+Rel(visitor, sixstack, "Loads pages on a mid-range phone over 4G", "HTTPS")
+Rel(calendars, sixstack, "Polls feeds with If-None-Match", "HTTPS")
+Rel(visitor, basemap, "Loads tiles after the map enters the viewport", "HTTPS")
+@enduml

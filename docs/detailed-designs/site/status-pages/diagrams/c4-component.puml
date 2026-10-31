@@ -1,0 +1,37 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Status pages, inline failures and offline events
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(pages, "Feature pages", "Angular pages", "Use LoadState and the inline failure pattern")
+  Component(interceptor, "ApiErrorInterceptor", "Angular HTTP interceptor (api)", "Maps failures to ApiError; keeps only status, field errors, referenceCode")
+  Component(nav, "StatusPageNavigator", "Angular service", "Renders status pages with skipLocationChange")
+  Component(status, "NotFoundPage / ForbiddenPage / ServerErrorPage / OfflinePage", "Angular pages on StatusPage", "Heading, explanation, next actions")
+  Component(fallback, "OfflineFallback", "Route logic", "Offline and no saved data: offline page")
+  Component(saved, "SavedEventsStore", "Angular service, IndexedDB", "Last events list and saved-at time")
+  Component(sw, "Angular service worker", "ngsw-config.json", "App shell cache, navigation fallback")
+  Component(conn, "ConnectivityService", "Angular service (site/toasts-and-banners)", "online signal")
+  Component(session, "SessionStore", "Angular service", "Signed-in email and community")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(logging, "RequestLoggingMiddleware", "ASP.NET Core middleware, outermost", "Logs method, route, status, duration, correlation id")
+  Component(exceptions, "ExceptionHandlingMiddleware", "ASP.NET Core middleware", "500 problem+json with referenceCode")
+  Component(authz, "CommunityMemberRequirement", "Authorization handler", "403 problem with ownerName and resourceTitle")
+  Component(controllers, "Controllers", "ASP.NET Core", "EventsController, OrganizerEventsController, ...")
+}
+
+Rel(pages, interceptor, "HTTP calls pass through")
+Rel(interceptor, conn, "Reports network errors")
+Rel(pages, nav, "Primary load failed with 404, 403, 500 or offline")
+Rel(nav, status, "Renders")
+Rel(status, session, "Reads signed-in account (403)")
+Rel(fallback, conn, "Reads online")
+Rel(fallback, saved, "Checks saved list")
+Rel(pages, saved, "Saves successful events list")
+Rel(sw, pages, "Serves cached app shell offline")
+Rel(interceptor, logging, "HTTPS requests", "JSON/HTTPS")
+Rel(logging, exceptions, "Next middleware")
+Rel(exceptions, authz, "Next middleware")
+Rel(authz, controllers, "Authorized requests")
+@enduml

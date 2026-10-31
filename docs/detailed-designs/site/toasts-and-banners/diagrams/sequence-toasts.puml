@@ -1,0 +1,51 @@
+@startuml
+title UML sequence behaviour — Show, pause and stack toasts
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "Feature page" as page
+  participant "ToastService" as service
+  participant "ToastCountdown" as timer
+  participant "ToastRegion" as region
+end box
+actor -> page : Copy the feed link
+page -> service : show(success, "Feed link copied", action "How to subscribe")
+service -> timer : Start 8 s countdown (L2-074)
+service -> region : Append at the bottom
+region --> actor : Polite live region announces the toast (L2-074)
+alt no hover or focus
+  timer --> service : 8 s elapsed
+  service -> region : Remove toast (L2-074)
+else pointer enters at 7 s
+  actor -> region : Hover the toast
+  region -> timer : pause(), 1 s remaining
+  actor -> region : Pointer stays 5 s
+  region --> actor : Toast still shown (L2-074)
+  actor -> region : Pointer leaves
+  region -> timer : resume()
+end
+opt danger toast
+  page -> service : show(danger, "Couldn't copy the link", action "Try again")
+  service -> region : Append with role="alert", no countdown (L2-074)
+  region --> actor : Stays after 60 s until Dismiss (L2-074)
+end
+opt fourth toast while three are shown
+  page -> service : show(info, ...)
+  service -> region : Remove the oldest, append the new one, three remain (L2-074)
+end
+actor -> region : Dismiss
+region -> service : dismiss(id)
+@enduml

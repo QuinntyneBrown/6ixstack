@@ -1,0 +1,66 @@
+@startuml
+title UML sequence behaviour — Store and route a report
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "HttpReportsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ReportsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "FileReportCommandValidator" as validator
+  participant "FileReportCommandHandler" as handler
+  participant "ReportRouting" as routing
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+  participant "OutboxProcessor" as outbox
+end box
+participant "Email provider" as email
+client -> controller : POST /api/events/{slug}/reports
+controller -> validator : Validate FileReportCommand (L2-039)
+alt invalid
+  validator --> controller : Field errors
+  controller --> client : 400 problem details
+else valid
+  controller -> handler : Send FileReportCommand
+  handler -> db : Load published event by slug
+  alt no such event
+    db --> handler : Nothing
+    handler --> controller : Not found
+    controller --> client : 404 problem details
+  else event found
+    db --> handler : Event, community organizers, moderators
+    handler -> db : Add Report with reason, details, reporter email (L2-040)
+    handler -> routing : Recipients(report, organizers, moderators)
+    alt reason CodeOfConduct
+      routing --> handler : Two moderators, no organizers (L2-040)
+      handler -> db : Add ConductReport notification and email OutboxMessage for each of the two moderators
+    else any other reason
+      routing --> handler : Community organizers and moderators (L2-040)
+      handler -> db : Add ReportFiled notification per organizer, quoting details, no reporter email (L2-040, L2-099)
+      handler -> db : Add moderator notifications
+      handler -> db : Add organizer email OutboxMessage where reports email is on (L2-067)
+    end
+    handler -> db : Save changes in one unit of work
+    db --> handler : Commit result
+    handler --> controller : Done
+    controller --> client : 202 Accepted
+  end
+end
+outbox -> db : Read pending OutboxMessages
+outbox -> email : Send each email, retry with backoff up to 5 attempts (L2-103)
+@enduml

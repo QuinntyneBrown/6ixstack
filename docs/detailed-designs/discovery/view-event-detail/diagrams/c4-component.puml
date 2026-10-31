@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — View event detail
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "EventDetailPage", "Angular page", "Hero, alerts, body sections, facts panel, actions")
+  Component(lib, "FactItem, Alert, EventMap, DockedActionBar", "Angular components (components)", "Presentational building blocks")
+  Component(timer, "StreamJoinTimer", "Angular service", "Reloads at JoinOpensAtUtc")
+  Component(skeleton, "DelayedSkeleton", "Angular helper", "Skeleton after 300 ms")
+  Component(client, "HttpEventsApi", "Angular service behind EVENTS_API", "Typed client for /api/events/{slug}")
+  Component(notfound, "NotFoundPage", "Angular page (site/status-pages)", "We can't find that page")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "EventsController", "ASP.NET Core controller", "GET /api/events/{slug}")
+  Component(handler, "GetEventDetailQueryHandler", "MediatR handler", "Loads event, related data and next community event")
+  Component(policy, "EventDetailPolicy", "Application service", "Detail state, actions, alerts, docked bar")
+  Component(clock, "SystemClock", "IClock", "Current instant")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events indexed by slug")
+
+Rel(page, client, "Requests event")
+Rel(page, lib, "Renders")
+Rel(page, skeleton, "Delays skeleton")
+Rel(page, timer, "Schedules join reload")
+Rel(page, notfound, "Shows on 404")
+Rel(client, ctrl, "GET /api/events/{slug}", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetEventDetailQuery")
+Rel(handler, db, "Reads event and related data", "EF Core")
+Rel(handler, policy, "Decides state, actions and alerts")
+Rel(policy, clock, "Reads now")
+@enduml

@@ -1,0 +1,34 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Observability
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(interceptor, "ProblemDetailsInterceptor", "Angular HTTP interceptor", "Error body to ApiProblem")
+  Component(errorpage, "ServerErrorPage", "Angular page", "Shows Ref code")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(log, "RequestLoggingMiddleware", "Middleware 1 (outermost)", "Correlation id, X-Correlation-Id, one entry per request")
+  Component(headers, "SecurityHeadersMiddleware", "Middleware 2", "Security headers")
+  Component(ex, "ExceptionHandlingMiddleware", "Middleware 3", "Problem details; reference code on 500")
+  Component(refcode, "ReferenceCodeGenerator", "Service", "XXXX-XXXX from 32 random bits")
+  Component(rest, "HTTPS, Swagger, routing, rate limiter, authentication, authorization, CSRF", "Middleware 4-10", "See platform/security-hardening")
+  Component(endpoints, "Controllers and HealthChecks", "Endpoints", "/api/*, /health/live, /health/ready")
+  Component(outbox, "OutboxProcessor", "BackgroundService", "Claims due messages; retries with backoff")
+  Component(handlers, "SendEmailHandler, RunSubmissionChecksHandler, RegenerateFeedsHandler", "IOutboxMessageHandler", "Background work")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "OutboxMessages")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(interceptor, log, "API requests", "JSON/HTTPS")
+Rel(interceptor, errorpage, "500 on page load navigates with code")
+Rel(log, headers, "next")
+Rel(headers, ex, "next")
+Rel(ex, rest, "next")
+Rel(rest, endpoints, "next")
+Rel(ex, refcode, "Unhandled exception")
+Rel(endpoints, db, "Change plus OutboxMessage in one unit of work; readiness probe", "EF Core")
+Rel(outbox, db, "Claims and updates messages", "EF Core")
+Rel(outbox, handlers, "Dispatches by Type")
+Rel(handlers, email, "Sends", "<TO SUPPLY>")
+@enduml

@@ -1,0 +1,59 @@
+@startuml
+title UML sequence behaviour — Conditional feed request
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+participant "Calendar app" as cal
+box "Backend — 6ixstack API application" #D1FADF
+  participant "RequestLoggingMiddleware" as log
+  participant "FeedsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "RegenerateFeedsHandler" as regen
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "FeedCache" as cache
+  participant "OutboxProcessor" as outbox
+  database "6ixstack database" as db
+end box
+cal -> log : GET /feeds/dotnet.ics\nIf-None-Match: "a1b2…"
+log -> controller : next
+controller -> cache : GetOrRenderAsync(dotnet)
+alt entry in memory
+  cache --> controller : CachedFeed {ETag "a1b2…"}
+else entry missing (custom feed or cold start)
+  cache -> db : Load published events for feed
+  db --> cache : Events
+  cache -> cache : IcsWriter.Write, SHA-256 ETag, store
+  cache --> controller : CachedFeed
+end
+alt If-None-Match equals ETag
+  controller --> log : 304 Not Modified, no body (L2-087)
+else changed or no If-None-Match
+  controller --> log : 200 text/calendar, ETag, Cache-Control
+end
+log -> log : Log route, status, duration; cached p95 <= 100 ms (L2-087)
+log --> cal : Response
+== An organizer edits a published event ==
+outbox -> regen : RegenerateFeeds message (L2-103)
+regen -> db : Load published events
+db --> regen : Events
+regen -> cache : Replace ready-made feeds; EvictCustom()
+cal -> log : GET /feeds/dotnet.ics\nIf-None-Match: "a1b2…"
+log -> controller : next
+controller -> cache : GetOrRenderAsync(dotnet)
+cache --> controller : CachedFeed {ETag "c3d4…"}
+controller --> log : 200 with new ETag
+log --> cal : Response
+@enduml

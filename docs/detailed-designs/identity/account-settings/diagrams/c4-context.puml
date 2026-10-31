@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Account settings
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>; delivers email change confirmations")
+
+Rel(organizer, sixstack, "Edits profile and email preferences using", "HTTPS")
+Rel(sixstack, email, "Sends email change confirmation via", "<TO SUPPLY>")
+Rel(email, organizer, "Delivers confirmation link to the new address")
+@enduml

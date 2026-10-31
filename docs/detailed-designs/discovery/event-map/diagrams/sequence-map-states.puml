@@ -1,0 +1,55 @@
+@startuml
+title UML sequence behaviour — Map loading and failure
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventsPage" as page
+  participant "EventMapPanel" as panel
+  participant "EventMap" as map
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+actor -> page : Open /
+page -> panel : Render map column (beside list at 992 px or more, above list below) (L2-016)
+panel --> actor : Frame at final size, "Plotting events…", aria-busy="true" (L2-015)
+par
+  panel -> panel : Load deferred EventMap chunk and basemap
+else
+  panel -> client : getMap(filters)
+  client -> controller : GET /api/events/map
+end
+alt chunk, basemap and data succeed
+  controller --> client : 200 EventMapDto
+  client --> panel : EventMapData
+  alt no points and no streams
+    panel --> actor : "Nothing on the map yet..." overlay
+  else
+    panel -> map : Render data
+    map --> actor : Map; SVG labels hidden from assistive technology (L2-015)
+  end
+else any of the three fails
+  panel --> actor : "The map didn't load. The list has every event." with Try again (L2-015)
+  note right of page : List, filters and featured card are unaffected (L2-015)
+  actor -> panel : Try again
+  panel -> panel : Repeat only the failed step
+end
+opt list request failed (owned by browse-events)
+  page -> panel : listFailed = true
+  panel --> actor : "The map fills in once events load."
+end
+@enduml

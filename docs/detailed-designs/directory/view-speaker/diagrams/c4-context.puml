@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — View a speaker
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(mail, "Email client", "Visitor's own mail application, opened by a mailto link")
+
+Rel(visitor, sixstack, "Reads a speaker's bio, talks and links using", "HTTPS")
+Rel(visitor, mail, "Writes an invitation to the published contact address with", "mailto")
+@enduml

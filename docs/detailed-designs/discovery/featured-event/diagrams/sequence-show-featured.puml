@@ -1,0 +1,66 @@
+@startuml
+title UML sequence behaviour — Show the featured event
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventsPage" as page
+  participant "FeatureCard" as card
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetFeaturedEventQueryHandler" as handler
+  participant "SystemClock" as clock
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /
+page -> card : Show skeleton after 300 ms if still pending (L2-089)
+page -> client : getFeatured()
+client -> controller : GET /api/events/featured
+controller -> handler : Send GetFeaturedEventQuery
+handler -> clock : Toronto date
+clock --> handler : Monday, November 2, 2026
+handler -> handler : Derive featured week start
+handler -> db : FeaturedEvent for week, with Event and Community
+db --> handler : Row or none
+alt no row for the week (L2-006)
+  handler --> controller : null
+  controller --> client : 204 No Content
+else event not Published or cancelled (L2-006)
+  handler --> controller : null
+  controller --> client : 204 No Content
+else featured and published
+  handler -> handler : Project labels: "Nov" 5, location, "Livestream available", "Thu · 9:00 AM", "Get tickets · $49"
+  handler --> controller : FeaturedEventDto
+  controller --> client : 200 JSON
+end
+alt request failed
+  client --> page : Error
+  page --> actor : Card keeps its skeleton frame; list and map continue (L2-077)
+else
+  client --> page : FeaturedEvent or null
+  page -> card : Render with event or null
+  alt event
+    card --> actor : "Featured this week" card with title linked to detail page (L2-006)
+  else null
+    card --> actor : "Your event could be here", "Free to list", Submit an event (L2-006)
+  end
+end
+@enduml

@@ -1,0 +1,125 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Automated submission checks
+
+package "SixStack.Domain" {
+  class Event {
+    +Guid Id
+    +string Title
+    +Guid CommunityId
+    +EventFormat Format
+    +DateTimeOffset StartsAtUtc
+    +Venue? Venue
+    +string? StreamUrl
+    +string? TicketUrl
+    +IReadOnlyCollection<Topic> Topics
+    +string SubmitterEmail
+  }
+  class SubmissionCheck {
+    +Guid Id
+    +Guid EventId
+    +CheckKind Kind
+    +CheckOutcome Outcome
+    +string Message
+    +Guid? RelatedEventId
+    +DateTimeOffset? CompletedAtUtc
+    +Complete(result: CheckResult, now: DateTimeOffset): void
+  }
+  enum CheckKind {
+    VenueAddress
+    TicketLink
+    StreamLink
+    Duplicate
+    OrganizerHistory
+    DeveloperRelevance
+  }
+  enum CheckOutcome {
+    Pending
+    Passed
+    Warning
+  }
+  class OutboxMessage {
+    +Guid Id
+    +string Type
+    +string Payload
+    +int AttemptCount
+    +DateTimeOffset NextAttemptAtUtc
+    +DateTimeOffset? ProcessedAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  interface ISubmissionCheckScheduler {
+    +Schedule(eventId: Guid): void
+  }
+  class SubmissionCheckScheduler
+  class RunSubmissionChecks {
+    +Guid EventId
+  }
+  class RunSubmissionChecksHandler {
+    +Handle(message: RunSubmissionChecks): Task
+  }
+  interface ISubmissionCheck {
+    +CheckKind Kind
+    +AppliesTo(event: Event): bool
+    +Run(event: Event): Task<CheckResult>
+  }
+  class CheckResult <<value object>> {
+    +CheckOutcome Outcome
+    +string Message
+    +Guid? RelatedEventId
+  }
+  class VenueAddressCheck
+  class LinkReachabilityCheck
+  class DuplicateCheck
+  class OrganizerHistoryCheck
+  class DeveloperRelevanceCheck
+  interface IGeocoder {
+    +Geocode(address: string, city: string): Task<GeoPoint?>
+  }
+  interface ILinkChecker {
+    +Check(url: string, timeout: TimeSpan): Task<LinkStatus>
+  }
+  interface IOutbox {
+    +Enqueue(message: object, notBeforeUtc: DateTimeOffset?): void
+  }
+}
+
+package "SixStack.Infrastructure" {
+  class HttpGeocoder
+  class HttpLinkChecker
+  class OutboxProcessor
+}
+
+Event "1" *-- "*" SubmissionCheck
+SubmissionCheck --> CheckKind
+SubmissionCheck --> CheckOutcome
+SubmissionCheckScheduler ..|> ISubmissionCheckScheduler
+SubmissionCheckScheduler ..> SubmissionCheck : creates Pending
+SubmissionCheckScheduler ..> IOutbox
+SubmissionCheckScheduler ..> RunSubmissionChecks : enqueues
+IOutbox ..> OutboxMessage : persists
+OutboxProcessor ..> RunSubmissionChecksHandler : dispatches
+RunSubmissionChecksHandler ..> RunSubmissionChecks : handles
+RunSubmissionChecksHandler "1" --> "*" ISubmissionCheck : runs
+RunSubmissionChecksHandler ..> SubmissionCheck : completes
+VenueAddressCheck ..|> ISubmissionCheck
+LinkReachabilityCheck ..|> ISubmissionCheck
+DuplicateCheck ..|> ISubmissionCheck
+OrganizerHistoryCheck ..|> ISubmissionCheck
+DeveloperRelevanceCheck ..|> ISubmissionCheck
+ISubmissionCheck ..> CheckResult : returns
+VenueAddressCheck ..> IGeocoder
+LinkReachabilityCheck ..> ILinkChecker
+HttpGeocoder ..|> IGeocoder
+HttpLinkChecker ..|> ILinkChecker
+@enduml

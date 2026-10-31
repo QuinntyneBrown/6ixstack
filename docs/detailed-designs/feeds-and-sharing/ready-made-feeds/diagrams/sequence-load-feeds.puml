@@ -1,0 +1,60 @@
+@startuml
+title UML sequence behaviour — Load the ready-made feeds
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "CalendarFeedsPage" as page
+  participant "DelayedSkeleton" as sk
+  participant "HttpFeedsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "FeedsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetReadyMadeFeedsQueryHandler" as handler
+  participant "FeedEventFilter" as filter
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /feeds
+page --> actor : Six feeds from READY_MADE_FEEDS, Copy link buttons active (L2-034)
+page -> sk : Start 300 ms timer (L2-089)
+page -> client : getReadyMadeFeedCounts()
+client -> controller : GET /api/feeds
+opt no response within 300 ms
+  sk --> page : Count skeletons; copy buttons and builder stay usable (L2-034)
+end
+controller -> controller : Allow anonymous caller (L2-080)
+controller -> handler : Send GetReadyMadeFeedsQuery
+loop each ReadyMadeFeedCatalogue entry
+  handler -> filter : Apply FeedSlug (topics, scope; hybrid in both)
+  handler -> db : Count published, not cancelled, start in 14-day window
+  db --> handler : Count
+end
+alt success
+  handler --> controller : ReadyMadeFeedsDto
+  controller --> client : 200 JSON
+  client --> page : ReadyMadeFeedCounts
+  page --> actor : "In-person and hybrid events only · 9 in the next two weeks" (L2-034)
+else failure or timeout
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : Alert "We couldn't load the ready-made feeds" with Try again; builder still works (L2-034, L2-077)
+  actor -> page : Try again
+  page -> client : getReadyMadeFeedCounts()
+end
+@enduml

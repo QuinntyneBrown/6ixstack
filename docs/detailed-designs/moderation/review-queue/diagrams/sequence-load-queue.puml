@@ -1,0 +1,67 @@
+@startuml
+title UML sequence behaviour — Open the review queue
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Moderator or organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "authGuard" as guard
+  participant "ReviewQueuePage" as page
+  participant "HttpModerationApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ModerationController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetReviewQueueQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> guard : Open /admin/review
+alt anonymous
+  guard --> actor : Redirect to /sign-in with return URL (L2-057)
+else signed in
+  guard -> page : Activate
+  page --> actor : Three skeleton cards after 300 ms, "Loading submissions…" (L2-058, L2-089)
+  page -> client : getQueue()
+  client -> controller : GET /api/moderation/queue
+  controller -> controller : ModeratorPolicy, 401 anonymous, 403 without Moderator role (L2-057, L2-080)
+  alt organizer
+    controller --> client : 403 problem details
+    client --> page : Forbidden
+    page --> actor : "Only moderators can review submissions" with Go to your events and Ask to moderate (L2-057)
+  else moderator
+    controller -> handler : Send GetReviewQueueQuery
+    handler -> db : In review events without a pending approval, SubmittedAtUtc ascending (L2-058)
+    db --> handler : Submissions
+    handler -> db : SubmissionCheck rows for those events
+    handler -> db : Decisions in the last 30 days that were not undone
+    db --> handler : Checks and decisions
+    handler -> handler : Waiting count, oldest, median review time, last approval (L2-058)
+    handler --> controller : ReviewQueueDto
+    controller --> client : 200 JSON
+    client --> page : ReviewQueue
+    alt cards
+      page --> actor : "4 waiting · oldest submitted yesterday · median review time 3 h" and four cards (L2-058)
+    else none waiting
+      page --> actor : "All caught up" with See what's live, "0 waiting · last approval 12 minutes ago" (L2-058)
+    end
+  end
+  opt 5xx or network error
+    client --> page : Error
+    page --> actor : "We couldn't load the queue", nothing approved or rejected, Try again (L2-058)
+  end
+end
+@enduml

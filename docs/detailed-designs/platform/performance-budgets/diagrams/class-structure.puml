@@ -1,0 +1,93 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Performance budgets
+
+package "SixStack.Application" {
+  interface IFeedCache {
+    +GetOrRenderAsync(feed: FeedSlug, ct): Task<CachedFeed>
+    +Replace(feed: FeedSlug, body: string): void
+    +EvictCustom(): void
+  }
+  class CachedFeed <<value object>> {
+    +string Body
+    +string ETag
+    +DateTimeOffset RenderedAtUtc
+  }
+  class FeedSlug <<value object>> {
+    +IReadOnlyList<Topic> Topics
+    +FeedScope Scope
+    +string? CommunitySlug
+  }
+  class RegenerateFeedsHandler {
+    +HandleAsync(message: OutboxMessage, ct): Task
+  }
+  class PerformanceBudgets <<static>> {
+    +PublicListP95 = 300 ms
+    +EventDetailP95 = 200 ms
+    +CachedFeedP95 = 100 ms
+    +LoadRate = 50 req/s
+    +MaxPageSize = 50
+  }
+}
+
+package "SixStack.Infrastructure" {
+  class FeedCache {
+    -IMemoryCache cache
+    -IcsWriter writer
+    -ComputeETag(body: string): string
+  }
+  class IcsWriter {
+    +Write(events): string
+  }
+}
+
+package "SixStack.Api" {
+  class FeedsController {
+    +GetFeed(feedSlug: string, ifNoneMatch: string?): IActionResult
+  }
+}
+
+package "sixstack (Angular)" {
+  class DelayedSkeleton {
+    +delayMs: number = 300
+    +visible: Signal<boolean>
+    +start(): void
+    +settle(): void
+  }
+  class EventsPage {
+    +skeleton: DelayedSkeleton
+  }
+  class FrontEndBudgets <<config>> {
+    +initialJsGzip = 250 KB
+    +lcp = 2.5 s
+    +cls = 0.1
+    +inp = 200 ms
+  }
+}
+
+package "components (Angular)" {
+  class Skeleton {
+    +shape: InputSignal<'row' | 'line' | 'cell' | 'card'>
+    +width: InputSignal<string>
+    +height: InputSignal<string>
+  }
+}
+
+FeedCache ..|> IFeedCache
+FeedCache ..> CachedFeed : returns
+FeedCache ..> IcsWriter
+IFeedCache ..> FeedSlug
+FeedsController ..> IFeedCache : reads
+RegenerateFeedsHandler ..> IFeedCache : replaces / evicts
+EventsPage *-- DelayedSkeleton
+EventsPage ..> Skeleton : renders when visible
+@enduml

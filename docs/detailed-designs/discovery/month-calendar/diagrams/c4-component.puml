@@ -1,0 +1,34 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Month calendar
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "CalendarPage", "Angular page", "Subtitle, filters, toolbar, state alerts, legend")
+  Component(store, "FilterStateStore", "Angular service", "Format and topics in URL and localStorage")
+  Component(layout, "MonthGridLayout", "Function module (components)", "Sunday-first cells with leading and trailing days")
+  Component(grid, "MonthGrid", "Angular component (components)", "Day cells, 3 links, +N more, dots below 768 px")
+  Component(daylist, "CalendarDayList", "Angular component (components)", "Picked day's events below 768 px")
+  Component(sk, "DelayedSkeleton", "Angular helper", "Skeleton chips after 300 ms")
+  Component(client, "HttpEventsApi", "Angular service behind EVENTS_API", "Typed client for /api/events/calendar")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "EventsController", "ASP.NET Core controller", "GET /api/events/calendar")
+  Component(validator, "GetMonthCalendarQueryValidator", "FluentValidation", "Month format and enum values")
+  Component(handler, "GetMonthCalendarQueryHandler", "MediatR handler", "Totals, counts, filters, days")
+  Component(clock, "SystemClock", "IClock", "Toronto date")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events indexed by status and start")
+
+Rel(page, store, "Reads and writes filters")
+Rel(page, layout, "Builds grid frame")
+Rel(page, grid, "Renders")
+Rel(page, daylist, "Renders picked day")
+Rel(page, sk, "Delays skeleton")
+Rel(page, client, "Requests month")
+Rel(client, ctrl, "GET /api/events/calendar", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates query")
+Rel(ctrl, handler, "Sends GetMonthCalendarQuery")
+Rel(handler, clock, "Reads today")
+Rel(handler, db, "Queries month's published events", "EF Core")
+@enduml

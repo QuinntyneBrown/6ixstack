@@ -1,0 +1,50 @@
+@startuml
+title UML sequence behaviour — Filter announcement and reduced motion
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventsPage" as page
+  participant "TopicChip" as chip
+  participant "ResultLine\n(aria-live polite)" as result
+  participant "MotionPreference" as motion
+  participant "EventMap" as map
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+actor -> chip : Space on "AI" chip
+chip --> actor : aria-pressed="true"; name "AI" beside the dot (L2-093)
+chip -> page : Topics changed
+page -> client : getUpcoming(filters, page 1)
+client -> controller : GET /api/events?topics=ai
+controller --> client : 200 UpcomingEventsDto
+client --> page : UpcomingEvents
+page -> result : Text "6 events · times in ET"
+result --> actor : Screen reader announces the new count (L2-093)
+page -> motion : reduced()
+alt reduced motion
+  motion --> page : true
+  page -> page : Scroll list to top with behavior 'auto' (L2-094)
+  page -> map : Update markers
+  map -> map : Apply without animated transitions (L2-094)
+else no preference
+  motion --> page : false
+  page -> page : Smooth scroll to top
+  page -> map : Update markers
+  map -> map : Animated transition
+end
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Organizer dashboard
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "OrganizerDashboardPage", "Angular page", "Stats, sortable events table, row actions, states")
+  Component(banner, "SubmissionBanner", "Angular component", "Maps a banner DTO to the Alert component")
+  Component(dismiss, "BannerDismissalStore", "Angular service", "Dismissed banner keys in localStorage")
+  Component(client, "HttpOrganizerEventsApi", "Angular service behind ORGANIZER_EVENTS_API", "Typed client for /api/organizer/events")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "OrganizerEventsController", "ASP.NET Core controller", "GET /api/organizer/events")
+  Component(policy, "OrganizerPolicy", "Authorization policy", "Requires an organizer session")
+  Component(handler, "GetOrganizerDashboardQueryHandler", "MediatR handler", "Scopes to the community, derives statuses, stats and banner")
+  Component(user, "ICurrentUser", "Application service", "Signed-in user identity")
+  Component(clock, "SystemClock", "IClock", "Current instant")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events, decisions, community organizers, users")
+
+Rel(page, client, "Requests the dashboard")
+Rel(page, banner, "Renders the selected banner")
+Rel(page, dismiss, "Filters and records dismissed banners")
+Rel(client, ctrl, "GET /api/organizer/events", "JSON/HTTPS")
+Rel(ctrl, policy, "Authorizes with")
+Rel(ctrl, handler, "Sends GetOrganizerDashboardQuery")
+Rel(handler, user, "Reads caller")
+Rel(handler, clock, "Reads now")
+Rel(handler, db, "Queries the community's events and decisions", "EF Core")
+@enduml

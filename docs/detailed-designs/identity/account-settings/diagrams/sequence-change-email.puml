@@ -1,0 +1,66 @@
+@startuml
+title UML sequence behaviour — Change and confirm the email address
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SettingsPage" as page
+  participant "HttpAccountApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "AccountController" as controller
+  participant "AuthController" as auth
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "UpdateAccountSettingsCommandHandler" as handler
+  participant "VerifyEmailCommandHandler" as verify
+  participant "SecurityTokenService" as tokens
+  participant "User" as user
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+  participant "OutboxProcessor" as outbox
+end box
+actor -> page : Enter new email, Save settings
+page -> client : saveSettings(email = new address)
+client -> controller : PUT /api/account/settings
+controller -> handler : Send UpdateAccountSettingsCommand
+handler -> user : RequestEmailChange(new address): PendingEmail set, Email unchanged (L2-068)
+handler -> tokens : Issue(new address, ChangeEmail, 24 hours) (L2-084)
+tokens --> handler : Plaintext once, SHA-256 hash on SecurityToken
+handler -> db : Save user, SecurityToken, confirmation email OutboxMessage in one unit of work
+db --> handler : Commit result
+handler --> controller : AccountSettingsSavedDto with PendingEmail
+controller --> client : 200 JSON
+client --> page : Saved
+page --> actor : "Settings saved"; pending address noted
+outbox -> db : Read pending OutboxMessages
+outbox -> outbox : Send confirmation to the new address, retry up to 5 attempts (L2-103)
+note over actor, db : Until confirmed, sign-in links still go to the old address (L2-068)
+actor -> auth : Open link: GET /auth/verify-email?token=...
+auth -> verify : Send VerifyEmailCommand
+verify -> tokens : Hash(token)
+verify -> db : Load SecurityToken by hash, purpose ChangeEmail
+alt missing, used, older than 24 hours, or no longer the PendingEmail (L2-084)
+  verify --> auth : Refused, nothing changes
+  auth --> actor : Redirect to failure page <TO SUPPLY>
+else valid
+  verify -> verify : Mark token used (L2-084)
+  verify -> user : ConfirmEmailChange(now): Email = PendingEmail (L2-068)
+  verify -> db : Save changes
+  verify --> auth : Confirmed
+  auth --> actor : Redirect to confirmation page <TO SUPPLY>
+end
+@enduml

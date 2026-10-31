@@ -1,0 +1,149 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — View a community
+
+package "SixStack.Domain" {
+  class Community {
+    +Guid Id
+    +string Slug
+    +string Name
+    +string Initials
+    +string City
+    +string Tagline
+    +string Description
+    +int MemberCount
+    +IReadOnlyCollection<Topic> Topics
+    +string? WebsiteUrl
+    +IReadOnlyCollection<CommunityLink> Links
+    +string? Cadence
+    +int? ActiveSinceYear
+    +string? PlacesLabel
+    +string? PlacesDetail
+    +string? PostingLead
+  }
+  class CommunityLink <<value object>> {
+    +string Label
+    +string Url
+  }
+  class CommunityOrganizer {
+    +Guid CommunityId
+    +Guid UserId
+    +string Role
+    +Guid? SpeakerId
+  }
+  class User {
+    +Guid Id
+    +string Name
+  }
+  class Event {
+    +Guid Id
+    +string Slug
+    +string Title
+    +Guid CommunityId
+    +DateTimeOffset StartsAtUtc
+    +DateTimeOffset EndsAtUtc
+    +EventStatus Status
+    +int GoingCount
+    +bool IsSoldOut
+    +IsPast(now: DateTimeOffset): bool
+  }
+}
+
+package "SixStack.Application" {
+  class GetCommunityQuery {
+    +string Slug
+  }
+  class GetCommunityQueryHandler {
+    +Handle(query: GetCommunityQuery): Task<CommunityDetailDto?>
+  }
+  class CommunityDetailDto {
+    +string Slug
+    +string Name
+    +string Initials
+    +string Tagline
+    +IReadOnlyList<Topic> Topics
+    +string About
+    +IReadOnlyList<DayGroupDto> Upcoming
+    +IReadOnlyList<PastEventDto> Past
+    +CommunityFactsDto Facts
+    +IReadOnlyList<OrganizerDto> Organizers
+  }
+  class DayGroupDto {
+    +DateOnly Date
+    +IReadOnlyList<EventSummaryDto> Events
+  }
+  class EventSummaryDto {
+    +string Slug
+    +string Title
+    +string StartTimeEt
+    +string LocationLabel
+    +string PriceLabel
+    +int GoingCount
+    +bool IsCancelled
+  }
+  class PastEventDto {
+    +string Slug
+    +string Title
+    +string DateLabel
+    +int AttendedCount
+  }
+  class CommunityFactsDto {
+    +string AudienceLabel
+    +string? CadenceLabel
+    +string? PlacesLabel
+    +string? PlacesDetail
+    +string? WebsiteLabel
+    +string? WebsiteUrl
+    +IReadOnlyList<LinkDto> Links
+    +string? PostingLeadLabel
+  }
+  class OrganizerDto {
+    +string Name
+    +string Initials
+    +string RoleLabel
+    +string? SpeakerSlug
+  }
+}
+
+package "sixstack (Angular)" {
+  class CommunityDetailPage {
+    +community: Signal<CommunityDetail | null>
+    +state: Signal<PageState>
+    +subscribe(): void
+    +retry(): void
+  }
+  interface CommunitiesApi {
+    +get(slug: string): Observable<CommunityDetail>
+  }
+  class HttpCommunitiesApi
+  class SubscribeFeedDialog {
+    +data: { communitySlug, communityName }
+  }
+}
+
+Community *-- "*" CommunityLink
+Community "1" *-- "*" CommunityOrganizer
+CommunityOrganizer "*" --> "1" User
+Event "*" --> "1" Community : CommunityId
+GetCommunityQueryHandler ..> GetCommunityQuery : handles
+GetCommunityQueryHandler ..> Community : reads
+GetCommunityQueryHandler ..> Event : reads
+GetCommunityQueryHandler ..> CommunityDetailDto : returns
+CommunityDetailDto "1" *-- "*" DayGroupDto
+DayGroupDto "1" *-- "*" EventSummaryDto
+CommunityDetailDto "1" *-- "*" PastEventDto
+CommunityDetailDto *-- CommunityFactsDto
+CommunityDetailDto "1" *-- "*" OrganizerDto
+HttpCommunitiesApi ..|> CommunitiesApi
+CommunityDetailPage ..> CommunitiesApi : COMMUNITIES_API
+CommunityDetailPage ..> SubscribeFeedDialog : opens via CDK Dialog
+@enduml

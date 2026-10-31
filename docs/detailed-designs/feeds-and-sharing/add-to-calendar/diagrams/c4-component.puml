@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Add an event to a personal calendar
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "EventDetailPage", "Angular page", "Add to my calendar and Update my calendar triggers")
+  Component(dialog, "AddToCalendarDialog", "CDK Dialog", "Four options, busy and failed states")
+  Component(links, "CalendarLinkBuilder", "Angular service", "Google Calendar and Outlook prefilled URLs")
+  Component(fmt, "TorontoTimeFormatter", "Angular service", "Event summary line in ET")
+  Component(client, "HttpEventsApi", "Angular service behind EVENTS_API", "downloadIcs(slug)")
+  Component(saver, "FileDownloader", "Angular service", "Saves a Blob as a file")
+  Component(toasts, "ToastService", "Angular service", "Download confirmation")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "EventsController", "ASP.NET Core controller", "GET /api/events/{slug}/ics, anonymous")
+  Component(handler, "GetEventIcsQueryHandler", "MediatR handler", "Loads a public event, writes one VEVENT")
+  Component(writer, "IcsWriter", "IIcsWriter, Infrastructure", "RFC 5545 single-event calendar")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events")
+
+Rel(page, dialog, "Dialog.open with EventDetail")
+Rel(dialog, fmt, "Formats summary line")
+Rel(dialog, links, "Builds Google and Outlook URLs")
+Rel(dialog, client, "Requests the .ics file")
+Rel(dialog, saver, "Saves the file")
+Rel(dialog, toasts, "Confirms the download")
+Rel(client, ctrl, "GET /api/events/{slug}/ics", "HTTPS")
+Rel(ctrl, handler, "Sends GetEventIcsQuery")
+Rel(handler, db, "Loads Published or Cancelled event", "EF Core")
+Rel(handler, writer, "WriteSingleEvent")
+@enduml

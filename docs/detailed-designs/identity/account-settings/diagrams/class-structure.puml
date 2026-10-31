@@ -1,0 +1,140 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Account settings
+
+package "SixStack.Domain" {
+  class User {
+    +Guid Id
+    +string Email
+    +string Name
+    +string? WebsiteUrl
+    +UserRole Role
+    +DateTimeOffset? EmailVerifiedAtUtc
+    +string? PendingEmail
+    +NotificationPreferences Preferences
+    +UpdateProfile(name: string, websiteUrl: string?): void
+    +SetPreferences(preferences: NotificationPreferences): void
+    +RequestEmailChange(newEmail: string): void
+    +ConfirmEmailChange(now: DateTimeOffset): void
+  }
+  class NotificationPreferences <<value object>> {
+    +bool EventDecisions
+    +bool Reports
+    +bool WeeklySummary
+    +bool FollowedCommunities
+    +{static} Default: NotificationPreferences
+  }
+  class Community {
+    +Guid Id
+    +string Slug
+    +string Name
+  }
+  class CommunityOrganizer {
+    +Guid CommunityId
+    +Guid UserId
+    +string Role
+  }
+  class SecurityToken {
+    +Guid Id
+    +string Email
+    +byte[] TokenHash
+    +TokenPurpose Purpose
+    +DateTimeOffset ExpiresAtUtc
+    +DateTimeOffset? UsedAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  class GetAccountSettingsQueryHandler {
+    +Handle(query: GetAccountSettingsQuery): Task<AccountSettingsDto>
+  }
+  class AccountSettingsDto {
+    +string Name
+    +string Email
+    +string? PendingEmail
+    +string? WebsiteUrl
+    +CommunitySummaryDto? Community
+    +int CoOrganizerCount
+    +NotificationPreferencesDto Preferences
+  }
+  class CommunitySummaryDto {
+    +string Slug
+    +string Name
+  }
+  class NotificationPreferencesDto {
+    +bool EventDecisions
+    +bool Reports
+    +bool WeeklySummary
+    +bool FollowedCommunities
+  }
+  class UpdateAccountSettingsCommand {
+    +string Name
+    +string Email
+    +string? WebsiteUrl
+    +NotificationPreferencesDto Preferences
+  }
+  class UpdateAccountSettingsCommandValidator
+  class UpdateAccountSettingsCommandHandler {
+    +Handle(command: UpdateAccountSettingsCommand): Task<AccountSettingsSavedDto>
+  }
+  class AccountSettingsSavedDto {
+    +DateTimeOffset SavedAtUtc
+    +string SavedAtEt
+    +string? PendingEmail
+  }
+  class VerifyEmailCommandHandler {
+    +Handle(command: VerifyEmailCommand): Task<VerifyEmailResult>
+  }
+  interface ISecurityTokenService {
+    +Issue(email: string, purpose: TokenPurpose, lifetime: TimeSpan): IssuedToken
+  }
+  interface IOutbox {
+    +Enqueue(type: string, payload: object): void
+  }
+}
+
+package "sixstack (Angular)" {
+  class SettingsPage {
+    +form: FormGroup<SettingsControls>
+    +state: Signal<SettingsState>
+    +save(): void
+    +retry(): void
+    +openSignOut(): void
+    +openDeleteAccount(): void
+  }
+  interface AccountApi {
+    +getSettings(): Observable<AccountSettings>
+    +saveSettings(request: UpdateAccountSettingsRequest): Observable<AccountSettingsSaved>
+    +deleteAccount(confirmEmail: string): Observable<void>
+  }
+  class HttpAccountApi
+}
+
+User *-- NotificationPreferences
+Community "1" *-- "*" CommunityOrganizer
+User "1" o-- "0..1" CommunityOrganizer
+GetAccountSettingsQueryHandler ..> User : reads
+GetAccountSettingsQueryHandler ..> CommunityOrganizer : counts co-organizers
+GetAccountSettingsQueryHandler ..> AccountSettingsDto : returns
+AccountSettingsDto *-- CommunitySummaryDto
+AccountSettingsDto *-- NotificationPreferencesDto
+UpdateAccountSettingsCommandValidator ..> UpdateAccountSettingsCommand : validates
+UpdateAccountSettingsCommandHandler ..> UpdateAccountSettingsCommand : handles
+UpdateAccountSettingsCommandHandler ..> User : mutates
+UpdateAccountSettingsCommandHandler ..> ISecurityTokenService
+UpdateAccountSettingsCommandHandler ..> IOutbox
+UpdateAccountSettingsCommandHandler ..> AccountSettingsSavedDto : returns
+VerifyEmailCommandHandler ..> SecurityToken : redeems ChangeEmail
+VerifyEmailCommandHandler ..> User : ConfirmEmailChange
+HttpAccountApi ..|> AccountApi
+SettingsPage ..> AccountApi : ACCOUNT_API
+@enduml

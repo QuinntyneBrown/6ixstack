@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Privacy and retention
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(basemap, "Map basemap provider", "<TO SUPPLY>")
+System_Ext(calendars, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+
+Rel(visitor, sixstack, "Browses without cookies; submits and reports with an email", "HTTPS")
+Rel(organizer, sixstack, "Signs in; sees reports without reporter identity", "HTTPS")
+Rel(moderator, sixstack, "Sees submitter and reporter emails", "HTTPS")
+Rel(visitor, basemap, "Loads map tiles, no cookies", "HTTPS")
+Rel(calendars, sixstack, "Fetches feeds without personal email", "HTTPS")
+@enduml

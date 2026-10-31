@@ -1,0 +1,131 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Cancel an event
+
+package "SixStack.Domain" {
+  enum EventStatus {
+    InReview
+    Published
+    Cancelled
+  }
+  class Event {
+    +Guid Id
+    +string Title
+    +Guid CommunityId
+    +Price Price
+    +string? TicketUrl
+    +EventStatus Status
+    +int GoingCount
+    +string? CancellationReason
+    +DateTimeOffset? CancelledAtUtc
+    +int Sequence
+    +Cancel(reason: string, now: DateTimeOffset): void
+    +RequiresTypedConfirmation(): bool
+    +IsPast(now: DateTimeOffset): bool
+  }
+  class Price <<value object>> {
+    +bool IsFree
+    +decimal? AmountCad
+  }
+  class EventNotCancellableException
+  class OutboxMessage {
+    +Guid Id
+    +string Type
+    +string Payload
+    +int AttemptCount
+    +DateTimeOffset NextAttemptAtUtc
+    +DateTimeOffset? ProcessedAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  class CancelEventCommand {
+    +Guid EventId
+    +string Reason
+    +bool NotifyAttendees
+    +string? ConfirmationName
+  }
+  class CancelEventCommandValidator
+  class CancelEventCommandHandler {
+    +Handle(command: CancelEventCommand): Task<Result<EventCancelledDto>>
+  }
+  class EventCancelledDto {
+    +EventStatus Status
+    +DateTimeOffset CancelledAtUtc
+    +bool EmailQueued
+  }
+  class EventCancelledEmail {
+    +Guid EventId
+    +string Reason
+  }
+  class EventAccessChecker {
+    +Check(event: Event): Task<AccessResult>
+  }
+  interface IAuditLog {
+    +Record(actorId: Guid, action: string, targetId: Guid, details: object): void
+  }
+  interface IOutbox {
+    +Enqueue(message: object, notBeforeUtc: DateTimeOffset?): void
+  }
+  interface IEmailSender {
+    +Send(message: EmailMessage): Task
+  }
+}
+
+package "SixStack.Infrastructure" {
+  class OutboxProcessor {
+    +ExecuteAsync(stoppingToken: CancellationToken): Task
+  }
+}
+
+package "sixstack (Angular)" {
+  class CancelEventDialog {
+    +data: CancelEventDialogData
+    +reason: FormControl<string>
+    +notifyAttendees: FormControl<boolean>
+    +confirmationName: FormControl<string>
+    +busy: Signal<boolean>
+    +failed: Signal<boolean>
+    +canConfirm: Signal<boolean>
+    +confirm(): void
+    +keep(): void
+  }
+  class CancelEventDialogData {
+    +string eventId
+    +string title
+    +boolean isPaid
+    +number goingCount
+  }
+  interface OrganizerEventsApi {
+    +cancelEvent(id: string, request: CancelEventRequest): Observable<EventCancelled>
+  }
+  class HttpOrganizerEventsApi
+}
+
+Event --> EventStatus
+Event *-- Price
+Event ..> EventNotCancellableException : throws
+CancelEventCommandHandler ..> CancelEventCommand : handles
+CancelEventCommandValidator ..> CancelEventCommand : validates
+CancelEventCommandHandler ..> EventAccessChecker
+CancelEventCommandHandler --> Event : loads / mutates
+CancelEventCommandHandler ..> IAuditLog
+CancelEventCommandHandler ..> IOutbox
+CancelEventCommandHandler ..> EventCancelledEmail : creates
+CancelEventCommandHandler ..> EventCancelledDto : returns
+IOutbox ..> OutboxMessage : persists
+OutboxProcessor ..> OutboxMessage : processes
+OutboxProcessor ..> IEmailSender
+HttpOrganizerEventsApi ..|> OrganizerEventsApi
+CancelEventDialog --> CancelEventDialogData
+CancelEventDialog ..> OrganizerEventsApi : ORGANIZER_EVENTS_API
+@enduml

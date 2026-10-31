@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Submit an event
+
+Person(visitor, "Visitor", "Anonymous developer submitting an event")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>; delivers confirmation and verification emails")
+
+Rel(visitor, sixstack, "Submits events for review using", "HTTPS")
+Rel(sixstack, email, "Sends confirmation and verification emails via", "<TO SUPPLY>")
+Rel(email, visitor, "Delivers emails to")
+@enduml

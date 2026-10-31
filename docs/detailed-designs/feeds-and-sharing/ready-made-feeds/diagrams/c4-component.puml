@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Ready-made calendar feeds
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "CalendarFeedsPage", "Angular page", "Ready-made list, builder host, How it works")
+  Component(catalogue, "READY_MADE_FEEDS", "TypeScript constant", "Names, descriptions and feed slugs")
+  Component(copier, "FeedLinkCopier", "Angular service", "Copies a feed link and raises the toast")
+  Component(toasts, "ToastService", "Angular service", "Success and danger toasts")
+  Component(client, "HttpFeedsApi", "Angular service behind FEEDS_API", "Typed client for /api/feeds")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "FeedsController", "ASP.NET Core controller", "GET /api/feeds, anonymous")
+  Component(handler, "GetReadyMadeFeedsQueryHandler", "MediatR handler", "Counts matching events per ready-made feed")
+  Component(srvcat, "ReadyMadeFeedCatalogue", "Application constant", "Ready-made feed keys and FeedSlug values")
+  Component(filter, "FeedEventFilter", "Application helper", "Narrows events to a FeedSlug")
+  Component(clock, "SystemClock", "IClock", "Current instant and Toronto date")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events indexed by status and start")
+
+Rel(page, catalogue, "Renders feeds from")
+Rel(page, client, "Requests counts")
+Rel(page, copier, "Copies a webcal link")
+Rel(copier, toasts, "Raises Feed link copied or Couldn't copy the link")
+Rel(client, ctrl, "GET /api/feeds", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetReadyMadeFeedsQuery")
+Rel(handler, srvcat, "Reads feed definitions")
+Rel(handler, filter, "Applies per feed")
+Rel(handler, clock, "Reads today")
+Rel(handler, db, "Counts published events", "EF Core")
+@enduml

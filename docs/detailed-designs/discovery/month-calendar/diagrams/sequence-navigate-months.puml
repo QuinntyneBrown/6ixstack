@@ -1,0 +1,58 @@
+@startuml
+title UML sequence behaviour — Navigate months and views
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "Angular Router" as router
+  participant "CalendarPage" as page
+  participant "MonthGrid" as grid
+  participant "CalendarDayList" as daylist
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+alt Next month, December 2026
+  actor -> page : Activate "Next month, December 2026"
+  page -> router : Set month=2026-12, keep format and topics (L2-026)
+else Previous month
+  actor -> page : Activate "Previous month, October 2026"
+  page -> router : Set month=2026-10 (L2-026)
+else Today
+  actor -> page : Activate Today
+  page -> router : Set month to current Toronto month, 2026-11 (L2-026)
+else deep link
+  actor -> router : Open /calendar?month=2026-12 (L2-026)
+end
+router -> page : month changed
+page --> actor : Heading "December 2026" announced politely (L2-026)
+page -> client : getMonth(month, filters)
+client -> controller : GET /api/events/calendar?month=...
+controller --> client : 200 MonthCalendarDto
+client --> page : MonthCalendar
+page -> grid : Render month (see load-month)
+opt List view
+  actor -> page : Activate List
+  page -> router : Navigate to / with the same format and topics (L2-026)
+end
+opt viewport below 768 px (L2-028)
+  grid --> actor : Day cells show topic dots instead of titles
+  actor -> grid : Tap November 5
+  grid -> page : dayPicked(2026-11-05)
+  page -> daylist : Render that day's events from the loaded month
+  daylist --> actor : List of the day's events with a link to each (L2-028)
+end
+@enduml

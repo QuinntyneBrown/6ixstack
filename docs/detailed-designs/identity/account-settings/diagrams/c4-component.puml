@@ -1,0 +1,35 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Account settings
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "SettingsPage", "Angular page", "Profile, switches, community; loading, error, invalid, saving, saved")
+  Component(client, "HttpAccountApi", "Angular service behind ACCOUNT_API", "Typed client for /api/account")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "AccountController", "ASP.NET Core controller", "GET and PUT /api/account/settings, OrganizerPolicy")
+  Component(query, "GetAccountSettingsQueryHandler", "MediatR handler", "Profile, preferences, community and co-organizer count")
+  Component(validator, "UpdateAccountSettingsCommandValidator", "FluentValidation", "Name, email, https website")
+  Component(handler, "UpdateAccountSettingsCommandHandler", "MediatR handler", "Saves profile and preferences, starts email change")
+  Component(tokens, "SecurityTokenService", "ISecurityTokenService", "24-hour ChangeEmail token stored as a hash")
+  Component(authCtrl, "AuthController", "ASP.NET Core controller", "GET /auth/verify-email")
+  Component(verify, "VerifyEmailCommandHandler", "MediatR handler", "Moves PendingEmail into Email")
+  Component(outbox, "OutboxProcessor", "Hosted service", "Sends outbox emails with retries")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Users, CommunityOrganizers, Communities, SecurityTokens, OutboxMessages")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(page, client, "Loads and saves settings")
+Rel(client, ctrl, "GET and PUT /api/account/settings", "JSON/HTTPS")
+Rel(ctrl, query, "Sends GetAccountSettingsQuery")
+Rel(ctrl, validator, "Validates command")
+Rel(ctrl, handler, "Sends UpdateAccountSettingsCommand")
+Rel(handler, tokens, "Issues ChangeEmail token")
+Rel(query, db, "Reads user and community", "EF Core")
+Rel(handler, db, "Writes user, token, outbox", "EF Core")
+Rel(authCtrl, verify, "Sends VerifyEmailCommand")
+Rel(verify, db, "Reads token, updates user", "EF Core")
+Rel(outbox, db, "Reads pending messages", "EF Core")
+Rel(outbox, email, "Sends emails", "<TO SUPPLY>")
+@enduml

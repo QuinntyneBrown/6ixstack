@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Reject a submission
+
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+Person(organizer, "Organizer", "Submitter of the event")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>; delivers rejection emails")
+
+Rel(moderator, sixstack, "Rejects a submission with a reason using", "HTTPS")
+Rel(sixstack, email, "Sends the reason and message via", "<TO SUPPLY>")
+Rel(email, organizer, "Delivers rejection email to")
+@enduml

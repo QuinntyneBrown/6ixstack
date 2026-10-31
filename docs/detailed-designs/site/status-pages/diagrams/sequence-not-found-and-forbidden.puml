@@ -1,0 +1,50 @@
+@startuml
+title UML sequence behaviour — Not-found and forbidden pages
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor or organizer" as actor
+participant "Web app host" as host
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "Router" as router
+  participant "EditEventPage" as page
+  participant "ApiErrorInterceptor" as interceptor
+  participant "StatusPageNavigator" as nav
+  participant "NotFoundPage / ForbiddenPage" as status
+  participant "SessionStore" as session
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "OrganizerEventsController" as controller
+  participant "CommunityMemberRequirement" as authz
+end box
+== Unknown route ==
+actor -> host : GET /evnts
+host -> host : Path matches no route pattern
+host --> actor : 404 with app shell (L2-076)
+router -> status : Wildcard route ** renders NotFoundPage
+status --> actor : "We can't find that page", Browse events, Open the calendar (L2-076)
+== Another community's event ==
+actor -> page : Open /organize/events/{id}/edit as Priya
+page -> interceptor : GET /api/organizer/events/{id}
+interceptor -> controller : HTTPS request with session cookie
+controller -> authz : Evaluate community membership
+authz --> controller : Fail: owned by Azure Toronto
+controller --> interceptor : 403 problem+json with ownerName, resourceTitle
+interceptor --> page : ApiError Forbidden
+page -> nav : forbidden(error)
+nav -> status : Render ForbiddenPage, URL kept (skipLocationChange)
+status -> session : Signed-in email and community
+session --> status : priya@gtaazure.ca, GTA Azure Community
+status --> actor : "You can't edit this event", owner and signed-in account named (L2-076)
+@enduml

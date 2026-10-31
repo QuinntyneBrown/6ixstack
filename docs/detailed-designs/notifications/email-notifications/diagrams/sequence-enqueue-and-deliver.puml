@@ -1,0 +1,73 @@
+@startuml
+title UML sequence behaviour — Enqueue and deliver a notification email
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as visitor
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ReportsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "ReportProblemCommandHandler" as handler
+  participant "NotificationPublisher" as publisher
+  participant "NotificationEmailPolicy" as policy
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "Outbox" as outbox
+  database "6ixstack database" as db
+  participant "OutboxProcessor" as processor
+  participant "NotificationEmailHandler" as emailHandler
+  participant "RetrySchedule" as retry
+  participant "SmtpEmailSender" as sender
+end box
+participant "Email provider" as provider
+actor "Organizer" as organizer
+visitor -> controller : POST /api/events/{slug}/reports
+controller -> handler : Send ReportProblemCommand
+handler -> publisher : Publish(ReportFiled, CommunityOrganizers)
+publisher -> db : Add Notification for each organizer
+publisher -> policy : Consider(notification, organizer)
+policy -> policy : ReportFiled maps to ProblemReports
+alt ProblemReports on (default on) (L2-067)
+  policy -> outbox : Enqueue(NotificationEmail, payload without reporter identity) (L2-099)
+  outbox -> db : Add OutboxMessage, NextAttemptAtUtc = now
+else ProblemReports off
+  policy --> publisher : No email
+end
+handler -> db : SaveChanges: report, notification, outbox message in one unit of work
+handler --> controller : Report stored
+controller --> visitor : 201, without waiting for email (L2-103)
+== Background, within 5 minutes of the report (L2-067) ==
+processor -> db : Claim due messages
+db --> processor : NotificationEmail message
+processor -> emailHandler : Handle(message)
+emailHandler -> db : Reload organizer, skip if deleted, re-check ProblemReports
+emailHandler -> sender : Send(rendered EmailMessage)
+sender -> provider : Submit email
+alt accepted
+  provider --> sender : Accepted
+  processor -> db : ProcessedAtUtc = now
+  provider -> organizer : Deliver email
+else provider failure
+  provider --> sender : Error or timeout
+  sender --> emailHandler : Exception
+  processor -> retry : NextAttempt(AttemptCount, now)
+  retry --> processor : Exponential backoff time
+  processor -> db : AttemptCount + 1, NextAttemptAtUtc, LastError (L2-103)
+  note over db : In-app notification is unchanged (L2-067)
+  opt AttemptCount reaches 5
+    processor -> processor : Stop retrying and log error with message id (L2-103)
+  end
+end
+@enduml

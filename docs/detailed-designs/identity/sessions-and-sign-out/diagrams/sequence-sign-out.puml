@@ -1,0 +1,60 @@
+@startuml
+title UML sequence behaviour — Sign out of this device
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SettingsPage" as page
+  participant "SignOutDialog" as dialog
+  participant "SessionStore" as store
+  participant "HttpAuthApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "AuthController" as controller
+  participant "SessionCookie" as cookie
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "SignOutCommandHandler" as handler
+  participant "Session" as session
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Sign out
+page -> dialog : Dialog.open(SignOutDialog)
+dialog --> actor : "Sign out of 6ixstack?", new email link needed, other devices stay signed in; focus on "Stay signed in" (L2-049)
+alt Stay signed in or Escape
+  actor -> dialog : Stay signed in
+  dialog --> page : Closed, nothing changes
+else confirm
+  actor -> dialog : Sign out
+  dialog -> dialog : Button "Signing out…", both buttons disabled, disableClose on (L2-049)
+  dialog -> client : signOut()
+  client -> controller : POST /api/auth/sign-out with cookie and X-XSRF-TOKEN (L2-083)
+  controller -> handler : Send SignOutCommand
+  handler -> db : Load current Session by ICurrentUser.SessionId
+  db --> handler : Session
+  handler -> session : Revoke(now): this session only (L2-048, L2-049)
+  handler -> db : Save changes
+  db --> handler : Commit result
+  handler --> controller : Done
+  controller -> cookie : Clear()
+  controller --> client : 204 No Content
+  client --> dialog : Done
+  dialog -> store : clear()
+  dialog --> actor : Events page opens; header shows no account controls (L2-049)
+  note right of session : Sessions on other devices keep RevokedAtUtc empty and stay valid (L2-049)
+end
+@enduml

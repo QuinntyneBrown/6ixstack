@@ -1,0 +1,67 @@
+@startuml
+title UML sequence behaviour — Request a sign-in link
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SignInPage" as page
+  participant "ResendCountdown" as countdown
+  participant "HttpAuthApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "AuthController" as controller
+  participant "RateLimiter" as limiter
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "RequestSignInLinkCommandHandler" as handler
+  participant "SecurityTokenService" as tokens
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+  participant "OutboxProcessor" as outbox
+end box
+actor -> page : Enter email, "Email me a sign-in link"
+alt malformed, for example "priya@gtaazure"
+  page --> actor : Summary "Check your email address", inline "Enter an email address like name@example.com.", input kept (L2-046)
+else well-formed
+  page -> page : Field read-only, button "Sending link…" (L2-046)
+  page -> page : Store address in localStorage sx.sign-in.email
+  page -> client : requestSignInLink(email, returnUrl)
+  client -> controller : POST /api/auth/sign-in-links
+  controller -> limiter : 5 per hour per email, 20 per hour per IP (L2-082)
+  alt limit exceeded
+    limiter --> client : 429 with Retry-After, no email sent
+    client --> page : Error
+    page --> actor : Plain-language error, input kept (L2-082)
+  else within limit
+    controller -> handler : Send RequestSignInLinkCommand
+    handler -> handler : Normalize email; validate ReturnUrl is a local path
+    handler -> tokens : Issue(email, SignIn, 15 minutes)
+    tokens --> handler : 256-bit plaintext once, SHA-256 hash on SecurityToken (L2-084)
+    handler -> db : Add SecurityToken and sign-in email OutboxMessage
+    note right of handler : Same work whether or not a User exists (L2-046)
+    handler -> db : Save changes in one unit of work
+    db --> handler : Commit result
+    handler --> controller : Done
+    controller --> client : 202 Accepted, empty body (L2-046)
+    client --> page : Done
+    page -> countdown : start(30)
+    page --> actor : "Check your inbox", address named, works once, expires in 15 minutes (L2-046)
+    countdown --> page : "Resend link" disabled with countdown for 30 s (L2-046)
+  end
+end
+outbox -> db : Read pending OutboxMessages
+outbox -> outbox : Send through IEmailSender to the email provider, retry up to 5 attempts (L2-103)
+@enduml

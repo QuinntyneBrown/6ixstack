@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Observability
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(maintainer, "Maintainer", "Operates 6ixstack; reads logs and health")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+System_Ext(logs, "Log store", "<TO SUPPLY>")
+
+Rel(visitor, sixstack, "Sees plain-language failures and reference codes", "HTTPS")
+Rel(organizer, sixstack, "Completes actions while background work retries", "HTTPS")
+Rel(maintainer, logs, "Searches by correlation id or reference code")
+Rel(maintainer, sixstack, "Probes /health/live and /health/ready", "HTTPS")
+Rel(sixstack, logs, "Emits structured JSON logs", "<TO SUPPLY>")
+Rel(sixstack, email, "Sends email with retries", "<TO SUPPLY>")
+@enduml

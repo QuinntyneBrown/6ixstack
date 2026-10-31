@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — View event detail
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Event detail page, alerts, docked bar")
+  Container(api, "6ixstack API", "ASP.NET Core", "Public event detail query and page rules")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events, agenda, speakers, communities")
+}
+System_Ext(ticketing, "Ticketing and streaming sites", "Organizer-owned links")
+
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/events/{slug}", "JSON/HTTPS")
+Rel(api, db, "Reads event with related data", "EF Core")
+Rel(visitor, ticketing, "Follows ticket and stream links", "HTTPS, new tab")
+@enduml

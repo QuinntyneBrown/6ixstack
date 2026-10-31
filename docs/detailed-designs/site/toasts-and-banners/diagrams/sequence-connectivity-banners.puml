@@ -1,0 +1,62 @@
+@startuml
+title UML sequence behaviour — Connectivity banners
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+participant "Browser" as browser
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ConnectivityService" as conn
+  participant "SavedEventsStore" as saved
+  participant "BannerService" as banners
+  participant "SiteHeader" as header
+  participant "EventsPage" as page
+  participant "ApiErrorInterceptor" as interceptor
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "HealthChecks" as health
+end box
+== Offline ==
+browser -> conn : offline event
+conn -> saved : savedAt
+saved --> conn : 9:42 AM
+conn -> banners : set(connectivity, warning "You're offline", not dismissable, role=status) (L2-075)
+conn -> header : online = false
+header --> actor : Submit event and feed actions disabled (L2-075)
+banners --> actor : "Showing events saved at 9:42 AM. Submitting and feeds need a connection."
+== Back online ==
+browser -> conn : online event
+conn -> banners : clear(connectivity)
+conn -> page : Refresh current list
+page --> conn : Events refreshed at 10:14 AM
+conn -> banners : set(connectivity, success "You're back online", "up to date as of 10:14 AM") (L2-075)
+conn -> header : online = true
+== API unreachable ==
+interceptor -> conn : reportNoResponse() while online
+conn -> banners : set(connectivity, danger "We can't reach 6ixstack", Retry now, role=alert, not dismissable) (L2-075)
+loop every 30 s until reachable (L2-075)
+  conn -> health : GET /health/live
+  alt no response
+    conn -> conn : Keep banner, schedule next probe
+  else 200 Healthy
+    conn -> banners : clear(connectivity)
+    conn -> page : Refresh current list
+  end
+end
+opt Retry now
+  actor -> banners : Retry now
+  banners -> conn : retryNow()
+  conn -> health : GET /health/live at once, restart 30 s timer (L2-075)
+end
+@enduml

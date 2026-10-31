@@ -1,0 +1,61 @@
+@startuml
+title UML sequence behaviour — Search, filter and sort communities
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "CommunitiesPage" as page
+  participant "Router" as router
+  participant "HttpCommunitiesApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "CommunitiesController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetCommunitiesQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Choose City Mississauga, Sort Most members, search "azure"
+page -> router : Write q, city and sort to the URL query string (L2-005, L2-029)
+page -> client : list(query, page 1)
+client -> controller : GET /api/communities?q=azure&city=Mississauga&sort=members
+controller -> controller : Validate query, search capped at 100 characters (L2-081)
+controller -> handler : Send GetCommunitiesQuery
+handler -> db : Count all listed communities
+db --> handler : ListedTotal
+handler -> db : Match name or topic name, topic, city (L2-029)
+db --> handler : Matching communities and MatchCount
+handler -> db : Earliest upcoming published event per community
+db --> handler : Next events
+handler -> handler : Sort by members, next event or A–Z; ties by name (L2-029)
+handler -> handler : Audience label "members", or "followers" when streaming-only (L2-029)
+handler -> handler : Take first 10 cards (L2-029)
+handler --> controller : CommunityDirectoryDto
+controller --> client : 200 JSON
+client --> page : CommunityDirectory
+alt MatchCount is 0 and search text present
+  page --> actor : "No communities match “azure”" with Clear search and List a meetup; lead "0 of 86 communities match." (L2-030)
+else MatchCount is 0 and a city is selected
+  page --> actor : "No communities in Mississauga yet" with List your community and See all of the GTA (L2-030)
+else matches
+  page --> actor : Cards and polite caption "Showing 10 of N communities" (L2-029, L2-093)
+end
+opt visitor activates anywhere on a card
+  actor -> page : Click card
+  page -> router : Navigate to /communities/{slug} (L2-029)
+end
+@enduml

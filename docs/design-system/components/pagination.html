@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pagination — 6ixstack design system</title>
+<meta name="description" content="Load more for browse lists and numbered pagination for queues, with counts, busy and complete states.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Navigation</p>
+      <h1>Pagination</h1>
+      <p class="ds-lead">Pagination moves through long result sets: load more for browsing lists, numbered pages where position matters.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill"><code>&lt;nav&gt;</code> + <code>&lt;button&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+<p>Pagination moves through a long result set in pages. 6ixstack's lists (events, communities, speakers) are browsed top to bottom, so the mocks use <b>load more</b>: a count of what is shown and a button that appends the next 20. Numbered pagination is the core-set variant for places where position matters and people return to a page, such as the review queue or an organizer's past events.</p>
+<ul><li>Use <b>load more</b> on public browse lists; it keeps the map and filters in place and the scroll position stable.</li>
+<li>Use <b>numbered</b> pages for work queues and tables where people need "page 4" to mean the same rows tomorrow.</li>
+<li>Never use infinite scroll: the footer (code of conduct, calendar feeds, organizer sign in) must stay reachable.</li></ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+<div class="ds-anatomy"><figure class="ds-anatomy__figure"><div class="stack"><nav aria-label="Pagination"><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Previous page"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 1">1</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 2">2</a></li><li><a href="../../mocks/pages/communities/default.html" aria-current="page" aria-label="Page 3">3</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 4">4</a></li><li><span class="pagination__gap" aria-hidden="true">…</span></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 7">7</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Next page"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></a></li></ul></nav><div class="load-more" style="margin-top: 0;"><p class="text-caption" role="status">Showing 10 of 86 communities</p><button class="btn" type="button">Show 20 more</button></div></div>
+<span class="ds-callout" style="left: 14%; top: 14%;" aria-hidden="true">1</span><span class="ds-callout" style="left: 44%; top: 14%;" aria-hidden="true">2</span><span class="ds-callout" style="left: 50%; top: 58%;" aria-hidden="true">3</span><span class="ds-callout" style="left: 50%; top: 84%;" aria-hidden="true">4</span></figure>
+<ol class="ds-anatomy__list"><li><div><b>Previous / next</b><small>32px icon links named "Previous page" / "Next page"; <code>aria-disabled</code> at the ends.</small></div></li>
+<li><div><b>Page links and current page</b><small>32px min-width; current has <code>aria-current="page"</code>, an accent-subtle fill and an accent edge. Gaps are "…".</small></div></li>
+<li><div><b>Result count</b><small>Caption text in a <code>role="status"</code> region: "Showing 10 of 86 communities".</small></div></li>
+<li><div><b>Load more button</b><small>Secondary button, "Show 20 more"; busy while the next page loads.</small></div></li></ol></div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+<div class="ds-example"><div class="ds-example__canvas"><div class="load-more" style="margin-top: 0;"><p class="text-caption" role="status">Showing 10 of 86 communities</p><button class="btn" type="button">Show 20 more</button></div></div><div class="ds-example__caption"><span>Load more: public lists (communities, speakers, long event lists).</span></div><details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="load-more" style="margin-top: 0;"&gt;&lt;p class="text-caption" role="status"&gt;Showing 10 of 86 communities&lt;/p&gt;&lt;button class="btn" type="button"&gt;Show 20 more&lt;/button&gt;&lt;/div&gt;</code></pre></details></div>
+<div class="ds-example"><div class="ds-example__canvas"><nav aria-label="Pagination"><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Previous page"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 1">1</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 2">2</a></li><li><a href="../../mocks/pages/communities/default.html" aria-current="page" aria-label="Page 3">3</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 4">4</a></li><li><span class="pagination__gap" aria-hidden="true">…</span></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 7">7</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Next page"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></a></li></ul></nav></div><div class="ds-example__caption"><span>Numbered: queues and tables.</span></div><details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;nav aria-label="Pagination"&gt;&lt;ul class="pagination"&gt;&lt;li&gt;&lt;a href="../../mocks/pages/communities/default.html" aria-label="Previous page"&gt;&lt;svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="m15 18-6-6 6-6"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="../../mocks/pages/communities/default.html" aria-label="Page 1"&gt;1&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="../../mocks/pages/communities/default.html" aria-label="Page 2"&gt;2&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="../../mocks/pages/communities/default.html" aria-current="page" aria-label="Page 3"&gt;3&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="../../mocks/pages/communities/default.html" aria-label="Page 4"&gt;4&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;span class="pagination__gap" aria-hidden="true"&gt;…&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="../../mocks/pages/communities/default.html" aria-label="Page 7"&gt;7&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="../../mocks/pages/communities/default.html" aria-label="Next page"&gt;&lt;svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="m9 18 6-6-6-6"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/nav&gt;</code></pre></details></div>
+<div class="ds-example"><div class="ds-example__canvas"><nav aria-label="Pagination (simple)"><ul class="pagination"><li><a href="../../mocks/pages/speakers/default.html" style="padding-inline: var(--space-3);"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>Previous</a></li><li><span class="text-caption">Page 2 of 5</span></li><li><a href="../../mocks/pages/speakers/default.html" style="padding-inline: var(--space-3);">Next<svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></a></li></ul></nav></div><div class="ds-example__caption"><span>Simple: previous / next with a page count, for short series.</span></div></div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="Pagination controls are one size: 32px page links, and the load-more button uses the medium button."><h2><a href="#sizes">Sizes</a></h2>
+
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+<div class="ds-matrix"><table><thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled / busy</th><th scope="col">Current / complete</th></tr></thead><tbody><tr><th scope="row">Page link</th><td><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 4">4</a></li></ul></td><td><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 4" data-state="hover">4</a></li></ul></td><td><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 4" data-state="focus">4</a></li></ul></td><td><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 4" data-state="active">4</a></li></ul></td><td><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Previous page" aria-disabled="true"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></a></li></ul></td><td><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 3" aria-current="page">3</a></li></ul></td></tr><tr><th scope="row">Load more</th><td><button class="btn" type="button">Show 20 more</button></td><td><button class="btn" type="button" data-state="hover">Show 20 more</button></td><td><button class="btn" type="button" data-state="focus">Show 20 more</button></td><td><button class="btn" type="button" data-state="active">Show 20 more</button></td><td><button class="btn" type="button" aria-busy="true">Show 20 more</button></td><td><span class="text-caption">Showing all 86 communities</span></td></tr></tbody></table></div>
+<h3>Both themes</h3><div class="ds-themes"><div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><nav aria-label="Pagination theme example"><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Previous page"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 1">1</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 2">2</a></li><li><a href="../../mocks/pages/communities/default.html" aria-current="page" aria-label="Page 3">3</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 4">4</a></li><li><span class="pagination__gap" aria-hidden="true">…</span></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 7">7</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Next page"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></a></li></ul></nav><div class="load-more" style="margin-top: 0;"><p class="text-caption" role="status">Showing 10 of 86 communities</p><button class="btn" type="button">Show 20 more</button></div></div></div><div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><nav aria-label="Pagination theme example"><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Previous page"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 1">1</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 2">2</a></li><li><a href="../../mocks/pages/communities/default.html" aria-current="page" aria-label="Page 3">3</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 4">4</a></li><li><span class="pagination__gap" aria-hidden="true">…</span></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 7">7</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Next page"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></a></li></ul></nav><div class="load-more" style="margin-top: 0;"><p class="text-caption" role="status">Showing 10 of 86 communities</p><button class="btn" type="button">Show 20 more</button></div></div></div></div>
+<ul><li><b>Busy</b>: the load-more button sets <code>aria-busy="true"</code>; when rows arrive, the count updates in its live region and focus moves to the first new row.</li>
+<li><b>Complete</b>: when everything is shown the button is removed and the count reads "Showing all 86 communities".</li></ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive</a></h2>
+<ul><li>Below 640px numbered pagination shows previous, current and next only, plus first and last with gaps; never more than seven slots.</li>
+<li>The load-more block is centred under the list at every width, with <code>--space-8</code> above it.</li>
+<li>In the Events page's list-plus-map layout, load more belongs to the list column so the map stays put.</li></ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+<p>Page links read <code>--color-fg-muted</code>, <code>--color-bg-subtle</code> (hover) and, when current, <code>--color-accent-subtle</code> fill, <code>--color-fg-accent</code> label and <code>--color-accent</code> edge. The load-more button uses the secondary <a href="button.html">button</a> tokens.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+<h3>Role and pattern</h3><p><code>&lt;nav aria-label="Pagination"&gt;</code> around a list of links; the current page has <code>aria-current="page"</code>. Load more is a native <code>&lt;button&gt;</code> plus a polite <code>role="status"</code> count; there is no APG widget pattern for either.</p><h3>Keyboard</h3><table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody><tr><td><kbd>Tab</kbd></td><td>Moves through previous, page links, next (disabled ends are skipped via <code>aria-disabled</code> plus <code>tabindex="-1"</code>).</td></tr><tr><td><kbd>Enter</kbd></td><td>Follows a page link.</td></tr><tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>On load more, fetches the next rows and moves focus to the first new one.</td></tr></tbody></table><h3>Focus</h3><p>Shared focus ring. After load more, focus goes to the first appended row so keyboard users do not have to Tab through everything already read.</p><h3>Labelling</h3><p>Page links are named "Page 4"; arrows "Previous page" / "Next page". The count is a live region so "Showing 30 of 86 communities" is announced after loading.</p><h3>Contrast</h3><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);"><div class="ds-pair"><span>Page number on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div><div class="ds-pair"><span>Current page label</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-accent-subtle" data-min="4.5"></span></div><div class="ds-pair"><span>Current page edge</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div><div class="ds-pair"><span>Count caption on page</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-canvas" data-min="4.5"></span></div></div><h3>Motion</h3><p>No animation; the button's busy spinner keeps turning under reduced motion because it reports status.</p><h3>Touch</h3><p>Page links are 32px squares with 4px gaps (above 24px minimum); on phones prefer load more, whose button is 40px tall.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+<ul><li>Count format: "Showing 10 of 86 communities"; add the date bound when filtered by time: "Showing 14 of 61 events through December 31".</li>
+<li>Button: "Show 20 more", naming the batch size, never "Load more…" or "See all".</li><li>Use the noun of the list ("communities", "speakers", "events").</li></ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+<div class="ds-dodont"><figure class="ds-do"><div class="ds-example__canvas"><div class="load-more" style="margin-top: 0;"><p class="text-caption" role="status">Showing 10 of 86 communities</p><button class="btn" type="button">Show 20 more</button></div></div><figcaption>Say how many are shown out of the total, and how many the button adds.</figcaption></figure><figure class="ds-dont"><div class="ds-example__canvas"><div class="load-more" style="margin-top: 0;"><button class="btn" type="button">Load more</button></div></div><figcaption>Offer a bare "Load more" with no count; people cannot tell whether two or two hundred results remain.</figcaption></figure><figure class="ds-do"><div class="ds-example__canvas"><nav aria-label="Example do"><ul class="pagination"><li><a href="../../mocks/pages/communities/default.html" aria-label="Previous page"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 1">1</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 2">2</a></li><li><a href="../../mocks/pages/communities/default.html" aria-current="page" aria-label="Page 3">3</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 4">4</a></li><li><span class="pagination__gap" aria-hidden="true">…</span></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Page 7">7</a></li><li><a href="../../mocks/pages/communities/default.html" aria-label="Next page"><svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></a></li></ul></nav></div><figcaption>Mark the current page with <code>aria-current</code> and name every link "Page n".</figcaption></figure><figure class="ds-dont"><div class="ds-example__canvas"><div class="text-caption">Scroll to load more events…</div></div><figcaption>Use infinite scroll on the Events list: the footer with calendar feeds and the code of conduct becomes unreachable.</figcaption></figure></div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+<div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead><tbody><tr><td>Page link</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr><tr><td>Hover fill</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr><tr><td>Current fill</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr><tr><td>Current label</td><td><code>--color-fg-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td></tr><tr><td>Current edge</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr><tr><td>Count caption</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr><tr><td>Link size</td><td><code>--control-height-sm</code></td><td colspan="2"><span data-token="--control-height-sm"></span></td></tr><tr><td>Radius</td><td><code>--radius-md</code></td><td colspan="2"><span data-token="--radius-md"></span></td></tr><tr><td>Load-more gap / top margin</td><td><code>--space-3</code> / <code>--space-8</code></td><td colspan="2"><span data-token="--space-3"></span> / <span data-token="--space-8"></span></td></tr></tbody></table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+<pre><code>&lt;div class="load-more"&gt;&lt;p class="text-caption" role="status"&gt;Showing 10 of 86 communities&lt;/p&gt;&lt;button class="btn" type="button"&gt;Show 20 more&lt;/button&gt;&lt;/div&gt;
+
+&lt;nav aria-label="Pagination"&gt;&lt;ul class="pagination"&gt;&lt;li&gt;&lt;a href="/pages/communities/default.html" aria-label="Previous page"&gt;&lt;svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="m15 18-6-6 6-6"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="/pages/communities/default.html" aria-label="Page 1"&gt;1&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="/pages/communities/default.html" aria-label="Page 2"&gt;2&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="/pages/communities/default.html" aria-current="page" aria-label="Page 3"&gt;3&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="/pages/communities/default.html" aria-label="Page 4"&gt;4&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;span class="pagination__gap" aria-hidden="true"&gt;…&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="/pages/communities/default.html" aria-label="Page 7"&gt;7&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="/pages/communities/default.html" aria-label="Next page"&gt;&lt;svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="m9 18 6-6-6-6"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/nav&gt;</code></pre><table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody><tr><td><code>.load-more</code></td><td>Centred count + button block.</td></tr><tr><td><code>role="status"</code> on the count</td><td>Announces the new count after loading.</td></tr><tr><td><code>.pagination</code></td><td>Numbered page list.</td></tr><tr><td><code>aria-current="page"</code></td><td>Current page.</td></tr><tr><td><code>aria-disabled="true"</code></td><td>Previous/next at the ends.</td></tr><tr><td><code>.pagination__gap</code></td><td>"…" between non-adjacent pages.</td></tr></tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+<p>Extracted from these mocks:</p><ul><li><a href="../../mocks/pages/communities/default.html">pages/communities/default</a> ("Showing 10 of 86 communities" + Show 20 more)</li><li><a href="../../mocks/pages/speakers/default.html">pages/speakers/default</a> (load more on the speakers directory)</li><li><a href="../../mocks/pages/events/long.html">pages/events/long</a> (load more in the list column beside the map)</li><li><a href="../../mocks/pages/review-queue/default.html">pages/review-queue/default</a> (work queue where numbered pages apply)</li></ul><p>Drift fixed during extraction:</p><ul><li>The mocks' count paragraph was not a live region; the system makes it <code>role="status"</code> so the new count is announced.</li><li>Numbered pagination and its gap marker are core-set additions; no mock uses them yet.</li></ul>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

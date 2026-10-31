@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Sessions, sign-out and the signed-in header
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Route guard, signed-in header, sign-out dialog")
+  Container(api, "6ixstack API", "ASP.NET Core", "Session authentication, current user, sign-out")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Users, sessions, notifications")
+}
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/auth/me, POST /api/auth/sign-out, session cookie", "JSON/HTTPS")
+Rel(api, db, "Reads and updates sessions", "EF Core")
+@enduml

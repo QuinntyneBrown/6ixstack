@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Time zones
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(calendars, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+
+Rel(visitor, sixstack, "Reads event times in Toronto time (ET)", "HTTPS")
+Rel(organizer, sixstack, "Enters start and end in a source time zone", "HTTPS")
+Rel(calendars, sixstack, "Fetches feeds with UTC instants", "HTTPS")
+@enduml

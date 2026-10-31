@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — About and Code of Conduct pages
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+
+Rel(visitor, sixstack, "Reads About, live stats and the Code of Conduct using", "HTTPS")
+@enduml

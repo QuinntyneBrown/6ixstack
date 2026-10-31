@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avatar — 6ixstack design system</title>
+<meta name="description" content="Avatars show a person by their initials; logo tiles show a community or a feed. Both sit beside a name and are decorative.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Avatar</h1>
+      <p class="ds-lead">Avatars show a person by their initials; logo tiles show a community or a feed. Both sit beside a name and are decorative.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Initials, image, icon</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li></ul>
+    </header>
+
+<section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+<p>Use an avatar for a speaker, organizer or signed-in member; use a logo tile (rounded square) for a community, an organization or a feed. 6ixstack does not collect photos at launch, so initials are the default; the image variant is ready for speaker headshots.</p>
+</section>
+<section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+<div class="ds-anatomy"><figure class="ds-anatomy__figure"><span class="avatar avatar--xl" aria-hidden="true">PN</span><span class="logo-tile logo-tile--lg" aria-hidden="true">GA</span>
+<span class="ds-callout" style="left: 18%; top: 15%;" aria-hidden="true">1</span><span class="ds-callout" style="left: 32%; top: 50%;" aria-hidden="true">2</span><span class="ds-callout" style="left: 70%; top: 15%;" aria-hidden="true">3</span></figure>
+<ol class="ds-anatomy__list"><li><div><b>Circle</b><small><code>--radius-full</code>; people only.</small></div></li><li><div><b>Initials</b><small>Two letters, first and last name, label font scaled with the size.</small></div></li><li><div><b>Logo tile</b><small>Rounded square (<code>--radius-md</code>, <code>--radius-lg</code> at large) for communities and feeds; initials or an icon.</small></div></li></ol></div>
+</section>
+<section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+<div class="ds-example">
+<div class="ds-example__canvas">
+<span class="avatar" aria-hidden="true">PN</span><span class="avatar" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/></svg></span><span class="logo-tile" aria-hidden="true">TD</span><span class="logo-tile" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></span><div class="avatar-group"><span class="avatar avatar--sm" aria-hidden="true">PN</span><span class="avatar avatar--sm" aria-hidden="true">MB</span><span class="avatar avatar--sm" aria-hidden="true">AR</span><span class="avatar avatar--sm" aria-hidden="true">+4</span></div>
+</div>
+<div class="ds-example__caption"><span>Initials, icon fallback, logo tile with initials, logo tile with icon, overlapping group with overflow count.</span></div>
+<details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span class="avatar" aria-hidden="true"&gt;PN&lt;/span&gt;&lt;span class="avatar" aria-hidden="true"&gt;&lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/&gt;&lt;circle cx="9" cy="7" r="4"/&gt;&lt;path d="M22 21v-2a4 4 0 0 0-3-3.87"/&gt;&lt;path d="M16 3.128a4 4 0 0 1 0 7.744"/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;span class="logo-tile" aria-hidden="true"&gt;TD&lt;/span&gt;&lt;span class="logo-tile" aria-hidden="true"&gt;&lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="M4 11a9 9 0 0 1 9 9"/&gt;&lt;path d="M4 4a16 16 0 0 1 16 16"/&gt;&lt;circle cx="5" cy="19" r="1"/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;div class="avatar-group"&gt;&lt;span class="avatar avatar--sm" aria-hidden="true"&gt;PN&lt;/span&gt;&lt;span class="avatar avatar--sm" aria-hidden="true"&gt;MB&lt;/span&gt;&lt;span class="avatar avatar--sm" aria-hidden="true"&gt;AR&lt;/span&gt;&lt;span class="avatar avatar--sm" aria-hidden="true"&gt;+4&lt;/span&gt;&lt;/div&gt;</code></pre></details>
+</div>
+</section>
+<section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+<div class="ds-example">
+<div class="ds-example__canvas">
+<span class="avatar avatar--sm" aria-hidden="true">PN</span><span class="avatar" aria-hidden="true">PN</span><span class="avatar avatar--lg" aria-hidden="true">PN</span><span class="avatar avatar--xl" aria-hidden="true">PN</span><span class="logo-tile" aria-hidden="true">GA</span><span class="logo-tile logo-tile--lg" aria-hidden="true">GA</span>
+</div>
+<div class="ds-example__caption"><span>Avatar 32 / 40 / 56 / 80px; logo tile 44 / 72px. Small in dense lists and the header, xl on speaker profiles, large tile on community pages.</span></div>
+<details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span class="avatar avatar--sm" aria-hidden="true"&gt;PN&lt;/span&gt;&lt;span class="avatar" aria-hidden="true"&gt;PN&lt;/span&gt;&lt;span class="avatar avatar--lg" aria-hidden="true"&gt;PN&lt;/span&gt;&lt;span class="avatar avatar--xl" aria-hidden="true"&gt;PN&lt;/span&gt;&lt;span class="logo-tile" aria-hidden="true"&gt;GA&lt;/span&gt;&lt;span class="logo-tile logo-tile--lg" aria-hidden="true"&gt;GA&lt;/span&gt;</code></pre></details>
+</div>
+</section>
+<section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+<p>Avatars are not interactive by themselves. When one is a control (the header account menu) it is wrapped in <code>.avatar-btn</code>, a real button, and takes the button focus ring.</p><div class="ds-matrix"><table>
+<thead><tr><th scope="col">Use</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th></tr></thead>
+<tbody>
+<tr><th scope="row">Account button</th><td><button class="avatar avatar-btn" type="button" aria-label="Account menu, Priya Natarajan">PN</button></td><td><button class="avatar avatar-btn" type="button" aria-label="Account menu" data-state="hover">PN</button></td><td><button class="avatar avatar-btn" type="button" aria-label="Account menu" data-state="focus">PN</button></td></tr>
+</tbody>
+</table></div><h3>Both themes</h3><div class="ds-themes">
+<div data-theme="light"><div class="ds-example__canvas" style="padding: 0;">
+<span class="avatar" aria-hidden="true">PN</span><span class="avatar avatar--lg" aria-hidden="true">MB</span><span class="logo-tile" aria-hidden="true">GA</span>
+</div></div>
+<div data-theme="dark"><div class="ds-example__canvas" style="padding: 0;">
+<span class="avatar" aria-hidden="true">PN</span><span class="avatar avatar--lg" aria-hidden="true">MB</span><span class="logo-tile" aria-hidden="true">GA</span>
+</div></div>
+</div>
+</section>
+<section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive</a></h2>
+<ul><li>Sizes do not change with the viewport; pick the size for the context.</li><li>Below 640px, logo tiles inside <code>.list__item</code> hide so the title keeps its width.</li><li>Speaker profile headers keep the xl avatar above the name on phones and beside it from <code>--layout-breakpoint-md</code>.</li></ul>
+</section>
+<section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+<p>Avatars use the accent-subtle pair (<code>--color-accent-subtle</code> / <code>--color-fg-accent</code>); logo tiles use <code>--color-bg-subtle</code> / <code>--color-fg-default</code>. In avatar groups each avatar has a 2px ring in <code>--color-bg-surface</code> so overlaps stay legible on cards in both themes.</p>
+</section>
+<section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+<h3>Role and pattern</h3><p>Decorative <code>span</code> with <code>aria-hidden="true"</code> whenever the name is next to it (always, in the mocks). When an image avatar stands alone, it is an <code>&lt;img alt="Priya Natarajan"&gt;</code>. An avatar that opens a menu is a <code>&lt;button&gt;</code> following the <a href="menu.html">menu</a> button pattern.</p>
+<h3>Keyboard</h3><table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+<tr><td>—</td><td>Decorative avatars are skipped.</td></tr>
+<tr><td><kbd>Tab</kbd>, <kbd>Enter</kbd>/<kbd>Space</kbd></td><td>On <code>.avatar-btn</code>: focus and open the account menu.</td></tr>
+</tbody></table>
+<h3>Focus</h3><p>Only <code>.avatar-btn</code> takes focus; the round shape gets the shared offset ring.</p>
+<h3>Labelling</h3><p>Group overflow “+4” is decorative when the list of names follows; otherwise give the group <code>role="img" aria-label="Priya Natarajan, Marcus Bell and 5 others"</code>.</p>
+<h3>Contrast</h3><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+<div class="ds-pair"><span>Initials on avatar</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-accent-subtle" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Initials on logo tile</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-subtle" data-min="4.5"></span></div>
+</div>
+<h3>Motion</h3><p>None.</p><h3>Touch</h3><p>The account button is 40px; decorative avatars are not targets.</p>
+</section>
+<section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+<ul><li>Initials: first letter of the first and last name, uppercase (“PN”). One-word names use the first two letters.</li><li>Community tiles use the community’s own short form: “GA” for GTA Azure Community, “TD” for Toronto .NET.</li><li>Overflow counts use “+n”, never “…”.</li></ul>
+</section>
+<section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+<div class="ds-dodont">
+<figure class="ds-do"><div class="ds-example__canvas"><a class="person" href="../../mocks/pages/speaker-detail/default.html"><span class="avatar" aria-hidden="true">PN</span><span><span class="person__name">Priya Natarajan</span></span></a></div><figcaption>Hide the avatar from screen readers when the name follows.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><span class="avatar" aria-label="PN">PN</span><span>Priya Natarajan</span></div><figcaption>Announce the initials and then the name; screen readers say “P N, Priya Natarajan”.</figcaption></figure>
+<figure class="ds-do"><div class="ds-example__canvas"><span class="logo-tile" aria-hidden="true">GA</span></div><figcaption>Square tiles for communities, circles for people.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><span class="avatar" aria-hidden="true">GA</span></div><figcaption>A round avatar for a community reads as a person.</figcaption></figure>
+</div>
+</section>
+<section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+<div class="ds-table-wrap"><table class="ds-table">
+<thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+<tbody>
+<tr><td>Avatar background</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+<tr><td>Avatar initials</td><td><code>--color-fg-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td></tr>
+<tr><td>Logo tile background</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+<tr><td>Logo tile initials</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+<tr><td>Group ring</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+<tr><td>Avatar radius</td><td><code>--radius-full</code></td><td colspan="2"><span data-token="--radius-full"></span></td></tr>
+<tr><td>Tile radius</td><td><code>--radius-md</code> / <code>--radius-lg</code></td><td colspan="2"><span data-token="--radius-md"></span> / <span data-token="--radius-lg"></span></td></tr>
+<tr><td>Initials font</td><td><code>--text-label</code></td><td colspan="2"><span data-token="--text-label"></span></td></tr>
+</tbody>
+</table></div>
+</section>
+<section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+<pre><code>&lt;span class="avatar" aria-hidden="true"&gt;PN&lt;/span&gt;
+&lt;span class="avatar avatar--xl" aria-hidden="true"&gt;&lt;img src="…" alt=""&gt;&lt;/span&gt;
+&lt;span class="logo-tile logo-tile--lg" aria-hidden="true"&gt;GA&lt;/span&gt;
+&lt;button class="avatar avatar-btn" type="button" aria-label="Account menu, Priya Natarajan" aria-haspopup="menu" aria-expanded="false"&gt;PN&lt;/button&gt;</code></pre><table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+<tr><td><code>.avatar</code></td><td>40px circle with initials or an image.</td></tr>
+<tr><td><code>.avatar--sm</code> <code>.avatar--lg</code> <code>.avatar--xl</code></td><td>32 / 56 / 80px.</td></tr>
+<tr><td><code>.avatar-group</code></td><td>Overlapping row with surface rings.</td></tr>
+<tr><td><code>.avatar-btn</code></td><td>Resets button chrome so an avatar can be the account control.</td></tr>
+<tr><td><code>.logo-tile</code> / <code>.logo-tile--lg</code></td><td>44 / 72px rounded square for communities and feeds.</td></tr>
+</tbody></table>
+</section>
+<section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+<p>Extracted from these mocks:</p>
+<ul>
+<li><a href="../../mocks/pages/speakers/default.html">pages/speakers/default</a> (speaker avatars)</li>
+<li><a href="../../mocks/pages/speaker-detail/default.html">pages/speaker-detail/default</a> (xl avatar)</li>
+<li><a href="../../mocks/pages/community-detail/default.html">pages/community-detail/default</a> (large logo tile)</li>
+<li><a href="../../mocks/pages/calendar-feeds/default.html">pages/calendar-feeds/default</a> (icon logo tiles)</li>
+<li><a href="../../mocks/pages/communities/default.html">pages/communities/default</a> (community tiles)</li>
+</ul>
+<p>Drift fixed during extraction: none; avatars were consistently <code>aria-hidden</code> beside names.</p>
+</section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

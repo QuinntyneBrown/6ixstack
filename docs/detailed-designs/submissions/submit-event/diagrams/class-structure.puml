@@ -1,0 +1,197 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Submit an event
+
+package "SixStack.Domain" {
+  enum EventStatus {
+    Draft
+    InReview
+    NeedsChanges
+    Rejected
+    Published
+    Cancelled
+  }
+  enum EventFormat {
+    InPerson
+    Streaming
+    Hybrid
+  }
+  enum TokenPurpose {
+    SignIn
+    VerifyEmail
+    ChangeEmail
+  }
+  class Event {
+    +Guid Id
+    +string Slug
+    +string Title
+    +string Description
+    +EventFormat Format
+    +DateTimeOffset StartsAtUtc
+    +DateTimeOffset EndsAtUtc
+    +string TimeZoneId
+    +Venue? Venue
+    +string? StreamUrl
+    +Price Price
+    +string? TicketUrl
+    +EventStatus Status
+    +DateTimeOffset SubmittedAtUtc
+    +string SubmitterEmail
+    +{static} Submit(details: EventDetails, submitterEmail: string, now: DateTimeOffset): Event
+    +Approve(moderatorId: Guid, now: DateTimeOffset): void
+  }
+  class EventDetails <<value object>> {
+    +string Title
+    +string OrganizerName
+    +string Description
+    +IReadOnlyList<Topic> Topics
+    +DateOnly Date
+    +string TimeZoneId
+    +TimeOnly StartTime
+    +TimeOnly? EndTime
+    +EventFormat Format
+    +Venue? Venue
+    +string? StreamUrl
+    +Price Price
+    +string? TicketUrl
+  }
+  class Venue <<value object>> {
+    +string Name
+    +string Address
+    +string City
+  }
+  class Price <<value object>> {
+    +bool IsFree
+    +decimal? AmountCad
+  }
+  class SubmissionCheck {
+    +Guid Id
+    +Guid EventId
+    +CheckKind Kind
+    +CheckOutcome Outcome
+    +string Message
+  }
+  class SecurityToken {
+    +Guid Id
+    +string Email
+    +byte[] TokenHash
+    +TokenPurpose Purpose
+    +DateTimeOffset ExpiresAtUtc
+    +DateTimeOffset? UsedAtUtc
+    +MarkUsed(now: DateTimeOffset): void
+  }
+  class VerifiedEmail {
+    +string NormalizedEmail
+    +DateTimeOffset VerifiedAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  class SubmitEventCommand {
+    +string Title
+    +string OrganizerName
+    +string Description
+    +IReadOnlyList<Topic> Topics
+    +DateOnly Date
+    +string TimeZoneId
+    +TimeOnly StartTime
+    +TimeOnly? EndTime
+    +EventFormat Format
+    +string? VenueName
+    +string? City
+    +string? StreetAddress
+    +string? StreamUrl
+    +bool IsFree
+    +decimal? PriceCad
+    +string? TicketUrl
+    +string ContactEmail
+  }
+  class SubmitEventCommandValidator
+  class SubmitEventCommandHandler {
+    +Handle(command: SubmitEventCommand): Task<SubmissionReceivedDto>
+  }
+  class SubmissionReceivedDto {
+    +string EventTitle
+    +string ContactEmail
+  }
+  class VerifyEmailCommand {
+    +string Token
+  }
+  class VerifyEmailCommandHandler {
+    +Handle(command: VerifyEmailCommand): Task<VerifyEmailResult>
+  }
+  class GetReferenceDataQueryHandler {
+    +Handle(query: GetReferenceDataQuery): Task<ReferenceDataDto>
+  }
+  interface ISecurityTokenService {
+    +Issue(email: string, purpose: TokenPurpose, lifetime: TimeSpan): IssuedToken
+    +Hash(plaintext: string): byte[]
+  }
+  interface IOutbox {
+    +Enqueue(type: string, payload: object): void
+  }
+}
+
+package "sixstack (Angular)" {
+  class SubmitEventPage {
+    +form: FormGroup<EventFormControls>
+    +state: Signal<SubmitState>
+    +submit(): void
+  }
+  class EventFormModel {
+    +create(): FormGroup<EventFormControls>
+    +applyFormat(format: EventFormat): void
+    +applyPrice(isFree: boolean): void
+  }
+  class DraftStore {
+    +available: boolean
+    +read(key: string): unknown
+    +write(key: string, value: unknown): void
+    +clear(key: string): void
+  }
+  interface SubmissionsApi {
+    +submit(request: SubmitEventRequest): Observable<SubmissionReceived>
+  }
+  interface ReferenceDataApi {
+    +get(): Observable<ReferenceData>
+  }
+  class HttpSubmissionsApi
+  class HttpReferenceDataApi
+}
+
+Event --> EventStatus
+Event --> EventFormat
+Event *-- Venue
+Event *-- Price
+Event "1" *-- "*" SubmissionCheck
+EventDetails *-- Venue
+EventDetails *-- Price
+SecurityToken --> TokenPurpose
+SubmitEventCommandValidator ..> SubmitEventCommand : validates
+SubmitEventCommandHandler ..> SubmitEventCommand : handles
+SubmitEventCommandHandler ..> Event : creates
+SubmitEventCommandHandler ..> EventDetails : builds
+SubmitEventCommandHandler ..> ISecurityTokenService
+SubmitEventCommandHandler ..> IOutbox
+SubmitEventCommandHandler ..> VerifiedEmail : checks
+SubmitEventCommandHandler ..> SubmissionReceivedDto : returns
+VerifyEmailCommandHandler ..> VerifyEmailCommand : handles
+VerifyEmailCommandHandler ..> SecurityToken : redeems
+VerifyEmailCommandHandler ..> VerifiedEmail : creates
+VerifyEmailCommandHandler ..> Event : publishes approved
+HttpSubmissionsApi ..|> SubmissionsApi
+HttpReferenceDataApi ..|> ReferenceDataApi
+SubmitEventPage ..> SubmissionsApi : SUBMISSIONS_API
+SubmitEventPage ..> ReferenceDataApi : REFERENCE_DATA_API
+SubmitEventPage ..> EventFormModel
+SubmitEventPage ..> DraftStore
+@enduml

@@ -1,0 +1,82 @@
+@startuml
+title UML sequence behaviour — Save changes to an event
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer or moderator" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EditEventPage" as page
+  participant "HttpOrganizerEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "OrganizerEventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "UpdateOrganizerEventCommandHandler" as handler
+  participant "EventAccessChecker" as access
+  participant "Event" as entity
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "AuditLog" as audit
+  database "6ixstack database" as db
+end box
+actor -> page : Save changes
+page --> actor : Fields disabled, button "Saving…" (L2-054)
+page -> client : updateEvent(id, details)
+client -> controller : PUT /api/organizer/events/{id}
+controller -> controller : Authenticate session, OrganizerPolicy (L2-080)
+controller -> controller : UpdateOrganizerEventCommandValidator (L2-041, L2-081)
+alt invalid fields
+  controller --> client : 400 problem details with field errors
+  client --> page : Field errors
+  page --> actor : Summary "Enter the street address for the venue." and "Enter a full link that starts with https://" (L2-054)
+else valid
+  controller -> handler : Send UpdateOrganizerEventCommand
+  handler -> db : Load event with row version
+  handler -> access : Check(event)
+  alt no access
+    access --> handler : ForbiddenEventAccess
+    handler --> controller : Forbidden, nothing changed
+    controller --> client : 403 problem details (L2-055)
+  else access granted
+    handler -> entity : Edit(details, now)
+    alt past event
+      entity --> handler : EventReadOnlyException
+      handler --> controller : Conflict
+      controller --> client : 409 problem details (L2-055)
+    else editable
+      entity -> entity : Published and start changed: TimeChangedAtUtc = now, Sequence + 1 (L2-022, L2-036)
+      entity --> handler : EditOutcome(changed fields)
+      alt caller is a moderator
+        handler -> handler : Keep status (L2-062)
+      else community member and status Needs changes
+        handler -> entity : Resubmit(), keep SubmittedAtUtc (L2-054)
+        handler -> handler : ISubmissionCheckScheduler.Schedule(eventId) (L2-059)
+      end
+      handler -> audit : Record(actor, EventEdited, event, changed fields) (L2-062, L2-086)
+      handler -> db : Save event, audit entry, outbox in one unit of work
+      db --> handler : Commit
+      handler -> handler : IFeedMatchCounter.Count(event)
+      handler --> controller : EventSavedDto
+      controller --> client : 200 JSON
+      client --> page : EventSaved
+      page --> actor : "Changes saved", 318 going and 41 feeds see it within an hour, View the listing (L2-054)
+    end
+  end
+end
+opt 5xx or network error
+  client --> page : Error
+  page --> actor : Fields re-enabled, values kept, error alert <TO SUPPLY>
+end
+@enduml

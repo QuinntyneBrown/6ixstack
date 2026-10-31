@@ -1,0 +1,84 @@
+@startuml
+title UML sequence behaviour — Authorize an organizer edit
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EditEventPage" as page
+  participant "HttpOrganizerEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "RequestLoggingMiddleware\nSecurityHeadersMiddleware\nExceptionHandlingMiddleware" as outer
+  participant "SessionAuthenticationHandler" as authn
+  participant "OrganizerPolicy\nCommunityMemberAuthorizationHandler" as authz
+  participant "CsrfProtectionMiddleware" as csrf
+  participant "OrganizerEventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "ValidationBehavior" as validation
+  participant "EditEventCommandHandler" as handler
+  participant "AuditLog" as audit
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Save changes
+page -> client : update(id, form)
+client -> outer : PUT /api/organizer/events/{id}\nCookie: session, XSRF-TOKEN; X-XSRF-TOKEN header
+outer -> outer : HTTPS only, HSTS (L2-083); register security headers
+outer -> authn : next (after UseRouting, UseRateLimiter)
+authn -> db : Load session by cookie
+db --> authn : Session or none
+alt no valid session
+  authn --> outer : Challenge
+  outer --> client : 401 problem details (L2-080)
+else session valid
+  authn -> authz : Principal with role and community ids
+  authz -> db : Read only Event.CommunityId for {id}
+  db --> authz : CommunityId or none
+  alt event belongs to another community
+    authz --> outer : Forbid
+    outer --> client : 403, nothing read or changed (L2-080)
+  else member, or no event with {id}
+    authz -> csrf : Authorized
+    csrf -> csrf : Recompute HMAC of session id, compare to header
+    alt token missing or wrong
+      csrf --> outer : Reject
+      outer --> client : 400 problem details, nothing changes (L2-083)
+    else token valid
+      csrf -> controller : next
+      controller -> validation : Send EditEventCommand
+      validation -> validation : Validate type, presence, length, format (L2-081)
+      validation -> handler : Valid command
+      handler -> db : Load event
+      alt no event with {id}
+        handler --> outer : NotFoundException
+        outer --> client : 404 problem details (L2-080)
+      else found
+        handler -> handler : Event.Edit(details, now)
+        handler -> audit : Record(Edit, "Event", id) (L2-086)
+        audit -> audit : Actor from ICurrentUser, time from IClock
+        handler -> db : Save edit and AuditEntry in one unit of work
+        db --> handler : Commit result
+        handler --> controller : Typed result
+        controller --> outer : 200 EventDto
+        outer --> client : 200 with CSP, nosniff, Referrer-Policy (L2-083)
+      end
+    end
+  end
+end
+client --> page : Result or problem
+page --> actor : Saved, or failure state
+@enduml

@@ -1,0 +1,132 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Build a custom calendar feed
+
+package "SixStack.Domain" {
+  enum FeedScope {
+    All
+    GtaOnly
+    StreamingOnly
+  }
+  enum Topic {
+    Ai
+    DotNet
+    Azure
+    Angular
+    React
+    Aws
+  }
+  class FeedSlug <<value object>> {
+    +IReadOnlyList<Topic> Topics
+    +FeedScope Scope
+    +string? CommunitySlug
+    +{static} Create(topics, scope, communitySlug): FeedSlug
+    +{static} TryParse(text: string, out slug: FeedSlug): bool
+    +ToString(): string
+  }
+  class Community {
+    +Guid Id
+    +string Slug
+    +string Name
+  }
+}
+
+package "SixStack.Application" {
+  class CreateFeedCommand {
+    +IReadOnlyList<Topic> Topics
+    +bool AllTopics
+    +FeedScope Scope
+    +string? CommunitySlug
+  }
+  class CreateFeedCommandValidator {
+    +AtLeastOneTopicUnlessAllTopics()
+    +KnownTopicsAndScope()
+    +CommunityExists()
+  }
+  class CreateFeedCommandHandler {
+    +Handle(command: CreateFeedCommand): Task<FeedLinkDto>
+  }
+  class FeedEventFilter <<static>> {
+    +Apply(events: IQueryable<Event>, slug: FeedSlug): IQueryable<Event>
+  }
+  class FeedLinkBuilder {
+    +Build(slug: FeedSlug, matchingEventCount: int): FeedLinkDto
+    +Describe(slug: FeedSlug): string
+  }
+  class FeedLinkDto {
+    +string FeedSlug
+    +string WebcalUrl
+    +string GoogleCalendarUrl
+    +string OutlookUrl
+    +string AppleCalendarUrl
+    +string Summary
+    +int MatchingEventCount
+  }
+}
+
+package "sixstack (Angular)" {
+  class FeedBuilder {
+    +communitySlug: Input<string | undefined>
+    +state: Signal<'idle' | 'invalid' | 'busy' | 'failed'>
+    +created: Output<FeedLink>
+    +submit(): void
+  }
+  class FeedChoiceForm {
+    +topics: FormRecord<FormControl<boolean>>
+    +allTopics: FormControl<boolean>
+    +scope: FormControl<FeedScope>
+  }
+  class FeedLinkPanel {
+    +link: Input<FeedLink>
+    +copy(): void
+  }
+  class SubscribeFeedDialog {
+    +data: SubscribeFeedDialogData
+    +link: Signal<FeedLink | null>
+    +done(): void
+  }
+  class SubscribeFeedDialogData {
+    +communitySlug?: string
+    +communityName?: string
+  }
+  class CalendarFeedsPage {
+    +createdLink: Signal<FeedLink | null>
+    +buildAnother(): void
+  }
+  interface FeedsApi {
+    +createFeed(choice: FeedChoice): Observable<FeedLink>
+  }
+  class HttpFeedsApi
+  class FeedLinkCopier {
+    +copy(webcalUrl: string): void
+  }
+}
+
+FeedSlug --> FeedScope
+FeedSlug "1" --> "*" Topic
+CreateFeedCommandValidator ..> CreateFeedCommand : validates
+CreateFeedCommandValidator ..> Community : checks slug
+CreateFeedCommandHandler ..> CreateFeedCommand : handles
+CreateFeedCommandHandler ..> FeedSlug : creates
+CreateFeedCommandHandler ..> FeedEventFilter : counts with
+CreateFeedCommandHandler ..> FeedLinkBuilder : uses
+FeedLinkBuilder ..> FeedLinkDto : returns
+FeedBuilder *-- FeedChoiceForm
+FeedBuilder ..> FeedsApi : FEEDS_API
+HttpFeedsApi ..|> FeedsApi
+SubscribeFeedDialog --> SubscribeFeedDialogData
+SubscribeFeedDialog ..> FeedBuilder : hosts
+SubscribeFeedDialog ..> FeedLinkPanel : shows
+CalendarFeedsPage ..> FeedBuilder : hosts
+CalendarFeedsPage ..> FeedLinkPanel : shows
+FeedLinkPanel ..> FeedLinkCopier
+@enduml

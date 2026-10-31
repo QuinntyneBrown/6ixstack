@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Empty state — 6ixstack design system</title>
+<meta name="description" content="First-run, quiet-period, no-results, permission and error empty states, compact size, and the success panel.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Empty state</h1>
+      <p class="ds-lead">Empty states say why a region has nothing to show, and give one clear next step.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Content pattern</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>An empty state fills a region that has nothing to show, and says why and what to do next. 6ixstack has four kinds:</p>
+      <ul>
+        <li><b>First run / nothing yet</b>: the region has never had content ("No notifications yet").</li>
+        <li><b>Quiet period</b>: nothing in the time range ("No events in the next two weeks").</li>
+        <li><b>No results</b>: filters or search removed everything ("No events match those filters").</li>
+        <li><b>Permission or error</b>: the person can't see it or it didn't load ("Only moderators can review submissions", "This event didn't load").</li>
+      </ul>
+      <p>For a whole-page HTTP error (404, 403, 500, offline) use the <a href="error-page.html">error page</a>. For a load error above content that is still useful, use an <a href="alert.html">alert</a>. The <b>success panel</b> (a completed form) shares this structure and is documented here.</p>
+    </section>
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.34-4.34"/></svg></div><h3 class="empty__title">No events match those filters</h3><p class="empty__text">Try another topic, or include streaming events.</p><div class="empty__actions"><a class="btn btn--primary" href="#overview">Clear filters</a><a class="btn" href="#overview">Get a feed for Kubernetes</a></div></div>
+          <span class="ds-callout" style="left: 54%; top: 14%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 80%; top: 42%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 74%; top: 60%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 70%; top: 82%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Icon</b><small>64px circle in <code>--color-accent-subtle</code>; 24px glyph; decorative.</small></div></li>
+          <li><div><b>Title</b><small><code>--text-h3</code>; a heading at the region's level.</small></div></li>
+          <li><div><b>Text</b><small>One or two sentences, max 36ch, <code>--color-fg-muted</code>.</small></div></li>
+          <li><div><b>Actions</b><small>One primary, one optional secondary.</small></div></li>
+        </ol>
+      </div>
+    </section>
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></div><h3 class="empty__title">No events in the next two weeks</h3><p class="empty__text">It’s a quiet stretch over the holidays. Organizers usually post January meetups in the first week of the new year.</p><div class="empty__actions"><a class="btn btn--primary" href="../../mocks/pages/submit-event/default.html"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Submit an event</a><a class="btn" href="../../mocks/pages/calendar/empty.html">Browse the calendar</a></div></div>
+        </div>
+        <div class="ds-example__caption"><span>Quiet period (pages/events/empty).</span></div>
+      </div>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.34-4.34"/></svg></div><h3 class="empty__title">No events match those filters</h3><p class="empty__text">Try another topic, or include streaming events.</p><div class="empty__actions"><a class="btn btn--primary" href="../../mocks/pages/events/default.html">Clear filters</a><a class="btn" href="../../mocks/dialogs/subscribe-feed/default.html">Get a feed for Kubernetes</a></div></div>
+        </div>
+        <div class="ds-example__caption"><span>No results (pages/events/no-results). The primary action undoes the filter.</span></div>
+      </div>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></div><h3 class="empty__title">No notifications yet</h3><p class="empty__text">When moderators review your events or people report a problem, you’ll see it here.</p><div class="empty__actions"><a class="btn" href="../../mocks/pages/organizer-dashboard/default.html">Go to your events</a></div></div>
+        </div>
+        <div class="ds-example__caption"><span>First run (pages/notifications/empty).</span></div>
+      </div>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h3 class="empty__title">Only moderators can review submissions</h3><p class="empty__text">You’re signed in as Priya Natarajan, an organizer. To help moderate, ask the 6ixstack team.</p><div class="empty__actions"><a class="btn btn--primary" href="../../mocks/pages/organizer-dashboard/default.html">Go to your events</a><a class="btn" href="../../mocks/pages/contact/default.html">Ask to moderate</a></div></div>
+        </div>
+        <div class="ds-example__caption"><span>Permission (pages/review-queue/forbidden).</span></div>
+      </div>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="empty empty--error"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></div><h3 class="empty__title">This event didn’t load</h3><p class="empty__text">We couldn’t reach 6ixstack. Check your connection and try again; nothing you did caused this.</p><div class="empty__actions"><button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M8 16H3v5"/></svg>Try again</button><a class="btn" href="../../mocks/pages/events/default.html">Back to all events</a></div></div>
+        </div>
+        <div class="ds-example__caption"><span>Error (<code>.empty--error</code>, pages/event-detail/error).</span></div>
+      </div>
+      <h3>Success panel</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="success-panel"><div class="success-panel__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div><div><h3 style="font: var(--text-h3);">Thanks, Priya — message sent</h3><p class="text-muted" style="margin-top: var(--space-2);">We’ll reply to priya@gtaazure.ca within two working days. Listing corrections are usually fixed the same day.</p></div><div class="cluster"><a class="btn btn--primary" href="../../mocks/pages/events/default.html">Back to events</a><a class="btn" href="../../mocks/pages/contact/default.html">Send another message</a></div></div>
+        </div>
+        <div class="ds-example__caption"><span>pages/contact/success: left-aligned, replaces the form after it sends.</span></div>
+      </div>
+    </section>
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+<div class="empty empty--compact"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/></svg></div><h3 class="empty__title">No upcoming talks</h3><p class="empty__text">Priya isn’t scheduled to speak anywhere right now. Organizers can invite her directly.</p><div class="empty__actions"><a class="btn btn--primary" href="mailto:priya@gtaazure.ca">Invite to speak</a></div></div>
+        </div>
+        <div class="ds-example__caption"><span><code>.empty--compact</code> (32px vertical padding) for a section inside a page: pages/speaker-detail/empty. Full size (48px) is for a page's main region.</span></div>
+      </div>
+    </section>
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The empty state has no interactive states of its own; its buttons follow <a href="button.html">button</a>. What changes is which variant shows:</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Region</th><th scope="col">Never had content</th><th scope="col">Filters remove all</th><th scope="col">Can't access</th><th scope="col">Failed to load</th></tr></thead>
+        <tbody><tr><th scope="row">Events list</th><td>Quiet period</td><td>No results</td><td>—</td><td>Alert above filters</td></tr><tr><th scope="row">Notifications</th><td>First run</td><td>—</td><td>—</td><td>Alert</td></tr><tr><th scope="row">Review queue</th><td>“Queue is clear”</td><td>—</td><td>Permission</td><td>Alert</td></tr><tr><th scope="row">Event detail</th><td>—</td><td>—</td><td>Error page (403)</td><td><code>.empty--error</code></td></tr></tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.34-4.34"/></svg></div><h3 class="empty__title">No events match those filters</h3><p class="empty__text">Try another topic.</p><div class="empty__actions"><a class="btn btn--primary" href="#overview">Clear filters</a></div></div><div class="empty empty--error"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></div><h3 class="empty__title">This event didn’t load</h3><p class="empty__text">Try again.</p><div class="empty__actions"><button class="btn btn--primary" type="button">Try again</button></div></div></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.34-4.34"/></svg></div><h3 class="empty__title">No events match those filters</h3><p class="empty__text">Try another topic.</p><div class="empty__actions"><a class="btn btn--primary" href="#overview">Clear filters</a></div></div><div class="empty empty--error"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></div><h3 class="empty__title">This event didn’t load</h3><p class="empty__text">Try again.</p><div class="empty__actions"><button class="btn btn--primary" type="button">Try again</button></div></div></div></div>
+      </div>
+    </section>
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Centred at every width; text wraps at 36ch.</li>
+        <li>Below 360px the two actions stack, primary first, each full width.</li>
+        <li>In the events page's two-column layout (≥ 1024px) the empty state fills the list column and the map column stays, showing "0 across the GTA".</li>
+        <li><code>.empty--compact</code> is used inside sections at every width; the full size only in a page's main region.</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The icon circle uses <code>--color-accent-subtle</code> with <code>--color-fg-accent</code>; the error variant swaps to <code>--color-danger-bg</code> and <code>--color-danger-icon</code>; the success panel to <code>--color-success-bg</code> and <code>--color-success-icon</code>. Text is <code>--color-fg-default</code> and <code>--color-fg-muted</code>.</p>
+    </section>
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Plain content: a heading, a paragraph and links or buttons. The heading level continues the page outline (<code>h2</code> in a page's main list, <code>h3</code> inside a section, <code>h1</code> only when it is the whole page, as in event-detail/error). When the empty state appears after filtering, the result line (<code>role="status"</code>) announces "0 events", so the empty state itself needs no live region.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody><tr><td><kbd>Tab</kbd></td><td>Reaches the primary action, then the secondary.</td></tr><tr><td><kbd>Enter</kbd></td><td>Follows the link or activates the button.</td></tr></tbody></table>
+      <h3>Focus</h3>
+      <p>Focus is not moved to the empty state. After "Clear filters" focus returns to the filter bar and the list re-renders.</p>
+      <h3>Labelling</h3>
+      <p>The icon is decorative (<code>aria-hidden</code>). Action labels name the object ("Get a feed for Kubernetes").</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);"><div class="ds-pair"><span>Title on page</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-canvas" data-min="4.5"></span></div><div class="ds-pair"><span>Text on page</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-canvas" data-min="4.5"></span></div><div class="ds-pair"><span>Icon on circle</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-accent-subtle" data-min="3"></span></div><div class="ds-pair"><span>Error icon on circle</span><span class="ds-pair__ratio" data-contrast="--color-danger-icon|--color-danger-bg" data-min="3"></span></div><div class="ds-pair"><span>Success icon on circle</span><span class="ds-pair__ratio" data-contrast="--color-success-icon|--color-success-bg" data-min="3"></span></div></div>
+      <h3>Motion</h3>
+      <p>None. Empty states appear in place without animation.</p>
+      <h3>Touch</h3>
+      <p>Actions are medium buttons (40px) with 12px between them.</p>
+    </section>
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Title: what is empty, specifically. "No communities in Oakville yet", not "Nothing here".</li>
+        <li>Text: why, and what usually happens next. "Organizers usually post January meetups in the first week of the new year."</li>
+        <li>No-results text suggests the change most likely to help: another topic, include streaming.</li>
+        <li>Permission text says who they are signed in as and who can grant access.</li>
+        <li>Error text says it is not their fault: "nothing you did caused this".</li>
+      </ul>
+    </section>
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.34-4.34"/></svg></div><h3 class="empty__title">No events match those filters</h3><p class="empty__text">Try another topic, or include streaming events.</p><div class="empty__actions"><a class="btn btn--primary" href="#overview">Clear filters</a></div></div></div><figcaption>No results: offer the way back first.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></div><h3 class="empty__title">No events in the next two weeks</h3><p class="empty__text">It’s a quiet stretch.</p><div class="empty__actions"><a class="btn btn--primary" href="#overview">Submit an event</a></div></div></div><figcaption>Show the quiet-period message when the person's own filters caused the empty list.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/></svg></div><h3 class="empty__title">No communities in Oakville yet</h3><p class="empty__text">If you run one, add your next event and your group gets a page here.</p><div class="empty__actions"><a class="btn btn--primary" href="#overview">List your community</a><a class="btn" href="#overview">See all of the GTA</a></div></div></div><figcaption>Name the place and give one way to fix it.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="empty"><div class="empty__icon"><svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/></svg></div><h3 class="empty__title">No data</h3><p class="empty__text">There is nothing to display.</p><div class="empty__actions"><a class="btn btn--primary" href="#overview">OK</a></div></div></div><figcaption>Generic copy and an action that does nothing.</figcaption></figure>
+      </div>
+    </section>
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Icon circle</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Icon</td><td><code>--color-fg-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td></tr>
+          <tr><td>Error circle</td><td><code>--color-danger-bg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-bg" data-swatch></i><span data-token="--color-danger-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-bg" data-swatch></i><span data-token="--color-danger-bg"></span></span></td></tr>
+          <tr><td>Success circle</td><td><code>--color-success-bg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-success-bg" data-swatch></i><span data-token="--color-success-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-success-bg" data-swatch></i><span data-token="--color-success-bg"></span></span></td></tr>
+          <tr><td>Text</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Padding full / compact</td><td><code>--space-12</code> / <code>--space-8</code></td><td colspan="2"><span data-token="--space-12"></span> / <span data-token="--space-8"></span></td></tr>
+          <tr><td>Gap</td><td><code>--space-3</code></td><td colspan="2"><span data-token="--space-3"></span></td></tr>
+          <tr><td>Title font</td><td><code>--text-h3</code></td><td colspan="2"><span data-token="--text-h3"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="empty"&gt;
+  &lt;div class="empty__icon"&gt;&lt;svg class="icon icon--lg" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;&lt;/div&gt;
+  &lt;h2 class="empty__title"&gt;No events match those filters&lt;/h2&gt;
+  &lt;p class="empty__text"&gt;Try another topic, or include streaming events.&lt;/p&gt;
+  &lt;div class="empty__actions"&gt;
+    &lt;a class="btn btn--primary" href="/events"&gt;Clear filters&lt;/a&gt;
+    &lt;a class="btn" href="/feeds/new?topic=kubernetes"&gt;Get a feed for Kubernetes&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody><tr><td><code>.empty</code></td><td>Full empty state (48px vertical padding).</td></tr><tr><td><code>.empty--compact</code></td><td>Inside sections (32px).</td></tr><tr><td><code>.empty--error</code></td><td>Danger icon circle.</td></tr><tr><td><code>.empty__icon</code> <code>__title</code> <code>__text</code> <code>__actions</code></td><td>Parts.</td></tr><tr><td><code>.success-panel</code> + <code>__icon</code></td><td>Completed-form panel.</td></tr></tbody></table>
+    </section>
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/pages/events/empty.html">pages/events/empty</a></li>
+        <li><a href="../../mocks/pages/events/no-results.html">pages/events/no-results</a></li>
+        <li><a href="../../mocks/pages/calendar/empty.html">pages/calendar/empty</a></li>
+        <li><a href="../../mocks/pages/communities/empty.html">pages/communities/empty</a></li>
+        <li><a href="../../mocks/pages/communities/no-results.html">pages/communities/no-results</a></li>
+        <li><a href="../../mocks/pages/notifications/empty.html">pages/notifications/empty</a></li>
+        <li><a href="../../mocks/pages/speaker-detail/empty.html">pages/speaker-detail/empty</a> (compact)</li>
+        <li><a href="../../mocks/pages/review-queue/empty.html">pages/review-queue/empty</a></li>
+        <li><a href="../../mocks/pages/review-queue/forbidden.html">pages/review-queue/forbidden</a></li>
+        <li><a href="../../mocks/pages/event-detail/error.html">pages/event-detail/error</a> (error)</li>
+        <li><a href="../../mocks/pages/contact/success.html">pages/contact/success</a> (success panel)</li>
+      </ul>
+      <p>Drift fixed during extraction: the success panel's heading used an inline <code>font: var(--text-h3)</code> on an <code>h2</code>; the panel is kept here (it shares the empty-state structure) and the inline font should become a <code>.success-panel__title</code> class. Error copy mixed "didn't" and "didn’t"; curly is the standard.</p>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

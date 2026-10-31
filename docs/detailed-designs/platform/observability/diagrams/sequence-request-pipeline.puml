@@ -1,0 +1,77 @@
+@startuml
+title UML sequence behaviour — Request pipeline and error responses
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventDetailPage" as page
+  participant "ProblemDetailsInterceptor" as interceptor
+  participant "ServerErrorPage" as errorpage
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "RequestLoggingMiddleware" as log
+  participant "ExceptionHandlingMiddleware" as ex
+  participant "ReferenceCodeGenerator" as refcode
+  participant "Middleware 4-10" as rest
+  participant "EventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetEventDetailQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /events/{slug}
+page -> interceptor : GET /api/events/{slug}
+interceptor -> log : HTTPS request
+log -> log : Start timer; correlation id from Activity trace id
+log -> log : Register X-Correlation-Id header (L2-101)
+log -> ex : next (via SecurityHeadersMiddleware)
+ex -> rest : next
+rest -> controller : Routed, authorized
+controller -> handler : Send GetEventDetailQuery
+handler -> db : Load published event by slug
+alt found
+  db --> handler : Event
+  handler --> controller : EventDetailDto
+  controller --> ex : 200 JSON
+  ex --> log : 200
+else no published event with slug
+  db --> handler : none
+  handler --> ex : NotFoundException
+  ex -> ex : Map to 404 problem details with correlationId
+  ex --> log : 404 application/problem+json
+else unhandled exception
+  handler --> ex : Exception
+  ex -> refcode : Next()
+  refcode --> ex : "7F3A-21C9"
+  ex -> ex : Log Error with exception, ReferenceCode, CorrelationId (L2-102)
+  ex --> log : 500 application/problem+json {referenceCode}, no stack trace (L2-102)
+end
+log -> log : Log Method, Route template, StatusCode, DurationMs, CorrelationId (L2-101)
+log --> interceptor : Response with X-Correlation-Id
+interceptor -> interceptor : Parse error body into ApiProblem
+alt 200
+  interceptor --> page : EventDetail
+  page --> actor : Event detail
+else 404
+  interceptor --> page : ApiProblem 404
+  page --> actor : Not found state
+else 500
+  interceptor --> page : ApiProblem 500 with referenceCode
+  page -> errorpage : Navigate with referenceCode
+  errorpage --> actor : Server error page with "Ref 7F3A-21C9" (L2-102)
+end
+@enduml

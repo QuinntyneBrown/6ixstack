@@ -1,0 +1,96 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Add an event to a personal calendar
+
+package "SixStack.Domain" {
+  class Event {
+    +Guid Id
+    +string Slug
+    +string Title
+    +DateTimeOffset StartsAtUtc
+    +DateTimeOffset EndsAtUtc
+    +Venue? Venue
+    +string? StreamUrl
+    +EventStatus Status
+    +int Sequence
+  }
+}
+
+package "SixStack.Application" {
+  class GetEventIcsQuery {
+    +string Slug
+  }
+  class GetEventIcsQueryHandler {
+    +Handle(query: GetEventIcsQuery): Task<IcsFileDto?>
+  }
+  class IcsFileDto {
+    +string FileName
+    +string Content
+  }
+  interface IIcsWriter {
+    +WriteSingleEvent(event: Event): string
+  }
+}
+
+package "SixStack.Infrastructure" {
+  class IcsWriter
+}
+
+package "SixStack.Api" {
+  class EventsController {
+    +GetIcs(slug: string): Task<IActionResult>
+  }
+}
+
+package "sixstack (Angular)" {
+  class AddToCalendarDialog {
+    +data: AddToCalendarDialogData
+    +summaryLine: string
+    +busyOption: Signal<'apple' | 'ics' | null>
+    +fileFailed: Signal<boolean>
+    +openGoogle(): void
+    +openOutlook(): void
+    +download(option: 'apple' | 'ics'): void
+  }
+  class AddToCalendarDialogData {
+    +event: EventDetail
+  }
+  class CalendarLinkBuilder {
+    +google(event: EventDetail): string
+    +outlook(event: EventDetail): string
+  }
+  class FileDownloader {
+    +save(blob: Blob, fileName: string): void
+  }
+  class TorontoTimeFormatter {
+    +shortDate(utc: string): string
+    +timeRange(startUtc: string, endUtc: string): string
+  }
+  interface EventsApi {
+    +downloadIcs(slug: string): Observable<IcsFile>
+  }
+  class HttpEventsApi
+}
+
+EventsController ..> GetEventIcsQuery : sends
+GetEventIcsQueryHandler ..> GetEventIcsQuery : handles
+GetEventIcsQueryHandler ..> Event : reads
+GetEventIcsQueryHandler ..> IIcsWriter
+GetEventIcsQueryHandler ..> IcsFileDto : returns
+IcsWriter ..|> IIcsWriter
+AddToCalendarDialog --> AddToCalendarDialogData
+AddToCalendarDialog ..> CalendarLinkBuilder
+AddToCalendarDialog ..> FileDownloader
+AddToCalendarDialog ..> TorontoTimeFormatter
+AddToCalendarDialog ..> EventsApi : EVENTS_API
+HttpEventsApi ..|> EventsApi
+@enduml

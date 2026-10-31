@@ -1,0 +1,63 @@
+@startuml
+title UML sequence behaviour — Store an event time
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Submitter" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SubmitEventPage" as page
+  participant "HttpSubmissionsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "SubmissionsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "SubmitEventCommandValidator" as validator
+  participant "SubmitEventCommandHandler" as handler
+  participant "Event" as entity
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "EventTimeConverter" as converter
+  database "6ixstack database" as db
+end box
+actor -> page : Enter Nov 4 2026, 9:00 AM, America/Vancouver
+page -> client : submit(form)
+client -> controller : POST /api/submissions {startsAtLocal, endsAtLocal, timeZoneId}
+controller -> validator : Validate SubmitEventCommand
+validator -> validator : EventTimeValidator: zone supported, end after start
+alt zone unknown or end not after start
+  validator --> controller : Validation failures
+  controller --> client : 400 ValidationProblemDetails
+  client --> page : Field errors
+  page --> actor : Error summary (L2-092)
+else valid
+  controller -> handler : Send SubmitEventCommand
+  handler -> converter : ToUtc(2026-11-04 09:00, America/Vancouver)
+  opt local time skipped or repeated by a daylight saving change
+    converter -> converter : Resolution rule <TO SUPPLY>
+  end
+  converter --> handler : 2026-11-04T17:00:00Z (L2-079)
+  handler -> entity : Submit() with StartsAtUtc, EndsAtUtc, TimeZoneId
+  handler -> db : Save event in one unit of work
+  db --> handler : Commit result
+  handler --> controller : Submission result
+  controller --> client : 201 Created
+  client --> page : Submitted
+  page --> actor : Submission outcome
+end
+note over converter
+  6:00 PM America/Toronto on 2027-03-16
+  is stored as 22:00Z (EDT, UTC-4) (L2-079)
+end note
+@enduml

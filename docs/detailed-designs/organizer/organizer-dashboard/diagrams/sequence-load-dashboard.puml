@@ -1,0 +1,68 @@
+@startuml
+title UML sequence behaviour — Load, sort and retry the organizer dashboard
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "OrganizerDashboardPage" as page
+  participant "DelayedSkeleton" as sk
+  participant "HttpOrganizerEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "OrganizerEventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetOrganizerDashboardQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /organize
+page -> sk : Start 300 ms timer (L2-089)
+page -> client : getDashboard()
+client -> controller : GET /api/organizer/events
+controller -> controller : Authenticate session, apply OrganizerPolicy (L2-080)
+opt no response within 300 ms
+  sk --> page : Four skeleton stats, four skeleton rows, same columns (L2-052)
+end
+controller -> handler : Send GetOrganizerDashboardQuery
+handler -> db : Community of the caller (CommunityOrganizer)
+db --> handler : GTA Azure Community
+handler -> db : Events where CommunityId = caller's community only (L2-051)
+db --> handler : Five events
+handler -> handler : Derive Past from EndsAtUtc, map status labels and row actions (L2-051)
+handler -> handler : Stats Upcoming, In review, Going, Feed subscribers (L2-051)
+handler --> controller : OrganizerDashboardDto
+alt success
+  controller --> client : 200 JSON
+  client --> page : OrganizerDashboard
+  alt no events
+    page --> actor : "List your first event" with Submit an event, no stats (L2-052)
+  else events
+    page --> actor : Stats 1, 1, 318, 1,204 and table sorted by date ascending (L2-051)
+    opt Date header activated
+      actor -> page : Activate Date
+      page -> page : Reverse order, set aria-sort="descending" (L2-051)
+      page --> actor : Re-sorted table
+    end
+  end
+else failure
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : "We couldn't load your events", listings are safe, Try again and Contact us (L2-052)
+  actor -> page : Try again
+  page -> client : getDashboard()
+end
+@enduml

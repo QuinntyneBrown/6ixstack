@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Toasts and site banners
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+
+Rel(visitor, sixstack, "Sees action outcomes and site status in", "HTTPS")
+Rel(organizer, sixstack, "Sees action outcomes and site status in", "HTTPS")
+Rel(moderator, sixstack, "Sees action outcomes and site status in", "HTTPS")
+@enduml

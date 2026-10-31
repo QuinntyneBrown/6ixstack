@@ -1,0 +1,39 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Sessions, sign-out and the signed-in header
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(header, "SiteHeader", "Angular app-shell component", "Notifications button, avatar, Submit event visibility")
+  Component(guard, "authGuard", "Angular CanMatch guard", "Redirects to /sign-in with returnUrl")
+  Component(interceptor, "unauthorizedInterceptor", "Angular HTTP interceptor", "401 on a protected call redirects to sign-in")
+  Component(dialog, "SignOutDialog", "Angular CDK Dialog", "Confirm sign-out, busy state")
+  Component(store, "SessionStore", "Angular service", "Current user and unread count")
+  Component(client, "HttpAuthApi", "Angular service behind AUTH_API", "Typed client for /api/auth")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(authn, "SessionAuthenticationHandler", "ASP.NET Core authentication handler", "Cookie to session, 14-day idle expiry, revocation")
+  Component(policies, "OrganizerPolicy, ModeratorPolicy", "Authorization policies", "401 anonymous, 403 wrong role")
+  Component(ctrl, "AuthController", "ASP.NET Core controller", "GET /api/auth/me, POST /api/auth/sign-out")
+  Component(me, "GetCurrentUserQueryHandler", "MediatR handler", "Name, initials, role, unread count")
+  Component(signout, "SignOutCommandHandler", "MediatR handler", "Revokes the current session only")
+  Component(cookie, "SessionCookie", "API helper", "Writes and clears the session cookie")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Users, Sessions, Notifications")
+
+Rel(header, store, "Reads user and unread count")
+Rel(guard, store, "Checks user")
+Rel(interceptor, store, "Clears on 401")
+Rel(dialog, client, "signOut()")
+Rel(dialog, store, "Clears user")
+Rel(store, client, "me()")
+Rel(client, authn, "Requests with session cookie", "JSON/HTTPS")
+Rel(authn, db, "Loads session by hash, updates LastSeenAtUtc", "EF Core")
+Rel(authn, ctrl, "Authenticated principal")
+Rel(ctrl, policies, "Applies")
+Rel(ctrl, me, "Sends GetCurrentUserQuery")
+Rel(ctrl, signout, "Sends SignOutCommand")
+Rel(ctrl, cookie, "Clears cookie")
+Rel(me, db, "Reads user and unread count", "EF Core")
+Rel(signout, db, "Sets RevokedAtUtc", "EF Core")
+@enduml

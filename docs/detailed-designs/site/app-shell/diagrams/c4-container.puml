@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — App shell, layout and theming
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "App shell, header, footer, mobile menu, theme tokens")
+  Container(api, "6ixstack API", "ASP.NET Core", "Current session for signed-in header actions")
+}
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/auth/me (identity/sessions-and-sign-out)", "JSON/HTTPS")
+@enduml

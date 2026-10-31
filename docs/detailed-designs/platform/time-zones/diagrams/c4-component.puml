@@ -1,0 +1,36 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Time zones
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(pages, "SubmitEventPage, EventsPage, EventDetailPage", "Angular pages", "Enter local times; show time labels")
+  Component(store, "FilterStateStore", "Angular service", "Filter state; triggers the notice on write")
+  Component(notice, "TimeZoneNotice", "Angular service", "Shows the Toronto time toast once")
+  Component(toast, "ToastService", "Angular service", "Queues toasts")
+  Component(fmt, "TorontoTimeFormatter", "Angular service", "Intl.DateTimeFormat in America/Toronto")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "SubmissionsController, OrganizerEventsController, EventsController", "ASP.NET Core controllers", "Event write and read endpoints")
+  Component(validator, "EventTimeValidator", "FluentValidation", "Supported zone; end after start")
+  Component(converter, "EventTimeConverter", "IEventTimeConverter", "Local time in IANA zone to UTC instant")
+  Component(formatter, "EventTimeFormatter", "IEventTimeFormatter", "ET labels and source time label")
+  Component(abbr, "TimeZoneAbbreviations", "Lookup", "IANA zone to generic abbreviation")
+  Component(toronto, "TorontoTime", "Static helper", "America/Toronto conversion and Toronto day")
+  Component(clock, "SystemClock", "IClock", "Current UTC instant")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "StartsAtUtc, EndsAtUtc, TimeZoneId")
+
+Rel(pages, store, "Writes filters")
+Rel(store, notice, "notifyOnce()")
+Rel(notice, toast, "Shows info toast")
+Rel(pages, fmt, "Formats client-computed times")
+Rel(pages, ctrl, "Local time and zone; reads labels", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates")
+Rel(ctrl, converter, "Converts on write, via command handler")
+Rel(ctrl, formatter, "Formats on read, via query handler")
+Rel(formatter, toronto, "Converts to ET")
+Rel(formatter, abbr, "Abbreviates source zone")
+Rel(toronto, clock, "Reads now for Toronto day")
+Rel(converter, db, "Stores UTC instants", "EF Core")
+@enduml

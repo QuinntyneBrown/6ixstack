@@ -1,0 +1,43 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Automated submission checks
+
+Container_Boundary(api, "6ixstack API") {
+  Component(submit, "SubmitEventCommandHandler", "MediatR handler", "Stores a new submission")
+  Component(update, "UpdateOrganizerEventCommandHandler", "MediatR handler", "Resubmits a Needs changes event")
+  Component(scheduler, "SubmissionCheckScheduler", "ISubmissionCheckScheduler", "Pending rows and RunSubmissionChecks message")
+  Component(outbox, "IOutbox", "Application port", "Queues background messages")
+  Component(processor, "OutboxProcessor", "Hosted service", "Dispatches due messages, backoff up to 5 attempts")
+  Component(handler, "RunSubmissionChecksHandler", "Outbox message handler", "Runs each pending check and stores results")
+  Component(venue, "VenueAddressCheck", "ISubmissionCheck", "Address present and geocoded")
+  Component(links, "LinkReachabilityCheck", "ISubmissionCheck", "Ticket and stream links 2xx or 3xx within 5 s")
+  Component(dup, "DuplicateCheck", "ISubmissionCheck", "Same date with similar title or same organizer")
+  Component(history, "OrganizerHistoryCheck", "ISubmissionCheck", "Approved event count")
+  Component(topic, "DeveloperRelevanceCheck", "ISubmissionCheck", "Not a developer topic warning")
+  Component(geocoder, "HttpGeocoder", "IGeocoder", "Geocoding adapter")
+  Component(linkchecker, "HttpLinkChecker", "ILinkChecker", "HTTP request with timeout")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events, submission checks, outbox")
+System_Ext(geo, "Geocoding service", "<TO SUPPLY>")
+System_Ext(sites, "Ticketing and streaming sites", "Organizer-owned links")
+
+Rel(submit, scheduler, "Schedule(eventId)")
+Rel(update, scheduler, "Schedule(eventId)")
+Rel(scheduler, outbox, "Enqueues RunSubmissionChecks")
+Rel(scheduler, db, "Writes Pending rows", "EF Core")
+Rel(processor, db, "Reads due messages", "EF Core")
+Rel(processor, handler, "Dispatches")
+Rel(handler, venue, "Runs")
+Rel(handler, links, "Runs")
+Rel(handler, dup, "Runs")
+Rel(handler, history, "Runs")
+Rel(handler, topic, "Runs")
+Rel(handler, db, "Writes outcomes", "EF Core")
+Rel(venue, geocoder, "Geocode(address)")
+Rel(links, linkchecker, "Check(url, 5 s)")
+Rel(dup, db, "Queries same-day events", "EF Core")
+Rel(history, db, "Counts approved events", "EF Core")
+Rel(geocoder, geo, "Looks up", "HTTPS")
+Rel(linkchecker, sites, "Requests", "HTTPS")
+@enduml

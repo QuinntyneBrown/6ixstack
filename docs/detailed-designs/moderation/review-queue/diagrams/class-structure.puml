@@ -1,0 +1,123 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Review queue
+
+package "SixStack.Domain" {
+  class Event {
+    +Guid Id
+    +string Title
+    +Guid CommunityId
+    +IReadOnlyCollection<Topic> Topics
+    +EventFormat Format
+    +DateTimeOffset StartsAtUtc
+    +Venue? Venue
+    +EventStatus Status
+    +DateTimeOffset SubmittedAtUtc
+    +string SubmitterEmail
+  }
+  class SubmissionCheck {
+    +Guid Id
+    +Guid EventId
+    +CheckKind Kind
+    +CheckOutcome Outcome
+    +string Message
+  }
+  enum CheckOutcome {
+    Pending
+    Passed
+    Warning
+  }
+  class ModerationDecision {
+    +Guid EventId
+    +DecisionKind DecisionKind
+    +DateTimeOffset DecidedAtUtc
+    +DateTimeOffset? UndoneAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  class GetReviewQueueQuery
+  class GetReviewQueueQueryHandler {
+    +Handle(query: GetReviewQueueQuery): Task<ReviewQueueDto>
+  }
+  class ReviewQueueDto {
+    +ReviewQueueSummaryDto Summary
+    +IReadOnlyList<ReviewCardDto> Cards
+  }
+  class ReviewQueueSummaryDto {
+    +int WaitingCount
+    +DateTimeOffset? OldestSubmittedAtUtc
+    +TimeSpan? MedianReviewTime
+    +DateTimeOffset? LastApprovalAtUtc
+    +string Label
+  }
+  class ReviewCardDto {
+    +Guid EventId
+    +string Title
+    +string OrganizerName
+    +string WhenLabel
+    +string WhereLabel
+    +IReadOnlyList<Topic> Topics
+    +IReadOnlyList<SubmissionCheckDto> Checks
+    +string SubmittedLabel
+    +string SubmitterEmail
+  }
+  class SubmissionCheckDto {
+    +CheckKind Kind
+    +CheckOutcome Outcome
+    +string Message
+  }
+}
+
+package "sixstack (Angular)" {
+  class ReviewQueuePage {
+    +queue: Signal<ReviewQueue | null>
+    +forbidden: Signal<boolean>
+    +focusedIndex: Signal<number>
+    +approve(card: ReviewCard): void
+    +openReject(card: ReviewCard): void
+    +retry(): void
+  }
+  class ReviewCard {
+    +card: InputSignal<ReviewCardModel>
+    +approve: OutputEmitterRef<void>
+    +reject: OutputEmitterRef<void>
+    +focus(): void
+  }
+  class ReviewQueueShortcuts {
+    +onKeydown(event: KeyboardEvent): void
+    -isTypingTarget(target: EventTarget): boolean
+  }
+  class KeyboardShortcutsDialog
+  interface ModerationApi {
+    +getQueue(): Observable<ReviewQueue>
+  }
+  class HttpModerationApi
+}
+
+Event "1" *-- "*" SubmissionCheck
+SubmissionCheck --> CheckOutcome
+ModerationDecision --> Event
+GetReviewQueueQueryHandler ..> GetReviewQueueQuery : handles
+GetReviewQueueQueryHandler ..> Event : reads
+GetReviewQueueQueryHandler ..> SubmissionCheck : reads
+GetReviewQueueQueryHandler ..> ModerationDecision : reads
+GetReviewQueueQueryHandler ..> ReviewQueueDto : returns
+ReviewQueueDto *-- ReviewQueueSummaryDto
+ReviewQueueDto "1" *-- "*" ReviewCardDto
+ReviewCardDto "1" *-- "*" SubmissionCheckDto
+HttpModerationApi ..|> ModerationApi
+ReviewQueuePage ..> ModerationApi : MODERATION_API
+ReviewQueuePage "1" *-- "*" ReviewCard
+ReviewQueuePage *-- ReviewQueueShortcuts
+ReviewQueueShortcuts ..> KeyboardShortcutsDialog : opens
+@enduml

@@ -1,0 +1,61 @@
+@startuml
+title UML sequence behaviour — Download a single-event calendar file
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "AddToCalendarDialog" as dialog
+  participant "HttpEventsApi" as client
+  participant "FileDownloader" as saver
+  participant "ToastService" as toasts
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetEventIcsQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "IcsWriter" as writer
+  database "6ixstack database" as db
+end box
+actor -> dialog : Apple Calendar (or Other app (.ics file))
+dialog -> dialog : busyOption = apple; aria-busy="true" on that option only, others usable (L2-037)
+dialog -> client : downloadIcs("azure-data-ai-day")
+client -> controller : GET /api/events/azure-data-ai-day/ics
+controller -> controller : Allow anonymous caller (L2-080)
+controller -> handler : Send GetEventIcsQuery
+handler -> db : Load event by slug
+alt Published or Cancelled event
+  db --> handler : Event
+  handler -> writer : WriteSingleEvent(event)
+  writer -> writer : VTIMEZONE America/Toronto; VEVENT with feed UID, SEQUENCE, URL, TZID times (L2-036, L2-037)
+  writer --> handler : Calendar text
+  handler --> controller : IcsFileDto
+  controller --> client : 200 text/calendar; charset=utf-8, attachment azure-data-ai-day.ics
+  client --> dialog : Blob and file name
+  dialog -> saver : save(blob, "azure-data-ai-day.ics")
+  saver --> actor : File downloads; calendar app shows ET time in the viewer's zone (L2-037)
+  dialog -> toasts : Success toast, copy <TO SUPPLY>
+  dialog -> dialog : busyOption = null
+else unknown slug, other status, server or network error
+  db --> handler : none
+  handler --> controller : null
+  controller --> client : 404, 5xx or network error
+  client --> dialog : Error
+  dialog -> dialog : busyOption = null; fileFailed = true
+  dialog --> actor : "We couldn't create the calendar file" suggests Google Calendar or Outlook; all options available (L2-037, L2-077)
+end
+@enduml

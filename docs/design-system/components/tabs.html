@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabs — 6ixstack design system</title>
+<meta name="description" content="Tabs switch between views of one object in place. Underline and pill variants, counts, two sizes, every state.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Navigation</p>
+      <h1>Tabs</h1>
+      <p class="ds-lead">Tabs switch between views of the same thing, such as an event's About, Agenda, Speakers and Location, without leaving the page.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: core (not yet in a mock)</span><span class="ds-pill">APG Tabs</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+<p>Tabs switch between views of the same object in place, without leaving the page: the About, Agenda, Speakers and Location of one event, or the Published, In review, Drafts and Past lists on the organizer dashboard. Only one panel shows at a time.</p>
+<ul>
+<li>Use tabs when people compare or flip between a few views of one thing and the panels are roughly the same weight.</li>
+<li>Use a <a href="button-group.html">segmented button group</a> to filter a single list (the mocks' Upcoming / Past and List / Calendar controls); the list is one panel whose contents change.</li>
+<li>Use <a href="sidebar-nav.html">sidebar navigation</a> when the views are separate sections people scroll to or deep-link to.</li>
+<li>Never use tabs for steps in a sequence; that is a <a href="stepper.html">stepper</a>.</li>
+</ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+<div class="ds-anatomy">
+<figure class="ds-anatomy__figure"><div class="tabs" role="tablist" aria-label="Event detail sections"><button class="tab" type="button" role="tab" id="an-t0" aria-controls="an-p" aria-selected="false" tabindex="-1">About</button><button class="tab" type="button" role="tab" id="an-t1" aria-controls="an-p" aria-selected="true" tabindex="0">Agenda</button><button class="tab" type="button" role="tab" id="an-t2" aria-controls="an-p" aria-selected="false" tabindex="-1">Speakers<span class="badge badge--count" aria-label="3 items">3</span></button><button class="tab" type="button" role="tab" id="an-t3" aria-controls="an-p" aria-selected="false" tabindex="-1">Location</button></div>
+<span class="ds-callout" style="left: 12%; top: 22%;" aria-hidden="true">1</span>
+<span class="ds-callout" style="left: 34%; top: 72%;" aria-hidden="true">2</span>
+<span class="ds-callout" style="left: 62%; top: 22%;" aria-hidden="true">3</span>
+<span class="ds-callout" style="left: 92%; top: 72%;" aria-hidden="true">4</span>
+</figure>
+<ol class="ds-anatomy__list">
+<li><div><b>Tab</b><small><code>button role="tab"</code>, 44px tall, <code>--text-label</code>, muted until selected.</small></div></li>
+<li><div><b>Selected indicator</b><small>2px <code>--color-accent</code> bar on the bottom edge plus accent label colour.</small></div></li>
+<li><div><b>Count (optional)</b><small><code>.badge--count</code> after the label, with an <code>aria-label</code> that says what is counted.</small></div></li>
+<li><div><b>Track</b><small><code>role="tablist"</code> with a 1px <code>--color-border-default</code> baseline; scrolls sideways when it overflows.</small></div></li>
+</ol>
+</div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+<p>Underline tabs are the default and sit on surfaces. Pill tabs sit inside cards and toolbars where an underline would collide with the card edge. Either can carry counts.</p>
+<div class="ds-example"><div class="ds-example__canvas"><div class="stack" style="width: 100%;"><div class="tabs" role="tablist" aria-label="Event detail sections"><button class="tab" type="button" role="tab" id="v1-t0" aria-controls="v1-p" aria-selected="true" tabindex="0">About</button><button class="tab" type="button" role="tab" id="v1-t1" aria-controls="v1-p" aria-selected="false" tabindex="-1">Agenda</button><button class="tab" type="button" role="tab" id="v1-t2" aria-controls="v1-p" aria-selected="false" tabindex="-1">Speakers</button><button class="tab" type="button" role="tab" id="v1-t3" aria-controls="v1-p" aria-selected="false" tabindex="-1">Location</button></div><div class="stack--sm" role="tabpanel" id="v1-p" aria-labelledby="v1-t0" tabindex="0" style="padding-top: var(--space-4);"><p>Fabric for Power BI developers: a hands-on evening at the Microsoft Reactor, 222 Bay Street, with doors at 6:00 pm.</p></div></div></div><div class="ds-example__caption"><span>Underline: event detail sections.</span></div><details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="tabs" role="tablist" aria-label="Event detail sections"&gt;&lt;button class="tab" type="button" role="tab" id="v1-t0" aria-controls="v1-p" aria-selected="true" tabindex="0"&gt;About&lt;/button&gt;&lt;button class="tab" type="button" role="tab" id="v1-t1" aria-controls="v1-p" aria-selected="false" tabindex="-1"&gt;Agenda&lt;/button&gt;&lt;button class="tab" type="button" role="tab" id="v1-t2" aria-controls="v1-p" aria-selected="false" tabindex="-1"&gt;Speakers&lt;/button&gt;&lt;button class="tab" type="button" role="tab" id="v1-t3" aria-controls="v1-p" aria-selected="false" tabindex="-1"&gt;Location&lt;/button&gt;&lt;/div&gt;</code></pre></details></div>
+<div class="ds-example"><div class="ds-example__canvas"><div class="tabs" role="tablist" aria-label="Your events by status"><button class="tab" type="button" role="tab" id="v2-t0" aria-controls="v2-p" aria-selected="false" tabindex="-1">Published<span class="badge badge--count" aria-label="12 items">12</span></button><button class="tab" type="button" role="tab" id="v2-t1" aria-controls="v2-p" aria-selected="true" tabindex="0">In review<span class="badge badge--count" aria-label="3 items">3</span></button><button class="tab" type="button" role="tab" id="v2-t2" aria-controls="v2-p" aria-selected="false" tabindex="-1">Drafts<span class="badge badge--count" aria-label="2 items">2</span></button><button class="tab" type="button" role="tab" id="v2-t3" aria-controls="v2-p" aria-selected="false" tabindex="-1">Past<span class="badge badge--count" aria-label="41 items">41</span></button></div></div><div class="ds-example__caption"><span>With counts: the organizer dashboard's status lists.</span></div></div>
+<div class="ds-example"><div class="ds-example__canvas"><div class="tabs tabs--pill" role="tablist" aria-label="Calendar range"><button class="tab" type="button" role="tab" id="v3-t0" aria-controls="v3-p" aria-selected="false" tabindex="-1">List</button><button class="tab" type="button" role="tab" id="v3-t1" aria-controls="v3-p" aria-selected="false" tabindex="-1">Week</button><button class="tab" type="button" role="tab" id="v3-t2" aria-controls="v3-p" aria-selected="true" tabindex="0">Month</button></div></div><div class="ds-example__caption"><span>Pill: inside a card header or toolbar.</span></div></div>
+<div class="ds-example"><div class="ds-example__canvas"><div style="width: 18rem; max-width: 100%; overflow: hidden;"><div class="tabs" role="tablist" aria-label="Event detail sections"><button class="tab" type="button" role="tab" id="v4-t0" aria-controls="v4-p" aria-selected="true" tabindex="0">About</button><button class="tab" type="button" role="tab" id="v4-t1" aria-controls="v4-p" aria-selected="false" tabindex="-1">Agenda</button><button class="tab" type="button" role="tab" id="v4-t2" aria-controls="v4-p" aria-selected="false" tabindex="-1">Speakers</button><button class="tab" type="button" role="tab" id="v4-t3" aria-controls="v4-p" aria-selected="false" tabindex="-1">Location</button><button class="tab" type="button" role="tab" id="v4-t4" aria-controls="v4-p" aria-selected="false" tabindex="-1">Sponsors</button><button class="tab" type="button" role="tab" id="v4-t5" aria-controls="v4-p" aria-selected="false" tabindex="-1">Code of conduct</button></div></div></div><div class="ds-example__caption"><span>Scrollable: tabs never wrap; the track scrolls sideways at narrow widths.</span></div></div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+<p>Medium (44px) everywhere a person taps; small (32px, caption type) only inside dense cards where the tabs sit in a row that is itself not the primary navigation.</p>
+<div class="ds-example"><div class="ds-example__canvas"><div class="tabs tabs--sm" role="tablist" aria-label="Small example"><button class="tab" type="button" role="tab" id="s1-t0" aria-controls="s1-p" aria-selected="true" tabindex="0">Published</button><button class="tab" type="button" role="tab" id="s1-t1" aria-controls="s1-p" aria-selected="false" tabindex="-1">In review</button><button class="tab" type="button" role="tab" id="s1-t2" aria-controls="s1-p" aria-selected="false" tabindex="-1">Drafts</button></div><div class="tabs" role="tablist" aria-label="Medium example"><button class="tab" type="button" role="tab" id="s2-t0" aria-controls="s2-p" aria-selected="true" tabindex="0">Published</button><button class="tab" type="button" role="tab" id="s2-t1" aria-controls="s2-p" aria-selected="false" tabindex="-1">In review</button><button class="tab" type="button" role="tab" id="s2-t2" aria-controls="s2-p" aria-selected="false" tabindex="-1">Drafts</button></div></div><div class="ds-example__caption"><span>Small · 32px and medium · 44px.</span></div></div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+<p>The panel each tab controls is omitted here; <code>aria-controls</code> points at the tab itself only so the static examples stay valid.</p>
+<div class="ds-matrix"><table><thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Selected</th></tr></thead><tbody><tr><th scope="row">Underline</th><td><div role="tablist" aria-label="Example ud" class="tabs" style="border: 0;"><button class="tab" type="button" role="tab" id="ud" aria-controls="ud" aria-selected="false" tabindex="-1">Agenda</button></div></td><td><div role="tablist" aria-label="Example uh" class="tabs" style="border: 0;"><button class="tab" type="button" role="tab" id="uh" aria-controls="uh" aria-selected="false" tabindex="-1" data-state="hover">Agenda</button></div></td><td><div role="tablist" aria-label="Example uf" class="tabs" style="border: 0;"><button class="tab" type="button" role="tab" id="uf" aria-controls="uf" aria-selected="false" tabindex="-1" data-state="focus">Agenda</button></div></td><td><div role="tablist" aria-label="Example ua" class="tabs" style="border: 0;"><button class="tab" type="button" role="tab" id="ua" aria-controls="ua" aria-selected="false" tabindex="-1" data-state="active">Agenda</button></div></td><td><div role="tablist" aria-label="Example ux" class="tabs" style="border: 0;"><button class="tab" type="button" role="tab" id="ux" aria-controls="ux" aria-selected="false" tabindex="-1" disabled>Agenda</button></div></td><td><div role="tablist" aria-label="Example us" class="tabs" style="border: 0;"><button class="tab" type="button" role="tab" id="us" aria-controls="us" aria-selected="true" tabindex="0">Agenda</button></div></td></tr><tr><th scope="row">Pill</th><td><div role="tablist" aria-label="Example pd" class="tabs tabs--pill" style="border: 0;"><button class="tab" type="button" role="tab" id="pd" aria-controls="pd" aria-selected="false" tabindex="-1">Agenda</button></div></td><td><div role="tablist" aria-label="Example ph" class="tabs tabs--pill" style="border: 0;"><button class="tab" type="button" role="tab" id="ph" aria-controls="ph" aria-selected="false" tabindex="-1" data-state="hover">Agenda</button></div></td><td><div role="tablist" aria-label="Example pf" class="tabs tabs--pill" style="border: 0;"><button class="tab" type="button" role="tab" id="pf" aria-controls="pf" aria-selected="false" tabindex="-1" data-state="focus">Agenda</button></div></td><td><div role="tablist" aria-label="Example pa" class="tabs tabs--pill" style="border: 0;"><button class="tab" type="button" role="tab" id="pa" aria-controls="pa" aria-selected="false" tabindex="-1" data-state="active">Agenda</button></div></td><td><div role="tablist" aria-label="Example px" class="tabs tabs--pill" style="border: 0;"><button class="tab" type="button" role="tab" id="px" aria-controls="px" aria-selected="false" tabindex="-1" disabled>Agenda</button></div></td><td><div role="tablist" aria-label="Example ps" class="tabs tabs--pill" style="border: 0;"><button class="tab" type="button" role="tab" id="ps" aria-controls="ps" aria-selected="true" tabindex="0">Agenda</button></div></td></tr></tbody></table></div>
+<h3>Both themes</h3>
+<div class="ds-themes"><div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="tabs" role="tablist" aria-label="Event detail sections"><button class="tab" type="button" role="tab" id="th-t0" aria-controls="th-p" aria-selected="false" tabindex="-1">About</button><button class="tab" type="button" role="tab" id="th-t1" aria-controls="th-p" aria-selected="true" tabindex="0">Agenda</button><button class="tab" type="button" role="tab" id="th-t2" aria-controls="th-p" aria-selected="false" tabindex="-1">Speakers</button><button class="tab" type="button" role="tab" id="th-t3" aria-controls="th-p" aria-selected="false" tabindex="-1">Location</button></div></div></div><div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><div class="tabs" role="tablist" aria-label="Event detail sections"><button class="tab" type="button" role="tab" ="-dk" ="-dk" aria-selected="false" tabindex="-1">About</button><button class="tab" type="button" role="tab" ="-dk" ="-dk" aria-selected="true" tabindex="0">Agenda</button><button class="tab" type="button" role="tab" ="-dk" ="-dk" aria-selected="false" tabindex="-1">Speakers</button><button class="tab" type="button" role="tab" ="-dk" ="-dk" aria-selected="false" tabindex="-1">Location</button></div></div></div></div>
+<ul><li><b>Disabled</b> tabs are rare: prefer hiding a tab whose panel would be empty, or showing the panel with an <a href="empty-state.html">empty state</a> ("No speakers announced yet").</li>
+<li><b>Selected</b> is <code>aria-selected="true"</code> and the roving <code>tabindex="0"</code>; every other tab is <code>tabindex="-1"</code>.</li></ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive</a></h2>
+<ul>
+<li>Tabs never wrap onto a second row. When they overflow (common below 768px with five or more tabs) the track scrolls horizontally with the scrollbar hidden; the selected tab is scrolled into view on load.</li>
+<li>Below 768px, consider whether the panels should become stacked sections instead: if people would scroll through all of them anyway (event About, Agenda, Location), drop the tabs and show the sections in order.</li>
+<li>The track spans the content column; tabs keep their natural width rather than stretching.</li>
+</ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+<p>Tabs read <code>--color-fg-muted</code> (resting label), <code>--color-fg-default</code> (hover), <code>--color-fg-accent</code> and <code>--color-accent</code> (selected label and indicator) and <code>--color-border-default</code> (track). In this palette accent is ink, so the selected tab is an ink underline in light theme and a near-white one in dark theme; the orange brand is never used for selection.</p>
+<pre><code>[data-theme="partner"] .tab[aria-selected="true"]::after { background: var(--color-fg-brand); }</code></pre>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+<h3>Role and pattern</h3><p><a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/">APG Tabs</a> with <b>automatic activation</b>: arrows move focus and select at once, because every panel is already in the page. Use manual activation (arrows move, Enter selects) only if a panel loads data.</p><h3>Keyboard</h3><table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody><tr><td><kbd>Tab</kbd></td><td>Moves focus into the tablist (to the selected tab), then out to the panel.</td></tr><tr><td><kbd>←</kbd> / <kbd>→</kbd></td><td>Previous / next tab, wrapping at the ends; selects it.</td></tr><tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>First / last tab.</td></tr><tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Selects the focused tab (manual activation only).</td></tr></tbody></table><h3>Focus</h3><p>Shared focus ring around the tab. The panel has <code>tabindex="0"</code> when it has no focusable content, so Tab lands on it next.</p><h3>Labelling</h3><p>The tablist has an <code>aria-label</code> ("Event detail sections"); each tab is labelled by its text; each panel is <code>aria-labelledby</code> its tab. Count badges carry an <code>aria-label</code> ("3 items").</p><h3>Contrast</h3><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);"><div class="ds-pair"><span>Resting tab on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div><div class="ds-pair"><span>Selected tab on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-bg-surface" data-min="4.5"></span></div><div class="ds-pair"><span>Indicator against surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div><div class="ds-pair"><span>Focus ring</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div></div><h3>Motion</h3><p>The indicator colour fades over <code>--duration-fast</code>; it does not slide. Panels swap without animation.</p><h3>Touch</h3><p>Tabs are 44px tall with 12px side padding, and at least 4px apart. Small tabs (32px) are only used where they are not the main way through the page.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+<ul><li>Labels are one or two nouns: "Agenda", "In review". No verbs, no "View…".</li>
+<li>Keep labels parallel and short enough that four fit at 360px.</li>
+<li>Counts are bare numbers; the meaning lives in the label and the badge's <code>aria-label</code>.</li></ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+<div class="ds-dodont"><figure class="ds-do"><div class="ds-example__canvas"><div class="segmented" role="group" aria-label="Example: event range"><button class="segmented__item" type="button" aria-pressed="true">Upcoming</button><button class="segmented__item" type="button" aria-pressed="false">Past</button></div></div><figcaption>Filter one list with a segmented control. The Events mocks do this for Upcoming / Past, which changes the list's contents rather than switching panels.</figcaption></figure><figure class="ds-dont"><div class="ds-example__canvas"><div class="tabs" role="tablist" aria-label="Example: tabs as filter"><button class="tab" type="button" role="tab" id="dd1-t0" aria-controls="dd1-p" aria-selected="true" tabindex="0">Upcoming</button><button class="tab" type="button" role="tab" id="dd1-t1" aria-controls="dd1-p" aria-selected="false" tabindex="-1">Past</button></div></div><figcaption>Use tabs to filter a list. Screen readers announce a tablist and panels that do not exist.</figcaption></figure><figure class="ds-do"><div class="ds-example__canvas"><div class="tabs" role="tablist" aria-label="Example: few tabs"><button class="tab" type="button" role="tab" id="dd2-t0" aria-controls="dd2-p" aria-selected="true" tabindex="0">Published</button><button class="tab" type="button" role="tab" id="dd2-t1" aria-controls="dd2-p" aria-selected="false" tabindex="-1">In review</button><button class="tab" type="button" role="tab" id="dd2-t2" aria-controls="dd2-p" aria-selected="false" tabindex="-1">Drafts</button><button class="tab" type="button" role="tab" id="dd2-t3" aria-controls="dd2-p" aria-selected="false" tabindex="-1">Past</button></div></div><figcaption>Keep to four or five short labels that fit on one row on a phone.</figcaption></figure><figure class="ds-dont"><div class="ds-example__canvas"><div class="cluster"><div class="tabs" role="tablist" aria-label="Example: wrapped row 1"><button class="tab" type="button" role="tab" id="dd3-t0" aria-controls="dd3-p" aria-selected="true" tabindex="0">About</button><button class="tab" type="button" role="tab" id="dd3-t1" aria-controls="dd3-p" aria-selected="false" tabindex="-1">Agenda</button></div><div class="tabs" role="tablist" aria-label="Example: wrapped row 2"><button class="tab" type="button" role="tab" id="dd4-t0" aria-controls="dd4-p" aria-selected="true" tabindex="0">Speakers</button><button class="tab" type="button" role="tab" id="dd4-t1" aria-controls="dd4-p" aria-selected="false" tabindex="-1">Location</button></div></div></div><figcaption>Wrap tabs onto two rows; the selected indicator no longer shows which row's panel is open.</figcaption></figure></div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+<div class="ds-table-wrap"><table class="ds-table"><thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead><tbody><tr><td>Resting label</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr><tr><td>Hover label</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr><tr><td>Selected label</td><td><code>--color-fg-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td></tr><tr><td>Selected indicator</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr><tr><td>Track baseline</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr><tr><td>Pill track</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr><tr><td>Pill selected</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr><tr><td>Height md / sm</td><td><code>--target-comfortable</code> / <code>--control-height-sm</code></td><td colspan="2"><span data-token="--target-comfortable"></span> / <span data-token="--control-height-sm"></span></td></tr><tr><td>Padding</td><td><code>--space-3</code></td><td colspan="2"><span data-token="--space-3"></span></td></tr><tr><td>Indicator radius</td><td><code>--radius-xs</code></td><td colspan="2"><span data-token="--radius-xs"></span></td></tr><tr><td>Transition</td><td><code>--duration-fast</code></td><td colspan="2"><span data-token="--duration-fast"></span></td></tr></tbody></table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+<pre><code>&lt;div class="tabs" role="tablist" aria-label="Event detail sections"&gt;&lt;button class="tab" type="button" role="tab" id="code-t0" aria-controls="code-p" aria-selected="true" tabindex="0"&gt;About&lt;/button&gt;&lt;button class="tab" type="button" role="tab" id="code-t1" aria-controls="code-p" aria-selected="false" tabindex="-1"&gt;Agenda&lt;/button&gt;&lt;button class="tab" type="button" role="tab" id="code-t2" aria-controls="code-p" aria-selected="false" tabindex="-1"&gt;Speakers&lt;/button&gt;&lt;button class="tab" type="button" role="tab" id="code-t3" aria-controls="code-p" aria-selected="false" tabindex="-1"&gt;Location&lt;/button&gt;&lt;/div&gt;
+&lt;div class="stack--sm" role="tabpanel" id="code-p" aria-labelledby="code-t0" tabindex="0" style="padding-top: var(--space-4);"&gt;&lt;p&gt;…&lt;/p&gt;&lt;/div&gt;</code></pre><table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody><tr><td><code>.tabs</code> + <code>role="tablist"</code></td><td>Track; scrolls when it overflows.</td></tr><tr><td><code>.tab</code> + <code>role="tab"</code></td><td>A tab button.</td></tr><tr><td><code>aria-selected</code>, roving <code>tabindex</code></td><td>Selected state; only the selected tab is in the tab order.</td></tr><tr><td><code>.tabs--pill</code></td><td>Pill variant.</td></tr><tr><td><code>.tabs--sm</code></td><td>Small size.</td></tr><tr><td><code>role="tabpanel"</code> + <code>aria-labelledby</code></td><td>The panel; one visible at a time.</td></tr></tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+<p>Extracted from these mocks:</p><ul><li><a href="../../mocks/pages/event-detail/default.html">pages/event-detail/default</a> (About, Agenda, Speakers and Location sections that tabs would group on wide screens)</li><li><a href="../../mocks/pages/organizer-dashboard/default.html">pages/organizer-dashboard/default</a> (status lists with counts)</li><li><a href="../../mocks/pages/events/default.html">pages/events/default</a> (segmented Upcoming / Past filter, the alternative to tabs)</li></ul><p>Drift fixed during extraction:</p><ul><li>No mock uses <code>.tabs</code> yet; the component is part of the core set. Its pill and small variants, and the disabled style, were added to the stylesheet during extraction.</li></ul>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

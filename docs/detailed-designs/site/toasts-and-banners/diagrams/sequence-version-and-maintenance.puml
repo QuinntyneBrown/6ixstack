@@ -1,0 +1,56 @@
+@startuml
+title UML sequence behaviour — New version and maintenance banners
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "Angular service worker (SwUpdate)" as sw
+  participant "VersionUpdateWatcher" as version
+  participant "MaintenanceNoticeSource" as maint
+  participant "BannerDismissalStore" as store
+  participant "BannerService" as banners
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "SiteController" as controller
+end box
+== New version ==
+sw -> sw : checkForUpdate() finds new ngsw manifest (interval <TO SUPPLY>)
+sw --> version : VERSION_READY
+version -> banners : set(version, info "6ixstack was updated", Refresh) (L2-075)
+banners --> actor : "Refresh to get the newest events and fixes."
+actor -> banners : Refresh
+banners -> version : refresh()
+version -> sw : activateUpdate()
+version -> version : document.location.reload()
+== Maintenance ==
+maint -> controller : Read current notice (route <TO SUPPLY>)
+controller --> maint : MaintenanceNotice windowId "2026-11-08"
+maint -> store : isDismissed("2026-11-08")
+alt not dismissed
+  store --> maint : false
+  maint -> banners : set(maintenance, info "Submissions pause Sunday, Nov 8, 2–4 AM ET", dismissible) (L2-075)
+  actor -> banners : Dismiss
+  banners -> store : remember("2026-11-08")
+else dismissed for this window
+  store --> maint : true
+  maint -> maint : Keep hidden after reload (L2-075)
+end
+opt new maintenance window
+  controller --> maint : MaintenanceNotice windowId "2026-12-06"
+  maint -> store : isDismissed("2026-12-06"), drop keys for other windows
+  store --> maint : false
+  maint -> banners : set(maintenance, new banner) (L2-075)
+end
+@enduml

@@ -1,0 +1,118 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Observability
+
+package "SixStack.Domain" {
+  class OutboxMessage {
+    +Guid Id
+    +string Type
+    +string Payload
+    +int AttemptCount
+    +DateTimeOffset NextAttemptAtUtc
+    +DateTimeOffset? ProcessedAtUtc
+    +DateTimeOffset? LockedUntilUtc
+    +DateTimeOffset? FailedAtUtc
+    +string? LastError
+    +string CorrelationId
+  }
+}
+
+package "SixStack.Application" {
+  interface IOutbox {
+    +Enqueue<T>(message: T): void
+  }
+  interface "IOutboxMessageHandler<T>" as IOMH {
+    +HandleAsync(message: T, ct): Task
+  }
+  interface IEmailSender {
+    +SendAsync(email: EmailMessage, idempotencyKey: Guid, ct): Task
+  }
+  class SendEmailHandler
+  class RunSubmissionChecksHandler
+  class RegenerateFeedsHandler
+}
+
+package "SixStack.Infrastructure" {
+  class Outbox
+  class OutboxProcessor {
+    -IClock clock
+    +ExecuteAsync(ct): Task
+    -ClaimDueBatchAsync(ct): Task<IReadOnlyList<OutboxMessage>>
+    -RecordFailure(msg: OutboxMessage, ex: Exception): void
+  }
+  class RetrySchedule {
+    +MaxAttempts: int = 5
+    +BaseDelay: TimeSpan = <TO SUPPLY>
+    +NextDelay(attempt: int): TimeSpan
+  }
+  class SmtpEmailSender
+}
+
+package "SixStack.Api" {
+  class RequestLoggingMiddleware {
+    +InvokeAsync(context, next): Task
+    -RouteTemplate(context): string
+  }
+  class ExceptionHandlingMiddleware {
+    +InvokeAsync(context, next): Task
+    -WriteProblem(context, status, problem): Task
+  }
+  class ReferenceCodeGenerator {
+    +Next(): string
+  }
+  class RequestLogEntry <<log fields>> {
+    +string Method
+    +string Route
+    +int StatusCode
+    +double DurationMs
+    +string CorrelationId
+  }
+  class HealthChecks <<registration>> {
+    +live: no checks
+    +ready: AppDbContext check
+  }
+}
+
+package "api (Angular)" {
+  class ProblemDetailsInterceptor {
+    +intercept(req, next): Observable<HttpEvent>
+  }
+  class ApiProblem {
+    +status: number
+    +title: string
+    +referenceCode?: string
+    +correlationId?: string
+    +errors?: Record<string, string[]>
+  }
+}
+
+package "sixstack (Angular)" {
+  class ServerErrorPage {
+    +referenceCode: InputSignal<string?>
+  }
+}
+
+Outbox ..|> IOutbox
+Outbox ..> OutboxMessage : adds
+OutboxProcessor ..> OutboxMessage : claims, updates
+OutboxProcessor --> RetrySchedule
+OutboxProcessor ..> IOMH : dispatches
+SendEmailHandler ..|> IOMH
+RunSubmissionChecksHandler ..|> IOMH
+RegenerateFeedsHandler ..|> IOMH
+SendEmailHandler ..> IEmailSender
+SmtpEmailSender ..|> IEmailSender
+RequestLoggingMiddleware ..> RequestLogEntry : writes
+ExceptionHandlingMiddleware --> ReferenceCodeGenerator
+ProblemDetailsInterceptor ..> ApiProblem : parses
+ServerErrorPage ..> ApiProblem : referenceCode
+@enduml

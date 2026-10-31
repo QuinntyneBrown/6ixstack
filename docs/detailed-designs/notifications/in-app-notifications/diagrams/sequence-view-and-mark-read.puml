@@ -1,0 +1,84 @@
+@startuml
+title UML sequence behaviour — View and mark notifications read
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "NotificationsPage" as page
+  participant "SessionStore" as session
+  participant "HttpNotificationsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "NotificationsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetNotificationsQueryHandler" as query
+  participant "MarkAllNotificationsReadCommandHandler" as markAll
+  participant "MarkNotificationReadCommandHandler" as markOne
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /notifications
+page -> client : list()
+client -> controller : GET /api/notifications
+opt no response within 300 ms
+  page --> actor : Four skeleton rows, lead "Loading…" (L2-065, L2-089)
+end
+controller -> controller : Require signed-in session
+controller -> query : Send GetNotificationsQuery
+query -> db : Current user's notifications, newest first
+db --> query : Rows and unread count
+query --> controller : NotificationListDto
+alt success with items
+  controller --> client : 200 JSON
+  client --> page : NotificationList
+  page -> session : unreadCount = 3
+  page --> actor : "3 unread", dot, bold title, hidden "(unread)" (L2-065, L2-093)
+else success, no items
+  controller --> client : 200 empty list
+  page --> actor : "No notifications yet" with Go to your events (L2-065)
+else failure
+  controller --> client : 5xx or network error
+  page --> actor : "We couldn't load notifications" with Try again (L2-065, L2-077)
+end
+opt Mark all as read
+  actor -> page : Mark all as read
+  page -> client : markAllRead()
+  client -> controller : POST /api/notifications/read-all + anti-forgery token
+  controller -> markAll : Send MarkAllNotificationsReadCommand
+  markAll -> db : Set ReadAtUtc on every unread row of the user
+  db --> markAll : Rows updated
+  markAll --> controller : Count
+  controller --> client : 204
+  page -> session : unreadCount = 0, header badge removed
+  page --> actor : No dots, button hidden, lead "All caught up" (L2-065)
+end
+opt Notification link activated
+  actor -> page : Activate a notification title
+  page -> client : markRead(id)
+  client -> controller : POST /api/notifications/{id}/read
+  controller -> markOne : Send MarkNotificationReadCommand
+  markOne -> db : Load notification for current user
+  alt owned by current user
+    markOne -> db : Set ReadAtUtc (L2-065)
+    controller --> client : 204
+  else other user's notification
+    controller --> client : 404
+  end
+  page -> session : Decrement unreadCount
+  page --> actor : Navigate to the notification link
+end
+@enduml

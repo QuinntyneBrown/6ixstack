@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Approve a submission
+
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>; delivers approval emails")
+System_Ext(calendars, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+
+Rel(moderator, sixstack, "Approves, undoes and sees co-reviewers in", "HTTPS")
+Rel(sixstack, email, "Sends approval email after the undo window via", "<TO SUPPLY>")
+Rel(email, organizer, "Delivers approval email to")
+Rel(visitor, sixstack, "Sees the published event in the list and calendar of", "HTTPS")
+Rel(calendars, sixstack, "Requests matching feeds from", "HTTPS, iCalendar")
+@enduml

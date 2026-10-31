@@ -1,0 +1,89 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — About and Code of Conduct pages
+
+package "SixStack.Domain" {
+  class Community {
+    +Guid Id
+    +string Slug
+    +string Name
+  }
+  class Event {
+    +Guid Id
+    +EventStatus Status
+    +DateTimeOffset StartsAtUtc
+  }
+  class User {
+    +Guid Id
+    +UserRole Role
+    +DateTimeOffset? DeletedAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  class GetSiteStatsQuery
+  class GetSiteStatsQueryHandler {
+    +Handle(query: GetSiteStatsQuery): Task<SiteStatsDto>
+  }
+  class SiteStatsDto {
+    +int Communities
+    +int EventsListedThisYear
+    +int FeedSubscribers
+    +int VolunteerModerators
+  }
+  interface IAppDbContext
+  interface IClock
+}
+
+package "SixStack.Api" {
+  class SiteController {
+    +GetStats(): Task<ActionResult<SiteStatsDto>>
+  }
+}
+
+package "sixstack (Angular)" {
+  class AboutPage {
+    +stats: Signal<SiteStats | null>
+  }
+  class CodeOfConductPage {
+    +lastUpdated: string = "September 1, 2026"
+    +conductEmail: string = "conduct@6ixstack.dev"
+  }
+  interface SiteApi {
+    +getStats(): Observable<SiteStats>
+  }
+  class HttpSiteApi
+}
+
+package "components (Angular library)" {
+  class StatsRow <<sx-stats-row>> {
+    +items: input<StatItem[]>
+  }
+  class StatItem {
+    +label: string
+    +value: number
+  }
+}
+
+SiteController ..> GetSiteStatsQuery : sends
+GetSiteStatsQueryHandler ..> GetSiteStatsQuery : handles
+GetSiteStatsQueryHandler ..> IAppDbContext
+GetSiteStatsQueryHandler ..> IClock
+GetSiteStatsQueryHandler ..> Community : counts
+GetSiteStatsQueryHandler ..> Event : counts
+GetSiteStatsQueryHandler ..> User : counts moderators
+GetSiteStatsQueryHandler ..> SiteStatsDto : returns
+HttpSiteApi ..|> SiteApi
+AboutPage ..> SiteApi : SITE_API
+AboutPage ..> StatsRow
+StatsRow "1" *-- "4" StatItem
+@enduml

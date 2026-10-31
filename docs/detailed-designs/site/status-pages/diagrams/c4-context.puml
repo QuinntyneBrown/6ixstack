@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Status pages, inline failures and offline events
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+
+Rel(visitor, sixstack, "Sees not-found, server-error and offline pages; saved events offline", "HTTPS")
+Rel(organizer, sixstack, "Sees forbidden page for another community's event", "HTTPS")
+@enduml

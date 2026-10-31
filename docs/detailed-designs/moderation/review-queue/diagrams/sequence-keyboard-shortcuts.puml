@@ -1,0 +1,52 @@
+@startuml
+title UML sequence behaviour — Review queue keyboard shortcuts
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Moderator" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "ReviewQueueShortcuts" as keys
+  participant "ReviewQueuePage" as page
+  participant "ReviewCard" as card
+  participant "RejectSubmissionDialog" as reject
+  participant "KeyboardShortcutsDialog" as help
+  participant "HttpModerationApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "ModerationController" as controller
+end box
+actor -> keys : keydown
+keys -> keys : Target is input, textarea, select or contenteditable, modifier held, or dialog open?
+alt typing in a field or dialog open
+  keys --> actor : Ignored; the letter is typed, nothing is approved (L2-064)
+else J or K
+  keys -> page : Move focus to next or previous card (L2-064)
+  page -> card : focus()
+  card --> actor : Focus ring on the card
+else A
+  keys -> page : approve(focused card) (L2-064)
+  page -> client : approve(eventId)
+  client -> controller : POST /api/moderation/submissions/{id}/approve
+  controller --> client : Result as in approve-submission (L2-060)
+  client --> page : Approval result
+  page --> actor : Toast and card removed; focus target afterwards <TO SUPPLY>
+else R
+  keys -> page : openReject(focused card) (L2-064)
+  page -> reject : Open "Reject “{title}”?"
+  reject --> actor : Reject dialog, focus trapped (L2-091)
+else ?
+  keys -> help : Open
+  help --> actor : J, K, A, R and ? listed (L2-064)
+end
+@enduml

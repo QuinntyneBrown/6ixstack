@@ -1,0 +1,102 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Contact form
+
+package "SixStack.Domain" {
+  enum ContactTopic {
+    GeneralQuestion
+    ListingCorrection
+    PartnershipOrSponsorship
+    CodeOfConductReport
+    Press
+  }
+  class ContactMessage {
+    +Guid Id
+    +string Name
+    +string Email
+    +ContactTopic Topic
+    +string Message
+    +DateTimeOffset ReceivedAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  class SendContactMessageCommand {
+    +string Name
+    +string Email
+    +ContactTopic Topic
+    +string Message
+  }
+  class SendContactMessageCommandValidator {
+    +MessageMaxLength: int = 5000
+  }
+  class SendContactMessageCommandHandler {
+    +Handle(command: SendContactMessageCommand): Task<Result>
+    -InboxFor(topic: ContactTopic): string
+  }
+  class ContactEmailPayload {
+    +Guid ContactMessageId
+    +string To
+    +string ReplyTo
+    +ContactTopic Topic
+  }
+  interface IOutbox {
+    +Enqueue(type: string, payload: object, notBeforeUtc: DateTimeOffset?): void
+  }
+  interface IAppDbContext
+  interface IClock
+  interface IEmailSender
+}
+
+package "SixStack.Infrastructure" {
+  class ContactEmailHandler {
+    +Handle(message: OutboxMessage, ct: CancellationToken): Task
+  }
+}
+
+package "SixStack.Api" {
+  class ContactController {
+    +Send(command: SendContactMessageCommand): Task<IActionResult>
+  }
+  class ContactRateLimitPolicy <<RateLimiter policy "contact">> {
+    +PermitLimit: int = 5
+    +Window: TimeSpan = 1 h
+    +Partition: client IP
+  }
+}
+
+package "sixstack (Angular)" {
+  class ContactPage {
+    +form: FormGroup<ContactForm>
+    +state: Signal<"editing" | "invalid" | "submitting" | "success" | "error">
+    +submit(): void
+  }
+  interface ContactApi {
+    +send(message: ContactMessageRequest): Observable<void>
+  }
+  class HttpContactApi
+}
+
+ContactMessage --> ContactTopic
+SendContactMessageCommandValidator ..> SendContactMessageCommand : validates
+SendContactMessageCommandHandler ..> SendContactMessageCommand : handles
+SendContactMessageCommandHandler ..> ContactMessage : creates
+SendContactMessageCommandHandler ..> IOutbox : enqueues ContactEmailPayload
+SendContactMessageCommandHandler ..> IAppDbContext
+SendContactMessageCommandHandler ..> IClock
+ContactEmailHandler ..> ContactEmailPayload
+ContactEmailHandler ..> IEmailSender
+ContactController ..> ContactRateLimitPolicy
+ContactController ..> SendContactMessageCommand : sends
+HttpContactApi ..|> ContactApi
+ContactPage ..> ContactApi : CONTACT_API
+@enduml

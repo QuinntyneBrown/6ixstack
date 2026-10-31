@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Textarea — 6ixstack design system</title>
+<meta name="description" content="Multi-line text input with help, counter and every state.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Textarea</h1>
+      <p class="ds-lead">A multi-line input for event descriptions, contact messages and the reason a moderator rejects a submission or an organizer cancels an event.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;textarea&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+<p>Use a textarea when the answer is a sentence or more. It always sits in a <a href="form-field.html">form field</a> with a visible label and usually help text that says how long the answer should be. For one line use a <a href="text-field.html">text field</a>.</p>
+    </section>
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+<div class="ds-anatomy"><figure class="ds-anatomy__figure"><div style="width: 20rem;"><div class="field"><label class="field__label" for="an-reason">Reason</label><textarea class="textarea" id="an-reason" rows="3" aria-describedby="an-reason-help">Venue closed for renovation. We will repost for December.</textarea><span class="field__help" id="an-reason-help">Shown on the listing and emailed to everyone going.</span></div></div>
+<span class="ds-callout" style="left: 2%; top: 4%;" aria-hidden="true">1</span><span class="ds-callout" style="left: 50%; top: 40%;" aria-hidden="true">2</span><span class="ds-callout" style="left: 92%; top: 66%;" aria-hidden="true">3</span><span class="ds-callout" style="left: 2%; top: 86%;" aria-hidden="true">4</span></figure>
+<ol class="ds-anatomy__list"><li><div><b>Label</b><small><code>--text-label</code>.</small></div></li><li><div><b>Text area</b><small>Min height 2.5 × control height (100px), <code>--text-body</code>.</small></div></li><li><div><b>Resize handle</b><small>Vertical only.</small></div></li><li><div><b>Help or counter</b><small>Below, linked with <code>aria-describedby</code>.</small></div></li></ol></div>
+    </section>
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+<div class="ds-example">
+  <div class="ds-example__canvas ds-example__canvas--stack">
+<div class="field"><label class="field__label" for="v-desc">Description</label><textarea class="textarea" id="v-desc" rows="3" rows="4" aria-describedby="v-desc-help">Move your Power BI reports onto Fabric without rewriting them. Semantic models, Direct Lake and deployment pipelines.</textarea><span class="field__help" id="v-desc-help">Two or three sentences. Markdown links are fine.</span></div><div class="field"><label class="field__label" for="v-msg">Message</label><textarea class="textarea" id="v-msg" rows="4" maxlength="1000" aria-describedby="v-msg-count">Our November meetup moved from Living Arts Centre to Sheridan College. Could you update the venue?</textarea><div class="field__foot"><span class="field__help">We reply within two working days.</span><span class="field__counter" id="v-msg-count">95 / 1000</span></div></div>
+  </div>
+  <div class="ds-example__caption"><span>Default with help text; with a character counter.</span></div>
+  <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field"&gt;&lt;label class="field__label" for="v-desc"&gt;Description&lt;/label&gt;&lt;textarea class="textarea" id="v-desc" rows="3" rows="4" aria-describedby="v-desc-help"&gt;Move your Power BI reports onto Fabric without rewriting them. Semantic models, Direct Lake and deployment pipelines.&lt;/textarea&gt;&lt;span class="field__help" id="v-desc-help"&gt;Two or three sentences. Markdown links are fine.&lt;/span&gt;&lt;/div&gt;&lt;div class="field"&gt;&lt;label class="field__label" for="v-msg"&gt;Message&lt;/label&gt;&lt;textarea class="textarea" id="v-msg" rows="4" maxlength="1000" aria-describedby="v-msg-count"&gt;Our November meetup moved from Living Arts Centre to Sheridan College. Could you update the venue?&lt;/textarea&gt;&lt;div class="field__foot"&gt;&lt;span class="field__help"&gt;We reply within two working days.&lt;/span&gt;&lt;span class="field__counter" id="v-msg-count"&gt;95 / 1000&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;</code></pre></details>
+</div>
+    </section>
+    <section class="ds-section" id="sizes" data-na="Textareas have one width rule (fill the column) and grow by rows."><h2><a href="#sizes">Sizes</a></h2>
+<p>One size: full width of the column. Set <code>rows</code> to the expected length (3 for a reason, 4–5 for a description or message); the minimum is 2.</p>
+    </section>
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+<div class="ds-matrix"><table>
+<thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Invalid</th><th scope="col">Disabled</th><th scope="col">Read-only</th></tr></thead>
+<tbody>
+<tr><th scope="row">Textarea</th><td><textarea class="textarea" id="s1" rows="3" aria-label="Message">Our November meetup moved from Living Arts Centre to Sheridan College. Could you update the venue?</textarea></td><td><textarea class="textarea" id="s2" rows="3" aria-label="Message" data-state="hover">Our November meetup moved from Living Arts Centre to Sheridan College. Could you update the venue?</textarea></td><td><textarea class="textarea" id="s3" rows="3" aria-label="Message" data-state="focus">Our November meetup moved from Living Arts Centre to Sheridan College. Could you update the venue?</textarea></td><td><textarea class="textarea" id="s4" rows="3" aria-label="Reason" aria-invalid="true"></textarea></td><td><textarea class="textarea" id="s5" rows="3" aria-label="Message" disabled>Our November meetup moved from Living Arts Centre to Sheridan College. Could you update the venue?</textarea></td><td><textarea class="textarea" id="s6" rows="3" aria-label="Moderator note" readonly>Approved. Thanks for the clear description.</textarea></td></tr>
+</tbody>
+</table></div>
+<h3>Both themes</h3>
+<div class="ds-themes">
+<div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><textarea class="textarea" id="t1" rows="3" aria-label="Message">Our November meetup moved from Living Arts Centre to Sheridan College. Could you update the venue?</textarea><textarea class="textarea" id="t2" rows="3" aria-label="Reason" aria-invalid="true"></textarea></div></div>
+<div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;"><textarea class="textarea" id="t1-dark" rows="3" aria-label="Message">Our November meetup moved from Living Arts Centre to Sheridan College. Could you update the venue?</textarea><textarea class="textarea" id="t2-dark" rows="3" aria-label="Reason" aria-invalid="true"></textarea></div></div>
+</div>
+    </section>
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+<ul><li>Full width of its column at every breakpoint.</li><li>Resize is vertical only, so the layout never breaks horizontally.</li><li>On phones the on-screen keyboard can cover it; the page scrolls it into view with <code>scroll-padding</code>.</li></ul>
+    </section>
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+<p>Identical to the <a href="text-field.html">text field</a>: surface, strong border, orange focus, danger border when invalid.</p>
+    </section>
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+<h3>Role and pattern</h3>
+<p>Native <code>&lt;textarea&gt;</code> with <code>&lt;label for&gt;</code>; help, counter and error linked through <code>aria-describedby</code>; <code>aria-invalid</code> when invalid.</p>
+<h3>Keyboard</h3>
+<table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+<tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves into and out of the control.</td></tr>
+<tr><td>Typing, <kbd>←</kbd> <kbd>→</kbd>, <kbd>Home</kbd> <kbd>End</kbd></td><td>Native text editing.</td></tr>
+<tr><td><kbd>Enter</kbd></td><td>Inserts a new line (never submits).</td></tr>
+</tbody></table>
+<h3>Focus</h3>
+<p>Same as the text field: orange ring at 0 offset plus orange border.</p>
+<h3>Labelling</h3>
+<p>Visible label; counters are announced politely only when the limit is near, not on every keystroke.</p>
+<h3>Contrast</h3>
+<div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+<div class="ds-pair"><span>Value text in input</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Placeholder</span><span class="ds-pair__ratio" data-contrast="--color-fg-subtle|--color-bg-surface" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Input border on card</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+<div class="ds-pair"><span>Invalid border</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+<div class="ds-pair"><span>Error text</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-bg-surface" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+</div>
+<h3>Motion</h3>
+<p>Border transition over <code>--duration-fast</code>.</p>
+<h3>Touch</h3>
+<p>The whole area is the target; at least 100px tall.</p>
+    </section>
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+<ul><li>Help text sets length and audience: “Shown on the listing and emailed to everyone going.”</li><li>Errors ask for what is missing: “Tell attendees why, in a sentence or two.”</li></ul>
+    </section>
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+<div class="ds-dodont">
+<figure class="ds-do"><div class="ds-example__canvas"><div class="field"><label class="field__label" for="dd-r">Reason</label><textarea class="textarea" id="dd-r" rows="3" aria-describedby="dd-r-help"></textarea><span class="field__help" id="dd-r-help">Shown on the listing and emailed to everyone going.</span></div></div><figcaption>Help says who reads it (cancel-event dialog).</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><textarea class="textarea" rows="1" aria-label="Reason"></textarea></div><figcaption>One row hides the expectation of a sentence; use at least 2 rows, or a text field.</figcaption></figure>
+<figure class="ds-do"><div class="ds-example__canvas"><div class="field"><label class="field__label" for="dd-m">Message</label><textarea class="textarea" id="dd-m" rows="3" rows="4">Our November meetup moved from Living Arts Centre to Sheridan College. Could you update the venue?</textarea></div></div><figcaption>Rows match the expected length.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><textarea class="textarea" rows="4" aria-label="Message" placeholder="Message"></textarea></div><figcaption>Placeholder instead of a label.</figcaption></figure>
+</div>
+    </section>
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+<div class="ds-table-wrap"><table class="ds-table">
+<thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+<tbody>
+<tr><td>Background</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+<tr><td>Border</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+<tr><td>Border, hover</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+<tr><td>Placeholder</td><td><code>--color-fg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td></tr>
+<tr><td>Focus border and ring</td><td><code>--color-focus-ring</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+<tr><td>Invalid border</td><td><code>--color-danger-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+<tr><td>Disabled fill</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+<tr><td>Read-only fill</td><td><code>--color-bg-surface-sunken</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td></tr>
+<tr><td>Minimum height</td><td><code>--control-height-md</code> × 2.5</td><td colspan="2"><span data-token="--control-height-md"></span></td></tr>
+<tr><td>Radius</td><td><code>--radius-md</code></td><td colspan="2"><span data-token="--radius-md"></span></td></tr>
+</tbody>
+</table></div>
+    </section>
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+<pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="reason"&gt;Reason&lt;/label&gt;
+  &lt;textarea class="textarea" id="reason" rows="3" aria-describedby="reason-help"&gt;&lt;/textarea&gt;
+  &lt;span class="field__help" id="reason-help"&gt;Shown on the listing and emailed to everyone going.&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+<table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+<tr><td><code>.textarea</code></td><td>Multi-line control.</td></tr>
+<tr><td><code>aria-invalid="true"</code></td><td>Invalid border.</td></tr>
+<tr><td><code>disabled</code> / <code>readonly</code></td><td>Disabled / read-only fill.</td></tr>
+<tr><td><code>.field__foot</code> + <code>.field__counter</code></td><td>Help and counter on one row.</td></tr>
+</tbody></table>
+    </section>
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+<p>Extracted from these mocks:</p>
+<ul>
+<li><a href="../../mocks/pages/submit-event/default.html">pages/submit-event/default</a> (description)</li>
+<li><a href="../../mocks/pages/contact/default.html">pages/contact/default</a> (message)</li>
+<li><a href="../../mocks/dialogs/cancel-event/invalid.html">dialogs/cancel-event/invalid</a> (invalid reason)</li>
+<li><a href="../../mocks/dialogs/reject-submission/default.html">dialogs/reject-submission/default</a> (moderator reason)</li>
+</ul>
+<p>Drift fixed during extraction: none; the mocks used <code>.textarea</code> consistently. Data-state hooks for hover/focus/invalid were added for documentation.</p>
+    </section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

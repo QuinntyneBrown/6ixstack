@@ -1,0 +1,39 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Event map and timeline
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "EventsPage", "Angular page", "List, dimming, result line suffix, scroll to row or day")
+  Component(panel, "EventMapPanel", "Angular component", "Defers the map, loads map data, owns map states")
+  Component(map, "EventMap", "Angular component (components)", "Dots, rings, arcs, hover card")
+  Component(timeline, "MapTimeline", "Angular component (components)", "Play control and 14 day buttons")
+  Component(state, "MapTimelineState", "Angular service", "focusedDay, playing, hoveredSlug signals")
+  Component(player, "TimelinePlayer", "Angular service", "Steps day focus every 1,100 ms")
+  Component(motion, "MotionPreference", "Angular service", "prefers-reduced-motion")
+  Component(store, "FilterStateStore", "Angular service", "Format, topics and search")
+  Component(client, "HttpEventsApi", "Angular service behind EVENTS_API", "Typed client for /api/events/map")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "EventsController", "ASP.NET Core controller", "GET /api/events/map")
+  Component(validator, "GetEventMapQueryValidator", "FluentValidation", "Bounds search length and enum values")
+  Component(handler, "GetEventMapQueryHandler", "MediatR handler", "Points, streams and timeline days")
+  Component(clock, "SystemClock", "IClock", "Toronto date")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events and venue coordinates")
+
+Rel(page, panel, "Hosts")
+Rel(page, state, "Reads focus, writes hovered row")
+Rel(panel, store, "Reads filters")
+Rel(panel, client, "Requests map data")
+Rel(panel, map, "Renders deferred")
+Rel(map, timeline, "Renders")
+Rel(panel, state, "Reads and writes focus")
+Rel(player, state, "Advances focusedDay")
+Rel(panel, motion, "Reads reduced motion")
+Rel(client, ctrl, "GET /api/events/map", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates query")
+Rel(ctrl, handler, "Sends GetEventMapQuery")
+Rel(handler, clock, "Reads today")
+Rel(handler, db, "Queries published events", "EF Core")
+@enduml

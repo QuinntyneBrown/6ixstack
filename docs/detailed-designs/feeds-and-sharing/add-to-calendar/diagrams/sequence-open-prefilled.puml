@@ -1,0 +1,41 @@
+@startuml
+title UML sequence behaviour — Open a prefilled calendar page
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventDetailPage" as page
+  participant "AddToCalendarDialog" as dialog
+  participant "TorontoTimeFormatter" as fmt
+  participant "CalendarLinkBuilder" as links
+end box
+participant "Calendar app (Google Calendar or Outlook)" as calapp
+actor -> page : Add to my calendar (or Update my calendar, L2-022)
+page -> dialog : Dialog.open(AddToCalendarDialog, { event })
+dialog -> fmt : shortDate, timeRange in America/Toronto (L2-079)
+fmt --> dialog : "Thu, Nov 5", "9:00 AM – 5:00 PM ET"
+dialog --> actor : "Azure Data & AI Day GTA · Thu, Nov 5, 9:00 AM – 5:00 PM ET · Living Arts Centre" (L2-037)
+alt Google Calendar
+  actor -> dialog : Google Calendar
+  dialog -> links : google(event)
+  links --> dialog : calendar.google.com template URL with title, UTC dates, ctz=America/Toronto, location, details
+else Outlook
+  actor -> dialog : Outlook
+  dialog -> links : outlook(event)
+  links --> dialog : Outlook compose URL with subject, start, end, location, body
+end
+dialog -> calapp : Open URL in a new tab, rel="noopener noreferrer" (L2-037)
+calapp --> actor : Prefilled event page, waiting to be saved
+@enduml

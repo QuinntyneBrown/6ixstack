@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Observability
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(maintainer, "Maintainer", "Operates 6ixstack; reads logs and health")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Parses problem details; shows reference codes on the server-error page")
+  Container(api, "6ixstack API", "ASP.NET Core", "Request logs, problem details, health endpoints, OutboxProcessor")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Outbox messages and application data")
+}
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+System_Ext(logs, "Log store", "<TO SUPPLY>")
+
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls; receives X-Correlation-Id and problem details", "JSON/HTTPS")
+Rel(api, db, "Writes outbox with each change; health probe", "EF Core")
+Rel(api, email, "Sends from the outbox", "<TO SUPPLY>")
+Rel(api, logs, "JSON console logs", "<TO SUPPLY>")
+Rel(maintainer, api, "GET /health/live, /health/ready", "HTTPS")
+Rel(maintainer, logs, "Searches")
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Security hardening
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(visitor, sixstack, "Reads, submits, reports and contacts anonymously, rate-limited", "HTTPS only")
+Rel(organizer, sixstack, "Manages own community's events with a session", "HTTPS only")
+Rel(moderator, sixstack, "Reviews submissions with the moderator role", "HTTPS only")
+Rel(sixstack, email, "Sends sign-in and notification emails within limits", "<TO SUPPLY>")
+@enduml

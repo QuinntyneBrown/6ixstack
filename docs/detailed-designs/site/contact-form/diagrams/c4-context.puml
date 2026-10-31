@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Contact form
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(team, "6ixstack team", "Volunteers reading hello@ and conduct@ inboxes")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(email, "Email provider", "<TO SUPPLY>: delivers transactional email")
+
+Rel(visitor, sixstack, "Sends a contact message using", "HTTPS")
+Rel(sixstack, email, "Sends the message to the team inbox via", "SMTP or provider API")
+Rel(email, team, "Delivers email to")
+@enduml

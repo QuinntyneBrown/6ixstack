@@ -1,0 +1,131 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — In-app notifications
+
+package "SixStack.Domain" {
+  enum NotificationType {
+    EventApproved
+    EventNeedsChanges
+    EventRejected
+    ReportFiled
+    FeedSubscribersMilestone
+    GoingMilestone
+    SubmissionQueued
+  }
+  class Notification {
+    +Guid Id
+    +Guid UserId
+    +NotificationType Type
+    +string Title
+    +string Text
+    +string LinkUrl
+    +DateTimeOffset CreatedAtUtc
+    +DateTimeOffset? ReadAtUtc
+    +string? DedupeKey
+    +MarkRead(now: DateTimeOffset): void
+  }
+  class User {
+    +Guid Id
+    +string Email
+    +UserRole Role
+    +DateTimeOffset? DeletedAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  enum NotificationAudience {
+    CommunityOrganizers
+    AllModerators
+  }
+  class NotificationRequest {
+    +NotificationType Type
+    +NotificationAudience Audience
+    +Guid? EventId
+    +Guid? CommunityId
+    +IReadOnlyDictionary<string, string> Arguments
+    +string? DedupeKey
+  }
+  interface INotificationPublisher {
+    +Publish(request: NotificationRequest, ct: CancellationToken): Task
+  }
+  class NotificationPublisher
+  class NotificationTemplates {
+    +Build(request: NotificationRequest): NotificationCopy
+  }
+  class MilestoneDetector {
+    +OnGoingCountChanged(eventId: Guid, oldCount: int, newCount: int, capacity: int?): Task
+    +OnFeedSubscribersChanged(communityId: Guid, oldCount: int, newCount: int): Task
+  }
+  class GetNotificationsQueryHandler {
+    +Handle(query: GetNotificationsQuery): Task<NotificationListDto>
+  }
+  class MarkNotificationReadCommandHandler {
+    +Handle(command: MarkNotificationReadCommand): Task<Result>
+  }
+  class MarkAllNotificationsReadCommandHandler {
+    +Handle(command: MarkAllNotificationsReadCommand): Task<int>
+  }
+  class NotificationListDto {
+    +int UnreadCount
+    +IReadOnlyList<NotificationDto> Items
+  }
+  class NotificationDto {
+    +Guid Id
+    +NotificationType Type
+    +string Title
+    +string Text
+    +string LinkUrl
+    +DateTimeOffset CreatedAtUtc
+    +bool IsRead
+  }
+  interface IAppDbContext
+  interface ICurrentUser
+  interface IClock
+}
+
+package "sixstack (Angular)" {
+  class NotificationsPage {
+    +list: Signal<NotificationList | null>
+    +state: Signal<LoadState>
+    +markAllRead(): void
+    +open(item: NotificationItemModel): void
+    +retry(): void
+  }
+  class SessionStore {
+    +unreadCount: WritableSignal<number>
+  }
+  interface NotificationsApi {
+    +list(): Observable<NotificationList>
+    +markRead(id: string): Observable<void>
+    +markAllRead(): Observable<void>
+  }
+  class HttpNotificationsApi
+}
+
+Notification --> NotificationType
+User "1" --> "*" Notification : receives
+NotificationPublisher ..|> INotificationPublisher
+NotificationPublisher ..> NotificationRequest : consumes
+NotificationPublisher ..> NotificationTemplates
+NotificationPublisher ..> IAppDbContext : adds Notification
+NotificationRequest --> NotificationAudience
+MilestoneDetector ..> INotificationPublisher
+GetNotificationsQueryHandler ..> ICurrentUser
+GetNotificationsQueryHandler ..> NotificationListDto : returns
+NotificationListDto "1" *-- "*" NotificationDto
+MarkNotificationReadCommandHandler ..> Notification : MarkRead
+MarkNotificationReadCommandHandler ..> IClock
+MarkAllNotificationsReadCommandHandler ..> IClock
+HttpNotificationsApi ..|> NotificationsApi
+NotificationsPage ..> NotificationsApi : NOTIFICATIONS_API
+NotificationsPage ..> SessionStore
+@enduml

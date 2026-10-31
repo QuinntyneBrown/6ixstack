@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour — Apply retention
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "RetentionJob" as job
+  participant "SystemClock" as clock
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "ApplyRetentionCommandHandler" as handler
+  participant "AccountPurger" as purger
+end box
+box "Backend — 6ixstack Infrastructure " #FFF4E5
+  database "6ixstack database" as db
+end box
+job -> job : Wake every 24 hours
+job -> clock : UtcNow
+clock --> job : now
+job -> handler : Send ApplyRetentionCommand(now)
+handler -> db : Set ReporterEmail = null where ResolvedAtUtc <= now - 90 days (L2-100)
+db --> handler : Rows updated
+handler -> db : Delete ContactMessage where ReceivedAtUtc <= now - 1 year (L2-100)
+db --> handler : Rows deleted
+handler -> db : Find User where DeletedAtUtc <= now - 30 days
+db --> handler : Deleted accounts
+loop each deleted account
+  handler -> purger : PurgeAsync(user)
+  purger -> db : Delete sessions, tokens for email, notifications, membership
+  purger -> db : Clear SubmitterEmail on events, ReporterEmail on reports from email
+  purger -> db : Delete contact messages from email
+  purger -> db : Delete User row; AuditEntry keeps user id only (L2-100, L2-086)
+  db --> purger : Commit result
+end
+handler -> db : Delete AuditEntry where OccurredAtUtc <= now - 2 years (L2-086)
+db --> handler : Rows deleted
+handler --> job : RetentionResult with counts
+job -> job : Log counts per rule, no email addresses
+alt a rule fails
+  job -> job : Log error with correlation id; next run retries (L2-101)
+end
+@enduml

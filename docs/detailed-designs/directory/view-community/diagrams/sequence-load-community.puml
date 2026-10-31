@@ -1,0 +1,67 @@
+@startuml
+title UML sequence behaviour — Load the community page
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "CommunityDetailPage" as page
+  participant "DelayedSkeleton" as sk
+  participant "HttpCommunitiesApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "CommunitiesController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetCommunityQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /communities/gta-azure-community
+page -> sk : Start 300 ms timer (L2-089)
+page -> client : get("gta-azure-community")
+client -> controller : GET /api/communities/gta-azure-community
+opt no response within 300 ms
+  sk --> page : Header, sections and facts as layout-matching skeletons (L2-089)
+end
+controller -> handler : Send GetCommunityQuery
+handler -> db : Load community, organizers and published events
+db --> handler : Community or nothing
+alt unknown slug
+  handler --> controller : null
+  controller --> client : 404 ProblemDetails
+  client --> page : NotFound
+  page --> actor : Not-found page "We can't find that page" (L2-031, L2-076)
+else community found
+  handler -> handler : Split upcoming and past with IsPast(now) (L2-031)
+  handler -> handler : Group upcoming by Toronto day; cancelled kept with badge (L2-031, L2-010)
+  handler -> handler : Past events most recent first with attended counts (L2-031)
+  handler -> handler : Facts, links and organizers with speaker slugs; no emails (L2-031, L2-099)
+  handler --> controller : CommunityDetailDto
+  controller --> client : 200 JSON
+  client --> page : CommunityDetail
+  alt no upcoming events
+    page --> actor : "Nothing scheduled right now", posting habit, Subscribe to this group (L2-031)
+  else upcoming events
+    page --> actor : Header, About, upcoming by day, past with Recap, facts, organizers (L2-031)
+  end
+else failure or timeout
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : "This community didn't load" with Try again and Back to communities (L2-031, L2-077)
+  actor -> page : Try again
+  page -> client : get("gta-azure-community")
+end
+@enduml

@@ -1,0 +1,143 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — View a speaker
+
+package "SixStack.Domain" {
+  class Speaker {
+    +Guid Id
+    +string Slug
+    +string Name
+    +string Initials
+    +string Role
+    +string Affiliation
+    +string Bio
+    +IReadOnlyCollection<Topic> Topics
+    +string HomeCity
+    +IReadOnlyCollection<SpeakerLink> Links
+    +string? PublicContactEmail
+    +int? TalkCount
+    +int? SpeakingSinceYear
+    +string? HomeCityNote
+  }
+  class SpeakerLink <<value object>> {
+    +string Label
+    +string Url
+  }
+  class EventSpeaker {
+    +Guid EventId
+    +Guid SpeakerId
+    +string? TalkTitle
+    +DateTimeOffset? TalkStartsAtUtc
+  }
+  class Event {
+    +Guid Id
+    +string Slug
+    +string Title
+    +Guid CommunityId
+    +DateTimeOffset StartsAtUtc
+    +DateTimeOffset EndsAtUtc
+    +EventStatus Status
+    +string? RecordingUrl
+    +IsPast(now: DateTimeOffset): bool
+  }
+  class CommunityOrganizer {
+    +Guid CommunityId
+    +Guid UserId
+    +string Role
+    +Guid? SpeakerId
+  }
+  class Community {
+    +Guid Id
+    +string Slug
+    +string Name
+  }
+}
+
+package "SixStack.Application" {
+  class GetSpeakerQuery {
+    +string Slug
+  }
+  class GetSpeakerQueryHandler {
+    +Handle(query: GetSpeakerQuery): Task<SpeakerDetailDto?>
+  }
+  class SpeakerDetailDto {
+    +string Slug
+    +string Name
+    +string Initials
+    +string RoleLine
+    +IReadOnlyList<CommunityAffiliationDto> Communities
+    +IReadOnlyList<Topic> Topics
+    +string Bio
+    +IReadOnlyList<EventSummaryDto> UpcomingTalks
+    +IReadOnlyList<PastTalkDto> PastTalks
+    +SpeakerFactsDto Facts
+    +string? ContactEmail
+  }
+  class CommunityAffiliationDto {
+    +string RoleLabel
+    +string CommunitySlug
+    +string CommunityName
+  }
+  class EventSummaryDto {
+    +string Slug
+    +string Title
+    +string Organizer
+    +string StartTimeEt
+    +string? SourceTime
+    +string LocationLabel
+    +bool IsCancelled
+  }
+  class PastTalkDto {
+    +string EventSlug
+    +string Title
+    +string ContextLabel
+    +string? RecordingUrl
+  }
+  class SpeakerFactsDto {
+    +string? TalkCountLabel
+    +string? SinceLabel
+    +string HomeCity
+    +string? HomeCityNote
+    +IReadOnlyList<LinkDto> Links
+  }
+}
+
+package "sixstack (Angular)" {
+  class SpeakerDetailPage {
+    +speaker: Signal<SpeakerDetail | null>
+    +state: Signal<PageState>
+    +canInvite: Signal<boolean>
+    +retry(): void
+  }
+  interface SpeakersApi {
+    +get(slug: string): Observable<SpeakerDetail>
+  }
+  class HttpSpeakersApi
+}
+
+Speaker *-- "*" SpeakerLink
+Speaker "1" *-- "*" EventSpeaker
+EventSpeaker "*" --> "1" Event
+CommunityOrganizer "*" --> "0..1" Speaker : SpeakerId
+CommunityOrganizer "*" --> "1" Community
+GetSpeakerQueryHandler ..> GetSpeakerQuery : handles
+GetSpeakerQueryHandler ..> Speaker : reads
+GetSpeakerQueryHandler ..> EventSpeaker : reads talks
+GetSpeakerQueryHandler ..> CommunityOrganizer : reads roles
+GetSpeakerQueryHandler ..> SpeakerDetailDto : returns
+SpeakerDetailDto "1" *-- "*" CommunityAffiliationDto
+SpeakerDetailDto "1" *-- "*" EventSummaryDto
+SpeakerDetailDto "1" *-- "*" PastTalkDto
+SpeakerDetailDto *-- SpeakerFactsDto
+HttpSpeakersApi ..|> SpeakersApi
+SpeakerDetailPage ..> SpeakersApi : SPEAKERS_API
+@enduml

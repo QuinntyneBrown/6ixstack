@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Submit an event
+
+Person(visitor, "Visitor", "Anonymous developer submitting an event")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Submit page, draft in browser storage, success panel")
+  Container(api, "6ixstack API", "ASP.NET Core", "Reference data, submission command, email verification, OutboxProcessor")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events, submission checks, security tokens, verified emails, outbox")
+}
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(visitor, api, "Opens verification link", "HTTPS")
+Rel(spa, api, "GET /api/reference-data, POST /api/submissions", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, email, "Sends queued emails", "<TO SUPPLY>")
+@enduml

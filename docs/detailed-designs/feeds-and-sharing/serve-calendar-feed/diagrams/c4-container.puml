@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Serve a calendar feed
+
+System_Ext(calapps, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+System_Boundary(sixstack, "6ixstack") {
+  Container(api, "6ixstack API", "ASP.NET Core", "Feed endpoint, feed cache, OutboxProcessor hosted service")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events, communities and outbox messages")
+}
+Rel(calapps, api, "GET /feeds/{feedSlug}.ics with If-None-Match", "HTTPS")
+Rel(api, db, "Reads published and cancelled events on a cache miss", "EF Core")
+Rel(api, db, "Reads FeedRegenerationRequested outbox messages", "EF Core")
+@enduml

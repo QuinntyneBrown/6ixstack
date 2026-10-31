@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Build a custom calendar feed
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(calapps, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+
+Rel(visitor, sixstack, "Chooses topics and scope, creates a feed link using", "HTTPS")
+Rel(visitor, calapps, "Opens the subscribe page or webcal link in")
+Rel(calapps, sixstack, "Requests the feed on a refresh schedule", "webcal/HTTPS")
+@enduml

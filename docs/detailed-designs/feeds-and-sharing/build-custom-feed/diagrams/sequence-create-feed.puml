@@ -1,0 +1,69 @@
+@startuml
+title UML sequence behaviour — Create a custom feed link
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SubscribeFeedDialog" as dialog
+  participant "FeedBuilder" as builder
+  participant "HttpFeedsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "RateLimiter" as limiter
+  participant "FeedsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "CreateFeedCommandHandler" as handler
+  participant "FeedSlug" as slug
+  participant "FeedLinkBuilder" as links
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> builder : Check AI and Azure, keep "GTA and streaming", Create feed link
+alt no topic and not all topics
+  builder --> actor : "Pick at least one topic, or choose “All topics”." on the group, focus first checkbox (L2-035, L2-092)
+else valid choice
+  builder -> builder : Disable inputs; button "Creating feed…" aria-busy="true"; Cancel enabled (L2-035)
+  builder -> client : createFeed({ topics: [ai, azure], scope: All })
+  client -> limiter : POST /api/feeds
+  alt more than 30 creations this hour from this IP
+    limiter --> client : 429 with Retry-After (L2-082)
+    client --> builder : Error
+    builder --> actor : Failed state, plain-language message, choices kept (L2-077)
+  else admitted
+    limiter -> controller : Forward
+    controller -> controller : Allow anonymous; validate topics, scope, community (L2-080, L2-081)
+    controller -> handler : Send CreateFeedCommand
+    handler -> slug : Create(topics, scope); dedupe and order by Topic (L2-035)
+    slug --> handler : ai-azure-gta-stream
+    handler -> db : Count published, not cancelled events matching FeedSlug
+    db --> handler : 11
+    handler -> links : Build(slug, 11)
+    links --> handler : FeedLinkDto (webcal, Google, Outlook, Apple, summary)
+    handler --> controller : FeedLinkDto
+    alt success
+      controller --> client : 200 JSON
+      client --> builder : FeedLink
+      builder --> dialog : created(FeedLink)
+      dialog --> actor : "Your feed is ready", "11 events right now", webcal://6ixstack.dev/feeds/ai-azure-gta-stream.ics, Copy, Google, Outlook, Apple, Done (L2-035)
+    else server or network error
+      controller --> client : 5xx or network error
+      client --> builder : Error
+      builder --> actor : "We couldn't create your feed", choices kept, button "Try again" (L2-035, L2-077)
+    end
+  end
+end
+@enduml

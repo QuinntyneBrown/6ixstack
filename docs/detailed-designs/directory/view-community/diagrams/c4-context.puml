@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — View a community
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(calendars, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+
+Rel(visitor, sixstack, "Reads a community page and subscribes to its feed using", "HTTPS")
+Rel(visitor, calendars, "Adds the community feed link to")
+Rel(calendars, sixstack, "Fetches the community feed from", "iCalendar/HTTPS")
+@enduml

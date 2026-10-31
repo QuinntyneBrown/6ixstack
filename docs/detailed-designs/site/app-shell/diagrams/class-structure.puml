@@ -1,0 +1,94 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — App shell, layout and theming
+
+package "components (Angular library)" {
+  class SiteHeader <<sx-site-header>> {
+    +navItems: input<NavItem[]>
+    +showSubmit: input<boolean>
+    +submitDisabled: input<boolean>
+    +menuOpen: output<HTMLElement>
+  }
+  class SiteFooter <<sx-site-footer>> {
+    +links: input<NavItem[]>
+  }
+  class DialogShell <<sx-dialog-shell>> {
+    +title: input<string>
+    +variant: input<"centered" | "bottom-sheet">
+  }
+  class Breakpoints <<_breakpoints.scss / BREAKPOINTS>> {
+    +xs: 0
+    +sm: 576 px
+    +md: 768 px
+    +lg: 992 px
+    +xl: 1200 px
+  }
+  class ThemeTokens <<tokens/ theme source>> {
+    +light: Theme
+    +dark: Theme
+    +generate(): _tokens.scss
+  }
+}
+
+package "sixstack (Angular app)" {
+  class AppShell <<sx-app-shell>> {
+    +hideSubmit: Signal<boolean>
+    +signedIn: Signal<boolean>
+  }
+  class NavItem {
+    +label: string
+    +path: string
+    +icon?: string
+  }
+  class NAV_ITEMS <<constant>> {
+    +primary: NavItem[]
+    +more: NavItem[]
+    +footer: NavItem[]
+  }
+  class MenuController {
+    +open(trigger: HTMLElement): void
+    +close(): void
+    -ref: DialogRef | null
+  }
+  class MobileMenuDialog {
+    +items: NavItem[]
+    +currentPath: Signal<string>
+    +navigate(item: NavItem): void
+  }
+  class SessionStore {
+    +user: Signal<CurrentUser | null>
+    +unreadCount: Signal<number>
+  }
+}
+
+package "Angular CDK" {
+  class Dialog
+  class BreakpointObserver
+}
+class Router <<@angular/router>>
+
+AppShell *-- SiteHeader
+AppShell *-- SiteFooter
+AppShell ..> SessionStore
+AppShell ..> MenuController
+SiteHeader ..> NavItem
+NAV_ITEMS "1" *-- "*" NavItem
+MobileMenuDialog ..> NAV_ITEMS
+AppShell ..> NAV_ITEMS
+MenuController ..> Dialog : opens MobileMenuDialog
+MenuController ..> BreakpointObserver : closes at lg
+MenuController ..> Router : closes on NavigationEnd
+MobileMenuDialog *-- DialogShell : bottom-sheet
+MobileMenuDialog ..> Router
+SiteHeader ..> Breakpoints
+SiteHeader ..> ThemeTokens
+@enduml

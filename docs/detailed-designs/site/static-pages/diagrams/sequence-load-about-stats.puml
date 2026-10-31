@@ -1,0 +1,51 @@
+@startuml
+title UML sequence behaviour — Load the About stats
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "AboutPage" as page
+  participant "HttpSiteApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "SiteController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetSiteStatsQueryHandler" as handler
+  participant "SystemClock" as clock
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /about
+page --> actor : Title, lead and prose sections render at once (L2-072)
+page -> client : getStats()
+client -> controller : GET /api/site/stats
+controller -> handler : Send GetSiteStatsQuery
+handler -> clock : Current Toronto year
+clock --> handler : 2026
+handler -> db : Count communities, events listed in 2026, feed subscribers, moderators
+db --> handler : 86, 1240, 9800, 6
+handler --> controller : SiteStatsDto
+alt success
+  controller --> client : 200 JSON
+  client --> page : SiteStats
+  page --> actor : Stats row "Communities 86", "Events listed in 2026 1,240", ... (L2-072)
+else failure or timeout
+  controller --> client : 5xx or network error
+  client --> page : Error
+  page --> actor : Stats row omitted, prose kept, no error shown (L2-072)
+end
+@enduml

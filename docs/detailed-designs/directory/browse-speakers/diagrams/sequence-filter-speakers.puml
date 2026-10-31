@@ -1,0 +1,55 @@
+@startuml
+title UML sequence behaviour — Search and filter speakers
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "SpeakersPage" as page
+  participant "Router" as router
+  participant "HttpSpeakersApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "SpeakersController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetSpeakersQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Choose Topic AWS and Speaking this month
+page -> router : Write topic and period to the URL query string (L2-005, L2-032)
+page -> client : list(query, page 1)
+client -> controller : GET /api/speakers?topic=aws&period=this-month
+controller -> controller : Validate query, search capped at 100 characters (L2-081)
+controller -> handler : Send GetSpeakersQuery
+handler -> db : Count all listed speakers
+db --> handler : ListedTotal
+handler -> db : Match name, company or talk title; topic (L2-032)
+db --> handler : Candidate speakers
+handler -> db : Talks at published events from now to end of Toronto month (L2-032)
+db --> handler : Matching speakers, MatchCount and next talks
+handler -> handler : Role line "Role, Company"; take first 9 cards (L2-032)
+handler --> controller : SpeakerDirectoryDto
+controller --> client : 200 JSON
+client --> page : SpeakerDirectory
+alt MatchCount is 0 and search text present
+  page --> actor : "No speakers match “Kotlin”" with Clear search; lead "0 of 214 speakers match." (L2-032)
+else MatchCount is 0 with topic or period set
+  page --> actor : "No AWS talks this month" with Show any time and Pitch a talk (L2-032)
+else matches
+  page --> actor : Cards and polite caption "Showing 9 of N speakers" (L2-032, L2-093)
+end
+@enduml

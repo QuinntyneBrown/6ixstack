@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Contact form
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Contact page and form states")
+  Container(api, "6ixstack API", "ASP.NET Core", "POST /api/contact, rate limit, OutboxProcessor")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Contact messages and outbox")
+}
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(spa, api, "POST /api/contact", "JSON/HTTPS")
+Rel(api, db, "Stores message and outbox entry", "EF Core")
+Rel(api, email, "Sends to hello@ or conduct@", "SMTP or provider API")
+@enduml

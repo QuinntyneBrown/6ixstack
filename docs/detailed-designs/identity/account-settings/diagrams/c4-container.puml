@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Account settings
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Settings page: profile, switches, community, account")
+  Container(api, "6ixstack API", "ASP.NET Core", "Settings query and command, email change confirmation, OutboxProcessor")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Users, community organizers, security tokens, outbox")
+}
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(organizer, api, "Opens confirmation link: GET /auth/verify-email", "HTTPS")
+Rel(spa, api, "GET and PUT /api/account/settings", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, email, "Sends queued emails", "<TO SUPPLY>")
+@enduml

@@ -1,0 +1,157 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Approve a submission
+
+package "SixStack.Domain" {
+  enum EventStatus {
+    InReview
+    Published
+  }
+  class Event {
+    +Guid Id
+    +string Title
+    +EventStatus Status
+    +string SubmitterEmail
+    +byte[] RowVersion
+    +Approve(moderatorId: Guid, now: DateTimeOffset): void
+    +UndoApproval(): void
+  }
+  class InvalidStatusTransitionException
+  enum DecisionKind {
+    Approve
+    Reject
+    RequestChanges
+  }
+  class ModerationDecision {
+    +Guid Id
+    +Guid EventId
+    +Guid ModeratorId
+    +DecisionKind DecisionKind
+    +DateTimeOffset DecidedAtUtc
+    +DateTimeOffset? UndoneAtUtc
+    +Undo(now: DateTimeOffset): void
+  }
+  class ReviewPresence {
+    +Guid EventId
+    +Guid ModeratorId
+    +DateTimeOffset LastSeenAtUtc
+  }
+  class User {
+    +string Email
+    +string Name
+    +DateTimeOffset? EmailVerifiedAtUtc
+  }
+}
+
+package "SixStack.Application" {
+  class ApproveSubmissionCommand {
+    +Guid EventId
+  }
+  class ApproveSubmissionCommandHandler {
+    +Handle(command: ApproveSubmissionCommand): Task<Result<ApprovalResultDto>>
+  }
+  class UndoApprovalCommand {
+    +Guid EventId
+  }
+  class UndoApprovalCommandHandler {
+    +Handle(command: UndoApprovalCommand): Task<Result>
+  }
+  class RecordReviewPresenceCommand {
+    +Guid EventId
+  }
+  class RecordReviewPresenceCommandHandler {
+    +Handle(command: RecordReviewPresenceCommand): Task<IReadOnlyList<CoReviewerDto>>
+  }
+  class ApprovalResultDto {
+    +Guid EventId
+    +string Title
+    +string OrganizerName
+    +Guid DecisionId
+    +DateTimeOffset UndoDeadlineUtc
+    +bool IsPublished
+    +PossibleDuplicateDto? PossibleDuplicate
+  }
+  class PossibleDuplicateDto {
+    +Guid EventId
+    +string Slug
+    +string DateLabel
+  }
+  class CoReviewerDto {
+    +string FirstName
+  }
+  class DecisionConflictProblem {
+    +string Decision
+    +string ModeratorFirstName
+  }
+  class SubmissionApprovedNotification {
+    +Guid EventId
+    +Guid DecisionId
+  }
+  interface IOutbox {
+    +Enqueue(message: object, notBeforeUtc: DateTimeOffset?): Guid
+    +Remove(messageId: Guid): bool
+  }
+  interface IAuditLog {
+    +Record(actorId: Guid, action: string, targetId: Guid, details: object): void
+  }
+}
+
+package "sixstack (Angular)" {
+  class ReviewQueuePage {
+    +approve(card: ReviewCard): void
+    +undo(result: ApprovalResult): void
+  }
+  class ReviewPresenceTracker {
+    +open(eventId: string): void
+    +close(): void
+  }
+  class ToastService {
+    +show(toast: ToastOptions): ToastRef
+  }
+  interface ModerationApi {
+    +approve(id: string): Observable<ApprovalResult>
+    +undoApproval(id: string): Observable<void>
+    +recordPresence(id: string): Observable<CoReviewer[]>
+  }
+  class HttpModerationApi
+}
+
+Event --> EventStatus
+Event ..> InvalidStatusTransitionException : throws
+ModerationDecision --> DecisionKind
+ModerationDecision --> Event
+ReviewPresence --> Event
+ApproveSubmissionCommandHandler ..> ApproveSubmissionCommand : handles
+ApproveSubmissionCommandHandler --> Event : loads / mutates
+ApproveSubmissionCommandHandler ..> User : reads verification
+ApproveSubmissionCommandHandler ..> ModerationDecision : creates
+ApproveSubmissionCommandHandler ..> SubmissionApprovedNotification : holds 8 s
+ApproveSubmissionCommandHandler ..> IOutbox
+ApproveSubmissionCommandHandler ..> IAuditLog
+ApproveSubmissionCommandHandler ..> ApprovalResultDto : returns
+ApproveSubmissionCommandHandler ..> DecisionConflictProblem : on 409
+ApprovalResultDto *-- PossibleDuplicateDto
+UndoApprovalCommandHandler ..> UndoApprovalCommand : handles
+UndoApprovalCommandHandler --> Event : loads / mutates
+UndoApprovalCommandHandler --> ModerationDecision : undoes
+UndoApprovalCommandHandler ..> IOutbox : removes held message
+UndoApprovalCommandHandler ..> IAuditLog
+RecordReviewPresenceCommandHandler ..> RecordReviewPresenceCommand : handles
+RecordReviewPresenceCommandHandler --> ReviewPresence : upserts
+RecordReviewPresenceCommandHandler ..> CoReviewerDto : returns
+HttpModerationApi ..|> ModerationApi
+ReviewQueuePage ..> ModerationApi : MODERATION_API
+ReviewQueuePage ..> ToastService
+ReviewQueuePage *-- ReviewPresenceTracker
+ReviewPresenceTracker ..> ModerationApi
+ReviewPresenceTracker ..> ToastService
+@enduml

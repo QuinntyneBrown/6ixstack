@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour — Display an event time
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventDetailPage" as page
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetEventDetailQueryHandler" as handler
+  participant "EventTimeFormatter" as formatter
+  participant "TimeZoneAbbreviations" as abbr
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /events/{slug}
+page -> client : getDetail(slug)
+client -> controller : GET /api/events/{slug}
+controller -> handler : Send GetEventDetailQuery
+handler -> db : Load published event by slug
+db --> handler : StartsAtUtc 2026-11-04T17:00Z, TimeZoneId America/Vancouver
+handler -> formatter : Format(event)
+formatter -> formatter : Convert to America/Toronto with DST rules (L2-079)
+alt TimeZoneId is America/Toronto
+  formatter --> handler : StartTimeEt only, SourceTime null
+else TimeZoneId differs from Toronto
+  formatter -> abbr : Abbreviate(America/Vancouver)
+  abbr --> formatter : "PT"
+  formatter -> formatter : Convert to source zone: 9:00 AM
+  formatter --> handler : StartTimeEt "12:00 PM", SourceTime "9:00 AM PT" (L2-079)
+end
+handler --> controller : EventDetailDto with UTC instants and labels
+controller --> client : 200 JSON
+client --> page : EventDetail
+page --> actor : "12:00 PM ET" with "9:00 AM PT"
+@enduml

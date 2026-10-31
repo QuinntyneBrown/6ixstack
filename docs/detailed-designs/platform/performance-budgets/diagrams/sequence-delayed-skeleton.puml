@@ -1,0 +1,48 @@
+@startuml
+title UML sequence behaviour — Delayed skeleton
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventsPage" as page
+  participant "DelayedSkeleton" as delayed
+  participant "Skeleton" as skeleton
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+actor -> page : Open /
+page -> delayed : start() — 300 ms timer (L2-089)
+page -> client : getUpcoming(filters, page 1)
+client -> controller : GET /api/events
+alt response within 300 ms
+  controller --> client : 200 UpcomingEventsDto
+  client --> page : UpcomingEvents
+  page -> delayed : settle() — timer cancelled
+  page --> actor : Content, no skeleton shown (L2-089)
+else response after 300 ms
+  delayed --> page : visible = true
+  page -> skeleton : Render EventRow-sized rows and hero line
+  opt prefers-reduced-motion
+    skeleton -> skeleton : No shimmer (L2-094)
+  end
+  skeleton --> actor : Placeholders in the final layout boxes
+  controller --> client : 200 UpcomingEventsDto
+  client --> page : UpcomingEvents
+  page -> delayed : settle() — visible = false
+  page --> actor : Content replaces same-size boxes, layout shift 0 (L2-089, L2-088)
+end
+@enduml

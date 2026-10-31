@@ -1,0 +1,132 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Browse communities
+
+package "SixStack.Domain" {
+  enum Topic {
+    Ai
+    DotNet
+    Azure
+    Angular
+    React
+    Aws
+  }
+  enum EventStatus {
+    Draft
+    InReview
+    NeedsChanges
+    Rejected
+    Published
+    Cancelled
+  }
+  class Community {
+    +Guid Id
+    +string Slug
+    +string Name
+    +string Initials
+    +string City
+    +string Tagline
+    +string Description
+    +int MemberCount
+    +IReadOnlyCollection<Topic> Topics
+  }
+  class Event {
+    +Guid Id
+    +string Slug
+    +string Title
+    +Guid CommunityId
+    +DateTimeOffset StartsAtUtc
+    +EventStatus Status
+  }
+}
+
+package "SixStack.Application" {
+  enum CommunitySort {
+    MostMembers
+    NextEventSoonest
+    Name
+  }
+  class GetCommunitiesQuery {
+    +string? Search
+    +Topic? Topic
+    +string? City
+    +CommunitySort Sort
+    +int Page
+  }
+  class GetCommunitiesQueryValidator {
+    +MaxSearchLength = 100
+  }
+  class GetCommunitiesQueryHandler {
+    +FirstPageSize = 10
+    +NextPageSize = 20
+    +Handle(query: GetCommunitiesQuery): Task<CommunityDirectoryDto>
+  }
+  class CommunityDirectoryDto {
+    +int ListedTotal
+    +int MatchCount
+    +int Page
+    +IReadOnlyList<CommunityCardDto> Items
+  }
+  class CommunityCardDto {
+    +string Slug
+    +string Name
+    +string Initials
+    +string City
+    +string AudienceLabel
+    +string Description
+    +IReadOnlyList<Topic> Topics
+    +NextEventDto? NextEvent
+  }
+  class NextEventDto {
+    +string Slug
+    +string Title
+    +string DateLabel
+  }
+}
+
+package "sixstack (Angular)" {
+  class CommunitiesPage {
+    +query: Signal<DirectoryQuery>
+    +result: Signal<CommunityDirectory | null>
+    +shownCount: Signal<number>
+    +search(text: string): void
+    +setTopic(topic: Topic | null): void
+    +setCity(city: string | null): void
+    +setSort(sort: CommunitySort): void
+    +loadMore(): void
+    +clearSearch(): void
+    +retry(): void
+  }
+  interface CommunitiesApi {
+    +list(query: DirectoryQuery, page: number): Observable<CommunityDirectory>
+  }
+  class HttpCommunitiesApi
+  class DirectoryCard {
+    +href: string
+  }
+}
+
+Community "1" --> "1..*" Topic
+Event --> EventStatus
+Event "*" --> "1" Community : CommunityId
+GetCommunitiesQuery --> CommunitySort
+GetCommunitiesQueryValidator ..> GetCommunitiesQuery : validates
+GetCommunitiesQueryHandler ..> GetCommunitiesQuery : handles
+GetCommunitiesQueryHandler ..> Community : reads
+GetCommunitiesQueryHandler ..> Event : reads next event
+GetCommunitiesQueryHandler ..> CommunityDirectoryDto : returns
+CommunityDirectoryDto "1" *-- "*" CommunityCardDto
+CommunityCardDto *-- "0..1" NextEventDto
+HttpCommunitiesApi ..|> CommunitiesApi
+CommunitiesPage ..> CommunitiesApi : COMMUNITIES_API
+CommunitiesPage ..> DirectoryCard : renders
+@enduml

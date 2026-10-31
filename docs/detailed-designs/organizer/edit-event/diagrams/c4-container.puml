@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Edit an event
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Edit page, event form, forbidden page")
+  Container(api, "6ixstack API", "ASP.NET Core", "Organizer event endpoints, access rule, background checks")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events, community organizers, audit entries, outbox")
+}
+System_Ext(calendars, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(moderator, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET and PUT /api/organizer/events/{id}", "JSON/HTTPS, session cookie")
+Rel(api, db, "Reads and writes events, audit entries and outbox messages", "EF Core")
+Rel(calendars, api, "GET /feeds/{feedSlug}.ics", "HTTPS")
+@enduml

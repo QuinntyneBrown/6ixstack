@@ -1,0 +1,47 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Approve a submission
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "ReviewQueuePage", "Angular page", "approve, undo, card removal")
+  Component(presence, "ReviewPresenceTracker", "Angular service", "Posts presence while a submission is open")
+  Component(toasts, "ToastService", "Angular service", "Success, warning, info and danger toasts")
+  Component(client, "HttpModerationApi", "Angular service behind MODERATION_API", "Typed client for /api/moderation")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "ModerationController", "ASP.NET Core controller", "approve, undo-approval, presence")
+  Component(policy, "ModeratorPolicy", "Authorization policy", "Moderator role")
+  Component(approve, "ApproveSubmissionCommandHandler", "MediatR handler", "Publishes or records pending approval, holds email")
+  Component(undo, "UndoApprovalCommandHandler", "MediatR handler", "Reverses within 8 s, drops held email")
+  Component(seen, "RecordReviewPresenceCommandHandler", "MediatR handler", "Upserts presence, returns co-reviewers")
+  Component(entity, "Event", "Domain entity", "Approve and UndoApproval transitions")
+  Component(audit, "IAuditLog", "Application port", "Approval and undo entries")
+  Component(outbox, "IOutbox", "Application port", "Held SubmissionApprovedNotification")
+  Component(processor, "OutboxProcessor", "Hosted service", "Sends due messages")
+  Component(sender, "IEmailSender", "Application port", "Email provider adapter")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events, decisions, presence, audit, outbox")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(page, client, "approve, undoApproval")
+Rel(page, toasts, "Shows toasts")
+Rel(presence, client, "recordPresence")
+Rel(presence, toasts, "Shows co-reviewer toast")
+Rel(client, ctrl, "POST /api/moderation/submissions/{id}/...", "JSON/HTTPS")
+Rel(ctrl, policy, "Authorizes with")
+Rel(ctrl, approve, "Sends ApproveSubmissionCommand")
+Rel(ctrl, undo, "Sends UndoApprovalCommand")
+Rel(ctrl, seen, "Sends RecordReviewPresenceCommand")
+Rel(approve, entity, "Approve(moderatorId, now)")
+Rel(undo, entity, "UndoApproval()")
+Rel(approve, audit, "Records")
+Rel(undo, audit, "Records")
+Rel(approve, outbox, "Enqueues, not before now + 8 s")
+Rel(undo, db, "Deletes held message", "EF Core")
+Rel(approve, db, "Commits once", "EF Core")
+Rel(seen, db, "Upserts ReviewPresence", "EF Core")
+Rel(processor, db, "Reads due messages", "EF Core")
+Rel(processor, sender, "Sends")
+Rel(sender, email, "Delivers", "<TO SUPPLY>")
+@enduml

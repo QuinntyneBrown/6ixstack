@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Serve a calendar feed
+
+System_Ext(calapps, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "FeedsController", "ASP.NET Core controller", "GET /feeds/{feedSlug}.ics, anonymous")
+  Component(handler, "GetCalendarFeedQueryHandler", "MediatR handler", "Parses slug, serves snapshot or builds one")
+  Component(filter, "FeedEventFilter", "Application helper", "Narrows events to a FeedSlug")
+  Component(writer, "IcsWriter", "IIcsWriter, Infrastructure", "RFC 5545 VCALENDAR, VTIMEZONE, VEVENT")
+  Component(cache, "MemoryFeedCache", "IFeedCache, Infrastructure", "FeedSnapshot with ETag per slug")
+  Component(clock, "SystemClock", "IClock", "Current instant")
+  Component(outbox, "OutboxProcessor", "Hosted service", "Dispatches outbox messages with backoff")
+  Component(regen, "RegenerateFeedsCommandHandler", "MediatR handler", "Evicts and rebuilds matching snapshots")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events and outbox messages")
+
+Rel(calapps, ctrl, "GET /feeds/{feedSlug}.ics", "HTTPS")
+Rel(ctrl, handler, "Sends GetCalendarFeedQuery")
+Rel(handler, cache, "Gets and stores snapshots")
+Rel(handler, filter, "Applies FeedSlug")
+Rel(handler, clock, "Reads now for the 30-day window")
+Rel(handler, writer, "Writes calendar text")
+Rel(handler, db, "Queries published and cancelled events", "EF Core")
+Rel(outbox, db, "Reads pending FeedRegenerationRequested", "EF Core")
+Rel(outbox, regen, "Sends RegenerateFeedsCommand")
+Rel(regen, cache, "Evicts and rebuilds matching snapshots")
+@enduml

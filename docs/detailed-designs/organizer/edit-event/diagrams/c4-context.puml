@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Edit an event
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(calendars, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+
+Rel(organizer, sixstack, "Edits their community's listings using", "HTTPS")
+Rel(moderator, sixstack, "Edits any submission or published listing using", "HTTPS")
+Rel(calendars, sixstack, "Requests updated feeds from", "HTTPS, iCalendar")
+@enduml

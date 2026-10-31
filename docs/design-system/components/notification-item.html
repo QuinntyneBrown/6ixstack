@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notification item — 6ixstack design system</title>
+<meta name="description" content="Notification items are the entries on the notifications page: what happened to an event you submitted or follow, when, and a link to it.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">6ixstack DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Components</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+      <li><a href="../components/site-header.html">Site header</a></li>
+      <li><a href="../components/sidebar-nav.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/footer.html">Footer</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/feature-card.html">Feature card</a></li>
+      <li><a href="../components/accordion.html">Accordion</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/drawer.html">Drawer</a></li>
+      <li><a href="../components/popover.html">Popover</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-primitives.html">Layout primitives</a></li>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/topic-chip.html">Topic chip</a></li>
+      <li><a href="../components/stat.html">Stat</a></li>
+      <li><a href="../components/event-row.html">Event row</a></li>
+      <li><a href="../components/date-tile.html">Date tile</a></li>
+      <li><a href="../components/calendar.html">Calendar</a></li>
+      <li><a href="../components/event-map.html">Event map</a></li>
+      <li><a href="../components/notification-item.html">Notification item</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/alert.html">Alert and banner</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/progress.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Notification item</h1>
+      <p class="ds-lead">Notification items are the entries on the notifications page: what happened to an event you submitted or follow, when, and a link to it.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">List of block links</span></div>
+      <ul class="ds-toc"><li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li></ul>
+    </header>
+
+<section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+<p>Use notification items for persistent, per-person history: approvals, requests for changes, cancellations, digests. For a message about something the person just did, use a <a href="toast.html">toast</a>; for a site-wide notice use a <a href="alert.html">banner</a>.</p>
+</section>
+<section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+<div class="ds-anatomy"><figure class="ds-anatomy__figure" style="display: block; width: 100%;"><ul class="notif-list"><li class="notif notif--unread"><span class="notif__icon notif__icon--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/event-detail/default.html">“Fabric for Power BI developers” is live</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Approved by a moderator. It’s in the list, the calendar and 41 feeds.</p></div><span class="notif__time">12 min ago</span></li></ul>
+<span class="ds-callout" style="left: 1%; top: 30%;" aria-hidden="true">1</span><span class="ds-callout" style="left: 6%; top: 8%;" aria-hidden="true">2</span><span class="ds-callout" style="left: 20%; top: 8%;" aria-hidden="true">3</span><span class="ds-callout" style="left: 20%; top: 64%;" aria-hidden="true">4</span><span class="ds-callout" style="left: 90%; top: 8%;" aria-hidden="true">5</span></figure>
+<ol class="ds-anatomy__list"><li><div><b>Unread dot</b><small>6px brand dot at the left edge; decorative, paired with hidden “(unread)” text and a bolder title.</small></div></li><li><div><b>Tone icon</b><small>40px circle in the status tone: success, warning, danger, or neutral.</small></div></li><li><div><b>Title link</b><small>Stretched over the item; semibold when unread, muted when read.</small></div></li><li><div><b>Text</b><small>One or two sentences of detail.</small></div></li><li><div><b>Time</b><small>Relative (“12 min ago”) for today, then “Yesterday”, then a date.</small></div></li></ol></div>
+</section>
+<section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+<div class="ds-example">
+<div class="ds-example__canvas">
+<ul class="notif-list" style="width: 100%;"><li class="notif notif--unread"><span class="notif__icon notif__icon--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/event-detail/default.html">“Fabric for Power BI developers” is live</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Approved by a moderator. It’s in the list, the calendar and 41 feeds.</p></div><span class="notif__time">12 min ago</span></li><li class="notif notif--unread"><span class="notif__icon notif__icon--warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/edit-event/default.html">“Azure Bicep clinic” needs changes</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">A moderator asked you to add the venue address before it can be published.</p></div><span class="notif__time">2 h ago</span></li><li class="notif notif--unread"><span class="notif__icon notif__icon--danger"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/event-detail/cancelled.html">“Blazor vs Angular: a friendly fight” was cancelled</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Brampton Dev Night cancelled this event. It was in your Everything feed.</p></div><span class="notif__time">Yesterday</span></li><li class="notif"><span class="notif__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/events/default.html">3 new .NET events this week</a></p><p class="notif__text">Toronto .NET User Group, Microsoft Reactor and Brampton Dev Night posted events.</p></div><span class="notif__time">Oct 26</span></li></ul>
+</div>
+<div class="ds-example__caption"><span>Approved, needs changes, cancelled (unread) and a read digest.</span></div>
+<details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;ul class="notif-list" style="width: 100%;"&gt;&lt;li class="notif notif--unread"&gt;&lt;span class="notif__icon notif__icon--success"&gt;&lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;circle cx="12" cy="12" r="10"/&gt;&lt;path d="m9 12 2 2 4-4"/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;div&gt;&lt;p class="notif__title"&gt;&lt;a href="../../mocks/pages/event-detail/default.html"&gt;“Fabric for Power BI developers” is live&lt;/a&gt;&lt;span class="visually-hidden"&gt; (unread)&lt;/span&gt;&lt;/p&gt;&lt;p class="notif__text"&gt;Approved by a moderator. It’s in the list, the calendar and 41 feeds.&lt;/p&gt;&lt;/div&gt;&lt;span class="notif__time"&gt;12 min ago&lt;/span&gt;&lt;/li&gt;&lt;li class="notif notif--unread"&gt;&lt;span class="notif__icon notif__icon--warning"&gt;&lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/&gt;&lt;path d="M12 9v4"/&gt;&lt;path d="M12 17h.01"/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;div&gt;&lt;p class="notif__title"&gt;&lt;a href="../../mocks/pages/edit-event/default.html"&gt;“Azure Bicep clinic” needs changes&lt;/a&gt;&lt;span class="visually-hidden"&gt; (unread)&lt;/span&gt;&lt;/p&gt;&lt;p class="notif__text"&gt;A moderator asked you to add the venue address before it can be published.&lt;/p&gt;&lt;/div&gt;&lt;span class="notif__time"&gt;2 h ago&lt;/span&gt;&lt;/li&gt;&lt;li class="notif notif--unread"&gt;&lt;span class="notif__icon notif__icon--danger"&gt;&lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;circle cx="12" cy="12" r="10"/&gt;&lt;path d="m15 9-6 6"/&gt;&lt;path d="m9 9 6 6"/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;div&gt;&lt;p class="notif__title"&gt;&lt;a href="../../mocks/pages/event-detail/cancelled.html"&gt;“Blazor vs Angular: a friendly fight” was cancelled&lt;/a&gt;&lt;span class="visually-hidden"&gt; (unread)&lt;/span&gt;&lt;/p&gt;&lt;p class="notif__text"&gt;Brampton Dev Night cancelled this event. It was in your Everything feed.&lt;/p&gt;&lt;/div&gt;&lt;span class="notif__time"&gt;Yesterday&lt;/span&gt;&lt;/li&gt;&lt;li class="notif"&gt;&lt;span class="notif__icon"&gt;&lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="M10.268 21a2 2 0 0 0 3.464 0"/&gt;&lt;path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;div&gt;&lt;p class="notif__title"&gt;&lt;a href="../../mocks/pages/events/default.html"&gt;3 new .NET events this week&lt;/a&gt;&lt;/p&gt;&lt;p class="notif__text"&gt;Toronto .NET User Group, Microsoft Reactor and Brampton Dev Night posted events.&lt;/p&gt;&lt;/div&gt;&lt;span class="notif__time"&gt;Oct 26&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;</code></pre></details>
+</div>
+</section>
+<section class="ds-section" id="sizes" data-na="One size; the list sits in a narrow page column (page--narrow)."><h2><a href="#sizes">Sizes</a></h2>
+<p>One size; the list sits in a narrow page column (page--narrow).</p>
+</section>
+<section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+<div class="ds-matrix"><table>
+<thead><tr><th scope="col">Item</th><th scope="col">Unread</th><th scope="col">Read</th><th scope="col">Hover</th><th scope="col">Focus</th></tr></thead>
+<tbody>
+<tr><th scope="row">Approval</th><td><ul class="notif-list" style="width: 18rem;"><li class="notif notif--unread"><span class="notif__icon notif__icon--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/event-detail/default.html">“Fabric for Power BI developers” is live</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Approved by a moderator.</p></div><span class="notif__time">12 min ago</span></li></ul></td><td><ul class="notif-list" style="width: 18rem;"><li class="notif"><span class="notif__icon notif__icon--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/event-detail/default.html">“Fabric for Power BI developers” is live</a></p><p class="notif__text">Approved by a moderator.</p></div><span class="notif__time">12 min ago</span></li></ul></td><td><ul class="notif-list" style="width: 18rem;"><li class="notif notif--unread" data-state="hover"><span class="notif__icon notif__icon--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/event-detail/default.html">“Fabric for Power BI developers” is live</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Approved by a moderator.</p></div><span class="notif__time">12 min ago</span></li></ul></td><td><ul class="notif-list" style="width: 18rem;"><li class="notif notif--unread"><span class="notif__icon notif__icon--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="notif__title"><a data-state="focus" href="../../mocks/pages/event-detail/default.html">“Fabric for Power BI developers” is live</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Approved by a moderator.</p></div><span class="notif__time">12 min ago</span></li></ul></td></tr>
+</tbody>
+</table></div><p>The page also has loading (skeleton items), empty (“You’re all caught up”), error and all-read states; “Mark all as read” disappears when nothing is unread.</p><h3>Both themes</h3><div class="ds-themes">
+<div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+<ul class="notif-list" style="width: 100%;"><li class="notif notif--unread"><span class="notif__icon notif__icon--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/event-detail/default.html">“Fabric for Power BI developers” is live</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Approved by a moderator. It’s in the list, the calendar and 41 feeds.</p></div><span class="notif__time">12 min ago</span></li><li class="notif"><span class="notif__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/events/default.html">3 new .NET events this week</a></p><p class="notif__text">Toronto .NET User Group, Microsoft Reactor and Brampton Dev Night posted events.</p></div><span class="notif__time">Oct 26</span></li></ul>
+</div></div>
+<div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+<ul class="notif-list" style="width: 100%;"><li class="notif notif--unread"><span class="notif__icon notif__icon--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/event-detail/default.html">“Fabric for Power BI developers” is live</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Approved by a moderator. It’s in the list, the calendar and 41 feeds.</p></div><span class="notif__time">12 min ago</span></li><li class="notif"><span class="notif__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/events/default.html">3 new .NET events this week</a></p><p class="notif__text">Toronto .NET User Group, Microsoft Reactor and Brampton Dev Night posted events.</p></div><span class="notif__time">Oct 26</span></li></ul>
+</div></div>
+</div>
+</section>
+<section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive</a></h2>
+<ul><li>Below 640px the time moves under the text (second column, last row).</li><li>From 640px the time sits in a third column at the top right.</li><li>Titles wrap; they never truncate.</li></ul>
+</section>
+<section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+<p>The list uses surface and default border; tone circles use <code>--color-*-bg</code> with <code>--color-*-icon</code>. The unread dot is <code>--color-brand</code> in both themes.</p>
+</section>
+<section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+<h3>Role and pattern</h3><p>A <code>&lt;ul&gt;</code> of items, each with one title link stretched over the item (block-link technique). Unread state is conveyed three ways: hidden “(unread)” text, a heavier title, and the dot.</p>
+<h3>Keyboard</h3><table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+<tr><td><kbd>Tab</kbd></td><td>One stop per item (the title link), after “Mark all as read”.</td></tr>
+<tr><td><kbd>Enter</kbd></td><td>Opens the event and marks the item read.</td></tr>
+</tbody></table>
+<h3>Focus</h3><p>Shared ring on the link; because the link’s hit area covers the item, the ring is drawn on the text. Keep focus on the next item after “Mark all as read”.</p>
+<h3>Labelling</h3><p>Icons are hidden; the tone is in the words (“is live”, “needs changes”, “was cancelled”). The page heading’s lead (“3 unread”) and the header bell label update together.</p>
+<h3>Contrast</h3><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+<div class="ds-pair"><span>Unread title</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Read title and text</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Time</span><span class="ds-pair__ratio" data-contrast="--color-fg-subtle|--color-bg-surface" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Text on hover</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-subtle" data-min="4.5"></span></div>
+<div class="ds-pair"><span>Success icon</span><span class="ds-pair__ratio" data-contrast="--color-success-icon|--color-success-bg" data-min="3"></span></div>
+<div class="ds-pair"><span>Warning icon</span><span class="ds-pair__ratio" data-contrast="--color-warning-icon|--color-warning-bg" data-min="3"></span></div>
+<div class="ds-pair"><span>Danger icon</span><span class="ds-pair__ratio" data-contrast="--color-danger-icon|--color-danger-bg" data-min="3"></span></div>
+</div>
+<h3>Motion</h3><p>None; marking as read changes weight and removes the dot instantly.</p><h3>Touch</h3><p>The whole item (at least 72px tall) is the target.</p>
+</section>
+<section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+<ul><li>Title: quote the event name, then what happened: ““Azure Bicep clinic” needs changes”.</li><li>Text: who did it and what to do next: “A moderator asked you to add the venue address…”.</li><li>Time: “12 min ago”, “2 h ago”, “Yesterday”, then “Oct 26”.</li></ul>
+</section>
+<section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+<div class="ds-dodont">
+<figure class="ds-do"><div class="ds-example__canvas"><ul class="notif-list" style="width: 100%;"><li class="notif notif--unread"><span class="notif__icon notif__icon--warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/edit-event/default.html">“Azure Bicep clinic” needs changes</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">A moderator asked you to add the venue address before it can be published.</p></div><span class="notif__time">2 h ago</span></li></ul></div><figcaption>Say what happened and what to do next.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><ul class="notif-list" style="width: 100%;"><li class="notif notif--unread"><span class="notif__icon notif__icon--warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/edit-event/default.html">Submission update</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Status changed.</p></div><span class="notif__time">2 h ago</span></li></ul></div><figcaption>A vague title; the person has to open it to learn anything.</figcaption></figure>
+<figure class="ds-do"><div class="ds-example__canvas"><ul class="notif-list" style="width: 100%;"><li class="notif notif--unread"><span class="notif__icon notif__icon--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="notif__title"><a href="../../mocks/pages/event-detail/default.html">“Fabric for Power BI developers” is live</a><span class="visually-hidden"> (unread)</span></p><p class="notif__text">Approved by a moderator.</p></div><span class="notif__time">12 min ago</span></li></ul></div><figcaption>Unread is text + weight + dot.</figcaption></figure>
+<figure class="ds-dont"><div class="ds-example__canvas"><ul class="notif-list" style="width: 100%;"><li class="notif notif--unread"><span class="notif__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></span><div><p class="notif__title" style="font-weight: var(--font-weight-regular); color: var(--color-fg-muted);">“Fabric for Power BI developers” is live</p></div></li></ul></div><figcaption>Unread shown by the dot alone.</figcaption></figure>
+</div>
+</section>
+<section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+<div class="ds-table-wrap"><table class="ds-table">
+<thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+<tbody>
+<tr><td>List surface</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+<tr><td>List border, dividers</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+<tr><td>Hover</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+<tr><td>Unread dot</td><td><code>--color-brand</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-brand" data-swatch></i><span data-token="--color-brand"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-brand" data-swatch></i><span data-token="--color-brand"></span></span></td></tr>
+<tr><td>Unread title</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+<tr><td>Read title, text</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+<tr><td>Time</td><td><code>--color-fg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td></tr>
+<tr><td>Neutral icon circle</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+<tr><td>Item padding</td><td><code>--space-4</code> / <code>--space-5</code></td><td colspan="2"><span data-token="--space-4"></span> / <span data-token="--space-5"></span></td></tr>
+<tr><td>List radius</td><td><code>--radius-lg</code></td><td colspan="2"><span data-token="--radius-lg"></span></td></tr>
+<tr><td>Title font</td><td><code>--text-body-sm</code></td><td colspan="2"><span data-token="--text-body-sm"></span></td></tr>
+<tr><td>Time font</td><td><code>--text-caption</code></td><td colspan="2"><span data-token="--text-caption"></span></td></tr>
+</tbody>
+</table></div>
+</section>
+<section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+<pre><code>&lt;ul class="notif-list"&gt;
+  &lt;li class="notif notif--unread"&gt;
+    &lt;span class="notif__icon notif__icon--success"&gt;&lt;svg class="icon" aria-hidden="true"…/&gt;&lt;/span&gt;
+    &lt;div&gt;
+      &lt;p class="notif__title"&gt;&lt;a href="…"&gt;“Fabric for Power BI developers” is live&lt;/a&gt;&lt;span class="visually-hidden"&gt; (unread)&lt;/span&gt;&lt;/p&gt;
+      &lt;p class="notif__text"&gt;Approved by a moderator…&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;span class="notif__time"&gt;12 min ago&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre><table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+<tr><td><code>.notif-list</code></td><td>Bordered list container.</td></tr>
+<tr><td><code>.notif</code> / <code>--unread</code></td><td>Item; unread adds the dot and bold title.</td></tr>
+<tr><td><code>.notif__icon</code> + <code>--success|warning|danger</code></td><td>Tone circle.</td></tr>
+<tr><td><code>.notif__title</code> (with <code>a</code>)</td><td>Stretched title link.</td></tr>
+<tr><td><code>.notif__text</code> / <code>.notif__time</code></td><td>Detail and time.</td></tr>
+</tbody></table>
+</section>
+<section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+<p>Extracted from these mocks:</p>
+<ul>
+<li><a href="../../mocks/pages/notifications/default.html">pages/notifications/default</a> (unread and read items)</li>
+<li><a href="../../mocks/pages/notifications/read.html">pages/notifications/read</a> (all read)</li>
+<li><a href="../../mocks/pages/notifications/empty.html">pages/notifications/empty</a> (caught up)</li>
+<li><a href="../../mocks/pages/notifications/loading.html">pages/notifications/loading</a> (loading)</li>
+<li><a href="../../mocks/pages/notifications/error.html">pages/notifications/error</a> (error)</li>
+</ul>
+<p>Drift fixed during extraction: none; the page header used inline layout styles, which belong to the page, not the item.</p>
+</section>
+
+    <footer class="ds-footer"><span>6ixstack design system · extracted from <a href="../../mocks/index.html">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

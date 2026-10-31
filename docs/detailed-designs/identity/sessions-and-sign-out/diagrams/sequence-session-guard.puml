@@ -1,0 +1,75 @@
+@startuml
+title UML sequence behaviour — Authenticate a request and guard a protected page
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "authGuard" as guard
+  participant "SessionStore" as store
+  participant "HttpAuthApi" as client
+  participant "unauthorizedInterceptor" as interceptor
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "SessionAuthenticationHandler" as authn
+  participant "AuthController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "Session" as session
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> guard : Navigate to /organize
+guard -> store : user?
+store -> client : me()
+client -> authn : GET /api/auth/me with session cookie
+alt no cookie
+  authn --> controller : Anonymous
+else cookie present
+  authn -> db : Load Session by SHA-256 hash of the secret
+  db --> authn : Session or nothing
+  authn -> session : IsActive(now)
+  alt revoked, user deleted, or idle more than 14 days (L2-048)
+    session --> authn : false
+    authn --> controller : Anonymous (L2-048)
+  else active
+    session --> authn : true
+    authn -> session : Touch(now), at most once per <TO SUPPLY> minutes
+    authn -> db : Save LastSeenAtUtc
+    authn -> authn : Re-issue cookie, 14-day sliding expiry (L2-048)
+    authn --> controller : Authenticated principal
+  end
+end
+alt anonymous
+  controller --> client : 401 (L2-080)
+  client --> store : user = null
+  store --> guard : null
+  guard --> actor : Redirect to /sign-in?returnUrl=/organize (L2-048)
+  note right of actor : After redemption the API redirects to /organize (identity/magic-link-sign-in)
+else signed in
+  controller --> client : 200 CurrentUserDto
+  client --> store : user
+  store --> guard : user
+  guard --> actor : /organize opens
+end
+opt session ends while a protected page is open
+  actor -> client : Any organizer API call
+  client -> authn : Request with stale cookie
+  authn --> client : 401 (L2-048)
+  client -> interceptor : 401 response
+  interceptor -> store : clear()
+  interceptor --> actor : Redirect to /sign-in?returnUrl=<current path> (L2-048)
+end
+@enduml

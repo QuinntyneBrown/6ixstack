@@ -1,0 +1,38 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Cancel an event
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(opener, "OrganizerDashboardPage or EditEventPage", "Angular page", "Opens the dialog and applies the result")
+  Component(dialog, "CancelEventDialog", "Angular CDK dialog", "Reason, email option, typed confirmation, states")
+  Component(client, "HttpOrganizerEventsApi", "Angular service behind ORGANIZER_EVENTS_API", "Typed client for the cancel endpoint")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "OrganizerEventsController", "ASP.NET Core controller", "POST /api/organizer/events/{id}/cancel")
+  Component(validator, "CancelEventCommandValidator", "FluentValidation", "Reason required")
+  Component(handler, "CancelEventCommandHandler", "MediatR handler", "Access, confirmation, cancel, audit, outbox")
+  Component(access, "EventAccessChecker", "Application service", "CommunityMemberRequirement or Moderator role")
+  Component(entity, "Event", "Domain entity", "Cancel transition and Sequence")
+  Component(audit, "IAuditLog", "Application port", "Records EventCancelled")
+  Component(outbox, "IOutbox", "Application port", "Queues EventCancelledEmail")
+  Component(processor, "OutboxProcessor", "Hosted service", "Sends due messages with backoff")
+  Component(sender, "IEmailSender", "Application port", "Email provider adapter")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events, audit entries, outbox")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(opener, dialog, "Opens with CancelEventDialogData", "CDK Dialog")
+Rel(dialog, client, "cancelEvent(id, request)")
+Rel(client, ctrl, "POST /cancel", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates body")
+Rel(ctrl, handler, "Sends CancelEventCommand")
+Rel(handler, access, "Checks access")
+Rel(handler, entity, "Calls Cancel(reason, now)")
+Rel(handler, audit, "Records")
+Rel(handler, outbox, "Enqueues")
+Rel(handler, db, "Commits once", "EF Core")
+Rel(processor, db, "Reads due messages", "EF Core")
+Rel(processor, sender, "Sends")
+Rel(sender, email, "Delivers", "<TO SUPPLY>")
+@enduml

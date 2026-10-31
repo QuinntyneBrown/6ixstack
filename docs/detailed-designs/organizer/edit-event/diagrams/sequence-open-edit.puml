@@ -1,0 +1,76 @@
+@startuml
+title UML sequence behaviour — Open the edit page
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Organizer or moderator" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EditEventPage" as page
+  participant "DraftStore" as draft
+  participant "HttpOrganizerEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "OrganizerEventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetOrganizerEventQueryHandler" as handler
+  participant "EventAccessChecker" as access
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open /organize/events/{id}/edit
+page --> actor : Form skeletons after 300 ms (L2-054, L2-089)
+page -> client : getEvent(id)
+client -> controller : GET /api/organizer/events/{id}
+controller -> controller : Authenticate session, OrganizerPolicy, 401 if anonymous (L2-080)
+controller -> handler : Send GetOrganizerEventQuery
+handler -> db : Load event
+db --> handler : Event or nothing
+alt unknown id
+  handler --> controller : NotFound
+  controller --> client : 404 problem details (L2-080)
+else event found
+  handler -> access : Check(event)
+  access -> db : CommunityOrganizer for caller and event's community
+  db --> access : Membership
+  alt not a community member and not a moderator
+    access --> handler : ForbiddenEventAccess(Azure Toronto, title, priya@gtaazure.ca)
+    handler --> controller : Forbidden
+    controller --> client : 403 problem details with communityName, signedInEmail (L2-055)
+    client --> page : Forbidden
+    page --> actor : Forbidden page "You can't edit this event" naming Azure Toronto and priya@gtaazure.ca (L2-055)
+  else allowed
+    access --> handler : Allowed
+    handler -> handler : IsReadOnly = event.IsPast(now) (L2-055)
+    handler --> controller : EventEditDto
+    controller --> client : 200 JSON
+    client --> page : EventEdit
+    alt read-only
+      page --> actor : Disabled fields, "This event has ended, so it can't be edited", no save actions (L2-055)
+      opt Duplicate as a new event
+        actor -> page : Duplicate as a new event
+        page -> draft : write(details without date, start and end) (L2-055)
+        page --> actor : Navigate to /submit, prefilled
+      end
+    else editable
+      page --> actor : Prefilled form and "Published · 318 going · last edited Oct 28" (L2-054)
+    end
+  end
+end
+opt 5xx or network error
+  client --> page : Error
+  page --> actor : "We couldn't open this event" with Try again and Back to your events (L2-054)
+end
+@enduml

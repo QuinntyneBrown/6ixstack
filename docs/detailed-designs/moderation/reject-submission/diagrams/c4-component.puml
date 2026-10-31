@@ -1,0 +1,42 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Reject a submission
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "ReviewQueuePage", "Angular page", "Opens the dialog, removes the card, raises the toast")
+  Component(dialog, "RejectSubmissionDialog", "Angular CDK dialog", "Reason, message, states")
+  Component(sent, "SentEmailDialog", "Angular CDK dialog", "Shows the sent email")
+  Component(client, "HttpModerationApi", "Angular service behind MODERATION_API", "Typed client for the reject endpoint")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(ctrl, "ModerationController", "ASP.NET Core controller", "POST /api/moderation/submissions/{id}/reject")
+  Component(policy, "ModeratorPolicy", "Authorization policy", "Moderator role")
+  Component(validator, "RejectSubmissionCommandValidator", "FluentValidation", "Reason required")
+  Component(handler, "RejectSubmissionCommandHandler", "MediatR handler", "Reason rule, decision, audit, outbox")
+  Component(entity, "Event", "Domain entity", "RequestChanges and Reject transitions")
+  Component(audit, "IAuditLog", "Application port", "Records SubmissionRejected")
+  Component(outbox, "IOutbox", "Application port", "Queues SubmissionRejectedEmail")
+  Component(processor, "OutboxProcessor", "Hosted service", "Sends due messages with backoff")
+  Component(emailHandler, "SubmissionRejectedEmailHandler", "Outbox message handler", "Composes email and notification")
+  Component(sender, "IEmailSender", "Application port", "Email provider adapter")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events, decisions, audit, outbox")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(page, dialog, "Opens with RejectSubmissionDialogData", "CDK Dialog")
+Rel(page, sent, "Opens on View email", "CDK Dialog")
+Rel(dialog, client, "reject(id, request)")
+Rel(client, ctrl, "POST /reject", "JSON/HTTPS")
+Rel(ctrl, policy, "Authorizes with")
+Rel(ctrl, validator, "Validates body")
+Rel(ctrl, handler, "Sends RejectSubmissionCommand")
+Rel(handler, entity, "RequestChanges or Reject")
+Rel(handler, audit, "Records")
+Rel(handler, outbox, "Enqueues")
+Rel(handler, db, "Commits once", "EF Core")
+Rel(processor, db, "Reads due messages", "EF Core")
+Rel(processor, emailHandler, "Dispatches")
+Rel(emailHandler, sender, "Sends")
+Rel(sender, email, "Delivers", "<TO SUPPLY>")
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Status pages, inline failures and offline events
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System_Boundary(sixstack, "6ixstack") {
+  Container(host, "Web app host", "<TO SUPPLY>", "Serves index.html; 404 status for paths outside the route table")
+  Container(spa, "6ixstack web app", "Angular, service worker", "Status pages, inline failure pattern, app shell cache, saved events list")
+  Container(api, "6ixstack API", "ASP.NET Core", "Problem details with reference codes, request logging, health")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Events and ownership")
+}
+Rel(visitor, host, "Requests pages", "HTTPS")
+Rel(host, spa, "Delivers app shell")
+Rel(visitor, spa, "Uses, online or offline")
+Rel(spa, api, "Calls; receives problem+json on failure", "JSON/HTTPS")
+Rel(api, db, "Reads", "EF Core")
+@enduml

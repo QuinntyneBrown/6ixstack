@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Add an event to a personal calendar
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+System_Ext(calapps, "Calendar apps", "Google Calendar, Outlook, Apple Calendar")
+
+Rel(visitor, sixstack, "Chooses how to add an event using", "HTTPS")
+Rel(sixstack, calapps, "Opens a prefilled event page in", "HTTPS link, new tab")
+Rel(visitor, calapps, "Opens the downloaded .ics file in")
+@enduml

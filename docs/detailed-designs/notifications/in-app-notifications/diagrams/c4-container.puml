@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — In-app notifications
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Notifications page and header unread badge")
+  Container(api, "6ixstack API", "ASP.NET Core", "Notification endpoints and trigger handlers")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Notifications, events, users")
+}
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(moderator, spa, "Uses", "HTTPS")
+Rel(spa, api, "GET /api/notifications, POST .../read, POST .../read-all", "JSON/HTTPS")
+Rel(api, db, "Writes notifications on triggers, reads and marks them", "EF Core")
+@enduml

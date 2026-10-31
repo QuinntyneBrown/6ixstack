@@ -1,0 +1,42 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Submit an event
+
+Container_Boundary(spa, "6ixstack web app") {
+  Component(page, "SubmitEventPage", "Angular page", "Sections, error summary, submitting, error and success states")
+  Component(form, "EventFormModel", "Typed reactive form", "Field rules and format-dependent fields")
+  Component(draft, "DraftStore", "Angular service", "Draft in localStorage")
+  Component(refClient, "HttpReferenceDataApi", "Angular service behind REFERENCE_DATA_API", "Topics, cities, time zones")
+  Component(subClient, "HttpSubmissionsApi", "Angular service behind SUBMISSIONS_API", "Typed client for /api/submissions")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(refCtrl, "ReferenceDataController", "ASP.NET Core controller", "GET /api/reference-data")
+  Component(subCtrl, "SubmissionsController", "ASP.NET Core controller", "POST /api/submissions")
+  Component(limiter, "RateLimiter", "ASP.NET Core rate limiting", "submissions policy: 10 per day per email")
+  Component(validator, "SubmitEventCommandValidator", "FluentValidation", "L2-041 and L2-042 field rules")
+  Component(handler, "SubmitEventCommandHandler", "MediatR handler", "Creates the event In review, checks and outbox messages")
+  Component(authCtrl, "AuthController", "ASP.NET Core controller", "GET /auth/verify-email")
+  Component(verify, "VerifyEmailCommandHandler", "MediatR handler", "Records verified address, publishes approved events")
+  Component(tokens, "SecurityTokenService", "ISecurityTokenService", "Random tokens stored as SHA-256 hashes")
+  Component(outbox, "OutboxProcessor", "Hosted service", "Sends outbox emails with retries")
+}
+ContainerDb(db, "6ixstack database", "SQL Server", "Events, SubmissionChecks, SecurityTokens, VerifiedEmails, OutboxMessages")
+System_Ext(email, "Email provider", "<TO SUPPLY>")
+
+Rel(page, form, "Builds form from")
+Rel(page, draft, "Writes and restores draft")
+Rel(page, refClient, "Loads reference data")
+Rel(page, subClient, "Submits")
+Rel(refClient, refCtrl, "GET /api/reference-data", "JSON/HTTPS")
+Rel(subClient, subCtrl, "POST /api/submissions", "JSON/HTTPS")
+Rel(subCtrl, limiter, "Passes")
+Rel(subCtrl, validator, "Validates command")
+Rel(subCtrl, handler, "Sends SubmitEventCommand")
+Rel(handler, tokens, "Issues VerifyEmail token")
+Rel(handler, db, "Writes event, checks, outbox", "EF Core")
+Rel(authCtrl, verify, "Sends VerifyEmailCommand")
+Rel(verify, db, "Reads token, writes VerifiedEmail and events", "EF Core")
+Rel(outbox, db, "Reads pending messages", "EF Core")
+Rel(outbox, email, "Sends emails", "<TO SUPPLY>")
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Privacy and retention
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Functional storage only; no third-party scripts")
+  Container(api, "6ixstack API", "ASP.NET Core", "Role-shaped DTOs; hosts RetentionJob")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Users, reports, contact messages, events, audit entries")
+}
+System_Ext(basemap, "Map basemap provider", "<TO SUPPLY>")
+
+Rel(visitor, spa, "Uses", "HTTPS")
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(moderator, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls; receives DTOs shaped by role", "JSON/HTTPS")
+Rel(spa, basemap, "Requests tiles", "HTTPS")
+Rel(api, db, "Reads by role; deletes expired personal data", "EF Core")
+@enduml

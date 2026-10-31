@@ -1,0 +1,71 @@
+@startuml
+title UML sequence behaviour — Run submission checks
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+box "Backend — 6ixstack API application" #D1FADF
+  participant "OutboxProcessor" as processor
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "RunSubmissionChecksHandler" as handler
+  participant "ISubmissionCheck" as check
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "HttpGeocoder" as geocoder
+  participant "HttpLinkChecker" as linker
+  database "6ixstack database" as db
+end box
+participant "Geocoding service" as geo
+participant "Ticketing and streaming sites" as sites
+processor -> db : Read due RunSubmissionChecks message
+processor -> handler : Dispatch(eventId)
+handler -> db : Load event and Pending SubmissionCheck rows
+loop each Pending row
+  handler -> check : Run(event)
+  alt VenueAddressCheck
+    alt address blank
+      check --> handler : Warning "No venue address" (L2-059)
+    else address given
+      check -> geocoder : Geocode(address, city)
+      geocoder -> geo : Lookup
+      geo --> geocoder : Result
+      check --> handler : Passed "Venue address found" or Warning <TO SUPPLY> (L2-059)
+    end
+  else LinkReachabilityCheck
+    check -> linker : Check(url, 5 s)
+    linker -> sites : HTTP request
+    alt 2xx or 3xx within 5 s
+      check --> handler : Passed "Link reachable" or "Stream link reachable" (L2-059)
+    else other status, error or timeout
+      check --> handler : Warning, submission stays reviewable <TO SUPPLY> copy (L2-059)
+    end
+  else DuplicateCheck
+    check -> db : Published or In review events on the same Toronto date
+    check --> handler : Warning "Possible duplicate of a Nov 19 listing" with RelatedEventId, or Passed "No duplicates" (L2-059)
+  else OrganizerHistoryCheck
+    check -> db : Count approved events of the organizer
+    check --> handler : 0 Warning "First submission from this sender"; 5+ Passed "Trusted organizer" (L2-059)
+  else DeveloperRelevanceCheck
+    check --> handler : Passed or Warning, copy <TO SUPPLY> (L2-059)
+  end
+  handler -> db : SubmissionCheck.Complete(result, now), save
+end
+alt every row completed
+  handler --> processor : Done
+  processor -> db : ProcessedAtUtc = now
+else unexpected exception
+  handler --> processor : Failed, remaining rows stay Pending
+  processor -> db : AttemptCount + 1, exponential backoff, at most 5 attempts (L2-103)
+end
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — App shell, layout and theming
+
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+Person(organizer, "Organizer", "Signed-in community organizer")
+Person(moderator, "Moderator", "Signed-in 6ixstack volunteer moderator")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+
+Rel(visitor, sixstack, "Navigates on any device, in light or dark", "HTTPS")
+Rel(organizer, sixstack, "Navigates on any device, in light or dark", "HTTPS")
+Rel(moderator, sixstack, "Navigates on any device, in light or dark", "HTTPS")
+@enduml

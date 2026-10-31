@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Delete an organizer account
+
+Person(organizer, "Organizer", "Signed-in community organizer")
+System_Boundary(sixstack, "6ixstack") {
+  Container(spa, "6ixstack web app", "Angular, service worker", "Delete account dialog on the settings page")
+  Container(api, "6ixstack API", "ASP.NET Core", "Account deletion command, session cookie")
+  ContainerDb(db, "6ixstack database", "SQL Server", "Users, sessions, community organizers, audit entries")
+}
+Rel(organizer, spa, "Uses", "HTTPS")
+Rel(spa, api, "DELETE /api/account", "JSON/HTTPS")
+Rel(api, db, "Deletes account data, revokes sessions, writes audit", "EF Core")
+@enduml

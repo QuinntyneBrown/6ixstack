@@ -1,0 +1,65 @@
+@startuml
+title UML sequence behaviour — Plot the map and link it to the list
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Visitor" as actor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventsPage" as page
+  participant "MapTimelineState" as state
+  participant "EventMapPanel" as panel
+  participant "EventMap" as map
+  participant "HttpEventsApi" as client
+end box
+box "Backend — 6ixstack API application" #D1FADF
+  participant "EventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetEventMapQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+actor -> page : Open / or change a filter
+page -> panel : Filters changed
+panel -> client : getMap(filters)
+client -> controller : GET /api/events/map?format&topics&q
+controller -> controller : Validate query, search capped at 100 characters
+controller -> handler : Send GetEventMapQuery
+handler -> db : Published, not cancelled, start in 14-day window, matching filters
+db --> handler : Events with venues
+handler -> handler : Point per GTA event with coordinates; omit without (L2-011)
+handler -> handler : Stream per streamed event with origin side and source time (L2-011)
+handler -> handler : 14 days with counts and first topics (L2-013)
+handler --> controller : EventMapDto
+controller --> client : 200 JSON
+client --> panel : EventMapData
+panel -> map : Render data
+map --> actor : Dots by first topic, dashed ring for hybrid, arcs into Toronto, subtitle "{n} across the GTA · {m} streaming in" (L2-011)
+== Row to map ==
+actor -> page : Hover or focus "What's new in the .NET 11 previews" row
+page -> state : hoveredSlug = tdnug-net11
+state --> map : hoveredSlug changed
+map --> actor : Dot lifts, others dim, card with title and time (L2-012)
+== Map to row ==
+actor -> map : Click a dot
+map -> panel : dotActivated(slug)
+panel -> page : revealEvent(slug)
+alt reduced motion (L2-094)
+  page --> actor : Jump row to centre of viewport
+else
+  page --> actor : Smooth scroll row to centre of viewport
+end
+page --> actor : Focus moves to the row (L2-012)
+@enduml
