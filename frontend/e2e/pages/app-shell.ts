@@ -60,6 +60,19 @@ export class AppShell {
     return menu;
   }
 
+  /** The computed page background and text colours, as `rgb(...)` strings. */
+  async pageColours(): Promise<{ background: string; text: string; muted: string }> {
+    return this.page.evaluate(() => {
+      const body = getComputedStyle(document.body);
+      const footer = document.querySelector('.site-footer__inner');
+      return {
+        background: body.backgroundColor,
+        text: body.color,
+        muted: footer ? getComputedStyle(footer).color : '',
+      };
+    });
+  }
+
   async hasHorizontalScroll(): Promise<boolean> {
     return this.page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
