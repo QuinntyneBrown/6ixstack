@@ -77,6 +77,10 @@ export class SubmitEventPage {
     return this.form.getByRole('checkbox', { name, exact: true });
   }
 
+  summaryItems(): Locator {
+    return this.errorSummary.locator('li');
+  }
+
   async summaryMessages(): Promise<string[]> {
     return this.errorSummary.locator('li').allInnerTexts();
   }
@@ -104,7 +108,45 @@ export class SubmitEventPage {
     if (input.email !== undefined) await this.field('Contact email').fill(input.email);
   }
 
+  successTitle(): Locator {
+    return this.successPanel.getByRole('heading', { level: 2 });
+  }
+
+  successText(): Locator {
+    return this.successPanel.locator('p').first();
+  }
+
+  nextSteps(): Locator {
+    return this.successPanel.locator('.steps-next li');
+  }
+
+  successAction(name: string): Locator {
+    return this.successPanel.getByRole(name === 'Submit another event' ? 'button' : 'link', { name });
+  }
+
+  busyButton(): Locator {
+    return this.page.getByRole('button', { name: 'Submitting…' });
+  }
+
   async submit(): Promise<void> {
-    await this.page.getByRole('button', { name: 'Submit for review' }).click();
+    await this.page.getByRole('button', { name: /^(Submit for review|Try again)$/ }).click();
+  }
+
+  /** A complete, valid in-person submission. */
+  static validInput(title: string, email: string): SubmissionInput {
+    return {
+      title,
+      organizer: 'GTA Azure Community',
+      description: 'Move your Power BI reports onto Fabric without rewriting them.',
+      topics: ['Azure'],
+      date: '2026-11-18',
+      start: '18:30',
+      end: '20:30',
+      venue: 'Living Arts Centre',
+      city: 'Mississauga',
+      address: '4141 Living Arts Dr',
+      ticketUrl: 'https://tickets.example.com/fabric',
+      email,
+    };
   }
 }

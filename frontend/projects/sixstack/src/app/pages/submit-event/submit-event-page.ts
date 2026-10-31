@@ -31,7 +31,8 @@ import {
   TOPIC_LABELS,
   TopicKey,
 } from 'components';
-import { catchError, finalize, map, merge, of, startWith, switchMap, timer } from 'rxjs';
+import { catchError, debounceTime, finalize, map, merge, of, startWith, switchMap, timer } from 'rxjs';
+import { DraftStore } from '../../shared/draft-store';
 import {
   applyFormat,
   createEventForm,
@@ -70,6 +71,7 @@ export class SubmitEventPage {
   private readonly submissions = inject(SUBMISSIONS_API);
   private readonly summary = viewChild(ErrorSummary);
   private readonly injector = inject(Injector);
+  private readonly drafts = inject(DraftStore);
 
   protected readonly form = createEventForm();
   protected readonly describedBy = describedBy;
@@ -113,8 +115,15 @@ export class SubmitEventPage {
       .map((e) => ({ controlId: e.name, message: e.message }));
   });
 
+  static readonly DRAFT_KEY = 'sx.draft.submit-event';
+
   constructor() {
+    const draft = this.drafts.read<ReturnType<typeof this.form.getRawValue>>(SubmitEventPage.DRAFT_KEY);
+    if (draft) this.form.patchValue(draft, { emitEvent: false });
     applyFormat(this.form);
+    this.form.valueChanges.pipe(debounceTime(500), takeUntilDestroyed()).subscribe(() => {
+      if (!this.received()) this.drafts.write(SubmitEventPage.DRAFT_KEY, this.form.getRawValue());
+    });
     merge(this.form.controls.format.valueChanges, this.form.controls.price.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => applyFormat(this.form));
@@ -162,7 +171,10 @@ export class SubmitEventPage {
         }),
       )
       .subscribe({
-        next: (received) => this.received.set(received),
+        next: (received) => {
+          this.drafts.clear(SubmitEventPage.DRAFT_KEY);
+          this.received.set(received);
+        },
         error: (error: unknown) => {
           if (error instanceof ApiError && error.kind === 'Validation') {
             const server: Partial<Record<FieldName, string>> = {};

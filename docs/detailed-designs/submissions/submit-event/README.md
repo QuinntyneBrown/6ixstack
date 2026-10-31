@@ -151,7 +151,9 @@ query, because those queries select `Published` events only (`L2-043`).
   `isFree`, `priceCad`, `ticketUrl`, `contactEmail`.
 - The rate limit of 10 submissions a day per contact email counts the last 24 hours.
 - `GET /auth/verify-email` redirects to `/?email-verified=1` (or `=0` for an unknown, used or expired link);
-  the web app shows a toast. Approved-but-unverified events keep status `InReview` with `ApprovedAtUtc` set and
+  the web app shows a toast (`ToastService`, existing toast variants) and removes the parameter: success
+  "Your email is verified" — "Events a moderator approves now go live straight away."; danger "That link didn’t
+  work" — "It may have expired or been used already. Your next submission sends a new one." Approved-but-unverified events keep status `InReview` with `ApprovedAtUtc` set and
   are published when the address is verified.
 - The automated checks (journey 06) and the moderator notification (journey 21) are not created here yet.
 - In Development and tests, `GET /api/dev/mailbox` lists the emails the dev mailbox received

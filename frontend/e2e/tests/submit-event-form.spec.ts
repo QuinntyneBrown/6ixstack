@@ -1,5 +1,6 @@
 import { expect, test } from '../fixtures';
 import { SubmitEventPage } from '../pages/submit-event.page';
+import { slowReferenceData } from '../support/stub-api';
 
 // L2-041 form and validation, L2-042 format-dependent fields, L2-045 loading; design: submissions/submit-event.
 test.describe('Submit an event: the form', () => {
@@ -86,11 +87,7 @@ test.describe('Submit an event: the form', () => {
   });
 
   test('a slow load shows three busy skeleton sections', async ({ page }) => {
-    await page.route('**/api/reference-data', async (route) => {
-      const response = await route.fetch();
-      await new Promise((r) => setTimeout(r, 2_000));
-      await route.fulfill({ response });
-    });
+    await slowReferenceData(page, 2_000);
     const submit = new SubmitEventPage(page);
     await submit.startOpening();
 

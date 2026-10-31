@@ -4,6 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { filter, map } from 'rxjs';
 import { SiteFooter, SiteHeader, SkipLink, ToastRegion } from 'components';
 import { ConnectivityService } from './banners/connectivity.service';
+import { EmailVerificationNotice } from './email-verification-notice';
 import { SiteBannerOutlet } from './banners/site-banner-outlet';
 import { MenuController } from './menu-controller';
 import { FOOTER_ITEMS, NAV_ITEMS } from './nav-items';
@@ -63,4 +64,8 @@ export class AppShell {
   );
   protected readonly navItems = NAV_ITEMS;
   protected readonly footerItems = FOOTER_ITEMS;
+
+  constructor() {
+    inject(EmailVerificationNotice).watch();
+  }
 }
