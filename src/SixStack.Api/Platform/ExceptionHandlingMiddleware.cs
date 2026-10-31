@@ -1,5 +1,6 @@
 using System.Text.Json;
 using FluentValidation;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using SixStack.Application.Common.Exceptions;
 
@@ -47,6 +48,9 @@ public sealed class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Ex
                     problem.Extensions[key] = value;
                 }
 
+                break;
+            case AntiforgeryValidationException:
+                problem = new ProblemDetails { Status = StatusCodes.Status400BadRequest, Title = "Your session token is missing or out of date. Reload the page and try again." };
                 break;
             case NotFoundException:
                 problem = new ProblemDetails { Status = StatusCodes.Status404NotFound, Title = "Not found." };

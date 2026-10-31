@@ -4,7 +4,7 @@ using SixStack.Api.Tests.Infrastructure;
 
 namespace SixStack.Api.Tests.Platform;
 
-public sealed class PlatformFactory : ApiFactory
+public class PlatformFactory : ApiFactory
 {
     public CapturingLoggerProvider Logs { get; } = new();
 
