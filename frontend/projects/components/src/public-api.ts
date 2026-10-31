@@ -28,3 +28,8 @@ export * from './lib/topics/topic-chip';
 export * from './lib/search-field/search-field';
 export * from './lib/skeleton/skeleton';
 export * from './lib/empty-state/empty-state';
+export * from './lib/date-tile/date-tile';
+export * from './lib/fact-item/fact-item';
+export * from './lib/avatar/avatar';
+export * from './lib/person/person-link';
+export * from './lib/description/description';

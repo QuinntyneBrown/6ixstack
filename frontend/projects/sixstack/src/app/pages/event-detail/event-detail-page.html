@@ -1,0 +1,102 @@
+@if (isNotFound(state())) {
+  <sx-not-found-page />
+} @else if (state().data; as e) {
+  <a class="back-link" routerLink="/"><sx-icon name="arrow-left" size="sm" />All events</a>
+  <div class="page-grid">
+    <div class="detail-main">
+      <div class="detail-hero">
+        <sx-date-tile [month]="e.dateTile.month" [day]="e.dateTile.day" size="lg" />
+        <div>
+          <h1>{{ e.title }}</h1>
+          <p class="lead">
+            by <a [routerLink]="['/communities', e.community.slug]">{{ e.community.name }}</a>
+          </p>
+          <div class="chip-row">
+            @for (topic of topics(e); track topic) {
+              <sx-topic-tag [topic]="topic" />
+            }
+          </div>
+        </div>
+      </div>
+      <div class="stack-gap">
+        <section class="prose" aria-labelledby="about-h">
+          <h2 id="about-h">About this event</h2>
+          <sx-description [text]="e.description" />
+        </section>
+        @if (e.agenda.length) {
+          <section aria-labelledby="agenda-h">
+            <h2 id="agenda-h" class="section-title">Agenda</h2>
+            <ol class="agenda">
+              @for (item of e.agenda; track $index) {
+                <li>
+                  <span class="agenda__time">{{ item.time }}</span
+                  ><span>{{ item.title }}</span>
+                </li>
+              }
+            </ol>
+          </section>
+        }
+        @if (e.speakers.length) {
+          <section aria-labelledby="spk-h">
+            <h2 id="spk-h" class="section-title">Speakers</h2>
+            <ul class="people">
+              @for (speaker of e.speakers; track speaker.slug) {
+                <li>
+                  <sx-person-link
+                    [name]="speaker.name"
+                    [role]="speaker.role"
+                    [initials]="speaker.initials"
+                    [link]="'/speakers/' + speaker.slug"
+                  />
+                </li>
+              }
+            </ul>
+          </section>
+        }
+        @if (e.facts.venue; as venue) {
+          <section aria-labelledby="venue-h">
+            <h2 id="venue-h" class="section-title">Venue</h2>
+            <div class="facts">
+              <sx-fact-item icon="pin" [label]="venue.name">{{ venue.address }}</sx-fact-item>
+              @if (venue.travelNotes) {
+                <sx-fact-item icon="compass" label="Getting there">{{ venue.travelNotes }}</sx-fact-item>
+              }
+            </div>
+          </section>
+        }
+      </div>
+    </div>
+    <aside class="stack" aria-label="Event details">
+      <div class="facts">
+        <sx-fact-item icon="calendar" [label]="e.facts.when.dateLabel">
+          @if (e.facts.when.suffix === 'cancelled') {
+            <s>{{ e.facts.when.timeRange }}</s> · cancelled
+          } @else {
+            {{ e.facts.when.timeRange }}
+            @if (e.facts.when.sourceTime) {
+              · {{ e.facts.when.sourceTime }} where it's hosted
+            }
+            @if (e.facts.when.suffix === 'ended') {
+              · ended
+            }
+          }
+        </sx-fact-item>
+        @if (e.facts.venue; as venue) {
+          <sx-fact-item icon="pin" [label]="venue.name">
+            {{ venue.address }} ·
+            <a [href]="venue.directionsUrl" target="_blank" rel="noopener noreferrer">Directions</a>
+          </sx-fact-item>
+        }
+        @if (e.facts.stream; as stream) {
+          <sx-fact-item icon="radio" [label]="stream.label">{{ stream.note }}</sx-fact-item>
+        }
+        @if (e.facts.price; as price) {
+          <sx-fact-item icon="ticket" [label]="price.label">{{ price.note }}</sx-fact-item>
+        }
+        @if (e.facts.attendance; as attendance) {
+          <sx-fact-item icon="users" [label]="attendance.label">{{ attendance.note }}</sx-fact-item>
+        }
+      </div>
+    </aside>
+  </div>
+}

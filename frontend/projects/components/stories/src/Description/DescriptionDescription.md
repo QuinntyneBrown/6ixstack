@@ -1,0 +1,1 @@
+A description renders an organizer's text safely (L2-081): paragraphs, line breaks, bullet lists (lines starting with "- ") and Markdown links whose URL starts with `https://`, opened with `rel="noopener noreferrer nofollow"`. Everything else, including HTML and other link schemes, stays literal text.

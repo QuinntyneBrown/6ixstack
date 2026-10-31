@@ -7,3 +7,4 @@ export * from './lib/core/api-error';
 export * from './lib/core/api-error.interceptor';
 export * from './lib/site/site-api';
 export * from './lib/events/events-api';
+export * from './lib/events/event-detail';

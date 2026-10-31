@@ -1,4 +1,9 @@
 import { Scenario } from './scenario';
+import { scenario as description } from './Description';
+import { scenario as personLink } from './PersonLink';
+import { scenario as avatar } from './Avatar';
+import { scenario as factItem } from './FactItem';
+import { scenario as dateTile } from './DateTile';
 import { scenario as emptyState } from './EmptyState';
 import { scenario as skeleton } from './Skeleton';
 import { scenario as searchField } from './SearchField';
@@ -22,6 +27,11 @@ import { scenario as toast } from './Toast';
 /** Every scenario, by name. Add one file per component and register it here. */
 export const SCENARIOS: Record<string, Scenario> = Object.fromEntries(
   [
+    description,
+    personLink,
+    avatar,
+    factItem,
+    dateTile,
     emptyState,
     skeleton,
     searchField,
