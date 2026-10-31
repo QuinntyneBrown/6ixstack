@@ -180,3 +180,15 @@ only above 0. The avatar leads to the dashboard or the review queue by role, and
 protected pages hide Submit event (`L2-050`).
 
 ![Sequence diagram for rendering the signed-in header](diagrams/sequence-signed-in-header.png)
+
+## Decisions (journey 27)
+
+- **`POST /auth/sign-out`** (signed in, with the anti-forgery token) revokes the session named in the cookie's `sid`
+  claim, clears the cookie and the XSRF cookie, and answers 204. Other sessions stay valid, as L2-049 states. The
+  prompt's "or every session" conflicts with L2-049, so sign-out stays per device; deleting the account (journey
+  26) is what ends every session.
+- **Where**: the Settings Account section ("Signing out ends this session only."), as the mocks draw it. There is no
+  separate account menu in the mocks.
+- **The dialog** "Sign out of 6ixstack?" focuses Stay signed in. While signing out, both buttons are disabled and
+  Escape does nothing. On success the session store is cleared and the events page opens, signed out.
+
