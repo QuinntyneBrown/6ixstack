@@ -19,6 +19,8 @@ export function apiEnvironment(databaseName = 'e2e'): NodeJS.ProcessEnv {
     Clock__FixedUtcNow: TODAY,
     Auth__TestSignIn__Enabled: 'true',
     Outbox__PollInterval: '00:00:01',
+    // Long-running servers would otherwise hit the per-IP sign-in limit across runs; API tests prove the limit.
+    Auth__SignInLinks__PerIpPerHour: '10000',
     DOTNET_CLI_TELEMETRY_OPTOUT: '1',
   };
 }

@@ -5,6 +5,8 @@ import { filter, map } from 'rxjs';
 import { SiteFooter, SiteHeader, SkipLink, ToastRegion } from 'components';
 import { ConnectivityService } from './banners/connectivity.service';
 import { EmailVerificationNotice } from './email-verification-notice';
+import { AccountControls } from './session/account-controls';
+import { SessionStore } from './session/session-store';
 import { SiteBannerOutlet } from './banners/site-banner-outlet';
 import { MenuController } from './menu-controller';
 import { FOOTER_ITEMS, NAV_ITEMS } from './nav-items';
@@ -12,7 +14,7 @@ import { FOOTER_ITEMS, NAV_ITEMS } from './nav-items';
 /** The frame every page sits in: skip link, header, main region and footer (site/app-shell design). */
 @Component({
   selector: 'sx-app-shell',
-  imports: [RouterOutlet, SkipLink, SiteHeader, SiteFooter, ToastRegion, SiteBannerOutlet],
+  imports: [AccountControls, RouterOutlet, SkipLink, SiteHeader, SiteFooter, ToastRegion, SiteBannerOutlet],
   template: `
     <sx-skip-link target="main" />
     <sx-site-header
@@ -21,7 +23,11 @@ import { FOOTER_ITEMS, NAV_ITEMS } from './nav-items';
       [submitDisabled]="!connectivity.online()"
       [showSubmit]="!hideSubmit()"
       (menuRequested)="menu.open($event)"
-    />
+    >
+      @if (session.user(); as user) {
+        <sx-account-controls slot="actions" [user]="user" />
+      }
+    </sx-site-header>
     <sx-site-banner-outlet />
     <main id="main" class="page" tabindex="-1">
       <router-outlet />
@@ -49,6 +55,7 @@ export class AppShell {
   protected readonly menu = inject(MenuController);
   protected readonly connectivity = inject(ConnectivityService);
   private readonly route = inject(ActivatedRoute);
+  protected readonly session = inject(SessionStore);
 
   /** Route data `hideSubmit: true` hides the header's Submit event button (the submit page, organizer pages). */
   protected readonly hideSubmit = toSignal(
@@ -67,5 +74,6 @@ export class AppShell {
 
   constructor() {
     inject(EmailVerificationNotice).watch();
+    this.session.load().subscribe();
   }
 }

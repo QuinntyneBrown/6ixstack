@@ -9,6 +9,9 @@ export class AppShell {
   readonly primaryNav: Locator;
   readonly submitEvent: Locator;
   readonly menuButton: Locator;
+  readonly notifications: Locator;
+  readonly notificationsBadge: Locator;
+  readonly account: Locator;
   /** The menu button by class; while a modal is open the page behind it is hidden from the accessibility tree. */
   readonly menuButtonBehindModal: Locator;
   readonly main: Locator;
@@ -22,6 +25,9 @@ export class AppShell {
     this.primaryNav = page.getByRole('navigation', { name: 'Primary' });
     this.submitEvent = this.header.getByRole('link', { name: 'Submit event' });
     this.menuButton = this.header.getByRole('button', { name: 'Open menu' });
+    this.notifications = this.header.getByRole('link', { name: /^Notifications/ });
+    this.notificationsBadge = this.notifications.locator('.badge');
+    this.account = this.header.getByRole('link', { name: /signed in as/ });
     this.menuButtonBehindModal = this.header.locator('.site-header__menu');
     this.main = page.locator('main#main');
     this.footer = page.locator('footer.site-footer');

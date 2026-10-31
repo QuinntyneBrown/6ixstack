@@ -25,6 +25,9 @@ intent of the design's hashed secret with less code.
 
 ## Consequences
 
+- The antiforgery cookie is `Secure` everywhere except Development, where Playwright and demos run over
+  `http://localhost` and antiforgery refuses a `Secure`-only cookie on plain HTTP. The session cookie stays
+  `Secure`; Chromium accepts it on `localhost`.
 - Sign out (journey 27) revokes by setting `RevokedAtUtc`; nothing else changes.
 - The test seam keeps its contract and now creates a real session, so tests exercise the same validation.
 - Until journey 15 (dashboard) and journey 06 (review queue), `/organize` and `/admin/review` are guarded

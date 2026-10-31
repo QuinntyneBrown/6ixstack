@@ -11,7 +11,7 @@ public static class AuthenticationSetup
     /// Cookie session authentication and the organizer and moderator policies (L2-080, L2-083).
     /// Each cookie names a server-side session that is checked on every request (ADR 0009).
     /// </summary>
-    public static IServiceCollection AddSixStackAuth(this IServiceCollection services)
+    public static IServiceCollection AddSixStackAuth(this IServiceCollection services, IHostEnvironment environment)
     {
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, HttpCurrentUser>();
@@ -42,7 +42,8 @@ public static class AuthenticationSetup
         {
             options.HeaderName = XsrfTokenService.HeaderName;
             options.Cookie.Name = "sixstack.antiforgery";
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            // Local development, Playwright and demos run over http://localhost; everywhere else it is HTTPS only.
+            options.Cookie.SecurePolicy = environment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
             options.Cookie.SameSite = SameSiteMode.Strict;
             options.Cookie.HttpOnly = true;
         });
