@@ -1,4 +1,12 @@
 import { Scenario } from './scenario';
+import { scenario as nextSteps } from './NextSteps';
+import { scenario as successPanel } from './SuccessPanel';
+import { scenario as formSection } from './FormSection';
+import { scenario as errorSummary } from './ErrorSummary';
+import { scenario as fieldSet } from './FieldSet';
+import { scenario as choice } from './Choice';
+import { scenario as input } from './Input';
+import { scenario as formField } from './FormField';
 import { scenario as optionButton } from './OptionButton';
 import { scenario as dockedActionBar } from './DockedActionBar';
 import { scenario as description } from './Description';
@@ -29,6 +37,14 @@ import { scenario as toast } from './Toast';
 /** Every scenario, by name. Add one file per component and register it here. */
 export const SCENARIOS: Record<string, Scenario> = Object.fromEntries(
   [
+    nextSteps,
+    successPanel,
+    formSection,
+    errorSummary,
+    fieldSet,
+    choice,
+    input,
+    formField,
     optionButton,
     dockedActionBar,
     description,

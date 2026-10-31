@@ -10,7 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddJsonConsole(options => options.IncludeScopes = true);
 
 var testSignInEnabled = builder.Configuration.GetValue<bool>("Auth:TestSignIn:Enabled");
-builder.Services.AddControllers(options => options.Conventions.Add(new TestSignInConvention(testSignInEnabled)));
+var devMailboxExposed = builder.Configuration.GetValue<bool>("DevMailbox:Expose");
+builder.Services.AddControllers(options => options.Conventions.Add(new ConditionalControllersConvention(testSignInEnabled, devMailboxExposed)));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();

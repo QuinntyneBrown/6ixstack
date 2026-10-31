@@ -120,7 +120,7 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 | Directory toolbar (`toolbar`) | communities, speakers | `TextField` (search) + `Select` (topic) |
 | Feed choice form (`FeedBuilder`) | calendar-feeds, subscribe-feed | Topics `Checkbox` group + scope `RadioGroup`; app component per `build-custom-feed` |
 | Feed link panel (`FeedLinkPanel`) | calendar-feeds (success), subscribe-feed (success) | `FormField` + `TextField` (copy-field) + `Button` (Copy) + `List` (option-list) |
-| Event form (sections Event basics, When, Where, Tickets) | submit-event, edit-event | `FormLayout`, `FormField`, `TextField`, `Textarea`, `Select`, `Checkbox`, `RadioGroup` (cards), `TopicTag`; build once |
+| Event form (sections Event basics, When, Where, Tickets) | submit-event, edit-event | `FormSection`, `FormField`, `Input`, `FieldSet`, `Choice`, `Check`; build once |
 
 ## Pages
 
@@ -194,8 +194,8 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 
 #### Submit an event — `/submit` — `pages/submit-event`: default, loading, error, invalid, submitting, success
 
-- Library: `FormLayout`, `FormField`, `TextField` (incl. `$` addon), `Textarea`, `Select`, `Checkbox` (topics), `TopicTag`, `RadioGroup` (format cards), `Button` (busy when submitting); loading `Skeleton`; error `Alert`; invalid `ErrorSummary` + `Alert`; success `EmptyState` (success panel) + `Stepper` (steps-next).
-- Local: page title, event form.
+- Library: `FormSection` (design system: form layout), `FormField`, `Input` (design system: text field incl. `$` addon, textarea, select), `FieldSet` + `Choice` + `Check` (design system: checkbox for topics, radio group with cards for format and price), `Button` (busy when submitting); loading `Skeleton`; error `Alert`; invalid `ErrorSummary` + `Alert`; success `SuccessPanel` (design system: empty state, success panel) + `NextSteps` (design system: stepper, steps-next).
+- Local: page title, event form (`shared/event-form`: form-card frame, grids, topic dots, price addon).
 
 #### Edit event — `/organize/events/:id/edit` — `pages/edit-event`: default, loading, error, invalid, submitting, success, read-only
 

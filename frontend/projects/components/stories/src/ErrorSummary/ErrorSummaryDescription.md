@@ -1,0 +1,1 @@
+The error summary sits above a form after a failed submit: "Fix N things before you continue", then each problem as a link that moves focus to its field. Call `focus()` once it renders so screen readers announce it.

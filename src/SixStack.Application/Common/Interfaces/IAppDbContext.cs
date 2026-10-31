@@ -12,6 +12,8 @@ public interface IAppDbContext
     DbSet<User> Users { get; }
     DbSet<CommunityOrganizer> CommunityOrganizers { get; }
     DbSet<OutboxMessage> OutboxMessages { get; }
+    DbSet<SecurityToken> SecurityTokens { get; }
+    DbSet<VerifiedEmail> VerifiedEmails { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

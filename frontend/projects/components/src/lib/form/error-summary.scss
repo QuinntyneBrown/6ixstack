@@ -1,0 +1,30 @@
+// Ported from docs/mocks/assets/ui.css (.alert--danger, .form-summary).
+:host {
+  display: block;
+}
+.alert {
+  display: flex;
+  gap: var(--spacingHorizontalM);
+  padding: var(--spacingHorizontalL);
+  border: 1px solid var(--colorStatusDangerBorder1);
+  border-left: 4px solid var(--colorStatusDangerBackground3);
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--colorStatusDangerBackground1);
+  color: var(--colorStatusDangerForeground1);
+}
+.alert > sx-icon {
+  color: var(--colorStatusDangerForeground3);
+}
+.alert__body {
+  flex: 1;
+}
+.alert__title {
+  font: var(--sx-text-label);
+}
+ul {
+  margin: var(--spacingHorizontalXS) 0 0;
+  padding-left: var(--spacingHorizontalXL);
+}
+a {
+  color: inherit;
+}

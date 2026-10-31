@@ -97,6 +97,9 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset?>("ApprovedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<int?>("AttendedCount")
                         .HasColumnType("int");
 
@@ -110,7 +113,7 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.Property<int?>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("CommunityId")
+                    b.Property<Guid?>("CommunityId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset?>("ConfirmedAtUtc")
@@ -145,6 +148,10 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("NoteTitle")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("OrganizerName")
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
 
@@ -226,6 +233,8 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
+                    b.HasIndex("SubmitterEmail");
+
                     b.HasIndex("Status", "StartsAtUtc");
 
                     b.ToTable("Events");
@@ -297,6 +306,44 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.HasIndex("ProcessedAtUtc", "FailedAtUtc", "NextAttemptAtUtc");
 
                     b.ToTable("OutboxMessages");
+                });
+
+            modelBuilder.Entity("SixStack.Domain.Entities.SecurityToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("nvarchar(254)");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Purpose")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTimeOffset?>("UsedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("Email", "Purpose", "CreatedAtUtc");
+
+                    b.ToTable("SecurityTokens");
                 });
 
             modelBuilder.Entity("SixStack.Domain.Entities.Speaker", b =>
@@ -381,6 +428,20 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("SixStack.Domain.Entities.VerifiedEmail", b =>
+                {
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(254)
+                        .HasColumnType("nvarchar(254)");
+
+                    b.Property<DateTimeOffset>("VerifiedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("NormalizedEmail");
+
+                    b.ToTable("VerifiedEmails");
+                });
+
             modelBuilder.Entity("SixStack.Domain.Entities.CommunityOrganizer", b =>
                 {
                     b.HasOne("SixStack.Domain.Entities.Community", "Community")
@@ -405,8 +466,7 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                     b.HasOne("SixStack.Domain.Entities.Community", "Community")
                         .WithMany()
                         .HasForeignKey("CommunityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.OwnsMany("SixStack.Domain.Entities.AgendaItem", "AgendaItems", b1 =>
                         {

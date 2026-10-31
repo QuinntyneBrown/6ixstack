@@ -135,10 +135,13 @@ def event_form(v, errors=None, disabled=False, include_email=True, prefix="ev"):
             + '</div></section>')
     where = (f'<section class="form-section" aria-labelledby="sec-where"><h2 id="sec-where">Where</h2><fieldset style="margin-top: var(--space-5);"><legend>Format</legend><div class="choice-cards">{cards}</div></fieldset>'
              f'<div class="form-grid form-grid--2">'
-             + field("Venue name", inp("venue", v["venue"], invalid=iv("venue")), "", er("venue"), fid="venue")
-             + field("City", sel("city", CITIES, v["city"]), fid="city")
-             + f'<div class="span-2">' + field("Street address", inp("address", v["address"], invalid=iv("address"), help=True, extra=' autocomplete="street-address"'), "Include the floor or room so people find you.", er("address"), fid="address") + '</div>'
-             + f'<div class="span-2">' + field("Livestream link", inp("stream", v["stream"], "url", "https://youtube.com/live/…", invalid=iv("stream"), help=True), "Shown 15 minutes before start. Leave empty for in-person events.", er("stream"), fid="stream", optional=True) + '</div>'
+             + (field("Venue name", inp("venue", v["venue"], invalid=iv("venue")), "", er("venue"), fid="venue")
+                + field("City", sel("city", CITIES, v["city"]), fid="city")
+                + f'<div class="span-2">' + field("Street address", inp("address", v["address"], invalid=iv("address"), help=True, extra=' autocomplete="street-address"'), "Include the floor or room so people find you.", er("address"), fid="address") + '</div>'
+                if v["fmt"] != "streaming" else "")
+             # L2-042: in person has no livestream link; streaming has no venue.
+             + (f'<div class="span-2">' + field("Livestream link", inp("stream", v["stream"], "url", "https://youtube.com/live/…", invalid=iv("stream"), help=True), "Shown 15 minutes before start.", er("stream"), fid="stream", optional=True) + '</div>'
+                if v["fmt"] != "in-person" else "")
              + '</div></section>')
     paid = v["paid"]
     tickets = (f'<section class="form-section" aria-labelledby="sec-tickets"><h2 id="sec-tickets">Tickets</h2><fieldset style="margin-top: var(--space-5);"><legend>Price</legend><div class="choice-row">'

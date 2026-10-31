@@ -21,6 +21,8 @@ public sealed class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.Property(e => e.RecordingUrl).HasMaxLength(2048);
         builder.Property(e => e.SubmitterEmail).HasMaxLength(254);
         builder.Property(e => e.CancellationReason).HasMaxLength(500);
+        builder.Property(e => e.OrganizerName).HasMaxLength(120);
+        builder.HasIndex(e => e.SubmitterEmail);
         builder.Property(e => e.PriceNote).HasMaxLength(120);
         builder.Property(e => e.PriceDetail).HasMaxLength(200);
         builder.Property(e => e.LivestreamNote).HasMaxLength(200);
@@ -36,7 +38,7 @@ public sealed class EventConfiguration : IEntityTypeConfiguration<Event>
             agenda.Property(a => a.Title).HasMaxLength(200);
         });
         builder.Ignore(e => e.IsCancelled);
-        builder.HasOne(e => e.Community).WithMany().HasForeignKey(e => e.CommunityId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(e => e.Community).WithMany().HasForeignKey(e => e.CommunityId).IsRequired(false).OnDelete(DeleteBehavior.Restrict);
         builder.OwnsOne(e => e.Venue, venue =>
         {
             venue.Property(v => v.Name).HasMaxLength(200);

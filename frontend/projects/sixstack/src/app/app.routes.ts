@@ -13,6 +13,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/event-detail/event-detail-page').then((m) => m.EventDetailPage),
   },
   {
+    path: 'submit',
+    title: 'Submit an event · 6ixstack',
+    data: { hideSubmit: true },
+    loadComponent: () => import('./pages/submit-event/submit-event-page').then((m) => m.SubmitEventPage),
+  },
+  {
     path: '**',
     title: 'Page not found · 6ixstack',
     loadComponent: () => import('./pages/status/not-found-page').then((m) => m.NotFoundPage),

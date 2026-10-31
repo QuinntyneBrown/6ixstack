@@ -89,3 +89,50 @@ export async function failIcs(page: Page, slug: string): Promise<() => Promise<v
   await page.route(`**/api/events/${slug}/ics`, handler);
   return () => page.unroute(`**/api/events/${slug}/ics`, handler);
 }
+
+/** Delays GET /api/reference-data (the submit form's lists) by `ms`. */
+export async function slowReferenceData(page: Page, ms: number): Promise<void> {
+  await page.route('**/api/reference-data', async (route) => {
+    const response = await route.fetch();
+    await new Promise((resolve) => setTimeout(resolve, ms));
+    await route.fulfill({ response });
+  });
+}
+
+/** Holds POST /api/submissions until the returned function is called, then lets it through. */
+export async function holdSubmission(page: Page): Promise<() => void> {
+  let release!: () => void;
+  const released = new Promise<void>((resolve) => (release = resolve));
+  await page.route('**/api/submissions', async (route) => {
+    await released;
+    await route.continue();
+  });
+  return release;
+}
+
+/** Makes POST /api/submissions fail with a 500 until the returned function is called. */
+export async function failSubmissions(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({
+      status: 500,
+      contentType: 'application/problem+json',
+      body: JSON.stringify({
+        status: 500,
+        title: 'Something went wrong on our side.',
+        referenceCode: '9C1D-04AA',
+      }),
+    });
+  await page.route('**/api/submissions', handler);
+  return () => page.unroute('**/api/submissions', handler);
+}
+
+/** Answers POST /api/submissions with a 400 carrying these field errors, as the API's validation does. */
+export async function rejectSubmission(page: Page, errors: Record<string, string[]>): Promise<void> {
+  await page.route('**/api/submissions', (route) =>
+    route.fulfill({
+      status: 400,
+      contentType: 'application/problem+json',
+      body: JSON.stringify({ status: 400, title: 'One or more validation errors occurred.', errors }),
+    }),
+  );
+}

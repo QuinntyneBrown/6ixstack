@@ -140,6 +140,26 @@ The submitted event carries `OrganizerName` as free text. Linking the event to a
 match is `<TO SUPPLY>`. Until approval the event is invisible to every public
 query, because those queries select `Published` events only (`L2-043`).
 
+### Decisions (journey 04)
+
+- `Event.CommunityId` is optional and a submission stores `OrganizerName` as typed; moderation links the
+  community (journey 07). Public queries still select `Published` events only.
+- End time is required ("Enter an end time."). "Not in the past" is judged by the Toronto calendar day. A
+  streaming event's livestream link is optional. Prices run from $0.01 to $10,000.
+- Field errors are keyed by the form's control names: `title`, `organizerName`, `description`, `topics`,
+  `date`, `timeZoneId`, `startTime`, `endTime`, `format`, `venueName`, `city`, `streetAddress`, `streamUrl`,
+  `isFree`, `priceCad`, `ticketUrl`, `contactEmail`.
+- The rate limit of 10 submissions a day per contact email counts the last 24 hours.
+- `GET /auth/verify-email` redirects to `/?email-verified=1` (or `=0` for an unknown, used or expired link);
+  the web app shows a toast (`ToastService`, existing toast variants) and removes the parameter: success
+  "Your email is verified" — "Events a moderator approves now go live straight away."; danger "That link didn’t
+  work" — "It may have expired or been used already. Your next submission sends a new one." Approved-but-unverified events keep status `InReview` with `ApprovedAtUtc` set and
+  are published when the address is verified.
+- The automated checks (journey 06) and the moderator notification (journey 21) are not created here yet.
+- In Development and tests, `GET /api/dev/mailbox` lists the emails the dev mailbox received
+  (`DevMailbox:Expose`), so tests and demos can follow verification links.
+- `DraftStore` writes after 500 ms of no typing.
+
 The requirements leave the following points open. The design does not settle
 them:
 
