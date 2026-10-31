@@ -1,5 +1,6 @@
 import { DialogConfig } from '@angular/cdk/dialog';
-import { Overlay } from '@angular/cdk/overlay';
+import { Overlay, OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
+import { Provider } from '@angular/core';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyDialogConfig = DialogConfig<any, any>;
@@ -25,4 +26,12 @@ export function sheetDialogConfig<C extends AnyDialogConfig>(overlay: Overlay, o
     maxWidth: '32rem',
     ...overrides,
   };
+}
+
+/**
+ * Renders CDK overlays in the overlay container instead of the browser's top layer, so the 6ixstack z-order applies
+ * and toasts (`--sx-z-toast`) stay above an open dialog (`--sx-z-modal`).
+ */
+export function provideSixstackOverlays(): Provider {
+  return { provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } };
 }

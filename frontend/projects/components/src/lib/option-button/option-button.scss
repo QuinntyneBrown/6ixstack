@@ -1,0 +1,46 @@
+// Ported from docs/mocks/assets/ui.css (.option-btn).
+:host {
+  display: flex;
+  align-items: center;
+  gap: var(--spacingHorizontalM);
+  width: 100%;
+  min-height: 3.25rem;
+  padding: var(--spacingHorizontalM) var(--spacingHorizontalL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--colorNeutralBackground1);
+  color: var(--colorNeutralForeground1);
+  font: var(--sx-text-label);
+  font-size: var(--fontSizeBase400);
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+}
+:host(:hover) {
+  border-color: var(--colorNeutralStroke1);
+  background: var(--colorSubtleBackgroundHover);
+  color: var(--colorNeutralForeground1);
+}
+small {
+  display: block;
+  color: var(--colorNeutralForeground2);
+  font: var(--sx-text-body-sm);
+}
+.option-btn__end {
+  display: flex;
+  margin-left: auto;
+  color: var(--colorNeutralForeground3);
+}
+:host([aria-busy='true']) {
+  pointer-events: none;
+}
+:host([aria-busy='true'])::after {
+  content: '';
+  margin-left: auto;
+  width: 1.1em;
+  height: 1.1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}

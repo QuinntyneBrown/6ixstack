@@ -147,5 +147,12 @@
       "label": "Get tickets",
       "url": "https://tickets.example.com/azure-data-ai-day-gta"
     }
+  },
+  "calendar": {
+    "summary": "Azure Data & AI Day GTA \u00b7 Thu, Nov 5, 9:00 AM \u2013 5:00 PM ET \u00b7 Living Arts Centre",
+    "startsAtUtc": "2026-11-05T14:00:00+00:00",
+    "endsAtUtc": "2026-11-05T22:00:00+00:00",
+    "location": "Living Arts Centre, 4141 Living Arts Dr",
+    "details": "A full day of Fabric.\n\nhttps://6ixstack.dev/events/azure-data-ai-day-gta"
   }
 }

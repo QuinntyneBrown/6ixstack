@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, InjectionToken } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../core/api-config';
 import { EventDetail } from './event-detail';
 
@@ -51,6 +51,13 @@ export interface EventsApi {
   upcoming(query: UpcomingEventsQuery): Observable<UpcomingEvents>;
   /** One published event; fails with `ApiError` kind `NotFound` for an unknown or unpublished slug. */
   detail(slug: string): Observable<EventDetail>;
+  /** The event as a single-event .ics file. */
+  downloadIcs(slug: string): Observable<CalendarFile>;
+}
+
+export interface CalendarFile {
+  blob: Blob;
+  fileName: string;
 }
 
 export const EVENTS_API = new InjectionToken<EventsApi>('EVENTS_API');
@@ -67,6 +74,22 @@ export class HttpEventsApi implements EventsApi {
     if (query.q) params = params.set('q', query.q);
     if (query.page && query.page > 1) params = params.set('page', query.page);
     return this.http.get<UpcomingEvents>(`${this.baseUrl}/api/events`, { params });
+  }
+
+  downloadIcs(slug: string): Observable<CalendarFile> {
+    return this.http
+      .get(`${this.baseUrl}/api/events/${encodeURIComponent(slug)}/ics`, {
+        responseType: 'blob',
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => ({
+          blob: response.body!,
+          fileName:
+            /filename="?([^";]+)"?/.exec(response.headers.get('Content-Disposition') ?? '')?.[1] ??
+            `${slug}.ics`,
+        })),
+      );
   }
 
   detail(slug: string): Observable<EventDetail> {

@@ -66,5 +66,12 @@
     "follow": null
   },
   "alerts": [],
-  "dockedBar": null
+  "dockedBar": null,
+  "calendar": {
+    "summary": "Azure AI Foundry: shipping agents to production \u00b7 Wed, Nov 4, 12:00 PM \u2013 1:30 PM ET \u00b7 Streaming online",
+    "startsAtUtc": "2026-11-04T17:00:00+00:00",
+    "endsAtUtc": "2026-11-04T18:30:00+00:00",
+    "location": "Streaming online",
+    "details": "Evaluation.\n\nhttps://6ixstack.dev/events/azure-ai-foundry-shipping-agents"
+  }
 }

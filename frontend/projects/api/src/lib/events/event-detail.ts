@@ -36,6 +36,16 @@ export interface EventDetail {
   };
   alerts: EventAlert[];
   dockedBar: { when: string; summary: string; action: { label: string; url: string } } | null;
+  calendar: CalendarInfo;
+}
+
+/** What calendar apps need: the dialog's summary line and the event for Google and Outlook links. */
+export interface CalendarInfo {
+  summary: string;
+  startsAtUtc: string;
+  endsAtUtc: string;
+  location: string;
+  details: string;
 }
 
 export interface LabelledFact {

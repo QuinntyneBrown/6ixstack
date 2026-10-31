@@ -80,6 +80,21 @@ Because `DTSTART` and `DTEND` carry `TZID=America/Toronto` with a matching
 `VTIMEZONE`, a calendar application in another time zone shows the event at
 the ET time converted to the viewer's zone (`L2-037` criterion 4).
 
+Decisions (journey 03):
+
+- Google Calendar and Outlook open their prefilled page in a new tab and close the dialog; they raise no toast,
+  because 6ixstack cannot know whether the visitor saved the event.
+- Apple Calendar and Other app download `{slug}.ics`, then close the dialog and raise a success toast
+  "Calendar file downloaded" with "Open {slug}.ics to add {title} to your calendar."
+- The Outlook option opens Outlook.com (`outlook.live.com/calendar/0/deeplink/compose`); Microsoft 365 users
+  can import the `.ics` with Other app.
+- A streaming event's summary line ends with "Streaming online".
+- Past and cancelled events do not offer the dialog (`L2-020`, `L2-021`); the API still serves their `.ics`
+  so a saved copy can be refreshed.
+- The time-change alert's "Update my calendar" opens the same dialog.
+- `SEQUENCE` is 0 until edits are versioned (journey 14); `URL` uses `Site:PublicBaseUrl`
+  (default `https://6ixstack.dev`) and `UID` is `{event id}@6ixstack.dev`.
+
 Open points in the requirement and mocks:
 
 - The success toast copy after a file download is `<TO SUPPLY>`. The

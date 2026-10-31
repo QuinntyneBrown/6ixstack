@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { Dialog } from '@angular/cdk/dialog';
 import { RouterLink } from '@angular/router';
 import { ApiError, EventAlert, EventDetail, EVENTS_API } from 'api';
 import {
@@ -21,6 +22,7 @@ import {
   FactItem,
   Icon,
   isTopic,
+  modalDialogConfig,
   PersonLink,
   Skeleton,
   TopicKey,
@@ -28,6 +30,11 @@ import {
 } from 'components';
 import { catchError, finalize, map, of, switchMap } from 'rxjs';
 import { failed, loaded, loading, LoadState, SKELETON_DELAY_MS } from '../../shared/load-state';
+import {
+  ADD_TO_CALENDAR_DESCRIPTION_ID,
+  ADD_TO_CALENDAR_TITLE_ID,
+  AddToCalendarDialog,
+} from '../../dialogs/add-to-calendar/add-to-calendar-dialog';
 import { NotFoundPage } from '../status/not-found-page';
 
 /** The event detail page (`/events/:slug`): the API decides state, facts, actions and alerts (L2-017 to L2-024). */
@@ -54,6 +61,7 @@ import { NotFoundPage } from '../status/not-found-page';
 })
 export class EventDetailPage {
   private readonly api = inject(EVENTS_API);
+  private readonly dialog = inject(Dialog);
 
   readonly slug = input.required<string>();
   protected readonly state = signal<LoadState<EventDetail>>(loading());
@@ -120,7 +128,24 @@ export class EventDetailPage {
     if (href) {
       return [{ label, href }];
     }
-    return [{ label, run: () => undefined }];
+    if (alert.action.kind === 'add-to-calendar') {
+      const detail = this.state().data;
+      return detail ? [{ label, run: () => this.openAddToCalendar(detail, document.activeElement) }] : [];
+    }
+    return [];
+  }
+
+  /** Opens Add to my calendar, returning focus to `trigger` when it closes. */
+  protected openAddToCalendar(event: EventDetail, trigger: EventTarget | null): void {
+    this.dialog.open(
+      AddToCalendarDialog,
+      modalDialogConfig({
+        data: event,
+        ariaLabelledBy: ADD_TO_CALENDAR_TITLE_ID,
+        ariaDescribedBy: ADD_TO_CALENDAR_DESCRIPTION_ID,
+        restoreFocus: (trigger as HTMLElement | null) ?? true,
+      }),
+    );
   }
 
   protected retry(): void {

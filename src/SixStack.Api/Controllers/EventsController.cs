@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using SixStack.Application.Calendar;
 using SixStack.Application.Events;
 
 namespace SixStack.Api.Controllers;
@@ -24,4 +26,12 @@ public sealed class EventsController(ISender sender) : ControllerBase
     [HttpGet("{slug}")]
     public Task<EventDetailDto> GetDetail(string slug, CancellationToken cancellationToken) =>
         sender.Send(new GetEventDetailQuery(slug), cancellationToken);
+
+    /// <summary>The event as a single-event iCalendar file for Apple Calendar and other apps (L2-037).</summary>
+    [HttpGet("{slug}/ics")]
+    public async Task<IActionResult> GetIcs(string slug, CancellationToken cancellationToken)
+    {
+        var file = await sender.Send(new GetEventIcsQuery(slug), cancellationToken);
+        return File(Encoding.UTF8.GetBytes(file.Content), "text/calendar; charset=utf-8", file.FileName);
+    }
 }
