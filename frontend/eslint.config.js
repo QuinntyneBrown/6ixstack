@@ -29,7 +29,10 @@ module.exports = tseslint.config(
         'error',
         { type: 'attribute', prefix: 'sx', style: 'camelCase' },
       ],
-      '@angular-eslint/component-selector': ['error', { type: 'element', prefix: 'sx', style: 'kebab-case' }],
+      '@angular-eslint/component-selector': [
+        'error',
+        { type: ['element', 'attribute'], prefix: 'sx', style: 'kebab-case' },
+      ],
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },

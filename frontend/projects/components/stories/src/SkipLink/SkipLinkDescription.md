@@ -1,0 +1,1 @@
+The skip link is the first focus stop on every page. It is hidden until focused, then slides into view; activating it moves focus to the main region (`#main`), so keyboard users can bypass the header (WCAG 2.4.1, L2-091).

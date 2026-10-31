@@ -150,26 +150,9 @@ hr,
   border: 0;
 }
 
-.skip-link {
-  position: absolute;
-  left: var(--spacingHorizontalL);
-  top: calc(-1 * var(--sx-space-24));
-  z-index: var(--sx-z-tooltip);
-  padding: var(--spacingHorizontalS) var(--spacingHorizontalL);
-  background: var(--colorNeutralBackground4);
-  color: var(--colorNeutralForeground1);
-  border-radius: var(--borderRadiusXLarge);
-  box-shadow: var(--shadow16);
-  text-decoration: none;
-  transition: top var(--durationFaster) var(--curveEasyEase);
-}
-.skip-link:focus-visible {
-  top: var(--spacingHorizontalL);
-}
-
 .icon {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: var(--sx-icon-size, 1.25rem);
+  height: var(--sx-icon-size, 1.25rem);
   fill: none;
   stroke: currentColor;
   stroke-width: 2;

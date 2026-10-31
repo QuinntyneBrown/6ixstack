@@ -1,0 +1,49 @@
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="brand" [routerLink]="homePath()" aria-label="6ixstack home">
+      <span class="brand__mark" aria-hidden="true">6</span>
+      <span aria-hidden="true"
+        ><span class="brand__six">6ix</span><span class="brand__stack">stack</span></span
+      >
+    </a>
+    <nav class="site-header__nav" aria-label="Primary">
+      @for (item of items(); track item.path) {
+        <a
+          class="nav-link"
+          [routerLink]="item.path"
+          routerLinkActive="nav-link--active"
+          [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+          ariaCurrentWhenActive="page"
+          >{{ item.label }}</a
+        >
+      }
+    </nav>
+    <div class="site-header__actions">
+      <ng-content select="[slot=actions]" />
+      @if (showSubmit()) {
+        <a
+          sx-button
+          appearance="primary"
+          [routerLink]="submitDisabled() ? null : submitPath()"
+          [attr.aria-disabled]="submitDisabled() ? 'true' : null"
+          aria-label="Submit event"
+        >
+          <sx-icon name="plus" /><span class="site-header__submit-label">Submit event</span>
+        </a>
+      }
+      <button
+        sx-button
+        appearance="ghost"
+        iconOnly
+        type="button"
+        class="site-header__menu"
+        aria-label="Open menu"
+        aria-haspopup="dialog"
+        [attr.aria-expanded]="menuExpanded()"
+        (click)="menuRequested.emit($any($event.currentTarget))"
+      >
+        <sx-icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>

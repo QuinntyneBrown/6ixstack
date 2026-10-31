@@ -9,4 +9,4 @@ docker run --rm --ipc=host --add-host=host.docker.internal:host-gateway \
   -v "$PWD":/work -w /work \
   -e PW_BASE_URL=http://host.docker.internal:4200 -e CI= \
   "mcr.microsoft.com/playwright:v${version}-noble" \
-  npx playwright test --update-snapshots "$@"
+  npx playwright test --update-snapshots=all "$@"

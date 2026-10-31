@@ -14,11 +14,11 @@ export type TokenSet = Partial<Record<FluentToken, string>>;
 /** Tokens with no colour-scheme dependency. */
 export const baseTokens: TokenSet = {
   fontFamilyBase:
-    '"Geist", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    '"Geist Variable", "Geist", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   fontFamilyMonospace:
-    '"Geist Mono", "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace',
+    '"Geist Mono Variable", "Geist Mono", "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace',
   fontFamilyNumeric:
-    '"Geist Mono", "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace',
+    '"Geist Mono Variable", "Geist Mono", "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace',
   fontSizeBase100: '0.625rem',
   fontSizeBase200: '0.75rem',
   fontSizeBase300: '0.875rem',
