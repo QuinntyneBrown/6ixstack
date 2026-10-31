@@ -72,3 +72,20 @@ export async function failEventDetail(page: Page, slug: string): Promise<() => P
   await page.route(`**/api/events/${slug}`, handler);
   return () => page.unroute(`**/api/events/${slug}`, handler);
 }
+
+/** Delays GET /api/events/{slug}/ics by `ms`. */
+export async function slowIcs(page: Page, slug: string, ms: number): Promise<void> {
+  await page.route(`**/api/events/${slug}/ics`, async (route) => {
+    const response = await route.fetch();
+    await new Promise((r) => setTimeout(r, ms));
+    await route.fulfill({ response });
+  });
+}
+
+/** Makes GET /api/events/{slug}/ics fail until the returned function is called. */
+export async function failIcs(page: Page, slug: string): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+  await page.route(`**/api/events/${slug}/ics`, handler);
+  return () => page.unroute(`**/api/events/${slug}/ics`, handler);
+}
