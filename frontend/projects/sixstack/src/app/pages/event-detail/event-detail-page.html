@@ -18,6 +18,19 @@
           </div>
         </div>
       </div>
+      @if (e.alerts.length) {
+        <div class="detail-alerts stack">
+          @for (alert of e.alerts; track alert.title) {
+            <sx-alert
+              [kind]="alert.kind"
+              [title]="alert.title"
+              [announce]="alert.kind === 'danger' ? 'alert' : null"
+              [actions]="alertActions(alert)"
+              >{{ alert.text }}</sx-alert
+            >
+          }
+        </div>
+      }
       <div class="stack-gap">
         <section class="prose" aria-labelledby="about-h">
           <h2 id="about-h">About this event</h2>
@@ -51,6 +64,14 @@
                 </li>
               }
             </ul>
+          </section>
+        }
+        @if (e.format === 'streaming' && e.facts.stream; as stream) {
+          <section aria-labelledby="origin-h">
+            <h2 id="origin-h" class="section-title">Where it streams from</h2>
+            <div class="facts">
+              <sx-fact-item icon="radio" [label]="stream.label">{{ stream.note }}</sx-fact-item>
+            </div>
           </section>
         }
         @if (e.facts.venue; as venue) {
@@ -109,6 +130,18 @@
             rel="noopener noreferrer"
             >{{ primary.label }}<sx-icon name="external" size="sm"
           /></a>
+        }
+        @if (e.actions.join?.url; as joinUrl) {
+          <a
+            sx-button
+            appearance="primary"
+            size="lg"
+            block
+            [href]="joinUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><sx-icon name="video" />{{ e.actions.join!.label }}</a
+          >
         }
         @if (e.actions.addToCalendar) {
           <button sx-button block type="button"><sx-icon name="calendar-plus" />Add to my calendar</button>

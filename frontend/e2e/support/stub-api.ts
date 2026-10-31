@@ -43,3 +43,15 @@ export async function stubEventPages(page: Page, first: string, second: string):
     }),
   );
 }
+
+/** Answers GET /api/events/{slug} with each fixture in turn (the last one repeats). */
+export async function stubEventDetail(page: Page, slug: string, ...fixtures: string[]): Promise<void> {
+  let call = 0;
+  await page.route(`**/api/events/${slug}`, (route) => {
+    const name = fixtures[Math.min(call++, fixtures.length - 1)];
+    return route.fulfill({
+      contentType: 'application/json',
+      body: readFileSync(resolve(__dirname, 'fixtures', `${name}.json`), 'utf8'),
+    });
+  });
+}

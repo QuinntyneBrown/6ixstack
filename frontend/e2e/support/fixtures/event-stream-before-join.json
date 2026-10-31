@@ -1,0 +1,77 @@
+{
+  "slug": "azure-ai-foundry-shipping-agents",
+  "title": "Azure AI Foundry: shipping agents to production",
+  "description": "Evaluation, tracing and safe rollout patterns for agentic apps on Azure. Live demos of the Foundry evaluation SDK, tracing with OpenTelemetry and staged rollouts with feature flags.\n\nQuestions are taken in the chat; the session is recorded and posted on Microsoft Learn within a day.",
+  "state": "upcoming",
+  "format": "streaming",
+  "community": {
+    "slug": "microsoft-reactor",
+    "name": "Microsoft Reactor"
+  },
+  "topics": ["ai", "azure"],
+  "dateTile": {
+    "month": "Nov",
+    "day": "4"
+  },
+  "facts": {
+    "when": {
+      "dateLabel": "Wednesday, November 4, 2026",
+      "timeRange": "12:00 PM \u2013 1:30 PM ET",
+      "sourceTime": "9:00 AM PT",
+      "suffix": null
+    },
+    "venue": null,
+    "stream": {
+      "label": "Streaming online",
+      "note": "YouTube and Microsoft Learn; the link opens 15 minutes before start"
+    },
+    "price": {
+      "label": "Free",
+      "note": null
+    },
+    "attendance": {
+      "label": "2,310 going",
+      "note": null
+    }
+  },
+  "agenda": [],
+  "speakers": [
+    {
+      "slug": "sofia-marchetti",
+      "name": "Sofia Marchetti",
+      "initials": "SM",
+      "role": "Cloud advocate, Microsoft"
+    },
+    {
+      "slug": "daniel-okafor",
+      "name": "Daniel Okafor",
+      "initials": "DO",
+      "role": "Principal PM, Azure AI Foundry"
+    }
+  ],
+  "actions": {
+    "primary": null,
+    "join": {
+      "label": "Join the stream",
+      "opensAtUtc": "2026-11-02T14:01:00+00:00",
+      "url": null
+    },
+    "addToCalendar": true,
+    "share": true,
+    "report": true,
+    "caption": "Tickets are sold by the organizer. 6ixstack never charges attendees.",
+    "recordingUrl": null,
+    "slidesUrl": null,
+    "findAnother": null,
+    "follow": null
+  },
+  "alerts": [
+    {
+      "kind": "info",
+      "title": "Starts in 2 days",
+      "text": "We'll show the stream link here 15 minutes before 12:00 PM ET.",
+      "action": null
+    }
+  ],
+  "dockedBar": null
+}
