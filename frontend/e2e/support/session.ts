@@ -1,3 +1,4 @@
+import { guarded } from './guarded';
 import { Page } from '@playwright/test';
 
 export const ORGANIZER = 'priya@gtaazure.ca';
@@ -11,9 +12,12 @@ export async function signInAs(page: Page, email: string): Promise<void> {
 
 /** Answers GET /api/auth/me with this unread count, keeping the rest of the real answer. */
 export async function withUnreadCount(page: Page, count: number): Promise<void> {
-  await page.route('**/api/auth/me', async (route) => {
-    const response = await route.fetch();
-    const body = { ...(await response.json()), unreadNotificationCount: count };
-    await route.fulfill({ response, json: body });
-  });
+  await page.route(
+    '**/api/auth/me',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      const body = { ...(await response.json()), unreadNotificationCount: count };
+      await route.fulfill({ response, json: body });
+    }),
+  );
 }

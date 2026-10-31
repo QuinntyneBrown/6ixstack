@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { guarded } from './guarded';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -10,11 +11,14 @@ export async function stubEvents(page: Page, fixture: string): Promise<void> {
 
 /** Delays every GET /api/events response by `ms` before it reaches the page. */
 export async function slowEvents(page: Page, ms: number): Promise<void> {
-  await page.route('**/api/events*', async (route) => {
-    const response = await route.fetch();
-    await new Promise((resolve) => setTimeout(resolve, ms));
-    await route.fulfill({ response });
-  });
+  await page.route(
+    '**/api/events*',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
 }
 
 /** Makes GET /api/events fail with a 500 problem response until the returned function is called. */
@@ -58,11 +62,14 @@ export async function stubEventDetail(page: Page, slug: string, ...fixtures: str
 
 /** Delays GET /api/events/{slug} by `ms`. */
 export async function slowEventDetail(page: Page, slug: string, ms: number): Promise<void> {
-  await page.route(`**/api/events/${slug}`, async (route) => {
-    const response = await route.fetch();
-    await new Promise((r) => setTimeout(r, ms));
-    await route.fulfill({ response });
-  });
+  await page.route(
+    `**/api/events/${slug}`,
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((r) => setTimeout(r, ms));
+      await route.fulfill({ response });
+    }),
+  );
 }
 
 /** Makes GET /api/events/{slug} fail with 500 until the returned function is called. */
@@ -75,11 +82,14 @@ export async function failEventDetail(page: Page, slug: string): Promise<() => P
 
 /** Delays GET /api/events/{slug}/ics by `ms`. */
 export async function slowIcs(page: Page, slug: string, ms: number): Promise<void> {
-  await page.route(`**/api/events/${slug}/ics`, async (route) => {
-    const response = await route.fetch();
-    await new Promise((r) => setTimeout(r, ms));
-    await route.fulfill({ response });
-  });
+  await page.route(
+    `**/api/events/${slug}/ics`,
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((r) => setTimeout(r, ms));
+      await route.fulfill({ response });
+    }),
+  );
 }
 
 /** Makes GET /api/events/{slug}/ics fail until the returned function is called. */
@@ -92,21 +102,27 @@ export async function failIcs(page: Page, slug: string): Promise<() => Promise<v
 
 /** Delays GET /api/reference-data (the submit form's lists) by `ms`. */
 export async function slowReferenceData(page: Page, ms: number): Promise<void> {
-  await page.route('**/api/reference-data', async (route) => {
-    const response = await route.fetch();
-    await new Promise((resolve) => setTimeout(resolve, ms));
-    await route.fulfill({ response });
-  });
+  await page.route(
+    '**/api/reference-data',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
 }
 
 /** Holds POST /api/submissions until the returned function is called, then lets it through. */
 export async function holdSubmission(page: Page): Promise<() => void> {
   let release!: () => void;
   const released = new Promise<void>((resolve) => (release = resolve));
-  await page.route('**/api/submissions', async (route) => {
-    await released;
-    await route.continue();
-  });
+  await page.route(
+    '**/api/submissions',
+    guarded(page, async (route) => {
+      await released;
+      await route.continue();
+    }),
+  );
   return release;
 }
 
@@ -141,10 +157,13 @@ export async function rejectSubmission(page: Page, errors: Record<string, string
 export async function holdSignInLink(page: Page): Promise<() => void> {
   let release!: () => void;
   const released = new Promise<void>((resolve) => (release = resolve));
-  await page.route('**/api/auth/sign-in-links', async (route) => {
-    await released;
-    await route.continue();
-  });
+  await page.route(
+    '**/api/auth/sign-in-links',
+    guarded(page, async (route) => {
+      await released;
+      await route.continue();
+    }),
+  );
   return release;
 }
 
@@ -155,11 +174,14 @@ export async function acceptSignInLink(page: Page): Promise<void> {
 
 /** Delays GET /api/moderation/queue by `ms`. */
 export async function slowQueue(page: Page, ms: number): Promise<void> {
-  await page.route('**/api/moderation/queue', async (route) => {
-    const response = await route.fetch();
-    await new Promise((resolve) => setTimeout(resolve, ms));
-    await route.fulfill({ response });
-  });
+  await page.route(
+    '**/api/moderation/queue',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
 }
 
 /** Makes GET /api/moderation/queue fail with a 500 until the returned function is called. */
@@ -180,16 +202,19 @@ export async function failQueue(page: Page): Promise<() => Promise<void>> {
 
 /** Answers GET /api/moderation/queue with the real queue, its first card's checks still pending. */
 export async function withPendingChecks(page: Page): Promise<void> {
-  await page.route('**/api/moderation/queue', async (route) => {
-    const response = await route.fetch();
-    const queue = await response.json();
-    queue.cards[0].checks = queue.cards[0].checks.map((c: { kind: string }) => ({
-      kind: c.kind,
-      outcome: 'pending',
-      message: 'Checking…',
-    }));
-    await route.fulfill({ response, json: queue });
-  });
+  await page.route(
+    '**/api/moderation/queue',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      const queue = await response.json();
+      queue.cards[0].checks = queue.cards[0].checks.map((c: { kind: string }) => ({
+        kind: c.kind,
+        outcome: 'pending',
+        message: 'Checking…',
+      }));
+      await route.fulfill({ response, json: queue });
+    }),
+  );
 }
 
 /** Answers GET /api/moderation/queue with nothing waiting. */
