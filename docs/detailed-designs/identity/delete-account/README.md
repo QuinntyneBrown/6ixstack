@@ -159,3 +159,20 @@ dismissed. Success ends every session and lands on the events page signed out;
 failure says nothing changed and offers Try again (`L2-071`).
 
 ![Sequence diagram for confirming and deleting an organizer account](diagrams/sequence-delete-account.png)
+
+## Decisions (journey 26)
+
+- **Endpoint**: `POST /api/account/delete` with `confirmationEmail`, compared ignoring case and surrounding spaces.
+  It answers 204, ends the cookie on the calling device, or 400 on `confirmationEmail` ("That doesn’t match. Type
+  {email} exactly.").
+- **Deletion is immediate**, well within L2-100's 30 days. In one unit of work it removes:
+  - the user, every session (so other devices are signed out on their next request), sign-in and change-email
+    tokens, the email verification, the account's notifications and review presence, and its organizer memberships;
+  - the address from events the account submitted, which stay published under their community.
+  - Moderation decisions keep their outcome, with the moderator unset.
+- **Audit**: `AccountDeleted` with the account id and no email.
+- **The dialog's notice** comes from the API with the settings ("…managed by your 2 co-organizers…").
+- **After deleting**, the app lands on the events page, signed out, with the toast "Your account was deleted".
+- **Report retention** (L2-100 criterion 1, reporter emails 90 days after a report is resolved) waits for a way to
+  resolve reports; none exists yet.
+

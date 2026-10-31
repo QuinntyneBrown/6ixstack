@@ -32,13 +32,13 @@ test.describe('Speakers directory', () => {
 
     await speakers.searchFor('shopify');
     await expect(speakers.card('Kenji Watanabe').root).toBeVisible();
-    expect(speakers.url().searchParams.get('q')).toBe('shopify');
+    await expect(page).toHaveURL(/[?&]q=shopify(&|$)/);
 
     await speakers.searchFor('');
     await speakers.topic.selectOption({ label: 'React' });
     await expect(speakers.card('Tomás Rivera').root).toBeVisible();
     await expect(speakers.card('Priya Natarajan').root).toHaveCount(0);
-    expect(speakers.url().searchParams.get('topic')).toBe('react');
+    await expect(page).toHaveURL(/[?&]topic=react(&|$)/);
   });
 
   test('the speaking period keeps this month’s or this year’s speakers', async ({ page }) => {
@@ -49,7 +49,7 @@ test.describe('Speakers directory', () => {
 
     await expect(speakers.card('Hannah Wright').root).toBeVisible();
     await expect(speakers.card('Kenji Watanabe').root).toHaveCount(0);
-    expect(speakers.url().searchParams.get('period')).toBe('year');
+    await expect(page).toHaveURL(/[?&]period=year(&|$)/);
   });
 
   test('a topic with no talks in the period offers any time or pitching a talk', async ({ page }) => {

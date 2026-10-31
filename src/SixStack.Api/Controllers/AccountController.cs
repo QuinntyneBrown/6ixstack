@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,17 @@ public sealed class AccountController(ISender sender) : ControllerBase
     [HttpPut("api/account/settings")]
     [Authorize]
     public Task<SettingsSavedDto> Save(UpdateAccountSettingsCommand command, CancellationToken cancellationToken) => sender.Send(command, cancellationToken);
+
+    /// <summary>Deletes the signed-in account (L2-071): 204 and signed out, or 400 when the typed email does not match.</summary>
+    [HttpPost("api/account/delete")]
+    [Authorize]
+    public async Task<IActionResult> Delete(DeleteAccountCommand command, CancellationToken cancellationToken)
+    {
+        await sender.Send(command, cancellationToken);
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        Response.Cookies.Delete(Auth.XsrfTokenService.CookieName);
+        return NoContent();
+    }
 
     /// <summary>Confirms a new email from its link and returns to settings with the outcome (L2-068).</summary>
     [HttpGet("auth/confirm-email")]

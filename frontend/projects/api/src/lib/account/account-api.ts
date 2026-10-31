@@ -12,6 +12,8 @@ export interface AccountSettings {
   emailProblemReports: boolean;
   emailWeeklySummary: boolean;
   community: { name: string; slug: string; coOrganizerCount: number } | null;
+  /** What deleting the account loses, for the delete dialog. */
+  deletionNotice: string;
 }
 
 export interface AccountSettingsUpdate {
@@ -32,6 +34,8 @@ export interface AccountApi {
   settings(): Observable<AccountSettings>;
   /** Saves the settings; 400 carries field errors for name, email and website (L2-068). */
   save(update: AccountSettingsUpdate): Observable<SettingsSaved>;
+  /** Deletes the signed-in account (L2-071); 400 when the typed email does not match. */
+  delete(confirmationEmail: string): Observable<void>;
 }
 
 export const ACCOUNT_API = new InjectionToken<AccountApi>('ACCOUNT_API');
@@ -43,6 +47,10 @@ export class HttpAccountApi implements AccountApi {
 
   settings(): Observable<AccountSettings> {
     return this.http.get<AccountSettings>(`${this.baseUrl}/api/account/settings`);
+  }
+
+  delete(confirmationEmail: string): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/api/account/delete`, { confirmationEmail });
   }
 
   save(update: AccountSettingsUpdate): Observable<SettingsSaved> {

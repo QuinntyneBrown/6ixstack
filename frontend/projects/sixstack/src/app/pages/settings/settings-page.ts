@@ -12,7 +12,8 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Dialog } from '@angular/cdk/dialog';
+import { Router, RouterLink } from '@angular/router';
 import { ACCOUNT_API, AccountSettings, ApiError, SettingsSaved } from 'api';
 import {
   Alert,
@@ -23,11 +24,18 @@ import {
   FormField,
   FormSection,
   Input,
+  modalDialogConfig,
   SidebarNav,
   SidebarNavItem,
   Skeleton,
   Switch,
+  ToastService,
 } from 'components';
+import {
+  DELETE_ACCOUNT_TITLE_ID,
+  DeleteAccountDialog,
+  DeleteAccountDialogData,
+} from '../../dialogs/delete-account/delete-account-dialog';
 import { merge, startWith } from 'rxjs';
 import { SessionStore } from '../../shell/session/session-store';
 import { SKELETON_DELAY_MS } from '../../shared/load-state';
@@ -61,12 +69,39 @@ export class SettingsPage {
   private readonly injector = inject(Injector);
   private readonly summary = viewChild(ErrorSummary);
   protected readonly session = inject(SessionStore);
+  private readonly dialog = inject(Dialog);
+  private readonly router = inject(Router);
+  private readonly toasts = inject(ToastService);
+
+  /** Delete your organizer account? (L2-071): on success the app lands signed out on the events page. */
+  protected openDelete(s: AccountSettings, trigger: EventTarget | null): void {
+    const ref = this.dialog.open<boolean, DeleteAccountDialogData>(
+      DeleteAccountDialog,
+      modalDialogConfig({
+        data: { email: s.email, notice: s.deletionNotice },
+        ariaLabelledBy: DELETE_ACCOUNT_TITLE_ID,
+        ariaDescribedBy: 'delete-account-description',
+        restoreFocus: (trigger as HTMLElement | null) ?? true,
+      }),
+    );
+    ref.closed.subscribe((deleted) => {
+      if (!deleted) return;
+      this.session.clear();
+      void this.router.navigateByUrl('/');
+      this.toasts.show({
+        kind: 'info',
+        title: 'Your account was deleted',
+        text: 'Thanks for organizing with 6ixstack.',
+      });
+    });
+  }
 
   protected readonly describedBy = describedBy;
   protected readonly sections: SidebarNavItem[] = [
     { label: 'Profile', fragment: 'profile' },
     { label: 'Email notifications', fragment: 'email-notifications' },
     { label: 'Community', fragment: 'community' },
+    { label: 'Account', fragment: 'account' },
   ];
   protected readonly current = signal('profile');
 
