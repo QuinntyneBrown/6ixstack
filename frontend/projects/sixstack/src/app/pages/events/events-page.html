@@ -9,7 +9,9 @@
       <p class="hero__stat">Event counts are unavailable right now.</p>
     } @else if (result(); as r) {
       @if (r.search && r.shown === 0) {
-        <p class="hero__stat">No matches for “{{ r.search }}” in the next two weeks.</p>
+        <p class="hero__stat">
+          No matches for <strong>“{{ r.search }}”</strong> in the next two weeks.
+        </p>
       } @else {
         <p class="hero__stat">
           <strong>{{ r.heroCounts.gta }} in the GTA</strong> and
@@ -57,7 +59,7 @@
   } @else if (result(); as r) {
     <p class="result-line" aria-live="polite">
       {{ r.shown }} {{ r.shown === 1 ? 'event' : 'events' }}{{ topicPhrase() }} · times in ET
-      @if (hasFilters()) {
+      @if (hasFilters() && r.shown > 0) {
         · <button class="result-line__clear" type="button" (click)="clearFilters()">Clear filters</button>
       }
     </p>
@@ -89,6 +91,14 @@
           [dateLabel]="day.dateLabel"
           [events]="day.events"
         />
+      }
+      @if (r.hasMore) {
+        <div class="load-more">
+          <p class="text-caption">
+            Showing {{ r.shown }} of {{ r.total }} events through {{ r.throughLabel }}
+          </p>
+          <button sx-button type="button" [busy]="loadingMore()" (click)="showMore()">Show 20 more</button>
+        </div>
       }
     }
   } @else if (slow()) {

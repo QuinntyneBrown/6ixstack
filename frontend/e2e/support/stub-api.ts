@@ -32,3 +32,14 @@ export async function failEvents(page: Page): Promise<() => Promise<void>> {
   await page.route('**/api/events*', handler);
   return () => page.unroute('**/api/events*', handler);
 }
+
+/** Answers page 1 and page 2 of GET /api/events from two fixtures. */
+export async function stubEventPages(page: Page, first: string, second: string): Promise<void> {
+  const read = (name: string) => readFileSync(resolve(__dirname, 'fixtures', `${name}.json`), 'utf8');
+  await page.route('**/api/events*', (route) =>
+    route.fulfill({
+      contentType: 'application/json',
+      body: new URL(route.request().url()).searchParams.get('page') === '2' ? read(second) : read(first),
+    }),
+  );
+}

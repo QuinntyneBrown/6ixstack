@@ -92,6 +92,7 @@ export class EventsPage {
     toObservable(computed(() => ({ filters: this.filters(), attempt: this.attempt() })))
       .pipe(
         switchMap(({ filters: f }) => {
+          this.page = 1;
           this.state.update((s) => loading(s.status === 'failed' ? null : s.data));
           this.slow.set(false);
           const timer = setTimeout(() => this.slow.set(true), SKELETON_DELAY_MS);
@@ -109,6 +110,46 @@ export class EventsPage {
         if (state.status === 'loaded') {
           this.announceCleared(state.data);
         }
+      });
+  }
+
+  protected readonly loadingMore = signal(false);
+  private page = 1;
+
+  /** Appends the next 20 matches, merging a day that is already shown (L2-009). */
+  protected showMore(): void {
+    const current = this.state();
+    if (current.status !== 'loaded' || this.loadingMore()) {
+      return;
+    }
+    const f = this.filters();
+    this.loadingMore.set(true);
+    this.api
+      .upcoming({ format: f.format, topics: f.topics, q: f.q, page: this.page + 1 })
+      .pipe(finalize(() => this.loadingMore.set(false)))
+      .subscribe({
+        next: (next) => {
+          this.page++;
+          const days = [...current.data.days];
+          for (const day of next.days) {
+            const last = days[days.length - 1];
+            if (last?.date === day.date) {
+              days[days.length - 1] = { ...last, events: [...last.events, ...day.events] };
+            } else {
+              days.push(day);
+            }
+          }
+          this.state.set(
+            loaded({ ...current.data, days, shown: next.shown, total: next.total, hasMore: next.hasMore }),
+          );
+        },
+        error: () =>
+          this.toasts.show({
+            kind: 'danger',
+            title: "We couldn't load more events",
+            text: 'Your list is still here. Try again in a moment.',
+            action: { label: 'Try again', run: () => this.showMore() },
+          }),
       });
   }
 
