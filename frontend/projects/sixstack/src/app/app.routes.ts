@@ -42,6 +42,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/communities/communities-page').then((m) => m.CommunitiesPage),
   },
   {
+    path: 'contact',
+    title: 'Contact · 6ixstack',
+    loadComponent: () => import('./pages/contact/contact-page').then((m) => m.ContactPage),
+  },
+  {
     path: 'speakers',
     title: 'Speakers · 6ixstack',
     loadComponent: () => import('./pages/speakers/speakers-page').then((m) => m.SpeakersPage),

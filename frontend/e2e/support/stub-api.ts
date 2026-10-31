@@ -622,3 +622,26 @@ export async function holdSignOut(page: Page): Promise<() => Promise<void>> {
     await held!.continue();
   };
 }
+
+/** Answers POST /api/contact with `status` until the returned function is called; 0 holds it instead. */
+export async function contactAnswers(page: Page, status: number): Promise<() => Promise<void>> {
+  let held: import('@playwright/test').Route | null = null;
+  const handler = async (route: import('@playwright/test').Route) => {
+    if (status === 0) {
+      held = route;
+      return;
+    }
+    await route.fulfill({
+      status,
+      contentType: 'application/problem+json',
+      body: JSON.stringify({ status }),
+    });
+  };
+  await page.route('**/api/contact', handler);
+  return async () => {
+    // Answer the held request before unrouting, which would otherwise let it through.
+    if (held)
+      await held.fulfill({ status: 500, contentType: 'application/problem+json', body: '{"status":500}' });
+    await page.unroute('**/api/contact', handler);
+  };
+}
