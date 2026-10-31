@@ -186,3 +186,21 @@ account keeps signing in with the old address until the link is opened
 (`L2-068`, `L2-084`).
 
 ![Sequence diagram for changing and confirming the email address](diagrams/sequence-change-email.png)
+
+## Decisions (journey 25)
+
+- **Endpoints**: `GET` and `PUT /api/account/settings` (signed in), and `GET /auth/confirm-email?token=…`, which
+  redirects to `/settings?email-confirmed=1|0`.
+- **A new email** is stored as `User.PendingEmail`, with a 24-hour `ChangeEmail` link sent to the new address.
+  Sign-in keeps the current address until the link is used. An address that belongs to another account is refused
+  on the email field.
+- **Website** is optional and must be a full `https://` link with a host.
+- **Email switches**: decisions, reports and the weekly summary. The "communities I follow" switch waits for the
+  follow feature, since nothing would send those emails yet.
+- **Community line**: "You manage {community} with {n} co-organizers", counting the other organizers. Without a
+  community: "No community is assigned to your account yet."
+- **Account section** (Sign out, Delete account) joins with journeys 26 and 27. The section nav lists only the
+  sections that exist.
+- "Saved at {time}." uses the API's clock in Toronto time.
+- The seed adds Nadia Chen as a GTA Azure volunteer organizer, so Priya has the 2 co-organizers that L2-070 names.
+

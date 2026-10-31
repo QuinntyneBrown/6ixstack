@@ -52,6 +52,16 @@ public sealed class DatabaseSeeder(AppDbContext db, IClock clock, IOutbox outbox
             db.Users.Add(priya);
         }
 
+        if (!users.ContainsKey(SeedData.VolunteerEmail))
+        {
+            var nadia = new User { Email = SeedData.VolunteerEmail, Name = "Nadia Chen", Role = UserRole.Organizer, CreatedAtUtc = clock.UtcNow };
+            nadia.Communities.Add(new CommunityOrganizer
+            {
+                Community = communities["gta-azure-community"], Role = "Volunteer, labs", Speaker = speakers["nadia-chen"], SortOrder = 2,
+            });
+            db.Users.Add(nadia);
+        }
+
         if (!users.ContainsKey(SeedData.CoOrganizerEmail))
         {
             var marcus = new User { Email = SeedData.CoOrganizerEmail, Name = "Marcus Bell", Role = UserRole.Organizer, CreatedAtUtc = clock.UtcNow };
