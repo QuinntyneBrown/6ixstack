@@ -144,3 +144,21 @@ confirmation; a server error, network error or 429 keeps every value and offers
 Try again. The email to the team inbox leaves in the background.
 
 ![Sequence diagram for sending a contact message](diagrams/sequence-send-message.png)
+
+## Decisions (journey 28)
+
+- **Endpoint**: `POST /api/contact`, anonymous. It answers 202 with the first name and reply address, 400 with field
+  errors, or 429 after five messages an hour from one IP address (`Contact:PerIpPerHour`).
+- **Topics** (API values): `general`, `listing`, `partnership`, `conduct` and `press`.
+- **Delivery**: each message is stored (`ContactMessage`) and emailed through the outbox, so a provider failure is
+  retried and never loses the message. It goes to hello@6ixstack.dev, or conduct@6ixstack.dev for code of conduct
+  reports, with the sender's address as the reply-to line in the body.
+- **Validation messages** follow the mocks ("Enter an email address like name@example.com", "Write a message so we
+  know how to help"). The summary reads "Fix {n} things before sending".
+- **Retention**: contact messages are kept for a year (L2-100). The deletion job joins with the retention work
+  deferred in journey 26.
+- **Clearing errors**: editing a field drops its own error, and the summary keeps the rest until the next send, so
+  an error never sits beside a value that has been fixed.
+- **Other ways to reach us**: the addresses are shown as text, as the mock draws them (`FactItem` labels are plain
+  text); "Your message didn't send" also names hello@6ixstack.dev.
+

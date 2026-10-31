@@ -1,0 +1,108 @@
+<div class="page-title">
+  <h1>Contact</h1>
+  <p class="lead">Questions, corrections or ideas — a person reads every message.</p>
+</div>
+<div class="page-grid">
+  <div class="contact-main">
+    @if (sent(); as s) {
+      <sx-success-panel
+        class="form-card"
+        role="status"
+        [title]="'Thanks, ' + s.firstName + ' — message sent'"
+      >
+        <p class="text-muted">
+          We’ll reply to {{ s.replyTo }} within two working days. Listing corrections are usually fixed the
+          same day.
+        </p>
+        <a slot="actions" sx-button appearance="primary" routerLink="/">Back to events</a>
+        <button slot="actions" sx-button type="button" (click)="another()">Send another message</button>
+      </sx-success-panel>
+    } @else {
+      @if (errors().length) {
+        <sx-error-summary
+          class="contact-alert"
+          [heading]="'Fix ' + errors().length + ' things before sending'"
+          [errors]="errors()"
+        />
+      }
+      @if (failed()) {
+        <sx-alert class="contact-alert" kind="danger" announce="alert" title="Your message didn't send">
+          6ixstack didn't respond. Nothing you wrote was lost — try again, or email hello&#64;6ixstack.dev.
+        </sx-alert>
+      }
+      <form class="form-card" [formGroup]="form" novalidate (ngSubmit)="send()">
+        <div class="form-grid form-grid--2">
+          <sx-form-field label="Your name" controlId="contact-name" [error]="errorFor('contact-name')">
+            <input
+              sx-input
+              id="contact-name"
+              type="text"
+              autocomplete="name"
+              formControlName="name"
+              [readOnly]="sending()"
+              [attr.aria-invalid]="errorFor('contact-name') ? 'true' : null"
+              [attr.aria-describedby]="describedBy('contact-name', false, !!errorFor('contact-name'))"
+            />
+          </sx-form-field>
+          <sx-form-field label="Email" controlId="contact-email" [error]="errorFor('contact-email')">
+            <input
+              sx-input
+              id="contact-email"
+              type="email"
+              autocomplete="email"
+              formControlName="email"
+              [readOnly]="sending()"
+              [attr.aria-invalid]="errorFor('contact-email') ? 'true' : null"
+              [attr.aria-describedby]="describedBy('contact-email', false, !!errorFor('contact-email'))"
+            />
+          </sx-form-field>
+          <sx-form-field class="span-2" label="What is it about?" controlId="contact-topic">
+            <select
+              sx-input
+              id="contact-topic"
+              formControlName="topic"
+              [attr.aria-disabled]="sending() ? 'true' : null"
+            >
+              @for (t of topics; track t.value) {
+                <option [value]="t.value">{{ t.label }}</option>
+              }
+            </select>
+          </sx-form-field>
+          <sx-form-field
+            class="span-2"
+            label="Message"
+            controlId="contact-message"
+            [error]="errorFor('contact-message')"
+          >
+            <textarea
+              sx-input
+              id="contact-message"
+              rows="5"
+              maxlength="5000"
+              formControlName="message"
+              [readOnly]="sending()"
+              [attr.aria-invalid]="errorFor('contact-message') ? 'true' : null"
+              [attr.aria-describedby]="describedBy('contact-message', false, !!errorFor('contact-message'))"
+            ></textarea>
+          </sx-form-field>
+        </div>
+        <div class="form-actions">
+          <button sx-button appearance="primary" type="submit" [busy]="sending()">
+            {{ sending() ? 'Sending…' : failed() ? 'Try again' : 'Send message' }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+  <aside class="contact-ways" aria-label="Other ways to reach us">
+    <div class="facts">
+      <sx-fact-item icon="mail" label="hello@6ixstack.dev">We reply within two working days</sx-fact-item>
+      <sx-fact-item icon="shield" label="conduct@6ixstack.dev"
+        >Code of conduct reports, answered within 24 hours</sx-fact-item
+      >
+      <sx-fact-item icon="flag" label="Wrong event details?"
+        >Use Report a problem on the event page for the fastest fix</sx-fact-item
+      >
+    </div>
+  </aside>
+</div>

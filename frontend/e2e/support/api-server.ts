@@ -27,6 +27,7 @@ export function apiEnvironment(databaseName = 'e2e'): NodeJS.ProcessEnv {
     Auth__SignInLinks__PerIpPerHour: '10000',
     Feeds__CreatePerIpPerHour: '10000',
     Reports__PerIpPerHour: '10000',
+    Contact__PerIpPerHour: '10000',
     // Submission link checks stay off the network in Playwright and demos.
     SubmissionChecks__LinkChecker: 'AssumeReachable',
     DOTNET_CLI_TELEMETRY_OPTOUT: '1',
