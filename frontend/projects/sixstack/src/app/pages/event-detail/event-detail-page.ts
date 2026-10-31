@@ -2,7 +2,17 @@ import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angu
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { ApiError, EventDetail, EVENTS_API } from 'api';
-import { DateTile, Description, FactItem, Icon, isTopic, PersonLink, TopicKey, TopicTag } from 'components';
+import {
+  Button,
+  DateTile,
+  Description,
+  FactItem,
+  Icon,
+  isTopic,
+  PersonLink,
+  TopicKey,
+  TopicTag,
+} from 'components';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { failed, loaded, loading, LoadState } from '../../shared/load-state';
 import { NotFoundPage } from '../status/not-found-page';
@@ -10,7 +20,7 @@ import { NotFoundPage } from '../status/not-found-page';
 /** The event detail page (`/events/:slug`): the API decides state, facts, actions and alerts (L2-017 to L2-024). */
 @Component({
   selector: 'sx-event-detail-page',
-  imports: [DateTile, Description, FactItem, Icon, NotFoundPage, PersonLink, RouterLink, TopicTag],
+  imports: [Button, DateTile, Description, FactItem, Icon, NotFoundPage, PersonLink, RouterLink, TopicTag],
   templateUrl: './event-detail-page.html',
   styleUrl: './event-detail-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
