@@ -15,3 +15,4 @@ export default meta;
 
 export { Default } from './ErrorSummaryDefault.stories';
 export { OneError } from './ErrorSummaryOneError.stories';
+export { CustomHeading } from './ErrorSummaryCustomHeading.stories';

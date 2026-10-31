@@ -1,0 +1,76 @@
+<div class="auth-layout">
+  <div class="auth-card">
+    @if (sentTo(); as address) {
+      <sx-success-panel class="form-card" icon="mail" [headingLevel]="1" title="Check your inbox">
+        <p>
+          We sent a sign-in link to <strong>{{ address }}</strong
+          >. It works once and expires in 15 minutes.
+        </p>
+        <p class="text-caption">Nothing there after a minute? Check spam, or ask for another link.</p>
+        <button
+          slot="actions"
+          sx-button
+          type="button"
+          [disabled]="resendWait.remaining() > 0 || sending()"
+          [busy]="sending()"
+          (click)="resend()"
+        >
+          {{ resendWait.remaining() > 0 ? 'Resend link in ' + resendWait.remaining() + 's' : 'Resend link' }}
+        </button>
+        <button slot="actions" sx-button appearance="ghost" type="button" (click)="useDifferentEmail()">
+          Use a different email
+        </button>
+      </sx-success-panel>
+    } @else {
+      @if (expired()) {
+        <sx-alert class="auth-alert" kind="danger" announce="alert" title="That sign-in link has expired">
+          Links work once and last 15 minutes. Enter your email and we’ll send a new one.
+        </sx-alert>
+      }
+      <div class="form-card">
+        <h1>Sign in to 6ixstack</h1>
+        <p class="lead">We’ll email you a link that signs you in. No password to remember.</p>
+        @if (error(); as message) {
+          <sx-error-summary
+            class="auth-summary"
+            heading="Check your email address"
+            [errors]="[{ controlId: 'email', message: message }]"
+          />
+        }
+        @if (failed(); as message) {
+          <sx-alert class="auth-summary" kind="danger" announce="alert" title="We couldn’t send the link">{{
+            message
+          }}</sx-alert>
+        }
+        <form class="stack" novalidate (submit)="$event.preventDefault(); send()">
+          <sx-form-field
+            label="Email"
+            controlId="email"
+            hint="Use the address you list events with."
+            [error]="error()"
+          >
+            <input
+              #emailInput
+              sx-input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              autocomplete="email"
+              [formControl]="email"
+              [readOnly]="sending()"
+              [attr.aria-invalid]="error() ? 'true' : null"
+              [attr.aria-describedby]="describedBy('email', true, !!error())"
+            />
+          </sx-form-field>
+          <button sx-button appearance="primary" size="lg" block type="submit" [busy]="sending()">
+            {{ sending() ? 'Sending link…' : 'Email me a sign-in link' }}
+          </button>
+        </form>
+      </div>
+    }
+    <p class="auth-note">
+      No account needed to <a routerLink="/submit">submit an event</a>. Sign in to edit your listings and see
+      who is coming.
+    </p>
+  </div>
+</div>
