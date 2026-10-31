@@ -160,3 +160,26 @@ The weekly job enqueues a summary only for organizers whose `WeeklySummary`
 switch is on. Delivery then follows the same outbox path and retry rules.
 
 ![Sequence diagram for the weekly summary email](diagrams/sequence-weekly-summary.png)
+
+## Decisions (journey 20)
+
+- **Preferences** are an owned value on `User`: `EventDecisions` (on), `ProblemReports` (on), `WeeklySummary` (off),
+  `FollowedCommunities` (off). The settings screen arrives with journey 25. Until then the defaults apply, and an
+  address with no account is treated as having the defaults.
+- **What is emailed now**:
+  - Approved ("“{title}” is live", after the undo window) and needs changes go out under `EventDecisions`. A
+    rejection always goes out (`L2-061`).
+  - A moderator's edit of an organizer's event ("A moderator updated “{title}”") goes out under `EventDecisions`.
+  - The weekly summary ("Your week on 6ixstack") goes out under `WeeklySummary`, Mondays at 8:00 AM Toronto time.
+  - Problem reports and followed communities have their switches but no emails yet. They come with journeys 22 and
+    the follow feature.
+- **In-app first**: the in-app notification is written with the decision. The email is its own `SendEmail` outbox
+  message, retried on failure with exponential backoff (30 s base, doubling, five attempts), so a failed send never
+  removes the notification (`L2-067` criterion 3). The outbox polls every few seconds, well within the five-minute
+  bound.
+- **Sender and copy**: from `hello@6ixstack.dev`; the copy is in `docs/mocks/notifications/email/`. Each email names
+  the event and links to it or to the dashboard. A "manage these emails" link joins with the settings screen.
+- **Unverified addresses**: decision emails go to the submitter's address whether or not it is verified, since they
+  answer the submitter's own request.
+- **Moderators** get no notification emails.
+

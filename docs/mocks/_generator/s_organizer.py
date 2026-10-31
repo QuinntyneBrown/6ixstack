@@ -894,3 +894,39 @@ def _():
         toast("success", "Approved “Rust in production at scale”", "", "Undo"),
         toast("success", "Approved “Fabric for Power BI developers”", "", "Undo"),
         toast("info", "Rejected “Free crypto trading masterclass”", "", "View email"))
+
+
+# ======================================================================= notification emails (journey 20)
+screen("email", "notification", "Notification emails", na={"invalid": "Emails have no inputs.", "busy": "Emails are sent in the background.",
+                                                             "loading": "Emails arrive complete.", "error": "A failed send is retried; nothing is shown."})
+
+
+def email_page(to, subject, body):
+    card = (f'<article class="form-card" style="max-width: 40rem; margin-inline: auto;"><p class="text-muted">From 6ixstack &lt;hello@6ixstack.dev&gt; · To {esc(to)}</p>'
+            f'<h1 style="font: var(--text-h3); margin-top: var(--space-2);">{esc(subject)}</h1>'
+            f'<pre class="email-body" style="white-space: pre-wrap; font: var(--text-body); margin-top: var(--space-4);">{esc(body)}</pre></article>')
+    return shell(f'<div style="padding-block: var(--space-12);">{card}</div>', user=None, submit=False)
+
+
+@state("email", "approved", "Approved: sent after the undo window closes, when event decisions are on (default).")
+def _():
+    return email_page("priya@gtaazure.ca", "“Fabric for Power BI developers” is live",
+                      "Good news: a moderator approved “Fabric for Power BI developers”. It’s in the 6ixstack list, the calendar and every matching feed.\n\nSee it: https://6ixstack.dev/events/fabric-for-power-bi-developers")
+
+
+@state("email", "needs-changes", "Sent back for changes: the reason and the fix, when event decisions are on.")
+def _():
+    return email_page("priya@gtaazure.ca", "“Azure Bicep clinic” needs changes",
+                      "A moderator reviewed “Azure Bicep clinic”.\n\nReason: missing or unclear venue address.\n\nEdit it and resubmit: https://6ixstack.dev/organize")
+
+
+@state("email", "event-updated", "A moderator edited the organizer's event: what changed and a link to check it.")
+def _():
+    return email_page("priya@gtaazure.ca", "A moderator updated “Azure Data & AI Day GTA”",
+                      "Jordan from 6ixstack updated “Azure Data & AI Day GTA”: start time, venue.\n\nCheck your event: https://6ixstack.dev/organize\n\nReply to this email if something looks wrong.")
+
+
+@state("email", "weekly-summary", "Weekly summary, Mondays at 8 AM, only for organizers who turned it on.")
+def _():
+    return email_page("priya@gtaazure.ca", "Your week on 6ixstack",
+                      "Here’s how GTA Azure Community’s events are doing.\n\n• Azure Data & AI Day GTA · Thu, Nov 5 · 318 going\n\n1,204 people follow GTA Azure Community in a calendar feed.\n\nYour events: https://6ixstack.dev/organize")
