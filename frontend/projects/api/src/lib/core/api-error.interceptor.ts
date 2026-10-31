@@ -11,6 +11,7 @@ const kindOf = (status: number): ApiErrorKind => {
   if (status === 400) return 'Validation';
   if (status === 403) return 'Forbidden';
   if (status === 404) return 'NotFound';
+  if (status === 409) return 'Conflict';
   if (status === 429) return 'RateLimited';
   if (status >= 500) return 'Server';
   return 'Other';
@@ -32,7 +33,10 @@ export const apiErrorInterceptor: HttpInterceptorFn = (request, next) => {
         onNetworkError?.();
       }
       const body = (typeof error.error === 'object' && error.error) || {};
-      const { errors, referenceCode, ownerName, resourceTitle } = body as Record<string, unknown>;
+      const { errors, referenceCode, ownerName, resourceTitle, decision, decidedBy, reason } = body as Record<
+        string,
+        unknown
+      >;
       return throwError(
         () =>
           new ApiError(
@@ -40,7 +44,7 @@ export const apiErrorInterceptor: HttpInterceptorFn = (request, next) => {
             error.status,
             (errors as Record<string, string[]>) ?? {},
             typeof referenceCode === 'string' ? referenceCode : null,
-            { ownerName, resourceTitle },
+            { ownerName, resourceTitle, decision, decidedBy, reason },
           ),
       );
     }),

@@ -5,9 +5,15 @@
 
 @if (state(); as s) {
   @if (s.status === 'loaded') {
-    @if (s.data.cards.length) {
-      <ul class="review-list" sxReviewQueueShortcuts>
-        @for (card of s.data.cards; track card.id) {
+    @if (cards().length) {
+      <ul
+        class="review-list"
+        sxReviewQueueShortcuts
+        (approveRequested)="approveFocused($event)"
+        (focusin)="onFocusIn($event)"
+        (focusout)="onFocusOut($event)"
+      >
+        @for (card of cards(); track card.id) {
           <li
             sx-review-card
             [title]="card.title"
@@ -17,7 +23,20 @@
             [topics]="topics(card)"
             [checks]="card.checks"
             [submitted]="card.submittedLabel + ' · ' + card.submitterEmail"
-          ></li>
+            [attr.data-id]="card.id"
+          >
+            <button
+              slot="actions"
+              sx-button
+              appearance="primary"
+              size="sm"
+              type="button"
+              [busy]="approving().has(card.id)"
+              (click)="approve(card)"
+            >
+              <sx-icon name="check" size="sm" />Approve<span class="visually-hidden"> {{ card.title }}</span>
+            </button>
+          </li>
         }
       </ul>
     } @else {

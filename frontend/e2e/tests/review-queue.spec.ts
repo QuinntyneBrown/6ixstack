@@ -139,7 +139,7 @@ test.describe('Review queue shortcuts', () => {
     await queue.press('Shift+Slash');
 
     await expect(queue.shortcutsDialog).toBeVisible();
-    await expect(queue.shortcutRows()).toHaveText(['J', 'K', '?']);
+    await expect(queue.shortcutRows()).toHaveText(['J', 'K', 'A', '?']);
     await queue.press('Escape');
     await expect(queue.shortcutsDialog).toBeHidden();
   });

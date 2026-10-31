@@ -55,7 +55,8 @@ export class KeyboardShortcutsDialog {
   protected readonly shortcuts = [
     { key: 'J', action: 'Next submission' },
     { key: 'K', action: 'Previous submission' },
-    // A (approve) and R (reject) join this list with journeys 07 and 08.
+    { key: 'A', action: 'Approve the focused submission' },
+    // R (reject) joins this list with journey 08.
     { key: '?', action: 'Show these shortcuts' },
   ];
 

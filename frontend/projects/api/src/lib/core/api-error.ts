@@ -1,6 +1,6 @@
 /** What went wrong with an API call, without any server text (L2-077): only status, field errors and reference. */
 export type ApiErrorKind =
-  'Network' | 'NotFound' | 'Forbidden' | 'RateLimited' | 'Validation' | 'Server' | 'Other';
+  'Network' | 'NotFound' | 'Forbidden' | 'Conflict' | 'RateLimited' | 'Validation' | 'Server' | 'Other';
 
 export class ApiError extends Error {
   constructor(

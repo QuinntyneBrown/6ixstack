@@ -15,7 +15,10 @@ export class ReviewCardPart {
     this.meta = root.locator('.meta-item');
     this.checks = root.getByRole('list', { name: 'Automatic checks' }).getByRole('listitem');
     this.submitted = root.locator('.review-card__submitted');
+    this.approve = root.getByRole('button', { name: /^Approve/ });
   }
+
+  readonly approve: Locator;
 
   /** The check with this message; `outcome` reads its passed, warning or pending state. */
   check(message: string): Locator {
@@ -70,6 +73,17 @@ export class ReviewQueuePage {
 
   emptyAction(name: string): Locator {
     return this.page.locator('.empty').getByRole('link', { name });
+  }
+
+  /** The toast with this title. */
+  toast(title: string): Locator {
+    return this.page
+      .locator('.toast')
+      .filter({ has: this.page.locator('.toast__title', { hasText: title }) });
+  }
+
+  toastAction(title: string, action: string): Locator {
+    return this.toast(title).getByRole('button', { name: action });
   }
 
   shortcutRows(): Locator {

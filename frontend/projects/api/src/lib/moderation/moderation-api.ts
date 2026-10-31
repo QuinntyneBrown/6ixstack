@@ -28,9 +28,25 @@ export interface ReviewQueue {
   cards: ReviewCardData[];
 }
 
+export interface ApprovalResult {
+  eventId: string;
+  title: string;
+  organizerName: string;
+  decisionId: string;
+  undoDeadlineUtc: string;
+  isPublished: boolean;
+  possibleDuplicate: { eventId: string; slug: string; dateLabel: string } | null;
+}
+
 export interface ModerationApi {
   /** Fails with `ApiError` kind `Forbidden` for a signed-in non-moderator. */
   getQueue(): Observable<ReviewQueue>;
+  /** Fails with kind `Conflict` (extensions `decision`, `decidedBy`) when someone already decided it. */
+  approve(id: string): Observable<ApprovalResult>;
+  /** Fails with kind `Conflict` and `reason: 'too-late'` after the 8 s window. */
+  undoApproval(id: string): Observable<void>;
+  /** Records that the caller is looking at a submission; names the other moderators who are. */
+  recordPresence(id: string): Observable<{ others: string[] }>;
 }
 
 export const MODERATION_API = new InjectionToken<ModerationApi>('MODERATION_API');
@@ -42,5 +58,20 @@ export class HttpModerationApi implements ModerationApi {
 
   getQueue(): Observable<ReviewQueue> {
     return this.http.get<ReviewQueue>(`${this.baseUrl}/api/moderation/queue`);
+  }
+
+  approve(id: string): Observable<ApprovalResult> {
+    return this.http.post<ApprovalResult>(`${this.baseUrl}/api/moderation/submissions/${id}/approve`, null);
+  }
+
+  undoApproval(id: string): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/api/moderation/submissions/${id}/undo-approval`, null);
+  }
+
+  recordPresence(id: string): Observable<{ others: string[] }> {
+    return this.http.post<{ others: string[] }>(
+      `${this.baseUrl}/api/moderation/submissions/${id}/presence`,
+      null,
+    );
   }
 }
