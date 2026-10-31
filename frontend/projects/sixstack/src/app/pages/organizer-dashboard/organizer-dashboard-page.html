@@ -1,0 +1,126 @@
+<div class="page-title dash-title">
+  <div>
+    <h1>Your events</h1>
+    <p class="lead">{{ lead() }}</p>
+  </div>
+  <a sx-button appearance="primary" routerLink="/submit"><sx-icon name="plus" size="sm" />New event</a>
+</div>
+
+@if (banner(); as b) {
+  <div class="submission-banner">
+    <sx-alert
+      [kind]="bannerKind(b)"
+      [title]="b.title"
+      [actions]="bannerActions(b)"
+      [dismissible]="b.dismissible"
+      [announce]="b.kind === 'notApproved' ? 'alert' : null"
+      (dismissed)="dismiss(b)"
+      >{{ b.text }}</sx-alert
+    >
+  </div>
+}
+
+@if (state().status === 'failed') {
+  <sx-alert kind="danger" announce="alert" title="We couldn’t load your events" [actions]="errorActions">
+    Your listings are safe; this is a problem on our side.
+  </sx-alert>
+} @else if (data(); as d) {
+  @if (d.rows.length) {
+    <sx-stats-row class="dash-stats">
+      <sx-stat label="Upcoming" [value]="d.stats.upcoming" />
+      <sx-stat label="In review" [value]="d.stats.inReview" />
+      <sx-stat label="Going" [value]="d.stats.going.toLocaleString('en-CA')" />
+      <sx-stat label="Feed subscribers" [value]="d.stats.feedSubscribers.toLocaleString('en-CA')" />
+    </sx-stats-row>
+    <sx-table>
+      <table class="table">
+        <caption class="visually-hidden">
+          Your events
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Event</th>
+            <th scope="col" [attr.aria-sort]="descending() ? 'descending' : 'ascending'">
+              <button type="button" (click)="toggleSort()">Date</button>
+            </th>
+            <th scope="col">Status</th>
+            <th scope="col" class="num">Going</th>
+            <th scope="col"><span class="visually-hidden">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.id) {
+            <tr>
+              <td>
+                <div class="dash-row__title">
+                  @if (row.status === 'published') {
+                    <a [routerLink]="row.publicUrl">{{ row.title }}</a>
+                  } @else {
+                    {{ row.title }}
+                  }
+                </div>
+                @if (row.needsChangesReason) {
+                  <div class="dash-row__reason">{{ row.needsChangesReason }}</div>
+                }
+              </td>
+              <td>{{ row.dateLabel }}</td>
+              <td>
+                <sx-badge [kind]="badge(row)">{{ row.statusLabel }}</sx-badge>
+              </td>
+              <td class="num">{{ row.going ?? '–' }}</td>
+              <td>
+                @if (row.status === 'past' && row.publicUrl) {
+                  <a sx-button appearance="ghost" size="sm" [routerLink]="row.publicUrl"
+                    >View<span class="visually-hidden"> {{ row.title }}</span></a
+                  >
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </sx-table>
+  } @else {
+    <div class="form-card">
+      <sx-empty-state icon="calendar-plus" title="List your first event">
+        <span slot="text"
+          >Events you submit show up here with their review status, how many people are going and how many
+          feeds include them.</span
+        >
+        <a slot="actions" sx-button appearance="primary" routerLink="/submit"
+          ><sx-icon name="plus" size="sm" />Submit an event</a
+        >
+      </sx-empty-state>
+    </div>
+  }
+} @else if (slow()) {
+  <sx-stats-row class="dash-stats">
+    @for (n of skeletons; track n) {
+      <sx-stat label="" [loading]="true" />
+    }
+  </sx-stats-row>
+  <sx-table>
+    <table class="table" aria-busy="true">
+      <thead>
+        <tr>
+          <th scope="col">Event</th>
+          <th scope="col">Date</th>
+          <th scope="col">Status</th>
+          <th scope="col" class="num">Going</th>
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (n of skeletons; track n) {
+          <tr class="skeleton-row">
+            <td><sx-skeleton width="70%" /></td>
+            <td><sx-skeleton width="60%" /></td>
+            <td><sx-skeleton width="4rem" /></td>
+            <td><sx-skeleton width="2rem" /></td>
+            <td></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </sx-table>
+}

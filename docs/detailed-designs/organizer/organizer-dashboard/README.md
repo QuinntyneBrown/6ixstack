@@ -165,3 +165,20 @@ no close button. A dismissed banner key is stored in the browser and filtered
 out on the next visit (`L2-053`).
 
 ![Sequence diagram for selecting and dismissing submission banners](diagrams/sequence-status-banners.png)
+
+## Decisions (journey 13)
+
+- Rows: the community's events and any the organizer submitted by email (a new organizer has no community yet);
+  never another community's. A `Rejected` event shows the status "Not approved". No server-side drafts exist, so
+  no Draft rows appear (the browser draft of `L2-044` stays on the submit page).
+- The Needs changes line is the fix for the reason: "Add the venue address" for a missing address.
+- Row actions: a Published title links to its page and Past rows offer View. Edit and Cancel arrive with journeys
+  14 and 15, so no row shows a button that does nothing yet.
+- Going sums `GoingCount` of upcoming published events. Feed subscribers reads `Community.FeedSubscriberCount`,
+  a stored figure until feed requests are counted (seeded 1,204 for GTA Azure Community).
+- Banners: success "It’s in the list, the calendar and every matching feed." with View the listing and Share it;
+  warning for Needs changes and danger for Not approved (quoting the moderator's message, or the reason, with their
+  first name). "Edit and resubmit", "Add the address" and "Ask a question" join with journeys 14 and 28. The
+  unverified banner's Resend verification email sends a new 24-hour link. Dismissals live in `localStorage` only.
+- The seed adds "Azure Bicep clinic" (Needs changes, sent back by Jordan for a missing address).
+

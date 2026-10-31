@@ -1,0 +1,31 @@
+// Local layout, ported from docs/mocks/assets/ui.css (page title with action, stats row spacing).
+:host {
+  display: block;
+}
+.dash-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacingHorizontalL);
+}
+.submission-banner {
+  margin-bottom: var(--spacingHorizontalXXL);
+}
+.dash-stats {
+  margin-bottom: var(--sx-space-8);
+}
+.dash-row__title {
+  font: var(--sx-text-label);
+}
+.dash-row__reason {
+  margin-top: var(--spacingHorizontalXXS);
+  color: var(--colorStatusWarningForeground1);
+  font: var(--sx-text-caption);
+}
+.form-card {
+  padding: var(--spacingHorizontalXXL);
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadius2XLarge);
+  background: var(--colorNeutralBackground1);
+}

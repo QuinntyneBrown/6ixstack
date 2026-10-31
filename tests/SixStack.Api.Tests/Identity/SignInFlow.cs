@@ -24,4 +24,20 @@ public static class SignInFlow
         var start = body.IndexOf("token=", StringComparison.Ordinal) + "token=".Length;
         return new string(body[start..].TakeWhile(c => !char.IsWhiteSpace(c)).ToArray());
     }
+
+    /// <summary>Opens a sign-in link with <paramref name="client"/> and echoes the XSRF token on later requests.</summary>
+    public static async Task<HttpResponseMessage> RedeemAsync(this HttpClient client, string token)
+    {
+        var response = await client.GetAsync($"/auth/redeem?token={Uri.EscapeDataString(token)}");
+        var xsrf = response.Headers.TryGetValues("Set-Cookie", out var cookies)
+            ? cookies.Select(c => c.Split(';')[0]).FirstOrDefault(c => c.StartsWith("XSRF-TOKEN=", StringComparison.Ordinal))?["XSRF-TOKEN=".Length..]
+            : null;
+        client.DefaultRequestHeaders.Remove("X-XSRF-TOKEN");
+        if (xsrf is not null)
+        {
+            client.DefaultRequestHeaders.Add("X-XSRF-TOKEN", Uri.UnescapeDataString(xsrf));
+        }
+
+        return response;
+    }
 }

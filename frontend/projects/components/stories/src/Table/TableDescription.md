@@ -1,0 +1,1 @@
+A table holds comparable rows, such as an organizer's events. Project a plain `<table class="table">`; a sortable header carries `aria-sort` and a button, and `.num` cells align right. It scrolls sideways on narrow screens.

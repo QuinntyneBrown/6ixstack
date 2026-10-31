@@ -72,6 +72,9 @@ namespace SixStack.Infrastructure.Persistence.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<int>("FeedSubscriberCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Initials")
                         .IsRequired()
                         .HasMaxLength(4)

@@ -21,3 +21,27 @@ export async function withUnreadCount(page: Page, count: number): Promise<void> 
     }),
   );
 }
+
+/** Signs a brand-new address in through the real magic link, as a first-time organizer would. */
+export async function signInWithLink(page: Page, email: string): Promise<void> {
+  const requested = await page.request.post('/api/auth/sign-in-links', { data: { email } });
+  if (!requested.ok()) throw new Error(`Sign-in link failed: ${requested.status()}`);
+  for (let attempt = 0; attempt < 30; attempt++) {
+    const mail = (await (
+      await page.request.get(`/api/dev/mailbox?to=${encodeURIComponent(email)}`)
+    ).json()) as {
+      subject: string;
+      textBody: string;
+    }[];
+    const link = mail
+      .find((m) => m.subject === 'Your 6ixstack sign-in link')
+      ?.textBody.match(/https:\/\/\S+redeem\S+/)?.[0];
+    if (link) {
+      const url = new URL(link);
+      await page.goto(url.pathname + url.search);
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+  throw new Error(`No sign-in link reached ${email}`);
+}

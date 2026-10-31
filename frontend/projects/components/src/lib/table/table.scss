@@ -1,0 +1,54 @@
+// Ported from docs/mocks/assets/ui.css (.table-wrap, .table). Unencapsulated, but every rule is scoped to
+// sx-table so it styles only the projected table.
+sx-table {
+  display: block;
+  overflow-x: auto;
+  border: 1px solid var(--colorNeutralStroke2);
+  border-radius: var(--borderRadiusXLarge);
+  background: var(--colorNeutralBackground1);
+}
+sx-table .table {
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--sx-text-body-sm);
+}
+sx-table .table th,
+sx-table .table td {
+  text-align: left;
+  padding: var(--spacingHorizontalM) var(--spacingHorizontalL);
+  border-bottom: 1px solid var(--colorNeutralStroke2);
+  vertical-align: middle;
+}
+sx-table .table th {
+  background: var(--colorNeutralBackground2);
+  font: var(--sx-text-label);
+  color: var(--colorNeutralForeground2);
+  white-space: nowrap;
+}
+sx-table .table tbody tr:last-child td {
+  border-bottom: 0;
+}
+sx-table .table tbody tr:hover {
+  background: var(--colorSubtleBackgroundHover);
+}
+sx-table .table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+sx-table .table th[aria-sort] button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--spacingHorizontalXS);
+  align-items: center;
+}
+sx-table .table th[aria-sort] button:focus-visible {
+  outline: var(--sx-focus-ring-width) solid var(--colorStrokeFocus2);
+  outline-offset: 2px;
+}
+sx-table .table th[aria-sort='ascending'] button::after {
+  content: '↑';
+}
+sx-table .table th[aria-sort='descending'] button::after {
+  content: '↓';
+}

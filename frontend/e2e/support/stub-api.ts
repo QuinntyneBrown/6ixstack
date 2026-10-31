@@ -322,3 +322,38 @@ export async function failFeedCreation(page: Page): Promise<() => Promise<void>>
   await page.route('**/api/feeds', handler);
   return () => page.unroute('**/api/feeds', handler);
 }
+
+/** Delays GET /api/organizer/events by `ms`. */
+export async function slowDashboard(page: Page, ms: number): Promise<void> {
+  await page.route(
+    '**/api/organizer/events',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await new Promise((resolve) => setTimeout(resolve, ms));
+      await route.fulfill({ response });
+    }),
+  );
+}
+
+/** Makes GET /api/organizer/events fail with a 500 until the returned function is called. */
+export async function failDashboard(page: Page): Promise<() => Promise<void>> {
+  const handler = (route: import('@playwright/test').Route) =>
+    route.fulfill({
+      status: 500,
+      contentType: 'application/problem+json',
+      body: '{"status":500,"referenceCode":"4E8C-21AA"}',
+    });
+  await page.route('**/api/organizer/events', handler);
+  return () => page.unroute('**/api/organizer/events', handler);
+}
+
+/** Answers GET /api/organizer/events with the real dashboard but this banner, for stable banner screenshots. */
+export async function withDashboardBanner(page: Page, banner: Record<string, unknown>): Promise<void> {
+  await page.route(
+    '**/api/organizer/events',
+    guarded(page, async (route) => {
+      const response = await route.fetch();
+      await route.fulfill({ response, json: { ...(await response.json()), banner } });
+    }),
+  );
+}
