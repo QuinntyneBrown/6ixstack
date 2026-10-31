@@ -140,6 +140,25 @@ so the page renders a ready-made model and holds no business rules.
 The `Events` table has a unique index on `Slug` so the lookup meets the 200 ms
 95th-percentile target in `L2-087`.
 
+### Decisions (journey 02)
+
+- The open data points become fields on `Event`: `PriceNote` ("includes lunch"), `PriceDetail` ("Student
+  tickets $15 with a valid ID"), `LivestreamNote` (also used as the streaming platform line), `Capacity`,
+  `AttendedCount`, `SlidesUrl`, `PreviousStartsAtUtc` and `TimeChangedAtUtc`, `IsConfirmed`, `NoteTitle` and
+  `NoteText`, an ordered `AgendaItems` collection (`StartsAtLocal`, `Title`), and `Venue.TravelNotes`. The submit and
+  edit forms (journeys 04 and 14) decide how organizers fill them; until then the seed holds them.
+- Alerts show in this order: cancelled, ended, countdown, time change, sold out, confirmed, organizer note.
+- A sold-out event keeps its ticket action (the ticket page runs the waitlist) and adds the sold-out alert.
+- Only streaming events have the join window; a hybrid event's stream is described in the facts.
+- Below one day the countdown reads "Starts in N hours" (or "Starts in less than an hour").
+- Past events keep Report a problem and drop Share, as the `event-detail/past` mock shows no share action.
+- The docked bar appears only for upcoming events with a ticket or register action.
+- Directions link to `https://www.google.com/maps/search/?api=1&query={venue, address, city}` until the map
+  provider is chosen (journey 16).
+- The detail document itself is served by the SPA host with status 200; the page shows `NotFoundPage` when the
+  API answers 404 (the host-level 404 stays open with the hosting choice, ADR 0006).
+- The venue map and the stream-origin map arrive with journey 16; until then those sections show the facts only.
+
 Open points:
 
 - The domain model has no field for the price note ("includes lunch", "Student
