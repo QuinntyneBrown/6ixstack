@@ -236,12 +236,14 @@ export class ReviewQueuePage {
     });
   }
 
-  /** Takes a decided card out of the list and moves focus to its neighbour, so J and K carry on. */
+  /** Takes a decided card out of the list, moves focus to its neighbour so J and K carry on, and refreshes the summary. */
   private remove(card: ReviewCardData): void {
     const list = this.cards();
     const index = list.findIndex((c) => c.id === card.id);
     const neighbour = list[index + 1] ?? list[index - 1];
     this.removed.update((s) => new Set(s).add(card.id));
+    // Refresh in the background so the summary's counts follow the decision.
+    this.reload.update((n) => n + 1);
     if (neighbour) {
       queueMicrotask(() =>
         document.querySelector<HTMLElement>(`.review-card[data-id="${neighbour.id}"]`)?.focus(),

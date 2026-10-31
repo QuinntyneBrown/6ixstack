@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { AppShell } from './app-shell';
 
 /** One submission card in the review queue. */
@@ -67,6 +67,12 @@ export class ReviewQueuePage {
 
   cardAt(index: number): ReviewCardPart {
     return new ReviewCardPart(this.cards.nth(index));
+  }
+
+  /** The "N waiting" count from the summary. */
+  async waitingCount(): Promise<number> {
+    await expect(this.summary).toHaveText(/^\d+ waiting/);
+    return Number((await this.summary.innerText()).match(/^(\d+) waiting/)?.[1] ?? NaN);
   }
 
   async titles(): Promise<string[]> {

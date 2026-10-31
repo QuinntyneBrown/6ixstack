@@ -47,6 +47,7 @@ test.describe('Reject a submission', () => {
     const { title, email } = await freshSubmission(page, unique('Trading masterclass'));
     const queue = new ReviewQueuePage(page);
     await queue.open();
+    const waiting = await queue.waitingCount();
     await queue.card(title).reject.click();
     const dialog = new RejectSubmissionDialog(page);
 
@@ -54,6 +55,7 @@ test.describe('Reject a submission', () => {
 
     await expect(dialog.panel).toBeHidden();
     await expect(queue.card(title).root).toHaveCount(0);
+    await expect(queue.summary).toHaveText(new RegExp(`^${waiting - 1} waiting`));
     const toastTitle = `Rejected “${title}”`;
     await expect(queue.toast(toastTitle)).toContainText('Toronto Test Meetup was emailed your reason.');
     await queue.toastAction(toastTitle, 'View email').click();
