@@ -1,4 +1,5 @@
 import { Scenario } from './scenario';
+import { scenario as dockedActionBar } from './DockedActionBar';
 import { scenario as description } from './Description';
 import { scenario as personLink } from './PersonLink';
 import { scenario as avatar } from './Avatar';
@@ -27,6 +28,7 @@ import { scenario as toast } from './Toast';
 /** Every scenario, by name. Add one file per component and register it here. */
 export const SCENARIOS: Record<string, Scenario> = Object.fromEntries(
   [
+    dockedActionBar,
     description,
     personLink,
     avatar,

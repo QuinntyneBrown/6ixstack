@@ -189,4 +189,17 @@
       </div>
     </aside>
   </div>
+  @if (e.dockedBar; as bar) {
+    <sx-docked-action-bar [title]="bar.when" [summary]="bar.summary">
+      <a
+        slot="action"
+        sx-button
+        appearance="primary"
+        [href]="bar.action.url"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ bar.action.label }}</a
+      >
+    </sx-docked-action-bar>
+  }
 }
