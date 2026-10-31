@@ -81,6 +81,22 @@ Angular workspace in `frontend/` with projects `sixstack` (the app), `api`, `com
 - Every component has a story folder `frontend/projects/components/stories/src/<Name>/`: `index.stories.ts` (meta + re-exports; the only file Storybook globs), one `<Name><Story>.stories.ts` per example (`Default` first), and `<Name>Description.md` + `<Name>BestPractices.md`, laid out like the Fluent UI v9 docsite. Run `npm run build-storybook` from `frontend/` after changing a component's API; CI builds it on every PR.
 - New components also get a perf-test scenario in `frontend/projects/perf-test/src/scenarios/`, modelled on Fluent UI's `apps/perf-test`; see that project's README for running it.
 
+## Components library is mandatory (CRITICAL)
+
+- The `sixstack` application MUST be built from the `components` library
+  (`frontend/projects/components`, `sx-*`). Never hand-write markup, CSS, icons,
+  overlays or toasts the library already provides. Use the library component,
+  Angular CDK `Dialog` with `DialogShell`, and `ToastService` with
+  `ToastRegion`/`Toast`.
+- `docs/screen-composition.md` is binding. Before implementing any page,
+  dialog, notification or shell part, read its entry and use exactly the
+  components it lists. Build locally only the UI it marks as local.
+- If the library lacks something the entry needs, STOP. Update the design
+  system catalogue (`docs/design-system/`) and the library first. Do not work
+  around it in the app.
+- Keep `docs/screen-composition.md` aligned with the mocks and the design
+  system catalogue.
+
 ## E2E architecture (Playwright)
 
 - Run the relevant Playwright tests for UI changes, including visual regression; update baselines only for intentional design changes.
