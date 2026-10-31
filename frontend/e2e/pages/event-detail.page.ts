@@ -1,4 +1,5 @@
 import { Locator, Page } from '@playwright/test';
+import { AddToCalendarDialog } from './add-to-calendar.dialog';
 import { AppShell } from './app-shell';
 
 /** The event detail page (`/events/:slug`). */
@@ -84,6 +85,13 @@ export class EventDetailPage {
 
   action(name: string | RegExp): Locator {
     return this.aside.getByRole('link', { name }).or(this.aside.getByRole('button', { name }));
+  }
+
+  async openAddToCalendar(): Promise<AddToCalendarDialog> {
+    await this.action('Add to my calendar').click();
+    const dialog = new AddToCalendarDialog(this.page);
+    await dialog.dialog.waitFor();
+    return dialog;
   }
 
   get caption(): Locator {

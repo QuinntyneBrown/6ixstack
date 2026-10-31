@@ -175,7 +175,9 @@
           <a sx-button block [routerLink]="follow.href">{{ follow.label }}</a>
         }
         @if (e.actions.addToCalendar) {
-          <button sx-button block type="button"><sx-icon name="calendar-plus" />Add to my calendar</button>
+          <button sx-button block type="button" (click)="openAddToCalendar(e, $event.currentTarget)">
+            <sx-icon name="calendar-plus" />Add to my calendar
+          </button>
         }
         @if (e.actions.share || e.actions.report) {
           <div class="cluster detail-actions__secondary">

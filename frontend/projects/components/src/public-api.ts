@@ -34,3 +34,4 @@ export * from './lib/avatar/avatar';
 export * from './lib/person/person-link';
 export * from './lib/description/description';
 export * from './lib/docked-action-bar/docked-action-bar';
+export * from './lib/option-button/option-button';

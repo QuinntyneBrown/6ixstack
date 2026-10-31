@@ -1,0 +1,1 @@
+An option button is one large choice in a list of ways to do something, such as the calendar apps in Add to my calendar. Use it on an `<a>` when the choice opens a page and on a `<button>` when it runs an action. `busy` sets `aria-busy` and shows a spinner in place of the end icon while the other options stay usable.
