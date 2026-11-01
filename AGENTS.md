@@ -34,6 +34,7 @@ docs/
   prompts/                    ordered implementation prompts: 00 scaffold, then one per journey in journey.md
   adr/                        architecture decision records for choices the designs leave open
   demos/                      one folder per journey: narrated demo.mp4 (Git LFS), screenshots, narration, credits
+  events/                     researched upcoming-event lists, one file per month and region, the source for CLI imports
 .claude/skills/, .agents/skills/  agent skills; keep both copies in sync
 .github/                      CI and deploy workflows and copilot-instructions.md
 ```
