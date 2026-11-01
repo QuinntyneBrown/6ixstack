@@ -15,6 +15,7 @@ namespace SixStack.Api.Controllers;
 [ApiController]
 [Route("api/admin/events")]
 [Authorize(Policy = AuthPolicies.AdminApi)]
+[AdminBodyLimit]
 public sealed class AdminEventsController(ISender sender) : ControllerBase
 {
     /// <summary>Lists events (L2-115): every status but deleted unless <c>status</c> is given, ordered by start.</summary>
