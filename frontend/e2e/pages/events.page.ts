@@ -100,6 +100,17 @@ export class EventsPage {
     await this.search.press('Enter');
   }
 
+  /** How many pixels of the search placeholder the box cuts off; 0 when it shows in full. */
+  async searchPlaceholderOverflow(): Promise<number> {
+    return this.search.evaluate((input: HTMLInputElement) => {
+      const style = getComputedStyle(input);
+      const context = document.createElement('canvas').getContext('2d')!;
+      context.font = style.font;
+      const room = input.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      return Math.max(0, Math.ceil(context.measureText(input.placeholder).width - room));
+    });
+  }
+
   /** Searches and returns the `q` the page sent to the API. */
   async searchAndCaptureQuery(text: string): Promise<string | null> {
     const request = this.page.waitForRequest(
