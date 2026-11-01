@@ -1,0 +1,131 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Event administration from the CLI
+
+package "SixStack.Cli" {
+  class CliApp {
+    +{static} Usage : string
+    +{static} RunAsync(args, services, output, input, ct) : Task<int>
+  }
+  class EventsCommand {
+    +RunAsync(args, ct) : Task<int>
+    -Guard(preview) : int?
+    -Fail(exception) : int
+  }
+  class CliArguments {
+    +Positionals : IReadOnlyList<string>
+    +Has(flag) : bool
+    +Get(option) : string?
+    +{static} Parse(args, options, flags) : CliArguments
+  }
+  class CliCurrentUser {
+    +UserId : Guid?
+    +Role : UserRole?
+    +SignIn(userId) : void
+  }
+  class CliAuditLog {
+    +Record(action, targetType, targetId, details) : void
+  }
+  enum ExitCodes {
+    Success = 0
+    Usage = 1
+    Validation = 2
+    NotFound = 3
+    Conflict = 4
+    Actor = 5
+    NotConfirmed = 6
+    Unexpected = 10
+  }
+}
+
+package "SixStack.Application.EventAdmin" {
+  class ListAdminEventsQuery {
+    +Status : EventStatus?
+    +From : DateOnly?
+    +To : DateOnly?
+    +Search : string?
+    +Take : int
+  }
+  class GetAdminEventQuery {
+    +IdOrSlug : string
+    +IncludeContact : bool
+  }
+  class AddAdminEventCommand {
+    +form fields
+    +Apply : bool
+    +{static} From(patch, apply) : AddAdminEventCommand
+  }
+  class UpdateAdminEventCommand {
+    +IdOrSlug : string
+    +Patch : EventDetailsPatch
+    +IfVersion : Guid?
+    +Apply : bool
+  }
+  class DeleteAdminEventCommand {
+    +IdOrSlug : string
+    +IfVersion : Guid?
+    +Apply : bool
+  }
+  class GetModeratorActorQuery {
+    +Email : string
+  }
+  class EventDetailsPatch {
+    +nullable form fields
+    +ApplyTo(form) : EventDetailsFormDto
+    +{static} ChangedFields(before, after) : IReadOnlyList<string>
+  }
+  class AdminEventDto
+  class AdminEventSummaryDto
+  class AdminWriteResultDto {
+    +Action : string
+    +DryRun : bool
+    +Changes : IReadOnlyList<string>
+    +Event : AdminEventSummaryDto
+  }
+  class AdminEventLookup {
+    +{static} FindAsync(db, idOrSlug, ct) : Task<Event>
+  }
+}
+
+package "SixStack.Application" {
+  interface IEventDetailsInput
+  abstract class "EventDetailsValidator<T>" as EDV
+  class UpdateOrganizerEventCommand
+  interface ICurrentUser
+  interface IAuditLog
+  class AuditLog
+}
+
+package "SixStack.Domain" {
+  class Event {
+    +Status : EventStatus
+    +Version : Guid
+    +Edit(details, now) : IReadOnlyList<string>
+    +Delete() : void
+  }
+}
+
+CliApp ..> EventsCommand : events
+EventsCommand ..> CliArguments
+EventsCommand ..> CliCurrentUser : signs in actor
+EventsCommand ..> ExitCodes
+CliCurrentUser ..|> ICurrentUser
+CliAuditLog ..|> IAuditLog
+CliAuditLog o-- AuditLog : decorates
+AddAdminEventCommand ..|> IEventDetailsInput
+EDV <|-- "AddAdminEventCommandValidator"
+UpdateAdminEventCommand o-- EventDetailsPatch
+UpdateAdminEventCommand ..> UpdateOrganizerEventCommand : applies through
+AdminWriteResultDto o-- AdminEventSummaryDto
+DeleteAdminEventCommand ..> Event : Delete()
+AdminEventLookup ..> Event
+@enduml

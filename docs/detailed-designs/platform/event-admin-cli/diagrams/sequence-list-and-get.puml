@@ -1,0 +1,38 @@
+@startuml
+title UML sequence behaviour — List and get events
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Operator" as op
+box "Backend — 6ixstack CLI (SixStack.Cli)" #E0F2FE
+  participant "CliApp" as app
+  participant "EventsCommand" as cmd
+end box
+box "Backend — 6ixstack Application" #ECFDF3
+  participant "ListAdminEventsQueryHandler\nGetAdminEventQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+op -> app : events list ~--status published ~--from 2026-11-03 ~--json
+app -> cmd : RunAsync(args)
+cmd -> cmd : CliArguments.Parse; bad option or value exits 1 (L2-105)
+cmd -> handler : Send ListAdminEventsQuery
+handler -> db : Events where status, Toronto dates, search; order by start; take
+db --> handler : Rows
+handler --> cmd : AdminEventListDto, no contact fields (L2-113)
+cmd --> op : { "count", "events": [...] } exit 0 (L2-110)
+op -> app : events get azure-toronto-meetup
+app -> cmd : RunAsync(args)
+cmd -> handler : Send GetAdminEventQuery(idOrSlug, IncludeContact false)
+handler -> db : Event by id or slug, any status
+alt no match
+  handler --> cmd : NotFoundException
+  cmd --> op : "No event matches 'azure-toronto-meetup'." exit 3 (L2-106)
+else found
+  handler --> cmd : AdminEventDto with form fields and version
+  cmd --> op : name: value lines, exit 0 (L2-106)
+end
+@enduml

@@ -1,0 +1,34 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+title Components — Event administration from the CLI
+
+Container_Boundary(cli, "6ixstack CLI") {
+  Component(cliapp, "CliApp", "Static entry point", "migrate, seed, reset unchanged; routes events")
+  Component(events, "EventsCommand", "Command runner", "Parses, guards writes, prints table or JSON, maps exit codes")
+  Component(args, "CliArguments", "Parser", "Positional words, ~--options and flags per command")
+  Component(user, "CliCurrentUser", "ICurrentUser", "The resolved moderator actor")
+  Component(audit, "CliAuditLog", "IAuditLog decorator", "Appends via CLI to the details")
+}
+Container_Boundary(app, "Application layer") {
+  Component(admin, "EventAdmin handlers", "MediatR", "List, Get, Add, Update, Delete, GetModeratorActor")
+  Component(validator, "EventDetailsValidator", "FluentValidation", "L2-041, L2-042, L2-081 rules")
+  Component(update, "UpdateOrganizerEventCommandHandler", "MediatR", "Moderator edit path, L2-054, L2-062")
+  Component(auditlog, "AuditLog", "IAuditLog", "Adds AuditEntry to the unit of work")
+  Component(slugs, "EventSlugs", "Helper", "Unique slug from the title")
+}
+ContainerDb(db, "6ixstack database", "SQL", "Events, users, audit entries")
+
+Rel(cliapp, events, "events …")
+Rel(events, args, "Parses with")
+Rel(events, user, "Signs in the actor")
+Rel(events, admin, "Sends requests", "ISender")
+Rel(admin, validator, "Validates with")
+Rel(admin, update, "Applies updates through", "ISender")
+Rel(admin, slugs, "Names new events with")
+Rel(admin, audit, "Records writes")
+Rel(update, audit, "Records EventEdited")
+Rel(audit, auditlog, "Decorates")
+Rel(admin, db, "Reads and writes", "EF Core")
+@enduml

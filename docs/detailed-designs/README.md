@@ -18,7 +18,7 @@ PNG images the README shows. Every design traces to L2 requirements in
 | Domain (`SixStack.Domain`) | .NET class library | Entities and enums with no dependencies |
 | Infrastructure (`SixStack.Infrastructure`) | .NET class library, EF Core | `AppDbContext`, migrations, email sender, geocoder, link checker, outbox processor, clock |
 | 6ixstack database | SQL Server | Events, communities, speakers, accounts, tokens, reports, notifications, audit entries, outbox |
-| 6ixstack CLI (`SixStack.Cli`) | .NET console | Migrate, seed and reset the database |
+| 6ixstack CLI (`SixStack.Cli`) | .NET console | Migrate, seed and reset the database; list, read, add, update and soft-delete events (`platform/event-admin-cli`) |
 
 External systems: an email delivery provider `<TO SUPPLY>`, a geocoding service
 `<TO SUPPLY>`, a map basemap provider `<TO SUPPLY>`, and the calendar
@@ -40,4 +40,4 @@ Business rules live in handlers and domain entities, never in controllers.
 | `moderation` | `review-queue`, `automated-checks`, `approve-submission`, `reject-submission` |
 | `notifications` | `in-app-notifications`, `email-notifications` |
 | `site` | `app-shell`, `static-pages`, `contact-form`, `toasts-and-banners`, `status-pages` |
-| `platform` | `time-zones`, `security-hardening`, `privacy-and-retention`, `performance-budgets`, `accessibility`, `observability` |
+| `platform` | `time-zones`, `security-hardening`, `privacy-and-retention`, `performance-budgets`, `accessibility`, `observability`, `event-admin-cli` |

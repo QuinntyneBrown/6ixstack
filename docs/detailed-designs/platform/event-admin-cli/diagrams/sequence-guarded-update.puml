@@ -1,0 +1,57 @@
+@startuml
+title UML sequence behaviour — Guarded update
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Operator" as op
+box "Backend — 6ixstack CLI (SixStack.Cli)" #E0F2FE
+  participant "EventsCommand" as cmd
+  participant "CliCurrentUser" as user
+end box
+box "Backend — 6ixstack Application" #ECFDF3
+  participant "GetModeratorActorQueryHandler" as actor
+  participant "UpdateAdminEventCommandHandler" as admin
+  participant "UpdateOrganizerEventCommandHandler" as edit
+  participant "CliAuditLog → AuditLog" as audit
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+op -> cmd : events update slug ~--title "New title" ~--actor jordan@6ixstack.dev
+cmd -> actor : Send GetModeratorActorQuery(email)
+alt missing, unknown or not a moderator
+  actor --> cmd : ForbiddenAccessException
+  cmd --> op : exit 5, nothing changed (L2-111)
+end
+actor --> cmd : user id
+cmd -> user : SignIn(user id) as Moderator
+cmd -> admin : Send UpdateAdminEventCommand(Apply false)
+admin -> db : Event by id or slug, not deleted
+admin -> admin : IfVersion, read-only check, merge patch, validate (L2-108)
+alt invalid
+  admin --> cmd : ValidationException
+  cmd --> op : field: message lines, exit 2
+end
+admin --> cmd : Preview: changes ["title"], version
+cmd --> op : Preview
+alt ~--dry-run
+  cmd --> op : exit 0, nothing saved (L2-111)
+else no ~--yes and not interactive, or answer not y
+  cmd --> op : "Nothing changed. Re-run with ~--yes to apply." exit 6
+else ~--yes or answer y
+  cmd -> admin : Send UpdateAdminEventCommand(Apply true, IfVersion = preview version)
+  admin -> edit : Send UpdateOrganizerEventCommand (moderator path, L2-062)
+  edit -> audit : Record EventEdited "title; via CLI" (L2-112)
+  edit -> db : SaveChanges with Version concurrency token
+  alt changed meanwhile
+    edit --> cmd : EditConflictException
+    cmd --> op : "Someone else changed this event." exit 4
+  else saved
+    edit --> admin : EventSavedDto
+    admin --> cmd : Result
+    cmd --> op : "Updated", exit 0
+  end
+end
+@enduml

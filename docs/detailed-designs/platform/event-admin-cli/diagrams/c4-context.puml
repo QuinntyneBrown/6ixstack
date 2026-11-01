@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Event administration from the CLI
+
+Person(operator, "Operator", "Maintainer, or a coding agent working for one, acting as a named moderator")
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(cli, "6ixstack CLI", "sixstack events list | get | add | update | delete")
+System(sixstack, "6ixstack", "Calendar of developer events in Toronto, the GTA and online")
+SystemDb_Ext(azsql, "Azure SQL (sixstack-sql / sixstack)", "Production database behind a firewall")
+
+Rel(operator, cli, "Runs commands with ~--actor, ~--yes or ~--dry-run, ~--json", "Terminal")
+Rel(cli, azsql, "Reads and writes events and audit entries", "TDS, ConnectionStrings__Default")
+Rel(sixstack, azsql, "Reads published events", "TDS")
+Rel(visitor, sixstack, "Browses events", "HTTPS")
+@enduml

@@ -1,12 +1,12 @@
 # Estimates
 
-- Overall effort: 157 days
-- Complete: 77%
+- Overall effort: 164 days
+- Complete: 74%
 
 | Subsystem | Effort | Complete |
 |---|---|---|
 | [site](site.md) | 19 days | 76% |
-| [platform](platform.md) | 28 days | 28% |
+| [platform](platform.md) | 35 days | 22% |
 | [discovery](discovery.md) | 20 days | 94% |
 | [feeds-and-sharing](feeds-and-sharing.md) | 17 days | 92% |
 | [submissions](submissions.md) | 9 days | 85% |
@@ -24,3 +24,4 @@
 4. Discovery month-calendar; feeds-and-sharing ready-made-feeds, serve-calendar-feed, build-custom-feed and share-event
 5. Organizer; discovery event-map and featured-event; directory communities
 6. Notifications; submissions report-problem; directory speakers; remaining identity; site contact-form and static-pages
+7. Platform event-admin-cli
