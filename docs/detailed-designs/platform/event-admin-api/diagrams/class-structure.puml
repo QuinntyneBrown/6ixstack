@@ -20,7 +20,7 @@ package "SixStack.Api" {
     +Delete(idOrSlug, dryRun, ct) : IActionResult
   }
   class ApiTokenAuthenticationHandler {
-    +{static} Scheme = "ApiToken"
+    +{static} SchemeName = "ApiToken"
     #HandleAuthenticateAsync() : AuthenticateResult
     #HandleChallengeAsync(properties) : Task
     #HandleForbiddenAsync(properties) : Task
@@ -29,7 +29,7 @@ package "SixStack.Api" {
     +AddAdminApi(services, configuration) : IServiceCollection
   }
   class AdminApiRateLimit <<static>> {
-    +PartitionKey(token) : string?
+    +AddAdminApiRateLimit(services, configuration) : IServiceCollection
   }
   class ApiAuditLog {
     +{static} Marker = "via API"
@@ -37,6 +37,7 @@ package "SixStack.Api" {
   }
   class AdminBodyLimitAttribute {
     +MaxBytes = 65536
+    +OnResourceExecuting(context) : void
   }
   class AdminApiSecurityFilter
   class HttpCurrentUser
