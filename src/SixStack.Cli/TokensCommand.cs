@@ -38,6 +38,8 @@ public sealed class TokensCommand(IServiceProvider services, TextWriter output, 
             return args.FirstOrDefault() switch
             {
                 "create" => await CreateAsync(scope.ServiceProvider, args[1..], cancellationToken),
+                "list" => await ListAsync(scope.ServiceProvider, args[1..], cancellationToken),
+                "revoke" => await RevokeAsync(scope.ServiceProvider, args[1..], cancellationToken),
                 null => throw new CliUsageException("Name a tokens command.\n" + CliApp.Usage),
                 var other => throw new CliUsageException($"Unknown tokens command '{other}'.\n" + CliApp.Usage),
             };
@@ -83,6 +85,46 @@ public sealed class TokensCommand(IServiceProvider services, TextWriter output, 
         }
 
         return await WriteAsync(scope, a, apply => new CreateApiTokenCommand(a.Get("--name"), days, apply), cancellationToken);
+    }
+
+    private async Task<int> ListAsync(IServiceProvider scope, string[] args, CancellationToken cancellationToken)
+    {
+        var a = CliArguments.Parse(args, [Actor], [Json]);
+        NoPositionals(a, "tokens list");
+        await SignInActorAsync(scope, a, cancellationToken);
+        var list = await scope.GetRequiredService<ISender>().Send(new ListApiTokensQuery(), cancellationToken);
+        if (a.Has(Json))
+        {
+            await WriteJsonAsync(list);
+            return ExitCodes.Success;
+        }
+
+        var rows = list.Tokens.Select(t => new[] { t.Id.ToString(), t.Status, Utc(t.CreatedAtUtc), Utc(t.ExpiresAtUtc), Utc(t.LastUsedAtUtc), t.Name }).ToList();
+        string[] headers = ["ID", "STATUS", "CREATED", "EXPIRES", "LAST USED", "NAME"];
+        var widths = headers.Select((h, i) => rows.Select(r => r[i].Length).Prepend(h.Length).Max()).ToArray();
+        string Line(string[] cells) => string.Join("  ", cells.Select((c, i) => i == cells.Length - 1 ? c : c.PadRight(widths[i]))).TrimEnd();
+        await output.WriteLineAsync(Line(headers));
+        foreach (var row in rows)
+        {
+            await output.WriteLineAsync(Line(row));
+        }
+
+        await output.WriteLineAsync($"{list.Count} token(s).");
+        return ExitCodes.Success;
+    }
+
+    private async Task<int> RevokeAsync(IServiceProvider scope, string[] args, CancellationToken cancellationToken)
+    {
+        var a = CliArguments.Parse(args, [Actor], [Json, Yes, DryRun]);
+        if (a.Positionals.Count != 1)
+        {
+            throw new CliUsageException("Usage: sixstack tokens revoke <token-id>");
+        }
+
+        var id = Guid.TryParse(a.Positionals[0], out var tokenId)
+            ? tokenId
+            : throw new CliUsageException("<token-id> must be the id that tokens list prints.");
+        return await WriteAsync(scope, a, apply => new RevokeApiTokenCommand(id, apply), cancellationToken);
     }
 
     /// <summary>Resolves the moderator actor and signs it in, so every command acts on the actor's own tokens (L2-124).</summary>
