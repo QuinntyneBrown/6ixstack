@@ -76,8 +76,9 @@
   text-underline-offset: 0.15em;
   cursor: pointer;
 }
+// Wide enough for the whole placeholder, so the format control wraps below rather than clipping it.
 .filter-row__search {
-  flex: 1 1 14rem;
+  flex: 1 1 17rem;
 }
 .events-error {
   margin-top: var(--spacingHorizontalXXL);

@@ -96,4 +96,15 @@ test.describe('Events filters', () => {
 
     expect(sent).toHaveLength(100);
   });
+
+  test('the search placeholder shows in full at every width', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+    await expect(events.search).toHaveAttribute('placeholder', 'Search talks, groups, or venues');
+
+    for (const width of [320, 390, 640, 768, 1024, 1232, 1280, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      expect(await events.searchPlaceholderOverflow(), `clipped at ${width} px`).toBe(0);
+    }
+  });
 });

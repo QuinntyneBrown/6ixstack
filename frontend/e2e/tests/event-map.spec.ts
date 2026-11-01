@@ -194,4 +194,17 @@ test.describe('Event map', () => {
     await expect(detail.venueMapDots).toHaveCount(1);
     await expect(detail.venueMapDays).toHaveCount(0);
   });
+
+  test('every city label stays inside the map at every width', async ({ page }) => {
+    const events = new EventsPage(page);
+    await events.open();
+    const map = new EventMapPart(page);
+    await map.svg.waitFor();
+
+    for (const width of [390, 1024, 1280, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await map.svg.scrollIntoViewIfNeeded();
+      expect(await map.clippedCityLabels(), `clipped at ${width} px`).toEqual([]);
+    }
+  });
 });

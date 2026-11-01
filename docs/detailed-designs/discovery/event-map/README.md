@@ -222,6 +222,8 @@ filters and featured card are untouched (`L2-015`).
 
 - **Basemap**: the bundled shoreline and city labels from the mock, drawn in the SVG, so no external provider can
   fail. The panel's failure states are the map request and the deferred chunk.
+- **City labels** are centred on the city unless that would cross the 480-unit canvas edge; then they anchor 14
+  units inside it (`text-anchor` end or start), so Scarborough never clips (`L2-011`).
 - **Stream origins**: `Event.StreamOriginCity` (new, seeded for the streaming communities) labels the arc. The side
   comes from the source time zone's offset against Toronto at the event's start, west when behind. A stream without
   an origin city is labelled "Online".

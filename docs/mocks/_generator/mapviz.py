@@ -30,6 +30,20 @@ def proj(lng, lat):
     return (round(W / 2 + (lng + 79.55) * _HP * _N, 1), round(H * 0.42 - (lat - 43.73) * _N, 1))
 
 
+LABEL_INSET = 14
+CITY_CHAR = 6.4  # a 10 px monospace glyph plus 0.04em tracking
+
+
+def _label_anchor(x, text):
+    """Keep a city label inside the canvas: one that would cross an edge is anchored to the inset instead."""
+    half = len(text) * CITY_CHAR / 2
+    if x + half > W - LABEL_INSET:
+        return W - LABEL_INSET, "end"
+    if x - half < LABEL_INSET:
+        return LABEL_INSET, "start"
+    return x, "middle"
+
+
 def _regions():
     pts = [proj(x, y) for x, y in SHORE]
     line = " L".join(f"{x},{y}" for x, y in pts)
@@ -63,7 +77,9 @@ def event_map(events, focus_day=None, hovered=None, playing=False, timeline=True
     for label, lng, lat, kind in PLACES:
         x, y = proj(lng, lat)
         cls = "water" if kind == "water" else "city"
-        g.append(f'<text x="{x}" y="{y}" class="event-map__{cls}" text-anchor="middle">{label if kind == "water" else label.upper()}</text>')
+        text = label if kind == "water" else label.upper()
+        x, anchor = _label_anchor(x, text) if kind == "city" else (x, "middle")
+        g.append(f'<text x="{x}" y="{y}" class="event-map__{cls}" text-anchor="{anchor}">{text}</text>')
     tip = None
     per_side = {"west": 0, "east": 0}
     for idx, e in enumerate(streams_all):

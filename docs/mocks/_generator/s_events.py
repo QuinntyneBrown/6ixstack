@@ -32,7 +32,7 @@ def feature_skeleton():
 def search_box(query=""):
     v = f' value="{esc(query)}"' if query else ""
     return (f'<form class="search" role="search" action="{P("events", "no-results")}"><label class="visually-hidden" for="event-search">Search events</label>{icon("search")}'
-            f'<input class="input" id="event-search" type="search" placeholder="Search talks, groups, or neighbourhoods"{v}></form>')
+            f'<input class="input" id="event-search" type="search" placeholder="Search talks, groups, or venues"{v}></form>')
 
 
 def filters(fmt="all", pressed=(), counts=(14, 9, 7), hover_chip=None, skeleton=False, query=None):
