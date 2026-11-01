@@ -3,10 +3,13 @@ using SixStack.Infrastructure.Persistence;
 
 namespace SixStack.Cli;
 
-/// <summary>Runs one database command: migrate, seed or reset.</summary>
+/// <summary>Runs one database command (migrate, seed or reset) or an <c>events</c> command.</summary>
 public static class CliApp
 {
-    public const string Usage = "Usage: sixstack <migrate|seed|reset>";
+    public const string Usage = """
+        Usage: sixstack <migrate|seed|reset>
+               sixstack events <list|get|add|update|delete> [options]   (sixstack events --help)
+        """;
 
     /// <param name="input">The terminal to ask for confirmation, or null when input is redirected.</param>
     public static async Task<int> RunAsync(string[] args, IServiceProvider services, TextWriter output, TextReader? input = null, CancellationToken cancellationToken = default)

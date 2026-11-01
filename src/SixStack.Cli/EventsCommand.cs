@@ -41,6 +41,12 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
     public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
     {
         var json = args.Contains(Json);
+        if (args.Contains("--help"))
+        {
+            await output.WriteLineAsync(args[0] != "--help" && EventsHelp.Commands.TryGetValue(args[0], out var help) ? help : EventsHelp.Overview);
+            return ExitCodes.Success;
+        }
+
         try
         {
             using var scope = services.CreateScope();
@@ -52,8 +58,8 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
                 "add" => await AddAsync(scope.ServiceProvider, args[1..], cancellationToken),
                 "update" => await UpdateAsync(scope.ServiceProvider, args[1..], cancellationToken),
                 "delete" => await DeleteAsync(scope.ServiceProvider, args[1..], cancellationToken),
-                null => throw new CliUsageException("Name an events command. " + CliApp.Usage),
-                var other => throw new CliUsageException($"Unknown events command '{other}'. " + CliApp.Usage),
+                null => throw new CliUsageException("Name an events command.\n" + CliApp.Usage),
+                var other => throw new CliUsageException($"Unknown events command '{other}'.\n" + CliApp.Usage),
             };
         }
         catch (CliUsageException ex)
