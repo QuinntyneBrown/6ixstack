@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SixStack.Application.Common.Exceptions;
 using SixStack.Application.Common.Time;
 using SixStack.Application.EventAdmin;
+using SixStack.Domain.Exceptions;
 
 namespace SixStack.Cli;
 
@@ -20,6 +21,7 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
     private const string DryRun = "--dry-run";
     private const string Actor = "--actor";
     private const string File = "--file";
+    private const string IfVersion = "--if-version";
 
     /// <summary>Field flags and the event file property each one sets.</summary>
     private static readonly string[] FieldOptions =
@@ -48,6 +50,7 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
                 "list" => await ListAsync(sender, args[1..], cancellationToken),
                 "get" => await GetAsync(sender, args[1..], cancellationToken),
                 "add" => await AddAsync(scope.ServiceProvider, args[1..], cancellationToken),
+                "update" => await UpdateAsync(scope.ServiceProvider, args[1..], cancellationToken),
                 null => throw new CliUsageException("Name an events command. " + CliApp.Usage),
                 var other => throw new CliUsageException($"Unknown events command '{other}'. " + CliApp.Usage),
             };
@@ -59,6 +62,14 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
         catch (ForbiddenAccessException ex)
         {
             return await FailAsync(json, ExitCodes.Actor, "actor", ex.Message);
+        }
+        catch (EditConflictException ex)
+        {
+            return await FailAsync(json, ExitCodes.Conflict, "conflict", ex.Message);
+        }
+        catch (InvalidStatusTransitionException ex)
+        {
+            return await FailAsync(json, ExitCodes.Conflict, "conflict", ex.Message);
         }
         catch (NotFoundException ex)
         {
@@ -129,14 +140,23 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
         var a = CliArguments.Parse(args, [File, Actor, .. FieldOptions], [Json, Yes, DryRun]);
         NoPositionals(a, "events add [--file <event.json>] [field flags]");
         var patch = await PatchAsync(a, cancellationToken);
-        return await WriteAsync(scope, a, apply => AddAdminEventCommand.From(patch, apply), cancellationToken);
+        return await WriteAsync(scope, a, (apply, _) => AddAdminEventCommand.From(patch, apply), cancellationToken);
+    }
+
+    private async Task<int> UpdateAsync(IServiceProvider scope, string[] args, CancellationToken cancellationToken)
+    {
+        var a = CliArguments.Parse(args, [File, Actor, IfVersion, .. FieldOptions], [Json, Yes, DryRun]);
+        var idOrSlug = OnePositional(a, "events update <id-or-slug> [--file <patch.json>] [field flags]");
+        var patch = await PatchAsync(a, cancellationToken);
+        var expected = Version(a);
+        return await WriteAsync(scope, a, (apply, previewed) => new UpdateAdminEventCommand(idOrSlug, patch, previewed ?? expected, apply), cancellationToken);
     }
 
     /// <summary>
     /// The write guard (L2-111): sign in the actor, preview, then stop for a dry run, apply with --yes or an
     /// interactive "y", and otherwise write nothing.
     /// </summary>
-    private async Task<int> WriteAsync(IServiceProvider scope, CliArguments a, Func<bool, IRequest<AdminWriteResultDto>> request, CancellationToken cancellationToken)
+    private async Task<int> WriteAsync(IServiceProvider scope, CliArguments a, Func<bool, Guid?, IRequest<AdminWriteResultDto>> request, CancellationToken cancellationToken)
     {
         if (a.Has(Yes) && a.Has(DryRun))
         {
@@ -151,7 +171,7 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
         }
 
         scope.GetRequiredService<CliCurrentUser>().SignIn(await sender.Send(new GetModeratorActorQuery(actor), cancellationToken));
-        var preview = await sender.Send(request(false), cancellationToken);
+        var preview = await sender.Send(request(false, null), cancellationToken);
         var json = a.Has(Json);
         if (a.Has(DryRun))
         {
@@ -180,7 +200,8 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
             }
         }
 
-        await ReportAsync(json, await sender.Send(request(true), cancellationToken));
+        // Apply what was previewed: a change made since then is a conflict, not a silent overwrite.
+        await ReportAsync(json, await sender.Send(request(true, preview.Event.Version), cancellationToken));
         return ExitCodes.Success;
     }
 
@@ -259,6 +280,11 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
             IsFree = price is { } given ? given == 0 : patch.IsFree,
         };
     }
+
+    private static Guid? Version(CliArguments a) =>
+        a.Get(IfVersion) is not { } value ? null
+        : Guid.TryParse(value, out var version) ? version
+        : throw new CliUsageException($"{IfVersion} must be the version that events get prints.");
 
     private static DateOnly? Date(CliArguments a, string option) =>
         a.Get(option) is not { } value ? null
