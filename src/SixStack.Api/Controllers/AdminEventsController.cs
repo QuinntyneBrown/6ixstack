@@ -64,6 +64,17 @@ public sealed class AdminEventsController(ISender sender) : ControllerBase
         return e;
     }
 
+    /// <summary>
+    /// Adds an event, published at once (L2-116): 201 with its Location, or 200 with the preview for
+    /// <c>?dryRun=true</c> (L2-119). Absent fields take the CLI's defaults.
+    /// </summary>
+    [HttpPost]
+    public async Task<ActionResult<AdminWriteResultDto>> Add([FromBody] EventDetailsPatch body, [FromQuery] bool dryRun, CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(AddAdminEventCommand.From(body, apply: !dryRun), cancellationToken);
+        return dryRun ? Ok(result) : Created($"/api/admin/events/{result.Event.Id}", result);
+    }
+
     private DateOnly? Date(string? value, string parameter)
     {
         if (value is null)
