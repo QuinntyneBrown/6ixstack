@@ -83,6 +83,11 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
                 .ToDictionary(g => g.Key, g => g.Select(f => f.ErrorMessage).Distinct().ToArray());
             return await FailAsync(json, ExitCodes.Validation, "validation", "The event is not valid.", fields);
         }
+        catch (Exception ex)
+        {
+            // A driver's message can name the server, the database or the login, so only the type is printed (L2-113).
+            return await FailAsync(json, ExitCodes.Unexpected, "unexpected", $"Unexpected error ({ex.GetType().Name}). Details are not printed, to keep secrets out of the output.");
+        }
     }
 
     private async Task<int> ListAsync(ISender sender, string[] args, CancellationToken cancellationToken)
