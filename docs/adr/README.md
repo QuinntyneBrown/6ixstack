@@ -13,3 +13,4 @@ Short records of choices the requirements and designs left open. One file per de
 | [0007](0007-toasts-and-banners.md) | Toast and banner choices, and what waits for the offline cache |
 | [0008](0008-status-page-wiring-with-first-consumers.md) | Forbidden and server-error wiring arrive with their first consumers |
 | [0009](0009-server-side-sessions-behind-the-cookie.md) | Server-side sessions behind the data-protected cookie |
+| [0010](0010-azure-app-service-single-origin-hosting.md) | Azure App Service hosts the API and the web app on one origin |

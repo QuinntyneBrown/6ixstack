@@ -34,8 +34,8 @@ if (builder.Configuration.GetValue("Outbox:Enabled", true))
 var app = builder.Build();
 
 // Pipeline order is part of the design (platform/observability, platform/security-hardening).
-// 1 request logging, 2 security headers, 3 exception handling, 4 HSTS/HTTPS, 5 Swagger, 6 routing,
-// 7 authentication, 8 authorization, 9 CSRF, 10 endpoints.
+// 1 request logging, 2 security headers, 3 exception handling, 4 HSTS/HTTPS, 5 Swagger, 6 web app files,
+// 7 routing, 8 authentication, 9 authorization, 10 CSRF, 11 endpoints, 12 web app fallback.
 // Request logging stays outside the exception handler so handled statuses are logged as returned.
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<SecurityHeadersMiddleware>();
@@ -53,6 +53,10 @@ if (app.Configuration.GetValue("Swagger:Enabled", app.Environment.IsDevelopment(
     app.UseSwaggerUI();
 }
 
+// The built web app (wwwroot) is served on the API's origin without a session (ADR 0010).
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseRouting();
 app.UseRateLimiter();
 app.UseAuthentication();
@@ -61,6 +65,9 @@ app.UseMiddleware<CsrfProtectionMiddleware>();
 app.MapControllers();
 app.MapHealthChecks("/health/live", new() { Predicate = _ => false }).AllowAnonymous();
 app.MapHealthChecks("/health/ready", new() { Predicate = check => check.Tags.Contains("ready") }).AllowAnonymous();
+
+// Deep links load the web app; server routes never fall back to it.
+app.MapFallbackToFile("{*path:regex(^(?!(api|auth|health|feeds|e|swagger)(/|$)).*$)}", "index.html").AllowAnonymous();
 
 app.Run();
 
