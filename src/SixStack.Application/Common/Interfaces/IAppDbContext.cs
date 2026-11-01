@@ -24,6 +24,7 @@ public interface IAppDbContext
     DbSet<ContactMessage> ContactMessages { get; }
     DbSet<AuditEntry> AuditEntries { get; }
     DbSet<ReviewPresence> ReviewPresences { get; }
+    DbSet<ApiToken> ApiTokens { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

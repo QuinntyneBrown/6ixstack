@@ -61,6 +61,7 @@ public static class DependencyInjection
         services.Configure<SiteOptions>(configuration.GetSection(SiteOptions.Section));
         services.AddSingleton<IIcsWriter, IcsWriter>();
         services.AddScoped<ISecurityTokenService, SecurityTokenService>();
+        services.AddSingleton<IApiTokenHasher, ApiTokenHasher>();
         services.Configure<SubmissionChecksOptions>(configuration.GetSection(SubmissionChecksOptions.Section));
         services.AddSingleton<IGeocoder, LocalGeocoder>();
         if (configuration.GetValue<string>($"{SubmissionChecksOptions.Section}:LinkChecker") == "AssumeReachable")
