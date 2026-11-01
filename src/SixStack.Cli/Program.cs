@@ -9,7 +9,7 @@ var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
     ContentRootPath = AppContext.BaseDirectory,
 });
 builder.Configuration.AddEnvironmentVariables();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration).AddEventAdministration();
 
 using var host = builder.Build();
-return await CliApp.RunAsync(args, host.Services, Console.Out);
+return await CliApp.RunAsync(args, host.Services, Console.Out, Console.IsInputRedirected ? null : Console.In);

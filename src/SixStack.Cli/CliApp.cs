@@ -8,8 +8,14 @@ public static class CliApp
 {
     public const string Usage = "Usage: sixstack <migrate|seed|reset>";
 
-    public static async Task<int> RunAsync(string[] args, IServiceProvider services, TextWriter output, CancellationToken cancellationToken = default)
+    /// <param name="input">The terminal to ask for confirmation, or null when input is redirected.</param>
+    public static async Task<int> RunAsync(string[] args, IServiceProvider services, TextWriter output, TextReader? input = null, CancellationToken cancellationToken = default)
     {
+        if (args.Length > 0 && args[0] == "events")
+        {
+            return await new EventsCommand(services, output).RunAsync(args[1..], cancellationToken);
+        }
+
         if (args.Length != 1)
         {
             await output.WriteLineAsync(Usage);
