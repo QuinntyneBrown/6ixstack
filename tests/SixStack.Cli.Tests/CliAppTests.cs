@@ -35,7 +35,7 @@ public sealed class CliAppTests : IDisposable
 
         Assert.True(first > 0);
         Assert.Equal(first, await EventCount());
-        Assert.Contains("Database seeded.", output.ToString());
+        Assert.Equal(string.Concat(Enumerable.Repeat("Database seeded." + Environment.NewLine, 2)), output.ToString());
     }
 
     [Fact]
@@ -46,6 +46,7 @@ public sealed class CliAppTests : IDisposable
         Assert.Equal(0, await CliApp.RunAsync(["reset"], services, output));
 
         Assert.True(await EventCount() > 0);
+        Assert.Equal("Database reset, migrated and seeded." + Environment.NewLine, output.ToString());
     }
 
     [Theory]

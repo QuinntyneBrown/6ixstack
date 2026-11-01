@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Event administration from the CLI
+
+Person(operator, "Operator", "Maintainer or agent")
+System_Boundary(sixstack, "6ixstack") {
+  Container(cli, "6ixstack CLI", "SixStack.Cli, .NET console", "migrate, seed, reset and events commands")
+  Container(api, "6ixstack API", "ASP.NET Core on App Service", "Serves the web app and API; runs the outbox processor")
+  Container(app, "Application layer", "SixStack.Application, MediatR, FluentValidation", "EventAdmin handlers, event details validators, moderator edit handler, audit log")
+  Container(infra, "Infrastructure", "SixStack.Infrastructure, EF Core", "AppDbContext, clock, outbox")
+  ContainerDb(db, "6ixstack database", "Azure SQL, SQL Server or SQLite", "Events, users, audit entries, outbox messages")
+}
+System_Ext(firewall, "Azure SQL firewall", "Admits the operator's IP while a rule is open")
+
+Rel(operator, cli, "Runs", "Terminal")
+Rel(cli, app, "Sends queries and commands", "MediatR")
+Rel(api, app, "Sends queries and commands", "MediatR")
+Rel(app, infra, "Uses IAppDbContext, IClock, IOutbox")
+Rel(infra, db, "Reads and writes", "EF Core")
+Rel(cli, firewall, "Connects through", "TDS")
+Rel(firewall, db, "Allows")
+@enduml

@@ -224,6 +224,20 @@ public class Event
     }
 
     /// <summary>
+    /// Soft delete (L2-109): the row and its history stay; every public and organizer view skips a Deleted event.
+    /// </summary>
+    public void Delete()
+    {
+        if (Status == EventStatus.Deleted)
+        {
+            throw new Exceptions.InvalidStatusTransitionException(Status, "delete");
+        }
+
+        Status = EventStatus.Deleted;
+        Version = Guid.NewGuid();
+    }
+
+    /// <summary>
     /// Cancels a published or waiting event (L2-056): it stays listed, marked cancelled with the reason, and a
     /// published event's SEQUENCE rises so calendar apps replace it. Past and cancelled events cannot be cancelled.
     /// </summary>

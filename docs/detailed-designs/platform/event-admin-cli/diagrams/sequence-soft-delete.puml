@@ -1,0 +1,44 @@
+@startuml
+title UML sequence behaviour — Soft delete
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Operator" as op
+actor "Visitor" as visitor
+box "Frontend — 6ixstack web app" #E0F2FE
+  participant "EventDetailPage" as page
+end box
+box "Backend — 6ixstack CLI (SixStack.Cli)" #DBEAFE
+  participant "EventsCommand" as cmd
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "DeleteAdminEventCommandHandler" as del
+  participant "Event" as event
+  participant "GetEventDetailQueryHandler" as detail
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+op -> cmd : events delete slug ~--actor jordan@6ixstack.dev ~--yes
+cmd -> del : Send DeleteAdminEventCommand(Apply false)
+del -> db : Event by id or slug
+alt already deleted
+  del --> cmd : EditConflictException("deleted")
+  cmd --> op : "This event is already deleted." exit 4 (L2-109)
+end
+del --> cmd : Preview
+cmd -> del : Send DeleteAdminEventCommand(Apply true, IfVersion)
+del -> event : Delete()
+event -> event : Status = Deleted, new Version
+del -> db : AuditEntry EventDeleted "was published; via CLI" and the status, one SaveChanges (L2-112)
+del --> cmd : Result
+cmd --> op : "Deleted", exit 0
+visitor -> page : Open /events/slug
+page -> detail : GET /api/events/slug
+detail -> db : Event where slug and status Published
+db --> detail : none
+detail --> page : 404
+page --> visitor : Not found page (L2-109)
+@enduml
