@@ -104,7 +104,7 @@ camelCase names (`System.Text.Json`, `JsonSerializerDefaults.Web`):
 
 ```json
 { "count": 1, "events": [ { "id": "…", "slug": "…", "title": "…", "status": "published", "cancelled": false,
-  "format": "inPerson", "organizerName": "…", "startsAtUtc": "2026-11-03T23:00:00+00:00", "endsAtUtc": "…" } ] }
+  "format": "inPerson", "organizerName": "…", "startsAtUtc": "2026-11-03T23:00:00+00:00", "endsAtUtc": "…", "version": "…" } ] }
 { "event": { "id": "…", "slug": "…", "status": "published", "cancelled": false, "cancellationReason": null,
   "startsAtUtc": "…", "endsAtUtc": "…", "version": "…", "title": "…", "organizerName": "…", "description": "…",
   "topics": ["azure"], "date": "2026-11-03", "timeZoneId": "America/Toronto", "startTime": "18:00",
@@ -115,7 +115,9 @@ camelCase names (`System.Text.Json`, `JsonSerializerDefaults.Web`):
 ```
 
 `submitterEmail` appears in `event` only with `--show-contact`. A `--json` run
-never prompts.
+never prompts. `changes` lists the form fields a write sets or changes; a delete
+reports `["status"]`. Every summary carries `version`, which `--if-version`
+accepts.
 
 ### Application layer
 
@@ -142,7 +144,8 @@ existing rules rather than restating them.
   `UpdateOrganizerEventCommandValidator` (`L2-041`, `L2-042`, `L2-081`). The
   handler builds the event from `IEventDetailsInput.ToDetails()`, gives it a
   slug through `EventSlugs.UniqueAsync` (extracted from
-  `SubmitEventCommandHandler`), publishes it with `ApprovedAtUtc` and
+  `SubmitEventCommandHandler`, together with `EventSlugs.NewEvent`, which maps
+  validated details to a new `Event` for both), publishes it with `ApprovedAtUtc` and
   `PublishedAtUtc` set to now, and records `EventAdded`. A moderator adding an
   event is its approval, so it skips the review queue; it has no
   `SubmitterEmail`, so no confirmation or verification email is sent. With
@@ -179,6 +182,9 @@ and dashboards with no query change.
 - **`EventsCommand`** — parses the command, resolves the actor for writes,
   sends the MediatR request, prints the result and maps exceptions to exit
   codes. It holds no business rule.
+- **`CliArguments`** / **`CliUsageException`** — the parser and its usage error.
+- **`ExitCodes`** — the exit code constants.
+- **`EventsHelp`** — the `events --help` and `events <command> --help` text.
 - **`CliCurrentUser`** — scoped `ICurrentUser`; after the actor is resolved it
   reports that user id and the `Moderator` role, so `EventAccess` and
   `AuditLog` see a moderator.
@@ -209,7 +215,8 @@ refused write and a failed write save nothing, so they leave no entry.
 - **Soft delete** — `delete` never removes a row. Undoing a delete is deferred.
 - **No secrets** — the CLI never prints configuration, the connection string or
   a driver exception's message. An unexpected exception prints only its type
-  name and exits 10. Logging stays at warning level (`appsettings.json`).
+  name and exits 10. Logging stays at warning level (`appsettings.json`) and
+  goes to standard error, so standard output holds only the result.
 - **No contact details** — `list` never includes `SubmitterEmail`; `get` adds
   it only with `--show-contact` (`L2-099`).
 
@@ -254,7 +261,7 @@ The procedure lives in `infra/README.md` under "Managing production events".
 | `L2-110` | `L1-025` | Every `events` command shall print a human-readable table or summary by default and, with `--json`, exactly one JSON document with stable camelCase names; exit codes 0 success, 1 usage, 2 validation, 3 not found, 4 conflict, 5 actor, 6 not confirmed, 10 unexpected. |
 | `L2-111` | `L1-025` | `events add`, `events update` and `events delete` shall require a moderator actor from `--actor` or `SIXSTACK_ACTOR`, show what will change, validate without writing under `--dry-run`, apply under `--yes`, ask "Apply? [y/N]" when interactive, and otherwise write nothing. |
 | `L2-112` | `L1-025` | Every applied CLI write shall record one audit entry (`L2-086`) in the same unit of work with the actor's user id, the time, the action, the event as target, and details that end with "via CLI"; a dry run, a refused write or a failed write shall record none. |
-| `L2-113` | `L1-025` | The CLI shall never print the connection string, a password or a database driver's exception message, and shall not print a submitter's email address unless `events get` is given `--show-contact` (`L2-099`, `L1-023`). |
+| `L2-113` | `L1-025` | The CLI shall never print the connection string, a password or an exception's message from the database driver, and shall not print a submitter's email address unless `events get` is given `--show-contact` (`L2-099`, `L1-023`). |
 | `L2-114` | `L1-025` | `sixstack migrate`, `sixstack seed` and `sixstack reset` shall keep their behaviour, output and exit codes, and the usage shall list the `events` commands. |
 
 ## Diagrams

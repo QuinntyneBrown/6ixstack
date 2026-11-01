@@ -12,7 +12,7 @@ src/
   SixStack.Application/       MediatR handlers, validators, DTOs, IAppDbContext
   SixStack.Infrastructure/    AppDbContext, migrations, external clients, auth, seeder
   SixStack.Api/               controllers, Program.cs, DI, middleware, Swagger
-  SixStack.Cli/               migrate, seed, and reset commands
+  SixStack.Cli/               migrate, seed, reset, and events (list, get, add, update, delete) commands
 tests/
   SixStack.<Layer>.Tests/     one test project per src project, same name + .Tests
 frontend/                     Angular workspace (package.json, angular.json, lint/format config)
@@ -48,7 +48,7 @@ Layer dependency direction (strict):
 - `SixStack.Application` — MediatR handlers, validators, DTO contracts, `IAppDbContext`
 - `SixStack.Infrastructure` — `AppDbContext`, EF migrations, SQL Server, external clients, auth services, seeder
 - `SixStack.Api` — controllers, `Program.cs`, DI composition, Swagger, middleware
-- `SixStack.Cli` — database migration, seeding, and reset commands
+- `SixStack.Cli` — database migration, seeding, and reset commands, and event administration (`events`) through Application handlers
 
 Non-obvious rules:
 

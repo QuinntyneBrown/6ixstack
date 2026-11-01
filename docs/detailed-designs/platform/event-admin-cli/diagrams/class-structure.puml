@@ -18,8 +18,8 @@ package "SixStack.Cli" {
   }
   class EventsCommand {
     +RunAsync(args, ct) : Task<int>
-    -Guard(preview) : int?
-    -Fail(exception) : int
+    -WriteAsync(scope, args, request, ct) : Task<int>
+    -FailAsync(json, exitCode, code, message, fields) : Task<int>
   }
   class CliArguments {
     +Positionals : IReadOnlyList<string>
@@ -35,15 +35,19 @@ package "SixStack.Cli" {
   class CliAuditLog {
     +Record(action, targetType, targetId, details) : void
   }
-  enum ExitCodes {
-    Success = 0
-    Usage = 1
-    Validation = 2
-    NotFound = 3
-    Conflict = 4
-    Actor = 5
-    NotConfirmed = 6
-    Unexpected = 10
+  class ExitCodes <<static>> {
+    +Success = 0
+    +Usage = 1
+    +Validation = 2
+    +NotFound = 3
+    +Conflict = 4
+    +Actor = 5
+    +NotConfirmed = 6
+    +Unexpected = 10
+  }
+  class EventsHelp <<static>> {
+    +Overview : string
+    +Commands : IReadOnlyDictionary<string, string>
   }
 }
 
@@ -92,7 +96,7 @@ package "SixStack.Application.EventAdmin" {
     +Event : AdminEventSummaryDto
   }
   class AdminEventLookup {
-    +{static} FindAsync(db, idOrSlug, ct) : Task<Event>
+    +{static} FindAsync(events, idOrSlug, ct) : Task<Event>
   }
 }
 
@@ -118,6 +122,7 @@ CliApp ..> EventsCommand : events
 EventsCommand ..> CliArguments
 EventsCommand ..> CliCurrentUser : signs in actor
 EventsCommand ..> ExitCodes
+EventsCommand ..> EventsHelp
 CliCurrentUser ..|> ICurrentUser
 CliAuditLog ..|> IAuditLog
 CliAuditLog o-- AuditLog : decorates

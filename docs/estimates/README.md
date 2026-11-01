@@ -1,12 +1,12 @@
 # Estimates
 
 - Overall effort: 164 days
-- Complete: 74%
+- Complete: 78%
 
 | Subsystem | Effort | Complete |
 |---|---|---|
 | [site](site.md) | 19 days | 76% |
-| [platform](platform.md) | 35 days | 22% |
+| [platform](platform.md) | 35 days | 42% |
 | [discovery](discovery.md) | 20 days | 94% |
 | [feeds-and-sharing](feeds-and-sharing.md) | 17 days | 92% |
 | [submissions](submissions.md) | 9 days | 85% |

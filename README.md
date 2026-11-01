@@ -61,7 +61,8 @@ flowchart LR
   app --> domain[SixStack.Domain]
   api --> infra[SixStack.Infrastructure<br/>EF Core, email, outbox]
   infra --> db[(SQL Server)]
-  cli[SixStack.Cli] --> infra
+  cli[SixStack.Cli] --> app
+  cli --> infra
 ```
 
 | Component                      | Technology                | Responsibility                                                              |
@@ -73,7 +74,7 @@ flowchart LR
 | `src/SixStack.Application`     | MediatR, FluentValidation | Commands, queries, validators and DTOs.                                     |
 | `src/SixStack.Domain`          | .NET                      | Entities and enums, with no dependencies.                                   |
 | `src/SixStack.Infrastructure`  | EF Core, SQL Server       | Persistence, migrations, email, geocoding, outbox, seeder.                  |
-| `src/SixStack.Cli`             | .NET console              | Migrate, seed and reset the database.                                       |
+| `src/SixStack.Cli`             | .NET console              | Migrate, seed and reset the database; list, read, add, update and delete events. |
 
 The API never applies migrations on startup. Run the CLI `migrate` command instead. See the
 [detailed designs](docs/detailed-designs/README.md) for the full architecture.
@@ -117,6 +118,32 @@ export Database__Provider=Sqlite
 export ConnectionStrings__Default="Data Source=sixstack.db"
 dotnet run --project src/SixStack.Cli -- reset
 ```
+
+### Manage events from the command line
+
+`sixstack events` lists, reads, adds, updates and soft-deletes events in whatever database
+`ConnectionStrings__Default` points at ([design](docs/detailed-designs/platform/event-admin-cli/README.md),
+[ADR 0011](docs/adr/0011-cli-event-administration.md)). Reads need nothing else:
+
+```bash
+dotnet run --project src/SixStack.Cli -- events list --status published --from 2026-11-03 --to 2026-11-09
+dotnet run --project src/SixStack.Cli -- events get whats-new-in-dotnet-11-previews --json
+```
+
+Writes run the web app's validation and edit rules, record an audit entry, and need a moderator account as the
+actor plus `--yes` (or `--dry-run` to preview without writing):
+
+```bash
+export SIXSTACK_ACTOR=jordan@6ixstack.dev   # a moderator in the seed data
+dotnet run --project src/SixStack.Cli -- events add --file event.json --dry-run
+dotnet run --project src/SixStack.Cli -- events update whats-new-in-dotnet-11-previews --title "What's new in .NET 11" --yes
+dotnet run --project src/SixStack.Cli -- events delete whats-new-in-dotnet-11-previews --yes
+```
+
+Every command takes `--json` and prints one JSON document for scripts and agents. Exit codes: 0 success,
+1 usage error, 2 validation error, 3 not found, 4 conflict, 5 actor missing or not a moderator, 6 not confirmed,
+10 unexpected error. `sixstack events --help` and `sixstack events <command> --help` list the options. To run it
+against production, see [Managing production events](infra/README.md#managing-production-events).
 
 ### Run the app
 
