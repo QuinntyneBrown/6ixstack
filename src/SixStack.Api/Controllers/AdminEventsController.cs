@@ -93,6 +93,21 @@ public sealed class AdminEventsController(ISender sender) : ControllerBase
     }
 
     /// <summary>
+    /// Soft-deletes the event (L2-118): its status becomes deleted and the row and its history stay. An applied delete
+    /// needs <c>If-Match</c> with the event's version; a dry run does not (L2-119).
+    /// </summary>
+    [HttpDelete("{idOrSlug}")]
+    public async Task<ActionResult<AdminWriteResultDto>> Delete(string idOrSlug, [FromQuery] bool dryRun, CancellationToken cancellationToken)
+    {
+        if (ReadIfMatch(required: !dryRun, out var version) is { } problem)
+        {
+            return problem;
+        }
+
+        return await sender.Send(new DeleteAdminEventCommand(idOrSlug, version, Apply: !dryRun), cancellationToken);
+    }
+
+    /// <summary>
     /// Reads <c>If-Match: "&lt;version&gt;"</c> (quotes and <c>W/</c> optional). Returns a 428 problem when it is
     /// required and absent, and a 400 problem when it is not a version.
     /// </summary>
