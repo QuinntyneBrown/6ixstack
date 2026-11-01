@@ -75,6 +75,49 @@ public sealed class AdminEventsController(ISender sender) : ControllerBase
         return dryRun ? Ok(result) : Created($"/api/admin/events/{result.Event.Id}", result);
     }
 
+    /// <summary>
+    /// Applies the fields present in the body over the event's current details through the moderator edit path
+    /// (L2-117). An applied update needs <c>If-Match</c> with the event's version; a dry run does not (L2-119).
+    /// </summary>
+    [HttpPatch("{idOrSlug}")]
+    public async Task<ActionResult<AdminWriteResultDto>> Update(string idOrSlug, [FromBody] EventDetailsPatch body, [FromQuery] bool dryRun, CancellationToken cancellationToken)
+    {
+        if (ReadIfMatch(required: !dryRun, out var version) is { } problem)
+        {
+            return problem;
+        }
+
+        var result = await sender.Send(new UpdateAdminEventCommand(idOrSlug, body, version, Apply: !dryRun), cancellationToken);
+        SetETag(result.Event.Version);
+        return result;
+    }
+
+    /// <summary>
+    /// Reads <c>If-Match: "&lt;version&gt;"</c> (quotes and <c>W/</c> optional). Returns a 428 problem when it is
+    /// required and absent, and a 400 problem when it is not a version.
+    /// </summary>
+    private ActionResult? ReadIfMatch(bool required, out Guid? version)
+    {
+        version = null;
+        var header = Request.Headers.IfMatch.ToString().Trim();
+        if (header.Length == 0)
+        {
+            return required
+                ? Problem(statusCode: StatusCodes.Status428PreconditionRequired, title: "Send If-Match with the event's version, as its ETag gives it.")
+                : null;
+        }
+
+        var value = header.StartsWith("W/", StringComparison.Ordinal) ? header[2..] : header;
+        if (!Guid.TryParse(value.Trim('"'), out var parsed))
+        {
+            ModelState.AddModelError("If-Match", "Use the event's version, as its ETag gives it.");
+            return ValidationProblem(ModelState);
+        }
+
+        version = parsed;
+        return null;
+    }
+
     private DateOnly? Date(string? value, string parameter)
     {
         if (value is null)
