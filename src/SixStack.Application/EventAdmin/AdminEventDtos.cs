@@ -14,7 +14,8 @@ public sealed record AdminEventSummaryDto(
     string Format,
     string? OrganizerName,
     DateTimeOffset StartsAtUtc,
-    DateTimeOffset EndsAtUtc)
+    DateTimeOffset EndsAtUtc,
+    Guid Version)
 {
     public static AdminEventSummaryDto From(Event e) => new(
         e.Id,
@@ -25,7 +26,8 @@ public sealed record AdminEventSummaryDto(
         FormatName(e),
         e.OrganizerName ?? e.Community?.Name,
         e.StartsAtUtc,
-        e.EndsAtUtc);
+        e.EndsAtUtc,
+        e.Version);
 
     public static string FormatName(Event e) => e.Format switch
     {

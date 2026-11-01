@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Text.RegularExpressions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -180,7 +179,7 @@ public sealed class SubmitEventCommandValidator : EventDetailsValidator<SubmitEv
 /// Stores the event in review, emails a confirmation and, on the first submission from an address, a verification
 /// link (L2-043, L2-085). Emails go through the outbox, so a provider failure never fails the submission.
 /// </summary>
-public sealed partial class SubmitEventCommandHandler(
+public sealed class SubmitEventCommandHandler(
     IAppDbContext db,
     IClock clock,
     IOutbox outbox,
@@ -246,41 +245,10 @@ public sealed partial class SubmitEventCommandHandler(
     private async Task<Event> NewEvent(SubmitEventCommand c, string email, DateTimeOffset now, CancellationToken cancellationToken)
     {
         var d = ((IEventDetailsInput)c).ToDetails();
-        return new Event
-        {
-            Slug = await UniqueSlug(d.Title, cancellationToken),
-            Title = d.Title,
-            OrganizerName = d.OrganizerName,
-            Description = d.Description,
-            Topics = d.Topics,
-            Status = EventStatus.InReview,
-            Format = d.Format,
-            StartsAtUtc = d.StartsAtUtc,
-            EndsAtUtc = d.EndsAtUtc,
-            TimeZoneId = d.TimeZoneId,
-            SourceTimeZoneId = d.TimeZoneId == "America/Toronto" ? null : d.TimeZoneId,
-            Venue = d.VenueName is null ? null : new Venue { Name = d.VenueName, Address = d.StreetAddress, City = d.City! },
-            StreamUrl = d.StreamUrl,
-            TicketUrl = d.TicketUrl,
-            PriceCents = d.PriceCents,
-            SubmitterEmail = email,
-            SubmittedAtUtc = now,
-        };
+        var e = EventSlugs.NewEvent(d, await EventSlugs.UniqueAsync(db, d.Title, cancellationToken));
+        e.Status = EventStatus.InReview;
+        e.SubmitterEmail = email;
+        e.SubmittedAtUtc = now;
+        return e;
     }
-
-    private async Task<string> UniqueSlug(string title, CancellationToken cancellationToken)
-    {
-        var slug = NonSlug().Replace(title.ToLowerInvariant(), "-").Trim('-');
-        slug = slug.Length > 100 ? slug[..100].TrimEnd('-') : slug;
-        var candidate = slug;
-        for (var n = 2; await db.Events.AnyAsync(e => e.Slug == candidate, cancellationToken); n++)
-        {
-            candidate = $"{slug}-{n}";
-        }
-
-        return candidate;
-    }
-
-    [GeneratedRegex("[^a-z0-9]+")]
-    private static partial Regex NonSlug();
 }

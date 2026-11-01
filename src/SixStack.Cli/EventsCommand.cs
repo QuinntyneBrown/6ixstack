@@ -13,9 +13,26 @@ namespace SixStack.Cli;
 /// The <c>events</c> command group (event-admin-cli design): parses, sends one MediatR request per step, prints a
 /// table or one JSON document, and maps exceptions to exit codes. Business rules live in the handlers.
 /// </summary>
-public sealed class EventsCommand(IServiceProvider services, TextWriter output)
+public sealed class EventsCommand(IServiceProvider services, TextWriter output, TextReader? input)
 {
     private const string Json = "--json";
+    private const string Yes = "--yes";
+    private const string DryRun = "--dry-run";
+    private const string Actor = "--actor";
+    private const string File = "--file";
+
+    /// <summary>Field flags and the event file property each one sets.</summary>
+    private static readonly string[] FieldOptions =
+    [
+        "--title", "--organizer", "--description", "--topics", "--date", "--start", "--end", "--time-zone", "--format",
+        "--venue", "--city", "--address", "--stream-url", "--ticket-url", "--price",
+    ];
+
+    private static readonly JsonSerializerOptions FileOptions = new(JsonSerializerDefaults.Web)
+    {
+        UnmappedMemberHandling = System.Text.Json.Serialization.JsonUnmappedMemberHandling.Disallow,
+        NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.Strict,
+    };
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { WriteIndented = true };
 
@@ -30,6 +47,7 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output)
             {
                 "list" => await ListAsync(sender, args[1..], cancellationToken),
                 "get" => await GetAsync(sender, args[1..], cancellationToken),
+                "add" => await AddAsync(scope.ServiceProvider, args[1..], cancellationToken),
                 null => throw new CliUsageException("Name an events command. " + CliApp.Usage),
                 var other => throw new CliUsageException($"Unknown events command '{other}'. " + CliApp.Usage),
             };
@@ -37,6 +55,10 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output)
         catch (CliUsageException ex)
         {
             return await FailAsync(json, ExitCodes.Usage, "usage", ex.Message);
+        }
+        catch (ForbiddenAccessException ex)
+        {
+            return await FailAsync(json, ExitCodes.Actor, "actor", ex.Message);
         }
         catch (NotFoundException ex)
         {
@@ -100,6 +122,142 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output)
         }
 
         return ExitCodes.Success;
+    }
+
+    private async Task<int> AddAsync(IServiceProvider scope, string[] args, CancellationToken cancellationToken)
+    {
+        var a = CliArguments.Parse(args, [File, Actor, .. FieldOptions], [Json, Yes, DryRun]);
+        NoPositionals(a, "events add [--file <event.json>] [field flags]");
+        var patch = await PatchAsync(a, cancellationToken);
+        return await WriteAsync(scope, a, apply => AddAdminEventCommand.From(patch, apply), cancellationToken);
+    }
+
+    /// <summary>
+    /// The write guard (L2-111): sign in the actor, preview, then stop for a dry run, apply with --yes or an
+    /// interactive "y", and otherwise write nothing.
+    /// </summary>
+    private async Task<int> WriteAsync(IServiceProvider scope, CliArguments a, Func<bool, IRequest<AdminWriteResultDto>> request, CancellationToken cancellationToken)
+    {
+        if (a.Has(Yes) && a.Has(DryRun))
+        {
+            throw new CliUsageException("Use --yes or --dry-run, not both.");
+        }
+
+        var sender = scope.GetRequiredService<ISender>();
+        var actor = a.Get(Actor) ?? scope.GetService<Microsoft.Extensions.Configuration.IConfiguration>()?["SIXSTACK_ACTOR"];
+        if (string.IsNullOrWhiteSpace(actor))
+        {
+            throw new ForbiddenAccessException("Name who is making this change with --actor <email> or SIXSTACK_ACTOR.");
+        }
+
+        scope.GetRequiredService<CliCurrentUser>().SignIn(await sender.Send(new GetModeratorActorQuery(actor), cancellationToken));
+        var preview = await sender.Send(request(false), cancellationToken);
+        var json = a.Has(Json);
+        if (a.Has(DryRun))
+        {
+            await ReportAsync(json, preview);
+            return ExitCodes.Success;
+        }
+
+        if (!a.Has(Yes))
+        {
+            if (!json)
+            {
+                await ReportAsync(false, preview);
+            }
+
+            if (json || input is null)
+            {
+                return await FailAsync(json, ExitCodes.NotConfirmed, "notConfirmed", "Nothing changed. Re-run with --yes to apply.");
+            }
+
+            await output.WriteAsync("Apply? [y/N] ");
+            var answer = (await input.ReadLineAsync(cancellationToken))?.Trim();
+            if (!string.Equals(answer, "y", StringComparison.OrdinalIgnoreCase) && !string.Equals(answer, "yes", StringComparison.OrdinalIgnoreCase))
+            {
+                await output.WriteLineAsync();
+                return await FailAsync(false, ExitCodes.NotConfirmed, "notConfirmed", "Nothing changed.");
+            }
+        }
+
+        await ReportAsync(json, await sender.Send(request(true), cancellationToken));
+        return ExitCodes.Success;
+    }
+
+    private async Task ReportAsync(bool json, AdminWriteResultDto result)
+    {
+        if (json)
+        {
+            await WriteJsonAsync(new { result });
+            return;
+        }
+
+        var e = result.Event;
+        var verb = result.Action switch { "added" => "add", "updated" => "update", _ => "delete" };
+        await output.WriteLineAsync(result.DryRun
+            ? $"Will {verb} {e.Slug} ({e.Id}): {e.Title}"
+            : $"{char.ToUpperInvariant(result.Action[0])}{result.Action[1..]} {e.Slug} ({e.Id}): {e.Title}");
+        await output.WriteLineAsync($"  status: {e.Status}{(e.Cancelled ? " (cancelled)" : string.Empty)}");
+        await output.WriteLineAsync($"  starts: {TorontoTime.ToLocal(e.StartsAtUtc).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture)} Toronto time");
+        await output.WriteLineAsync($"  changes: {(result.Changes.Count == 0 ? "none" : string.Join(", ", result.Changes))}");
+    }
+
+    /// <summary>The event file, then the field flags over it (the flags win).</summary>
+    private static async Task<EventDetailsPatch> PatchAsync(CliArguments a, CancellationToken cancellationToken)
+    {
+        var patch = new EventDetailsPatch();
+        if (a.Get(File) is { } path)
+        {
+            string text;
+            try
+            {
+                text = await System.IO.File.ReadAllTextAsync(path, cancellationToken);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                throw new CliUsageException($"--file: can't read {path}.");
+            }
+
+            try
+            {
+                patch = JsonSerializer.Deserialize<EventDetailsPatch>(text, FileOptions) ?? throw new CliUsageException($"--file: {path} holds no event.");
+            }
+            catch (JsonException ex)
+            {
+                throw new CliUsageException($"--file: {path} is not a valid event file. {ex.Message}");
+            }
+        }
+
+        string? Flag(string option) => a.Get(option);
+        decimal? price = null;
+        if (a.Get("--price") is { } p)
+        {
+            price = decimal.TryParse(p, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var value)
+                ? value
+                : throw new CliUsageException("--price must be an amount in Canadian dollars, such as 25 or 0.");
+        }
+
+        return patch with
+        {
+            Title = Flag("--title") ?? patch.Title,
+            OrganizerName = Flag("--organizer") ?? patch.OrganizerName,
+            Description = Flag("--description") ?? patch.Description,
+            Topics = Flag("--topics") is { } topics
+                ? topics.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                : patch.Topics,
+            Date = Flag("--date") ?? patch.Date,
+            StartTime = Flag("--start") ?? patch.StartTime,
+            EndTime = Flag("--end") ?? patch.EndTime,
+            TimeZoneId = Flag("--time-zone") ?? patch.TimeZoneId,
+            Format = Flag("--format") ?? patch.Format,
+            VenueName = Flag("--venue") ?? patch.VenueName,
+            City = Flag("--city") ?? patch.City,
+            StreetAddress = Flag("--address") ?? patch.StreetAddress,
+            StreamUrl = Flag("--stream-url") ?? patch.StreamUrl,
+            TicketUrl = Flag("--ticket-url") ?? patch.TicketUrl,
+            PriceCad = price ?? patch.PriceCad,
+            IsFree = price is { } given ? given == 0 : patch.IsFree,
+        };
     }
 
     private static DateOnly? Date(CliArguments a, string option) =>

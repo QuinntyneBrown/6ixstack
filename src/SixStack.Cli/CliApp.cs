@@ -13,7 +13,7 @@ public static class CliApp
     {
         if (args.Length > 0 && args[0] == "events")
         {
-            return await new EventsCommand(services, output).RunAsync(args[1..], cancellationToken);
+            return await new EventsCommand(services, output, input).RunAsync(args[1..], cancellationToken);
         }
 
         if (args.Length != 1)
