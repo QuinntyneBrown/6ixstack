@@ -18,6 +18,7 @@ builder.Services.AddApplication();
 builder.Services.Configure<SixStack.Application.Site.MaintenanceOptions>(builder.Configuration.GetSection(SixStack.Application.Site.MaintenanceOptions.Section));
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSixStackAuth(builder.Environment);
+builder.Services.AddAdminApi();
 builder.Services.AddSignInRateLimit(builder.Configuration);
 builder.Services.AddHsts(options =>
 {
