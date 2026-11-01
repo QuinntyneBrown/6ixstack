@@ -23,6 +23,7 @@ frontend/                     Angular workspace (package.json, angular.json, lin
     perf-test/                perf scenarios in src/scenarios/
   e2e/                        Playwright: tests/, pages/ (one page object per screen), visual baselines,
                               demo/ (demo-video tooling and journeys/<nn>-<slug>.ts)
+infra/                        Azure Bicep for production (App Service + Azure SQL); see infra/README.md
 docs/
   assets/                     repository assets, such as the logo the README shows
   specs/                      L1 and L2 requirements
@@ -34,7 +35,7 @@ docs/
   adr/                        architecture decision records for choices the designs leave open
   demos/                      one folder per journey: narrated demo.mp4 (Git LFS), screenshots, narration, credits
 .claude/skills/, .agents/skills/  agent skills; keep both copies in sync
-.github/                      CI workflows and copilot-instructions.md
+.github/                      CI and deploy workflows and copilot-instructions.md
 ```
 
 New code goes in the folder that owns it; don't add top-level folders or new projects without updating this tree.
