@@ -38,7 +38,21 @@ const SHORE: [number, number][] = [
   [-78.4, 43.9],
 ];
 
-export const PLACES: { label: string; x: number; y: number; water: boolean }[] = [
+/** How far edge labels sit inside the canvas, and the width of one city-label glyph (10 px mono, 0.04em tracking). */
+const LABEL_INSET = 14;
+const CITY_CHAR = 6.4;
+
+type Anchor = 'start' | 'middle' | 'end';
+
+/** Centres a city label on its city unless that would cross a canvas edge; then anchors it inside. */
+function anchorInside(x: number, text: string): { x: number; anchor: Anchor } {
+  const half = (text.length * CITY_CHAR) / 2;
+  if (x + half > MAP_WIDTH - LABEL_INSET) return { x: MAP_WIDTH - LABEL_INSET, anchor: 'end' };
+  if (x - half < LABEL_INSET) return { x: LABEL_INSET, anchor: 'start' };
+  return { x, anchor: 'middle' };
+}
+
+export const PLACES: { label: string; x: number; y: number; anchor: Anchor; water: boolean }[] = [
   ['Toronto', -79.415, 43.705, false],
   ['Mississauga', -79.655, 43.622, false],
   ['Brampton', -79.76, 43.72, false],
@@ -46,14 +60,11 @@ export const PLACES: { label: string; x: number; y: number; water: boolean }[] =
   ['Markham', -79.31, 43.885, false],
   ['Scarborough', -79.23, 43.775, false],
   ['Lake Ontario', -79.4, 43.52, true],
-].map(([label, lng, lat, water]) => {
-  const [x, y] = project(lng as number, lat as number);
-  return {
-    label: water ? (label as string) : (label as string).toUpperCase(),
-    x,
-    y,
-    water: water as boolean,
-  };
+].map(([name, lng, lat, water]) => {
+  const [px, y] = project(lng as number, lat as number);
+  if (water) return { label: name as string, x: px, y, anchor: 'middle' as Anchor, water: true };
+  const label = (name as string).toUpperCase();
+  return { label, y, ...anchorInside(px, label), water: false };
 });
 
 /** Downtown Toronto, where stream arcs land. */

@@ -23,7 +23,7 @@
           [attr.x]="place.x"
           [attr.y]="place.y"
           [attr.class]="place.water ? 'event-map__water' : 'event-map__city'"
-          text-anchor="middle"
+          [attr.text-anchor]="place.anchor"
         >
           {{ place.label }}
         </text>

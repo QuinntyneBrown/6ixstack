@@ -46,6 +46,19 @@ export class EventMapPart {
     return this.root.locator(`.map-day[aria-label^="${label}:"]`);
   }
 
+  /** The city labels that run past the edge of the map canvas. */
+  async clippedCityLabels(): Promise<string[]> {
+    return this.root.locator('.event-map__city').evaluateAll((labels) =>
+      labels
+        .filter((label) => {
+          const box = label.getBoundingClientRect();
+          const canvas = label.closest('.event-map__canvas')!.getBoundingClientRect();
+          return box.left < canvas.left - 0.5 || box.right > canvas.right + 0.5;
+        })
+        .map((label) => label.textContent!.trim()),
+    );
+  }
+
   async clickMarker(slug: string): Promise<void> {
     await this.marker(slug).locator('circle, path').last().dispatchEvent('click');
   }
