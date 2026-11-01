@@ -54,13 +54,20 @@ order is part of the design, and `platform/observability` uses the same list.
 6. **`UseRouting`** — selects the endpoint so the later stages can read its
    metadata.
 7. **`UseRateLimiter`** — applies the IP-partitioned policies named on each
-   endpoint.
+   endpoint, and the admin API's per-token and per-IP global limiter under
+   `/api/admin` (`platform/event-admin-api`).
 8. **`UseAuthentication`** — runs `SessionAuthenticationHandler`, which reads
    the session cookie and builds the principal (see
-   `identity/sessions-and-sign-out`).
+   `identity/sessions-and-sign-out`). The cookie scheme stays the default.
+   The `ApiToken` bearer scheme (`platform/event-admin-api`, ADR 0012) runs
+   only for endpoints whose policy names it: the `AdminApi` policy of
+   `api/admin/events`. A session cookie does not authenticate those endpoints,
+   and a bearer token does not authenticate any other.
 9. **`UseAuthorization`** — evaluates the endpoint's policies.
 10. **`CsrfProtectionMiddleware`** — validates the anti-forgery token on
-    state-changing cookie-authenticated requests.
+    state-changing cookie-authenticated requests. A principal from the
+    `ApiToken` bearer scheme is skipped: browsers never attach an
+    `Authorization` header to a cross-site request on their own.
 11. **Endpoints** — `MapControllers()` and the health checks. Each controller
     sends a MediatR request. `ValidationBehavior` runs every FluentValidation
     validator before the handler.

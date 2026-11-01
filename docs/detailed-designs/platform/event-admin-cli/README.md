@@ -240,6 +240,17 @@ environment, as the deploy workflow does for `migrate`.
 4. Delete the firewall rule.
 
 The procedure lives in `infra/README.md` under "Managing production events".
+For day-to-day changes, the same procedure is needed only once, to issue a
+personal API token with `sixstack tokens create`; the agent then calls the
+admin API over HTTPS with no firewall rule and no connection string
+(`platform/event-admin-api`, ADR 0012).
+
+### Token commands
+
+`sixstack tokens create|list|revoke` issue, list and revoke the actor's own
+API tokens for the admin API. They follow this design's actor, write guard,
+`--json` and exit-code rules; their grammar and handlers are in
+`platform/event-admin-api`. `CliApp.Usage` lists them.
 
 ### Follow-up risks
 

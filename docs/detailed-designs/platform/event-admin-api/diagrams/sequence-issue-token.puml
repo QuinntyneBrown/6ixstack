@@ -1,0 +1,45 @@
+@startuml
+title UML sequence behaviour — Issue an API token from the CLI
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Maintainer" as op
+box "Backend — 6ixstack CLI (SixStack.Cli)" #E0F2FE
+  participant "TokensCommand" as cmd
+  participant "CliCurrentUser" as user
+end box
+box "Backend — 6ixstack Application" #ECFDF3
+  participant "GetModeratorActorQueryHandler" as actor
+  participant "CreateApiTokenCommandHandler" as create
+  participant "CliAuditLog → AuditLog" as audit
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "ApiTokenHasher" as hasher
+  database "6ixstack database" as db
+end box
+op -> cmd : tokens create ~--name laptop-agent ~--actor jordan@6ixstack.dev ~--yes
+cmd -> actor : Send GetModeratorActorQuery(email)
+alt missing, unknown or not a moderator
+  actor --> cmd : ForbiddenAccessException
+  cmd --> op : exit 5 (L2-124)
+end
+actor --> cmd : user id
+cmd -> user : SignIn(user id)
+cmd -> create : Send CreateApiTokenCommand(Apply false)
+create -> create : Validate name 1-80, days 1-365
+create --> cmd : Preview: name, expiry
+alt ~--dry-run, or not confirmed
+  cmd --> op : exit 0 or 6, nothing stored
+else ~--yes or answer y
+  cmd -> create : Send CreateApiTokenCommand(Apply true)
+  create -> db : Owner is a moderator?
+  create -> hasher : Create(token id)
+  hasher --> create : sxk_<id>_<secret>, salt, SHA-256(salt ‖ secret)
+  create -> audit : Record ApiTokenCreated "laptop-agent; via CLI" (L2-122)
+  create -> db : Insert ApiToken (salt, hash only) and audit entry (L2-120)
+  create --> cmd : Result with plaintext token
+  cmd --> op : Token printed once, exit 0
+end
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+title UML sequence behaviour — Authenticate a bearer request
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Coding agent" as agent
+box "Backend — 6ixstack API (SixStack.Api)" #E0F2FE
+  participant "AdminApiRateLimit" as limit
+  participant "ApiTokenAuthenticationHandler" as scheme
+  participant "AdminApi policy" as policy
+  participant "AdminEventsController" as ctl
+end box
+box "Backend — 6ixstack Application" #ECFDF3
+  participant "AuthenticateApiTokenCommandHandler" as auth
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "ApiTokenHasher" as hasher
+  database "6ixstack database" as db
+end box
+agent -> limit : GET /api/admin/events, Authorization: Bearer sxk_…
+alt over 60 a minute for the token or 120 for the IP
+  limit --> agent : 429, Retry-After, problem (L2-123)
+end
+limit -> policy : Admitted
+policy -> scheme : Authenticate with ApiToken only
+scheme -> auth : Send AuthenticateApiTokenCommand(token)
+auth -> hasher : ReadId(token)
+auth -> db : ApiToken by id, with owner
+auth -> hasher : Verify(token, salt, hash), fixed-time
+alt malformed, unknown, revoked, expired or wrong secret
+  auth --> scheme : null
+  scheme --> agent : 401, WWW-Authenticate: Bearer, problem (L2-121)
+end
+auth -> db : LastUsedAtUtc = now (L2-120)
+auth --> scheme : token id, user id, email, current role
+scheme --> policy : Principal (authentication type ApiToken)
+alt role is not Moderator
+  policy --> agent : 403, problem (L2-121)
+end
+policy -> ctl : Authorized; CSRF skipped for ApiToken
+ctl --> agent : 200
+@enduml

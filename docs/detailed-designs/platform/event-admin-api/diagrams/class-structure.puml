@@ -1,0 +1,143 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Event administration over the API
+
+package "SixStack.Api" {
+  class AdminEventsController {
+    +List(status, from, to, search, take, ct) : IActionResult
+    +Get(idOrSlug, showContact, ct) : IActionResult
+    +Add(patch, dryRun, ct) : IActionResult
+    +Update(idOrSlug, patch, dryRun, ct) : IActionResult
+    +Delete(idOrSlug, dryRun, ct) : IActionResult
+  }
+  class ApiTokenAuthenticationHandler {
+    +{static} Scheme = "ApiToken"
+    #HandleAuthenticateAsync() : AuthenticateResult
+    #HandleChallengeAsync(properties) : Task
+    #HandleForbiddenAsync(properties) : Task
+  }
+  class AdminApiSetup <<static>> {
+    +AddAdminApi(services, configuration) : IServiceCollection
+  }
+  class AdminApiRateLimit <<static>> {
+    +PartitionKey(token) : string?
+  }
+  class ApiAuditLog {
+    +{static} Marker = "via API"
+    +Record(action, targetType, targetId, details) : void
+  }
+  class AdminBodyLimitAttribute {
+    +MaxBytes = 65536
+  }
+  class AdminApiSecurityFilter
+  class HttpCurrentUser
+  class CsrfProtectionMiddleware
+}
+
+package "SixStack.Cli" {
+  class TokensCommand {
+    +RunAsync(args, ct) : Task<int>
+  }
+  class TokensHelp <<static>>
+  class CliCurrentUser
+}
+
+package "SixStack.Application.ApiTokens" {
+  class CreateApiTokenCommand {
+    +Name : string?
+    +Days : int
+    +Apply : bool
+  }
+  class ListApiTokensQuery
+  class RevokeApiTokenCommand {
+    +TokenId : Guid
+    +Apply : bool
+  }
+  class AuthenticateApiTokenCommand {
+    +Token : string
+  }
+  class ApiTokenDto {
+    +Id : Guid
+    +Name : string
+    +CreatedAtUtc, ExpiresAtUtc
+    +LastUsedAtUtc, RevokedAtUtc
+    +Status : string
+  }
+  class ApiTokenWriteResultDto {
+    +Action : string
+    +DryRun : bool
+    +ApiToken : ApiTokenDto
+    +Token : string?
+  }
+  class ApiTokenPrincipalDto {
+    +TokenId : Guid
+    +UserId : Guid
+    +Email : string
+    +Role : UserRole
+  }
+}
+
+package "SixStack.Application" {
+  interface IApiTokenHasher {
+    +Create(tokenId) : NewApiTokenSecret
+    +ReadId(token) : Guid?
+    +Verify(token, salt, hash) : bool
+  }
+  interface ICurrentUser
+  interface IAuditLog
+  class AuditLog
+  class "EventAdmin handlers" as EA
+}
+
+package "SixStack.Infrastructure" {
+  class ApiTokenHasher
+  class ApiTokenConfiguration
+}
+
+package "SixStack.Domain" {
+  class ApiToken {
+    +Id : Guid
+    +UserId : Guid
+    +Name : string
+    +Salt : string
+    +TokenHash : string
+    +CreatedAtUtc : DateTimeOffset
+    +ExpiresAtUtc : DateTimeOffset
+    +LastUsedAtUtc : DateTimeOffset?
+    +RevokedAtUtc : DateTimeOffset?
+    +IsActive(now) : bool
+    +StatusAt(now) : string
+    +Revoke(now) : void
+  }
+  class User
+}
+
+AdminEventsController ..> EA : sends
+ApiTokenAuthenticationHandler ..> AuthenticateApiTokenCommand : sends
+AuthenticateApiTokenCommand ..> ApiTokenPrincipalDto : returns
+AdminApiSetup ..> ApiTokenAuthenticationHandler : registers
+AdminApiSetup ..> AdminApiRateLimit
+AdminApiSetup ..> ApiAuditLog
+ApiAuditLog ..|> IAuditLog
+ApiAuditLog o-- AuditLog : decorates
+HttpCurrentUser ..|> ICurrentUser
+CliCurrentUser ..|> ICurrentUser
+TokensCommand ..> CreateApiTokenCommand
+TokensCommand ..> ListApiTokensQuery
+TokensCommand ..> RevokeApiTokenCommand
+TokensCommand ..> TokensHelp
+ApiTokenHasher ..|> IApiTokenHasher
+ApiTokenConfiguration ..> ApiToken : maps
+CreateApiTokenCommand ..> IApiTokenHasher
+ApiTokenWriteResultDto o-- ApiTokenDto
+ApiToken --> User : owner
+@enduml

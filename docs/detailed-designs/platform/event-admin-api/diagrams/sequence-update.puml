@@ -1,0 +1,49 @@
+@startuml
+title UML sequence behaviour — Previewed, versioned update over the API
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Coding agent" as agent
+box "Backend — 6ixstack API (SixStack.Api)" #E0F2FE
+  participant "AdminEventsController" as ctl
+  participant "ApiAuditLog → AuditLog" as audit
+end box
+box "Backend — 6ixstack Application" #ECFDF3
+  participant "GetAdminEventQueryHandler" as get
+  participant "UpdateAdminEventCommandHandler" as admin
+  participant "UpdateOrganizerEventCommandHandler" as edit
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  database "6ixstack database" as db
+end box
+agent -> ctl : GET /api/admin/events/{slug}
+ctl -> get : Send GetAdminEventQuery
+get -> db : Event by id or slug
+ctl --> agent : 200 AdminEventDto, ETag "version" (L2-115)
+agent -> ctl : PATCH {slug}?dryRun=true, If-Match, { "startTime": "18:30" }
+ctl -> admin : Send UpdateAdminEventCommand(Apply false, IfVersion)
+admin -> admin : Version, read-only check, merge patch, validate (L2-117)
+alt invalid
+  admin --> ctl : ValidationException
+  ctl --> agent : 400 validation problem, errors by form field
+end
+admin --> ctl : Preview: changes ["startTime"]
+ctl --> agent : 200, dryRun true, nothing saved (L2-119)
+agent -> ctl : PATCH {slug}, If-Match "version", same body
+alt no If-Match
+  ctl --> agent : 428 problem
+end
+ctl -> admin : Send UpdateAdminEventCommand(Apply true, IfVersion)
+alt version is stale
+  admin --> ctl : EditConflictException("changed")
+  ctl --> agent : 409, reason changed
+end
+admin -> edit : Send UpdateOrganizerEventCommand (moderator path, L2-062)
+edit -> edit : Event.Edit: SEQUENCE rises, time-change alert queued
+edit -> audit : Record EventEdited "startTime; via API" (L2-122)
+edit -> db : SaveChanges with Version concurrency token
+admin --> ctl : Result with the new version
+ctl --> agent : 200, ETag "new version"
+@enduml

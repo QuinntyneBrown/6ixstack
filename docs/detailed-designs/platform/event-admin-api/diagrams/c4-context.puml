@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Event administration over the API
+
+Person(operator, "Maintainer", "Moderator who issues a personal API token once")
+Person(agent, "Coding agent", "Runs on the maintainer's machine with the token")
+Person(visitor, "Visitor", "Anonymous developer browsing events")
+System(cli, "6ixstack CLI", "sixstack tokens create | list | revoke")
+System(sixstack, "6ixstack", "Web app and API on App Service, api/admin/events")
+SystemDb_Ext(azsql, "Azure SQL (sixstack-sql / sixstack)", "Production database behind a firewall")
+
+Rel(operator, cli, "Issues and revokes tokens with ~--actor, ~--yes", "Terminal")
+Rel(cli, azsql, "Stores the token hash, once, through a firewall rule", "TDS")
+Rel(agent, sixstack, "Lists, reads, adds, updates and deletes events", "HTTPS, Authorization: Bearer")
+Rel(sixstack, azsql, "Reads and writes events, tokens and audit entries", "TDS")
+Rel(visitor, sixstack, "Browses events", "HTTPS")
+@enduml
