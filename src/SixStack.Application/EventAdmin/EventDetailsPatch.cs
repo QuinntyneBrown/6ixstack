@@ -1,11 +1,14 @@
+using System.Text.Json.Serialization;
 using SixStack.Application.Organizer;
 
 namespace SixStack.Application.EventAdmin;
 
 /// <summary>
 /// The fields an <c>events add</c> or <c>events update</c> sets, under the edit form's names; a null field keeps
-/// its current value and an empty string clears an optional one (event-admin-cli design).
+/// its current value and an empty string clears an optional one (event-admin-cli design). A property the form does
+/// not have is refused, in an event file and in an admin API body alike (L2-116).
 /// </summary>
+[JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
 public sealed record EventDetailsPatch(
     string? Title = null,
     string? OrganizerName = null,
