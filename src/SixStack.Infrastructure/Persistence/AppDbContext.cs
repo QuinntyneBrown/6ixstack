@@ -26,6 +26,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
     public DbSet<AuditEntry> AuditEntries => Set<AuditEntry>();
     public DbSet<ReviewPresence> ReviewPresences => Set<ReviewPresence>();
+    public DbSet<ApiToken> ApiTokens => Set<ApiToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
