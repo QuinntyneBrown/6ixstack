@@ -91,6 +91,21 @@ public sealed class AdminApiAuthenticationTests(AdminApiAuthenticationTests.Fact
         });
     }
 
+    // L2-120: Given a moderator deletes their account, then their tokens are deleted with it and are refused, 401.
+    [Fact]
+    public async Task A_token_stops_working_when_its_owner_deletes_the_account()
+    {
+        using var own = new ApiFactory();
+        var (token, id) = await own.IssueTokenAsync(HttpClientExtensions.SecondModerator);
+        var sam = own.CreateHttpsClient();
+        await sam.SignInAsAsync(HttpClientExtensions.SecondModerator);
+
+        Assert.Equal(HttpStatusCode.NoContent, (await sam.PostAsJsonAsync("/api/account/delete", new { confirmationEmail = HttpClientExtensions.SecondModerator })).StatusCode);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, (await own.CreateTokenClient(token).GetAsync("/api/admin/events")).StatusCode);
+        Assert.False(await own.WithDbAsync(db => db.ApiTokens.AnyAsync(t => t.Id == id)));
+    }
+
     // L2-121 #3: Given a signed-in moderator's session cookie and no token, then 401.
     [Fact]
     public async Task A_session_cookie_does_not_reach_the_admin_api()
