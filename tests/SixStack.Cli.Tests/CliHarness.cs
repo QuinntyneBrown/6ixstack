@@ -1,4 +1,5 @@
 using System.Text.Json;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,6 +56,13 @@ public sealed class CliHarness : IDisposable
     {
         using var scope = services.CreateScope();
         return await query(scope.ServiceProvider.GetRequiredService<AppDbContext>());
+    }
+
+    /// <summary>Sends a request as the API would, to see what the public site shows.</summary>
+    public async Task<T> SendAsync<T>(IRequest<T> request)
+    {
+        using var scope = services.CreateScope();
+        return await scope.ServiceProvider.GetRequiredService<ISender>().Send(request);
     }
 
     public void Dispose() => services.Dispose();

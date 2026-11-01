@@ -51,6 +51,7 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
                 "get" => await GetAsync(sender, args[1..], cancellationToken),
                 "add" => await AddAsync(scope.ServiceProvider, args[1..], cancellationToken),
                 "update" => await UpdateAsync(scope.ServiceProvider, args[1..], cancellationToken),
+                "delete" => await DeleteAsync(scope.ServiceProvider, args[1..], cancellationToken),
                 null => throw new CliUsageException("Name an events command. " + CliApp.Usage),
                 var other => throw new CliUsageException($"Unknown events command '{other}'. " + CliApp.Usage),
             };
@@ -150,6 +151,14 @@ public sealed class EventsCommand(IServiceProvider services, TextWriter output, 
         var patch = await PatchAsync(a, cancellationToken);
         var expected = Version(a);
         return await WriteAsync(scope, a, (apply, previewed) => new UpdateAdminEventCommand(idOrSlug, patch, previewed ?? expected, apply), cancellationToken);
+    }
+
+    private async Task<int> DeleteAsync(IServiceProvider scope, string[] args, CancellationToken cancellationToken)
+    {
+        var a = CliArguments.Parse(args, [Actor, IfVersion], [Json, Yes, DryRun]);
+        var idOrSlug = OnePositional(a, "events delete <id-or-slug>");
+        var expected = Version(a);
+        return await WriteAsync(scope, a, (apply, previewed) => new DeleteAdminEventCommand(idOrSlug, previewed ?? expected, apply), cancellationToken);
     }
 
     /// <summary>
