@@ -17,8 +17,8 @@ param sqlAdminLogin string = 'sixstackadmin'
 @description('SQL administrator password.')
 param sqlAdminPassword string
 
-@description('GitHub repository (owner/name) allowed to deploy through OIDC.')
-param githubRepository string = 'QuinntyneBrown/6ixstack'
+@description('GitHub repository allowed to deploy through OIDC, as its token subject names it (owner@ownerId/name@repoId).')
+param githubRepository string = 'QuinntyneBrown@1749159/6ixstack@1440300040'
 
 var connectionString = 'Server=tcp:${sqlServer.properties.fullyQualifiedDomainName},1433;Initial Catalog=${database.name};User ID=${sqlAdminLogin};Password=${sqlAdminPassword};Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 
