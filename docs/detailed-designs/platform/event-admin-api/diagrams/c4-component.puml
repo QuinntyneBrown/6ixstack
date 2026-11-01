@@ -1,0 +1,39 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Event administration over the API
+
+Person(agent, "Coding agent", "Bearer token")
+Container_Boundary(api, "6ixstack API") {
+  Component(limit, "AdminApiRateLimit", "Chained global limiter", "60 a minute per token, 120 per IP, under /api/admin")
+  Component(scheme, "ApiTokenAuthenticationHandler", "Authentication scheme ApiToken", "Bearer header to principal")
+  Component(policy, "AdminApi policy", "Authorization", "ApiToken scheme and Moderator role")
+  Component(csrf, "CsrfProtectionMiddleware", "Middleware", "Skips ApiToken principals")
+  Component(controller, "AdminEventsController", "MVC controller", "Verbs, dryRun, If-Match, ETag, 64 KB body limit")
+  Component(audit, "ApiAuditLog", "IAuditLog decorator", "Appends via API")
+  Component(errors, "ExceptionHandlingMiddleware", "Middleware", "Problem details, reference codes")
+}
+Container_Boundary(app, "Application layer") {
+  Component(tokens, "ApiTokens handlers", "MediatR", "Authenticate, Create, List, Revoke")
+  Component(admin, "EventAdmin handlers", "MediatR", "List, Get, Add, Update, Delete")
+  Component(auditlog, "AuditLog", "IAuditLog", "Adds AuditEntry to the unit of work")
+}
+Container_Boundary(infra, "Infrastructure") {
+  Component(hasher, "ApiTokenHasher", "IApiTokenHasher", "Random token, salted SHA-256, fixed-time compare")
+}
+ContainerDb(db, "6ixstack database", "SQL", "ApiTokens, Events, AuditEntries")
+
+Rel(agent, limit, "HTTPS request")
+Rel(limit, scheme, "Admits")
+Rel(scheme, tokens, "AuthenticateApiTokenCommand", "ISender")
+Rel(tokens, hasher, "Verifies with")
+Rel(scheme, policy, "Principal")
+Rel(policy, csrf, "Authorized")
+Rel(csrf, controller, "Passes bearer requests")
+Rel(controller, admin, "Sends requests", "ISender")
+Rel(admin, audit, "Records writes")
+Rel(audit, auditlog, "Decorates")
+Rel(errors, controller, "Wraps")
+Rel(tokens, db, "Reads and touches", "EF Core")
+Rel(admin, db, "Reads and writes", "EF Core")
+@enduml
