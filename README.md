@@ -145,6 +145,29 @@ Every command takes `--json` and prints one JSON document for scripts and agents
 10 unexpected error. `sixstack events --help` and `sixstack events <command> --help` list the options. To run it
 against production, see [Managing production events](infra/README.md#managing-production-events).
 
+### Manage events over the API
+
+A moderator can also manage events over HTTPS, which needs no connection string or firewall rule
+([design](docs/detailed-designs/platform/event-admin-api/README.md),
+[ADR 0012](docs/adr/0012-event-administration-api.md)). Issue a personal API token once from the CLI; it is
+printed once and stored only as a salted hash:
+
+```bash
+dotnet run --project src/SixStack.Cli -- tokens create --name laptop-agent --actor jordan@6ixstack.dev --yes
+```
+
+With the API running ([Run the app](#run-the-app)), send it as a bearer token to `/api/admin/events` (`GET`,
+`POST`, `PATCH`, `DELETE`). Writes take `?dryRun=true` to preview; `PATCH` and `DELETE` need `If-Match` with the
+version that `GET` returns as its `ETag`:
+
+```bash
+export SIXSTACK_API_TOKEN=sxk_...   # from tokens create
+curl -H "Authorization: Bearer $SIXSTACK_API_TOKEN" "http://localhost:5100/api/admin/events?search=azure"
+```
+
+Every write is audited "via API" under the token's moderator. `tokens list` and `tokens revoke <id>` manage
+your tokens; Swagger documents the endpoints with the bearer scheme.
+
 ### Run the app
 
 ```bash

@@ -123,7 +123,8 @@ Content-Type: application/json
   hash unique even across databases (ADR 0012).
 - **`CreateApiTokenCommand(Name, Days, Apply)`** — the owner is
   `ICurrentUser.UserId`, re-read from the database and required to be a
-  moderator (`ForbiddenAccessException` otherwise). Validated by
+  moderator (`ForbiddenAccessException` otherwise; `ApiTokenOwner` holds that
+  check for the create, list and revoke handlers). Validated by
   `CreateApiTokenCommandValidator`: name required and at most 80 characters,
   days 1 to 365 (default 90). With `Apply` true it stores the row, records
   `ApiTokenCreated` (details: the name) and returns the plaintext once.
@@ -141,7 +142,7 @@ Content-Type: application/json
 ### Authentication and authorization
 
 - **`ApiTokenAuthenticationHandler`** (`SixStack.Api/Auth`, scheme
-  `ApiToken`) — reads `Authorization`. No header, or a scheme other than
+  `ApiToken`, `SchemeName`) — reads `Authorization`. No header, or a scheme other than
   `Bearer`, is `NoResult`. Otherwise it sends `AuthenticateApiTokenCommand`;
   null is `Fail`. Success builds a principal whose identity has authentication
   type `ApiToken` and the claims `NameIdentifier`, `Email`, `Role` and
@@ -171,7 +172,8 @@ Content-Type: application/json
 
 ### Abuse prevention
 
-- **Rate limits** (`AdminApiRateLimit`, in the style of `SignInRateLimit`) —
+- **Rate limits** (`AdminApiRateLimit.AddAdminApiRateLimit`, in the style of
+  `SignInRateLimit`, called by `AdminApiSetup.AddAdminApi`) —
   a chained global limiter that applies only to paths under `/api/admin`: a
   fixed one-minute window per token id (read from the `sxk_` prefix, before
   authentication; default 60, `AdminApi:PerTokenPerMinute`) and per IP address
@@ -180,8 +182,9 @@ Content-Type: application/json
   `Retry-After` and, under `/api/admin`, a problem body.
 - **Body size** — `AdminBodyLimitAttribute` (a resource filter on the
   controller) sets the request's maximum body size to 64 KB where the server
-  supports it and answers 413 for a larger `Content-Length` before model
-  binding; `ExceptionHandlingMiddleware` already maps Kestrel's 413.
+  supports it, so Kestrel refuses a larger chunked body while it is read, and
+  answers 413 for a larger `Content-Length` before model binding;
+  `ExceptionHandlingMiddleware` maps both to a 413 problem.
 - **Errors** — `ExceptionHandlingMiddleware` maps validation to 400 with the
   form's field names, `ForbiddenAccessException` to 403, `NotFoundException`
   to 404, `EditConflictException` to 409 with `reason`, and anything else to
@@ -244,8 +247,9 @@ sixstack tokens [<command>] --help
 
 | Test class (`tests/`) | Covers |
 |-----------------------|--------|
-| `SixStack.Cli.Tests/TokensCommandTests` | `L2-120` #1, #2, #5; `L2-122` #3; `L2-124` #1 to #6 |
-| `SixStack.Api.Tests/AdminApi/AdminApiAuthenticationTests` | `L2-120` #3, #4; `L2-121` #1 to #5 |
+| `SixStack.Cli.Tests/TokensCreateTests` | `L2-120` #1, #5; `L2-122` #3; `L2-124` #1, #2, #3, #6 |
+| `SixStack.Cli.Tests/TokensListAndRevokeTests` | `L2-120` #2; `L2-122` #3; `L2-124` #3, #4, #5 |
+| `SixStack.Api.Tests/AdminApi/AdminApiAuthenticationTests` | `L2-120` #3, #4 and account deletion; `L2-121` #1 to #5 |
 | `SixStack.Api.Tests/AdminApi/AdminEventsReadTests` | `L2-115` #1 to #5; `L2-123` #4 |
 | `SixStack.Api.Tests/AdminApi/AdminEventsAddTests` | `L2-116` #1 to #3; `L2-119` #1, #2; `L2-122` #1, #2 |
 | `SixStack.Api.Tests/AdminApi/AdminEventsUpdateTests` | `L2-117` #1 to #4; `L2-119` #1, #3, #4, #5 |

@@ -76,3 +76,65 @@ the firewall again. You need a moderator account in the production database to w
    ```
 
 Never run `reset` against production: it drops and recreates the database, and it has no guard yet.
+
+### Over the API, without a firewall rule
+
+The admin API (`/api/admin/events`, ADR 0012) runs the same handlers as the CLI behind a moderator's personal API
+token, so day-to-day changes need neither the connection string nor a firewall rule.
+
+1. Once per machine, follow steps 1, 2 and 4 above to issue a token against production, and store it in your
+   secret store; it is printed once and the database keeps only a salted hash:
+
+   ```sh
+   dotnet run --project src/SixStack.Cli -- tokens create --name "$USER-laptop-agent" --days 90 --actor you@example.org --yes
+   ```
+
+2. From then on, call the API from your machine. Read, preview with `?dryRun=true`, then apply with the event's
+   version in `If-Match` (the `ETag` of a `GET`). With `curl`:
+
+   ```sh
+   read -rs SIXSTACK_API_TOKEN && export SIXSTACK_API_TOKEN
+   api=https://sixstack.azurewebsites.net/api/admin/events
+   auth="Authorization: Bearer $SIXSTACK_API_TOKEN"
+
+   # Add (preview, then apply)
+   curl -fsS -X POST "$api?dryRun=true" -H "$auth" -H "Content-Type: application/json" -d @event.json
+   curl -fsS -X POST "$api" -H "$auth" -H "Content-Type: application/json" -d @event.json
+
+   # Update: read the version, preview, then apply with If-Match
+   etag=$(curl -fsS -D - -o /dev/null "$api/<slug>" -H "$auth" | tr -d '\r' | awk 'tolower($1)=="etag:"{print $2}')
+   curl -fsS -X PATCH "$api/<slug>?dryRun=true" -H "$auth" -H "Content-Type: application/json" -d '{"title":"Corrected title"}'
+   curl -fsS -X PATCH "$api/<slug>" -H "$auth" -H "If-Match: $etag" -H "Content-Type: application/json" -d '{"title":"Corrected title"}'
+
+   # Soft delete
+   etag=$(curl -fsS -D - -o /dev/null "$api/<slug>" -H "$auth" | tr -d '\r' | awk 'tolower($1)=="etag:"{print $2}')
+   curl -fsS -X DELETE "$api/<slug>" -H "$auth" -H "If-Match: $etag"
+   ```
+
+   With PowerShell's `Invoke-RestMethod`:
+
+   ```powershell
+   $api = 'https://sixstack.azurewebsites.net/api/admin/events'
+   $headers = @{ Authorization = "Bearer $env:SIXSTACK_API_TOKEN" }
+
+   # Add
+   Invoke-RestMethod -Method Post -Uri $api -Headers $headers -ContentType 'application/json' -InFile event.json
+
+   # Update: read the version, preview, then apply with If-Match
+   $event = Invoke-RestMethod -Uri "$api/<slug>" -Headers $headers
+   $patch = @{ title = 'Corrected title' } | ConvertTo-Json
+   Invoke-RestMethod -Method Patch -Uri "$api/<slug>?dryRun=true" -Headers $headers -ContentType 'application/json' -Body $patch
+   Invoke-RestMethod -Method Patch -Uri "$api/<slug>" -Headers ($headers + @{ 'If-Match' = "`"$($event.version)`"" }) -ContentType 'application/json' -Body $patch
+
+   # Soft delete
+   $event = Invoke-RestMethod -Uri "$api/<slug>" -Headers $headers
+   Invoke-RestMethod -Method Delete -Uri "$api/<slug>" -Headers ($headers + @{ 'If-Match' = "`"$($event.version)`"" })
+   ```
+
+   Errors are problem details: 401 for a missing, revoked or expired token, 403 when the token's owner is no
+   longer a moderator, 400 with `errors` by field, 404, 409 with `reason` (`changed`, `read-only`, `deleted`), 428
+   without `If-Match`, 413 over 64 KB, and 429 with `Retry-After` beyond 60 requests a minute per token or 120 per
+   IP address. Every write is audited "via API" under your account.
+
+3. Revoke a token with `tokens revoke <id> --actor you@example.org --yes` (through the firewall again), or demote
+   its owner, which turns every request into 403 at once.
