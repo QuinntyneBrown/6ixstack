@@ -9,11 +9,14 @@ namespace SixStack.Api.Platform;
 /// The public event listings' cache (platform/event-listing-cache). Before model binding it answers a stored entry
 /// (L2-125); otherwise it buffers the action's body and stores a 200 or 204 under the generation read before the
 /// action ran. Either way it sends a strong <c>ETag</c> over the body and 304 for a matching <c>If-None-Match</c>
-/// (L2-126). Errors are written by <c>ExceptionHandlingMiddleware</c> and never stored.
+/// (L2-126) and the <see cref="CacheControl"/> header (L2-127). Errors are written by <c>ExceptionHandlingMiddleware</c> and never stored.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class EventListingCacheAttribute : Attribute, IAsyncResourceFilter
 {
+    /// <summary>Browsers and shared caches reuse a listing for 10 s and may show it a minute longer while revalidating (L2-127).</summary>
+    public const string CacheControl = "public, max-age=10, stale-while-revalidate=60";
+
     public async Task OnResourceExecutionAsync(ResourceExecutingContext context, ResourceExecutionDelegate next)
     {
         var http = context.HttpContext;
@@ -62,6 +65,7 @@ public sealed class EventListingCacheAttribute : Attribute, IAsyncResourceFilter
     private static async Task WriteAsync(HttpContext http, int status, string? contentType, byte[] body, string etag)
     {
         http.Response.Headers.ETag = etag;
+        http.Response.Headers.CacheControl = CacheControl;
         if (Matches(http.Request.Headers.IfNoneMatch, etag))
         {
             http.Response.StatusCode = StatusCodes.Status304NotModified;
