@@ -700,8 +700,7 @@ fieldset:disabled .input, fieldset:disabled .select, fieldset:disabled .textarea
 
 /* Filter row (v2): search sits beside the format switch, topics below. */
 .filter-row { display: flex; flex-direction: column; gap: var(--space-3); align-self: stretch; }
-@media (min-width: 40rem) { .filter-row { flex-direction: row; flex-wrap: wrap; } }
-.filter-row .search { flex: 1 1 17rem; }
+@media (min-width: 40rem) { .filter-row { flex-direction: row; flex-wrap: wrap; } .filter-row .search { flex: 1 1 17rem; } }
 .filter-row .search .input { min-height: 2.75rem; border-color: var(--color-border-default); font-size: var(--font-size-sm); }
 .filter-row .segmented { flex: none; }
 

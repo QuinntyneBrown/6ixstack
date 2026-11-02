@@ -60,6 +60,11 @@
     flex-direction: row;
     flex-wrap: wrap;
   }
+  // Wide enough for the whole placeholder, so the format control wraps below rather than clipping it. Only in the
+  // row: in the phone column the basis would become the search box's height and open a gap under it.
+  .filter-row__search {
+    flex: 1 1 17rem;
+  }
 }
 .chip-row {
   display: flex;
@@ -75,10 +80,6 @@
   text-decoration: underline;
   text-underline-offset: 0.15em;
   cursor: pointer;
-}
-// Wide enough for the whole placeholder, so the format control wraps below rather than clipping it.
-.filter-row__search {
-  flex: 1 1 17rem;
 }
 .events-error {
   margin-top: var(--spacingHorizontalXXL);
