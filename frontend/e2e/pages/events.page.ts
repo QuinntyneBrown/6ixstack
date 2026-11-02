@@ -164,6 +164,22 @@ export class EventsPage {
   url(): URL {
     return new URL(this.page.url());
   }
+
+  /** Leaves for the calendar through the header, inside the app (no reload). */
+  async goToCalendar(): Promise<void> {
+    await this.shell.primaryNav.getByRole('link', { name: 'Calendar' }).click();
+    await this.page.waitForURL('**/calendar');
+  }
+
+  /** The browser's back button, inside the app (no reload). */
+  async goBack(): Promise<void> {
+    await this.page.goBack({ waitUntil: 'commit' });
+  }
+
+  /** Resolves when the next GET /api/events response (page 1) reaches the page. */
+  nextListResponse(): Promise<unknown> {
+    return this.page.waitForResponse((r) => new URL(r.url()).pathname === '/api/events');
+  }
 }
 
 /** One event row in the list. */

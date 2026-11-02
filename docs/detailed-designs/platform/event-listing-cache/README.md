@@ -86,13 +86,18 @@ Terms used in this design:
 ### Web app (`L2-130`)
 
 - **`ListingCache`** (`frontend/projects/api/src/lib/events/listing-cache.ts`) —
-  a least-recently-used map of up to 20 responses keyed by the request URL with
-  its sorted parameters. `cached(key, request$)` returns an observable that:
+  a least-recently-used map of up to 20 responses keyed by the request path and
+  its parameters. `cached(key, load)` returns an observable that:
   - with nothing saved, emits the response, saves it and completes, or fails as
     before;
-  - with a saved response, emits it at once, then runs the quiet refresh, emits
-    the new response only if its JSON differs, saves it and completes; a failed
-    quiet refresh completes without an error, so the saved listing stays.
+  - with a saved response, emits it at once, then runs the quiet refresh
+    (`load(true)`), emits the new response only if its JSON differs, saves it and
+    completes; a failed quiet refresh completes without an error, so the saved
+    listing stays.
+- **Quiet refreshes revalidate** — `HttpEventsApi` sends them with the fetch
+  option `cache: 'no-cache'`, so the browser revalidates with the `ETag` (a cheap
+  304 when nothing changed) instead of reusing its 10-second copy. A first load
+  may still use that copy (`L2-127`).
 - **`HttpEventsApi`** uses it for `upcoming` (first page only; later pages append
   and must emit once), `featured`, `map` and `month`. Pages keep depending on
   `EVENTS_API`.
