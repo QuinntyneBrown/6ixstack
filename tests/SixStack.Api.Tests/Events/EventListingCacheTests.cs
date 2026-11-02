@@ -128,4 +128,44 @@ public sealed class EventListingCacheTests(ApiFactory factory) : IClassFixture<A
 
         Assert.Equal(anonymous, await Body("/api/events?topics=dotnet", signedIn));
     }
+
+    // L2-127 #1
+    [Theory]
+    [InlineData("/api/events")]
+    [InlineData("/api/events/featured")]
+    [InlineData("/api/events/map")]
+    [InlineData("/api/events/calendar?month=2026-11")]
+    public async Task Listings_may_be_reused_briefly_by_browsers_and_shared_caches(string url)
+    {
+        var client = factory.CreateHttpsClient();
+        var first = await client.SendAsync(Get(url));
+        var notModified = await client.SendAsync(Get(url, first.Headers.ETag!.Tag));
+
+        foreach (var response in new[] { first, notModified })
+        {
+            Assert.Equal("public, max-age=10, stale-while-revalidate=60", response.Headers.CacheControl?.ToString());
+        }
+    }
+
+    // L2-127 #2, #3
+    [Theory]
+    [InlineData("/api/events?format=maybe")]
+    [InlineData("/api/events/azure-data-ai-day-gta")]
+    public async Task Errors_and_other_endpoints_are_not_publicly_cacheable(string url)
+    {
+        var response = await factory.CreateHttpsClient().GetAsync(url);
+
+        Assert.False(response.Headers.CacheControl?.Public ?? false);
+    }
+
+    // L2-127 #3
+    [Fact]
+    public async Task The_admin_list_is_not_publicly_cacheable()
+    {
+        var token = (await SixStack.Api.Tests.AdminApi.AdminApiTokens.IssueTokenAsync(factory, HttpClientExtensions.Moderator)).Token;
+        var response = await SixStack.Api.Tests.AdminApi.AdminApiTokens.CreateTokenClient(factory, token).GetAsync("/api/admin/events");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.False(response.Headers.CacheControl?.Public ?? false);
+    }
 }
