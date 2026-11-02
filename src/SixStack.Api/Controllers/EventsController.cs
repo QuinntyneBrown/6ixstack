@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using SixStack.Api.Platform;
 using SixStack.Application.Calendar;
 using SixStack.Application.Events;
 
@@ -15,6 +16,7 @@ public sealed class EventsController(ISender sender) : ControllerBase
 {
     /// <summary>Upcoming published events grouped by Toronto day, with format and hero counts (L2-001 to L2-009).</summary>
     [HttpGet]
+    [EventListingCache]
     public Task<UpcomingEventsDto> GetUpcoming(
         [FromQuery] string? format,
         [FromQuery] string[]? topics,
@@ -25,6 +27,7 @@ public sealed class EventsController(ISender sender) : ControllerBase
 
     /// <summary>This week's featured event (L2-006): 200 with its card, or 204 when nothing is featured.</summary>
     [HttpGet("featured")]
+    [EventListingCache]
     public async Task<IActionResult> Featured(CancellationToken cancellationToken)
     {
         var featured = await sender.Send(new GetFeaturedEventQuery(), cancellationToken);
@@ -42,6 +45,7 @@ public sealed class EventsController(ISender sender) : ControllerBase
 
     /// <summary>The event map for the list's filters (L2-011, L2-013): venue dots, stream arcs and the 14 timeline days.</summary>
     [HttpGet("map")]
+    [EventListingCache]
     public Task<EventMapDto> Map(
         [FromQuery] string? format,
         [FromQuery] string[]? topics,
@@ -51,6 +55,7 @@ public sealed class EventsController(ISender sender) : ControllerBase
 
     /// <summary>One Toronto month for the calendar grid (L2-025, L2-027); 400 for a malformed month.</summary>
     [HttpGet("calendar")]
+    [EventListingCache]
     public Task<MonthCalendarDto> Calendar(
         [FromQuery] string? month,
         [FromQuery] string? format,
