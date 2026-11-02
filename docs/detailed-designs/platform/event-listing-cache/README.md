@@ -57,7 +57,7 @@ Terms used in this design:
 
 - **`IEventListingCache`** (`SixStack.Application/Common/Interfaces`) —
   `Generation`, `TryGet(key)`, `Set(key, listing, generation)` and `EvictAll()`,
-  with `CachedListing(StatusCode, Body, ETag)`.
+  with `CachedListing(StatusCode, ContentType, Body, ETag)`.
 - **`MemoryEventListingCache`** (`SixStack.Infrastructure/Caching`, singleton) —
   a `ConcurrentDictionary` capped at 1,000 entries; when it is full a new key is
   served but not stored. `Set` stores an entry only while the generation is the

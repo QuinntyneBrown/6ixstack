@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 using SixStack.Api.Tests.Infrastructure;
 
 namespace SixStack.Api.Tests.Events;
@@ -56,5 +57,75 @@ public sealed class EventListingCacheTests(ApiFactory factory) : IClassFixture<A
         var second = await client.SendAsync(Get("/api/events?format=streaming", $"\"0000\", {tag}"));
 
         Assert.Equal(HttpStatusCode.NotModified, second.StatusCode);
+    }
+
+    /// <summary>Changes a title behind the application's back, so nothing evicts the cache.</summary>
+    private Task<int> RenameUnnoticed(string slug, string title) =>
+        factory.WithDbAsync(db => db.Events.Where(e => e.Slug == slug).ExecuteUpdateAsync(s => s.SetProperty(e => e.Title, title)));
+
+    private async Task<string> Body(string url, HttpClient? client = null)
+    {
+        var response = await (client ?? factory.CreateHttpsClient()).GetAsync(url);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        return await response.Content.ReadAsStringAsync();
+    }
+
+    [Theory]
+    [InlineData("/api/events?topics=react", "server-components-one-year-in")]
+    [InlineData("/api/events/featured", "azure-data-ai-day-gta")]
+    [InlineData("/api/events/map?topics=react", "server-components-one-year-in")]
+    [InlineData("/api/events/calendar?month=2026-11&topics=aws", "bedrock-in-the-real-world")]
+    public async Task A_repeated_listing_is_answered_from_memory(string url, string slug)
+    {
+        var before = await Body(url);
+        var title = $"Renamed unnoticed {Guid.NewGuid():N}";
+        Assert.Equal(1, await RenameUnnoticed(slug, title));
+
+        var again = await Body(url);
+
+        Assert.Equal(before, again);
+        Assert.DoesNotContain(title, again);
+    }
+
+    [Fact]
+    public async Task Other_filters_are_another_entry()
+    {
+        await Body("/api/events?topics=aws");
+        var title = $"Renamed unnoticed {Guid.NewGuid():N}";
+        await RenameUnnoticed("bedrock-in-the-real-world", title);
+
+        Assert.DoesNotContain(title, await Body("/api/events?topics=aws"));
+        Assert.Contains(title, await Body("/api/events?topics=aws&format=gta"));
+    }
+
+    [Fact]
+    public async Task Filters_that_differ_only_in_case_order_or_repeats_share_an_entry()
+    {
+        var first = await Body("/api/events?topics=ai&topics=angular");
+        await RenameUnnoticed("signals-all-the-way-down", $"Renamed unnoticed {Guid.NewGuid():N}");
+
+        Assert.Equal(first, await Body("/api/events?topics=Angular&topics=AI&topics=ai"));
+    }
+
+    [Fact]
+    public async Task A_request_that_fails_validation_is_refused_every_time()
+    {
+        var client = factory.CreateHttpsClient();
+        for (var i = 0; i < 2; i++)
+        {
+            var response = await client.GetAsync("/api/events?format=maybe");
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+        }
+    }
+
+    [Fact]
+    public async Task Signed_in_and_anonymous_visitors_receive_the_same_listing()
+    {
+        var anonymous = await Body("/api/events?topics=dotnet");
+        var signedIn = factory.CreateHttpsClient();
+        await signedIn.SignInAsAsync(HttpClientExtensions.Organizer);
+
+        Assert.Equal(anonymous, await Body("/api/events?topics=dotnet", signedIn));
     }
 }

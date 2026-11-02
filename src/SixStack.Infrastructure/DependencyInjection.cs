@@ -28,8 +28,9 @@ public static class DependencyInjection
     {
         var connectionString = configuration.GetConnectionString("Default");
         var provider = configuration["Database:Provider"] ?? "SqlServer";
-        services.AddDbContext<AppDbContext>(options =>
+        services.AddDbContext<AppDbContext>((sp, options) =>
         {
+            options.AddInterceptors(sp.GetRequiredService<Caching.ListingChangeInterceptor>());
             if (string.Equals(provider, "Sqlite", StringComparison.OrdinalIgnoreCase))
             {
                 options.UseSqlite(connectionString ?? "Data Source=sixstack.db");
@@ -64,6 +65,8 @@ public static class DependencyInjection
         services.AddScoped<ISecurityTokenService, SecurityTokenService>();
         services.AddSingleton<IApiTokenHasher, ApiTokenHasher>();
         services.Configure<SubmissionChecksOptions>(configuration.GetSection(SubmissionChecksOptions.Section));
+        services.AddSingleton<IEventListingCache, Caching.MemoryEventListingCache>();
+        services.AddSingleton<Caching.ListingChangeInterceptor>();
         services.AddSingleton<IGeocoder, LocalGeocoder>();
         services.Configure<GeocodingOptions>(configuration.GetSection(GeocodingOptions.Section));
         if (configuration.GetValue<string>($"{GeocodingOptions.Section}:Provider") == "Nominatim")
