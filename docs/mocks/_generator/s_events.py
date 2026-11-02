@@ -114,6 +114,21 @@ def _():
         "Skeletons appear only after 300 ms; rows keep the exact height of real rows, and the map frame keeps its size, so nothing shifts when data arrives.", "top: 44rem; left: 1rem;")
 
 
+@state("events", "revisit", "Coming back to the list (back button, or a filter used earlier this visit): saved results show at once with no skeleton and refresh quietly.")
+def _():
+    return events_page(result_line("14 events · times in ET") + day_groups(EVENTS),
+                       event_map(EVENTS)) + note(
+        "Shown from this visit's saved results the moment the page opens, so no skeleton appears. A quiet refresh runs in the background; if anything changed, rows update in place with no layout shift and no announcement beyond the result line.", "top: 44rem; left: 1rem;")
+
+
+@state("events", "refresh-failed", "The quiet refresh failed while saved results were showing: the list stays, and the site banner says it may be out of date.")
+def _():
+    return events_page(result_line("14 events · times in ET") + day_groups(EVENTS),
+                       event_map(EVENTS),
+                       banner=banner("danger", "We can't reach 6ixstack", "Retrying in 30 seconds. The events below may be out of date.", '<button type="button">Retry now</button>', close=False, role="alert")) + note(
+        "A failed background refresh never blanks a list that is already showing. The inline error (see “error”) is only for a load with nothing to show. Network failures raise the site banner; once 6ixstack answers again the list refreshes itself.", "top: 44rem; left: 1rem;")
+
+
 @state("events", "empty", "Nothing listed in the next two weeks (holiday lull): the list explains why, the map stays calm and empty.")
 def _():
     content = result_line("0 events · times in ET") + empty(
@@ -375,6 +390,12 @@ def _():
     sk_days = {d: [] for d in range(1, 31)}
     grid = month_grid(events_by_day=sk_days).replace('<div class="cal__events"></div>', f'<div class="cal__events" aria-hidden="true">{sk("85%", "0.9rem", "skeleton--rect")}</div>')
     return calendar_page(grid.replace('aria-label="November 2026"', 'aria-label="November 2026" aria-busy="true"'), sub="Loading November…", counts=("–", "–", "–"))
+
+
+@state("calendar", "revisit", "Returning to a month seen earlier this visit: the grid fills at once from saved results and refreshes quietly.")
+def _():
+    return calendar_page(default_month()) + note(
+        "Months, filters and the featured card seen earlier in the visit open instantly with no chip skeletons; a quiet refresh swaps in any change in place.", "top: 10rem; right: 1rem;")
 
 
 @state("calendar", "empty", "December 2026 has no events yet: the grid stays, with an explanation and a submit action.")
