@@ -65,6 +65,7 @@ public static class DependencyInjection
         services.AddScoped<ISecurityTokenService, SecurityTokenService>();
         services.AddSingleton<IApiTokenHasher, ApiTokenHasher>();
         services.Configure<SubmissionChecksOptions>(configuration.GetSection(SubmissionChecksOptions.Section));
+        services.Configure<EventListingCacheOptions>(configuration.GetSection(EventListingCacheOptions.Section));
         services.AddSingleton<IEventListingCache, Caching.MemoryEventListingCache>();
         services.AddSingleton<Caching.ListingChangeInterceptor>();
         services.AddSingleton<IGeocoder, LocalGeocoder>();
