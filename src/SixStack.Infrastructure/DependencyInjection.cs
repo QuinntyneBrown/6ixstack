@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SixStack.Application.Calendar;
 using SixStack.Application.Common.Interfaces;
 using SixStack.Application.Common.Messages;
+using SixStack.Application.Events;
 using SixStack.Infrastructure.Calendar;
 using SixStack.Infrastructure.Email;
 using SixStack.Infrastructure.Identity;
@@ -64,7 +65,9 @@ public static class DependencyInjection
         services.AddSingleton<IApiTokenHasher, ApiTokenHasher>();
         services.Configure<SubmissionChecksOptions>(configuration.GetSection(SubmissionChecksOptions.Section));
         services.AddSingleton<IGeocoder, LocalGeocoder>();
+        services.Configure<GeocodingOptions>(configuration.GetSection(GeocodingOptions.Section));
         services.AddSingleton<IVenueLocator, LocalVenueLocator>();
+        services.AddHostedService<VenueGeocodingJob>();
         if (configuration.GetValue<string>($"{SubmissionChecksOptions.Section}:LinkChecker") == "AssumeReachable")
         {
             services.AddSingleton<ILinkChecker, AssumeReachableLinkChecker>();
