@@ -3,6 +3,7 @@ import { inject, Injectable, InjectionToken } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../core/api-config';
 import { EventDetail } from './event-detail';
+import { ListingCache } from './listing-cache';
 
 export type EventFormatFilter = 'all' | 'gta' | 'streaming';
 
@@ -121,6 +122,11 @@ export interface ProblemReport {
   replyEmail: string | null;
 }
 
+/**
+ * The events API. `featured`, `map`, `month` and page 1 of `upcoming` are listings saved for the visit (L2-130):
+ * when one is saved, the observable emits it at once, then emits again only if a quiet refresh brings a change,
+ * and a failed refresh completes without an error.
+ */
 export interface EventsApi {
   /** Sends a problem report (L2-039); 400 carries field errors, 429 means too many from this address. */
   report(slug: string, report: ProblemReport): Observable<void>;
@@ -149,14 +155,27 @@ export const EVENTS_API = new InjectionToken<EventsApi>('EVENTS_API');
 export class HttpEventsApi implements EventsApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
+  /** Listings saved for the visit; a saved one shows at once and refreshes quietly (L2-130). */
+  private readonly listings = new ListingCache();
+
+  /** GET `path` through the saved listings; a quiet refresh revalidates past the browser's HTTP cache. */
+  private listing<T>(path: string, params: HttpParams): Observable<T> {
+    return this.listings.cached(`${path}?${params.toString()}`, (refresh) =>
+      this.http.get<T>(`${this.baseUrl}${path}`, { params, ...(refresh ? { cache: 'no-cache' } : {}) }),
+    );
+  }
 
   upcoming(query: UpcomingEventsQuery): Observable<UpcomingEvents> {
     let params = new HttpParams();
     if (query.format && query.format !== 'all') params = params.set('format', query.format);
     for (const topic of query.topics ?? []) params = params.append('topics', topic);
     if (query.q) params = params.set('q', query.q);
-    if (query.page && query.page > 1) params = params.set('page', query.page);
-    return this.http.get<UpcomingEvents>(`${this.baseUrl}/api/events`, { params });
+    if (query.page && query.page > 1) {
+      // Later pages are appended to the list, so they must answer once: they are never saved.
+      params = params.set('page', query.page);
+      return this.http.get<UpcomingEvents>(`${this.baseUrl}/api/events`, { params });
+    }
+    return this.listing<UpcomingEvents>('/api/events', params);
   }
 
   report(slug: string, report: ProblemReport): Observable<void> {
@@ -164,9 +183,14 @@ export class HttpEventsApi implements EventsApi {
   }
 
   featured(): Observable<FeaturedEvent | null> {
-    return this.http
-      .get<FeaturedEvent>(`${this.baseUrl}/api/events/featured`, { observe: 'response' })
-      .pipe(map((response) => (response.status === 204 ? null : response.body)));
+    return this.listings.cached('/api/events/featured', (refresh) =>
+      this.http
+        .get<FeaturedEvent>(`${this.baseUrl}/api/events/featured`, {
+          observe: 'response',
+          ...(refresh ? { cache: 'no-cache' } : {}),
+        })
+        .pipe(map((response) => (response.status === 204 ? null : response.body))),
+    );
   }
 
   map(query: UpcomingEventsQuery): Observable<EventMapData> {
@@ -174,14 +198,14 @@ export class HttpEventsApi implements EventsApi {
     if (query.format && query.format !== 'all') params = params.set('format', query.format);
     for (const topic of query.topics ?? []) params = params.append('topics', topic);
     if (query.q) params = params.set('q', query.q);
-    return this.http.get<EventMapData>(`${this.baseUrl}/api/events/map`, { params });
+    return this.listing<EventMapData>('/api/events/map', params);
   }
 
   month(query: MonthCalendarQuery): Observable<MonthCalendar> {
     let params = new HttpParams().set('month', query.month);
     if (query.format && query.format !== 'all') params = params.set('format', query.format);
     for (const topic of query.topics ?? []) params = params.append('topics', topic);
-    return this.http.get<MonthCalendar>(`${this.baseUrl}/api/events/calendar`, { params });
+    return this.listing<MonthCalendar>('/api/events/calendar', params);
   }
 
   downloadIcs(slug: string): Observable<CalendarFile> {

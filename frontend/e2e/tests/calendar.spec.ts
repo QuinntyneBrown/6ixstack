@@ -93,6 +93,21 @@ test.describe('Month calendar', () => {
     await expect(new EventsPage(page).formatOption('In the GTA')).toHaveAttribute('aria-pressed', 'true');
   });
 
+  // L2-130 #5
+  test('a month seen earlier in the visit opens at once, with no skeleton chips', async ({ page }) => {
+    const calendar = new CalendarPage(page);
+    await calendar.open();
+    await expect(calendar.subtitle).toHaveText(/^20 events this month/);
+    await calendar.nextMonth.click();
+    await calendar.waitForMonth('December 2026');
+    await slowCalendar(page, 4_000);
+
+    await calendar.previousMonth.click();
+
+    await expect(calendar.subtitle).toHaveText(/^20 events this month/, { timeout: 1_000 });
+    await expect(calendar.skeletonChips()).toHaveCount(0);
+  });
+
   test('a slow month shows skeleton chips in the grid', async ({ page }) => {
     await slowCalendar(page, 2_000);
     const calendar = new CalendarPage(page);
