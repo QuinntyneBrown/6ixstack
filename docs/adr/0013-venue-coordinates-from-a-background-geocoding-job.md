@@ -22,7 +22,7 @@ only answers whether an address looks like a GTA street address.
 - `Geocoding:Provider` chooses the adapter:
   - `Local` (the default, used by tests, Playwright, demos and development) places the venue at its city's
     reference point from a fixed table of the reference-list cities. It never touches the network.
-  - `Nominatim` (production, set in `infra/main.bicep`) queries OpenStreetMap Nominatim's search API for the
+  - `Nominatim` (production, set in `src/SixStack.Api/appsettings.Production.json`) queries OpenStreetMap Nominatim's search API for the
     address in Ontario, Canada, at most one request a second, with an identifying `User-Agent`, as the
     Nominatim usage policy asks. An address Nominatim does not find falls back to the city's reference point, so
     the event still appears on the map and is not looked up again; a network error or non-success status returns
