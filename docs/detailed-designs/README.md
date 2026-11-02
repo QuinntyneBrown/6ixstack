@@ -40,4 +40,4 @@ Business rules live in handlers and domain entities, never in controllers.
 | `moderation` | `review-queue`, `automated-checks`, `approve-submission`, `reject-submission` |
 | `notifications` | `in-app-notifications`, `email-notifications` |
 | `site` | `app-shell`, `static-pages`, `contact-form`, `toasts-and-banners`, `status-pages` |
-| `platform` | `time-zones`, `security-hardening`, `privacy-and-retention`, `performance-budgets`, `accessibility`, `observability`, `event-admin-cli` |
+| `platform` | `time-zones`, `security-hardening`, `privacy-and-retention`, `performance-budgets`, `accessibility`, `observability`, `event-admin-cli`, `event-admin-api`, `event-listing-cache` |

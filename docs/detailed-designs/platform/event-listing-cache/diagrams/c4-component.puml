@@ -1,0 +1,41 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Event listing cache
+
+Person(visitor, "Visitor", "Browser running the web app")
+Container_Boundary(web, "6ixstack web app") {
+  Component(page, "EventsPage / CalendarPage", "Angular", "Switch to each load; skeleton after 300 ms")
+  Component(httpapi, "HttpEventsApi", "EVENTS_API", "upcoming, featured, map, month")
+  Component(lcache, "ListingCache", "TypeScript", "20 saved responses, quiet refresh")
+}
+Container_Boundary(api, "6ixstack API") {
+  Component(log, "RequestLoggingMiddleware", "Middleware", "Logs route, status, duration, ListingCache")
+  Component(filter, "EventListingCacheAttribute", "MVC resource filter", "Key, hit or miss, ETag, 304, Cache-Control")
+  Component(controller, "EventsController", "MVC controller", "Four listing actions")
+}
+Container_Boundary(app, "Application layer") {
+  Component(handlers, "Listing query handlers", "MediatR", "Upcoming, Featured, Map, MonthCalendar")
+  Component(contract, "IEventListingCache", "Interface", "Generation, TryGet, Set, EvictAll")
+  Component(writes, "Write handlers", "MediatR", "Approve, edit, cancel, admin API, LocateVenues")
+}
+Container_Boundary(infra, "Infrastructure") {
+  Component(store, "MemoryEventListingCache", "Singleton", "1,000 entries, lifetime and Toronto midnight via IClock")
+  Component(interceptor, "ListingChangeInterceptor", "SaveChangesInterceptor", "Evicts after listing-relevant saves")
+}
+ContainerDb(db, "6ixstack database", "SQL", "Events, Communities, Venues, Speakers")
+
+Rel(visitor, page, "Opens a listing")
+Rel(page, httpapi, "Subscribes")
+Rel(httpapi, lcache, "Saved or fresh")
+Rel(lcache, log, "GET listing", "HTTPS")
+Rel(log, filter, "next")
+Rel(filter, store, "TryGet / Set")
+Rel(filter, controller, "Miss only")
+Rel(controller, handlers, "Sends query", "ISender")
+Rel(handlers, db, "Reads", "EF Core")
+Rel(writes, interceptor, "SaveChanges")
+Rel(interceptor, db, "Saves", "EF Core")
+Rel(interceptor, store, "EvictAll")
+Rel(store, contract, "Implements")
+@enduml

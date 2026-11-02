@@ -113,6 +113,12 @@ its day groups (merging a day it already shows).
 - The result line drops its "Clear filters" link when nothing matches, because the no-results state offers it.
 - When Show 20 more fails, a danger toast "We couldn't load more events" offers Try again and the list stays.
 
+### Caching
+
+`GET /api/events` is served from the API's listing cache with an `ETag` and
+short-lived `Cache-Control`, and the web app shows a saved response at once
+and refreshes it quietly (`platform/event-listing-cache`, `L2-125` to `L2-130`).
+
 ## Requirements
 
 | L2 ID | Refines (L1) | Requirement |

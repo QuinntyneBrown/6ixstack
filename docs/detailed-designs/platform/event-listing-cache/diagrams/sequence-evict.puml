@@ -1,0 +1,34 @@
+@startuml
+title UML sequence behaviour — A saved change evicts the listings
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Moderator" as mod
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "ApproveSubmissionHandler" as approve
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "AppDbContext" as ctx
+  participant "ListingChangeInterceptor" as icpt
+  participant "MemoryEventListingCache" as cache
+  database "6ixstack database" as db
+end box
+participant "Visitor's browser" as br
+mod -> approve : Approve "Rust in production at scale"
+approve -> ctx : SaveChangesAsync
+ctx -> icpt : SavingChanges
+icpt -> icpt : Event modified -> note listing change
+ctx -> db : INSERT / UPDATE
+alt save succeeds
+  ctx -> icpt : SavedChanges
+  icpt -> cache : EvictAll()
+  cache -> cache : clear entries, generation + 1
+else save fails
+  ctx -> icpt : SaveChangesFailed
+  icpt -> icpt : forget the note (entries kept)
+end
+br -> cache : next GET /api/events (via filter)
+cache --> br : miss: computed again, shows the event (L2-128)
+@enduml

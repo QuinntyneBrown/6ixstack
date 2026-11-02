@@ -38,6 +38,9 @@ Terms used in this design:
   indexes on `Communities (Slug)` and `Speakers (Slug)`, and
   `EventSpeakers (SpeakerId)`. Each slice design names any further index it
   uses.
+- **Listing cache** — the four event listings (`GET /api/events`, `/featured`,
+  `/map`, `/calendar`) are served from memory with an `ETag` and evicted after any
+  save that touches them (`platform/event-listing-cache`, `L2-125` to `L2-130`).
 - **Paging** — list endpoints cap `pageSize` at 50 in their validators.
 - **`FeedCache`** — `IFeedCache` implementation in `SixStack.Infrastructure`. It
   holds the rendered ICS body of each feed in `IMemoryCache` with a strong

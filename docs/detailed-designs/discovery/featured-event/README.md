@@ -94,6 +94,12 @@ Open points:
 - Whether a featured event whose start has already passed in the current week
   stays on the card is `<TO SUPPLY>`.
 
+### Caching
+
+`GET /api/events/featured` is served from the API's listing cache with an `ETag` and
+short-lived `Cache-Control`, and the web app shows a saved response at once
+and refreshes it quietly (`platform/event-listing-cache`, `L2-125` to `L2-130`).
+
 ## Requirements
 
 | L2 ID | Refines (L1) | Requirement |

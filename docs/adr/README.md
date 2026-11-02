@@ -17,3 +17,4 @@ Short records of choices the requirements and designs left open. One file per de
 | [0011](0011-cli-event-administration.md) | The CLI manages events through Application handlers, as a named moderator, with guarded writes and soft delete |
 | [0012](0012-event-administration-api.md) | Events are administered over the API with personal bearer tokens issued from the CLI, stored salted and hashed, with `If-Match` concurrency |
 | [0013](0013-venue-coordinates-from-a-background-geocoding-job.md) | Venue coordinates come from a background geocoding job, with OpenStreetMap Nominatim in production |
+| [0014](0014-event-listing-cache.md) | Event listings are cached in API memory, evicted after any save that touches them, bounded by a 5-minute lifetime and Toronto midnight, and reused briefly by browsers and the web app |
