@@ -1,12 +1,15 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Net.Http.Headers;
+using SixStack.Application.Common.Interfaces;
 
 namespace SixStack.Api.Platform;
 
 /// <summary>
-/// The public event listings' HTTP cache (platform/event-listing-cache): a strong <c>ETag</c> over the body and
-/// 304 for a matching <c>If-None-Match</c> (L2-126).
+/// The public event listings' cache (platform/event-listing-cache). Before model binding it answers a stored entry
+/// (L2-125); otherwise it buffers the action's body and stores a 200 or 204 under the generation read before the
+/// action ran. Either way it sends a strong <c>ETag</c> over the body and 304 for a matching <c>If-None-Match</c>
+/// (L2-126). Errors are written by <c>ExceptionHandlingMiddleware</c> and never stored.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class EventListingCacheAttribute : Attribute, IAsyncResourceFilter
@@ -14,6 +17,15 @@ public sealed class EventListingCacheAttribute : Attribute, IAsyncResourceFilter
     public async Task OnResourceExecutionAsync(ResourceExecutingContext context, ResourceExecutionDelegate next)
     {
         var http = context.HttpContext;
+        var cache = http.RequestServices.GetRequiredService<IEventListingCache>();
+        var key = EventListingCacheKey.For(http.Request.Path, http.Request.Query);
+        if (cache.TryGet(key) is { } stored)
+        {
+            await WriteAsync(http, stored.StatusCode, stored.ContentType, stored.Body, stored.ETag);
+            return;
+        }
+
+        var generation = cache.Generation;
         var original = http.Response.Body;
         using var buffer = new MemoryStream();
         http.Response.Body = buffer;
@@ -37,14 +49,17 @@ public sealed class EventListingCacheAttribute : Attribute, IAsyncResourceFilter
         var body = buffer.ToArray();
         if (status is StatusCodes.Status200OK or StatusCodes.Status204NoContent)
         {
-            await WriteAsync(http, status, body, ETagOf(body));
+            var etag = ETagOf(body);
+            var contentType = http.Response.ContentType;
+            cache.Set(key, new CachedListing(status, contentType, body, etag), generation);
+            await WriteAsync(http, status, contentType, body, etag);
             return;
         }
 
         await original.WriteAsync(body, http.RequestAborted);
     }
 
-    private static async Task WriteAsync(HttpContext http, int status, byte[] body, string etag)
+    private static async Task WriteAsync(HttpContext http, int status, string? contentType, byte[] body, string etag)
     {
         http.Response.Headers.ETag = etag;
         if (Matches(http.Request.Headers.IfNoneMatch, etag))
@@ -56,6 +71,7 @@ public sealed class EventListingCacheAttribute : Attribute, IAsyncResourceFilter
         }
 
         http.Response.StatusCode = status;
+        http.Response.ContentType = contentType;
         http.Response.ContentLength = body.Length;
         await http.Response.Body.WriteAsync(body, http.RequestAborted);
     }

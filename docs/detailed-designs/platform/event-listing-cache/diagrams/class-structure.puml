@@ -36,6 +36,7 @@ package "SixStack.Application" {
   }
   class CachedListing <<record>> {
     +StatusCode : int
+    +ContentType : string?
     +Body : byte[]
     +ETag : string
   }
