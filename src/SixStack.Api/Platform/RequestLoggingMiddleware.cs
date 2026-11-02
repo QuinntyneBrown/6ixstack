@@ -5,7 +5,8 @@ namespace SixStack.Api.Platform;
 /// <summary>
 /// Outermost middleware (L2-101): assigns the correlation id, returns it in <c>X-Correlation-Id</c>, and writes one
 /// structured entry per request with method, route template, final status and duration. It never logs the raw
-/// path, query string or body, so tokens and email addresses stay out of the logs.
+/// path, query string or body, so tokens and email addresses stay out of the logs. An event listing request also
+/// carries <c>ListingCache</c> (hit or miss) in its scope (platform/event-listing-cache).
 /// </summary>
 public sealed class RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggingMiddleware> logger)
 {
@@ -21,7 +22,8 @@ public sealed class RequestLoggingMiddleware(RequestDelegate next, ILogger<Reque
             return Task.CompletedTask;
         });
 
-        using var scope = logger.BeginScope(new Dictionary<string, object> { ["CorrelationId"] = correlationId });
+        var scopeState = new Dictionary<string, object> { ["CorrelationId"] = correlationId };
+        using var scope = logger.BeginScope(scopeState);
         var started = Stopwatch.GetTimestamp();
         try
         {
@@ -34,6 +36,11 @@ public sealed class RequestLoggingMiddleware(RequestDelegate next, ILogger<Reque
                 ?? context.GetEndpoint()?.DisplayName
                 ?? "(unmatched)";
             var status = context.Response.StatusCode;
+            if (context.Items.TryGetValue(EventListingCacheAttribute.OutcomeItem, out var outcome) && outcome is not null)
+            {
+                scopeState[EventListingCacheAttribute.OutcomeItem] = outcome;
+            }
+
             var level = status >= 500 ? LogLevel.Error
                 : route.StartsWith("/health", StringComparison.Ordinal) || route.StartsWith("Health checks", StringComparison.Ordinal) ? LogLevel.Debug
                 : LogLevel.Information;
