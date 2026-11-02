@@ -126,19 +126,19 @@ Services: dialogs open through Angular CDK `Dialog` with their content wrapped i
 
 ### Public
 
-#### Events — `/` — `pages/events`: default, hover, day-focus, playing, loading, empty, error, filtered, no-results, partial, long, edge
+#### Events — `/` — `pages/events`: default, hover, day-focus, playing, loading, revisit, refresh-failed, empty, error, filtered, no-results, partial, long, edge
 
-- Library: `FeatureCard` (with `DateTile`, `Button` on-feature; journey 17), `SegmentedControl` (design system: button group, segmented), `TopicChip`, `SearchField` (design system: text field, search), `DayGroup`, `EventRow` (with `TopicTag`, `Badge`), `EventMap`, `MapTimeline` (journey 16), `Link` (arrow), `Button`; loading `Skeleton`; empty and no-results `EmptyState`; error `Alert` (list, with Try again and a link action) + `Skeleton` (map waits); long load more (`Button`, busy while loading); edge `Badge` (Waitlist open, Cancelled on `EventRow`).
-- Local: hero (`hero`, `hero__stat`), filter bar, result line, `EventMapPanel` (map states), CTA band (`cta-band`: submit and subscribe sections). hover, day-focus, playing and partial change map/list state classes only (`is-dim`, `is-off`, `is-hot`).
+- Library: `FeatureCard` (with `DateTile`, `Button` on-feature; journey 17), `SegmentedControl` (design system: button group, segmented), `TopicChip`, `SearchField` (design system: text field, search), `DayGroup`, `EventRow` (with `TopicTag`, `Badge`), `EventMap`, `MapTimeline` (journey 16), `Link` (arrow), `Button`; loading `Skeleton`; empty and no-results `EmptyState`; error `Alert` (list, with Try again and a link action) + `Skeleton` (map waits); long load more (`Button`, busy while loading); edge `Badge` (Waitlist open, Cancelled on `EventRow`); revisit uses the default composition with no `Skeleton`; refresh-failed keeps the list and relies on the shell's site banner (`notifications/site-banner`, danger), with no inline `Alert`.
+- Local: hero (`hero`, `hero__stat`), filter bar, result line, `EventMapPanel` (map states), CTA band (`cta-band`: submit and subscribe sections). hover, day-focus, playing and partial change map/list state classes only (`is-dim`, `is-off`, `is-hot`). Saved listing results come from the `api` project's `HttpEventsApi` cache (platform/event-listing-cache), not from page code.
 
 #### Event detail — `/events/:slug` — `pages/event-detail`: default, loading, error, streaming, past, cancelled
 
 - Library: `Icon` (back link), `DateTile` (lg), `TopicTag`, `Description` (the design's `DescriptionRenderer`), `PersonLink` with `Avatar` (speakers), `EventMap` (compact; journey 16), `FactItem` (facts), `Button` (primary, block, ghost), `DockedActionBar`; loading `Skeleton`; error `EmptyState` (error); not found `StatusPage` (`NotFoundPage`); streaming, past, cancelled and status alerts `Alert` (see `notifications/event-alert`).
 - Local: page layout, back link, detail hero, facts panel frame (`.facts`), prose section, agenda (`ol.agenda`, `agenda__time`: no library component for an event agenda; flag for catalogue review), share/report/calendar action row.
 
-#### Calendar — `/calendar` — `pages/calendar`: default, loading, empty, error, no-results
+#### Calendar — `/calendar` — `pages/calendar`: default, loading, revisit, empty, error, no-results
 
-- Library: `SegmentedControl`, `TopicChip`, `Button` (previous, next, Today), `ButtonGroup` (List / Month view switch), `MonthGrid`, `TopicTag` (legend), `CalendarDayList` (small screens); loading `Skeleton` chips inside `MonthGrid`; empty, error and no-results use `Alert` (not `EmptyState`).
+- Library: `SegmentedControl`, `TopicChip`, `Button` (previous, next, Today), `ButtonGroup` (List / Month view switch), `MonthGrid`, `TopicTag` (legend), `CalendarDayList` (small screens); loading `Skeleton` chips inside `MonthGrid`; empty, error and no-results use `Alert` (not `EmptyState`); revisit uses the default composition with no `Skeleton`.
 - Local: page title, filter bar, calendar toolbar (`cal-toolbar`: month heading and actions).
 
 #### Communities — `/communities` — `pages/communities`: default, loading, empty, error, no-results
