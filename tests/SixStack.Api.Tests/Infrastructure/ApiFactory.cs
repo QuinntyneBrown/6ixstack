@@ -31,6 +31,7 @@ public class ApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Swagger:Enabled", "true");
         builder.UseSetting("DevMailbox:Expose", "true");
         builder.UseSetting("SubmissionChecks:LinkChecker", "AssumeReachable");
+        builder.UseSetting("Geocoding:Enabled", "false");
         builder.ConfigureServices(ConfigureTestServices);
     }
 

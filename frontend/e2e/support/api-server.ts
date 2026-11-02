@@ -30,6 +30,8 @@ export function apiEnvironment(databaseName = 'e2e'): NodeJS.ProcessEnv {
     Contact__PerIpPerHour: '10000',
     // Submission link checks stay off the network in Playwright and demos.
     SubmissionChecks__LinkChecker: 'AssumeReachable',
+    // The map stays exactly as seeded; API tests prove the geocoding job.
+    Geocoding__Enabled: 'false',
     DOTNET_CLI_TELEMETRY_OPTOUT: '1',
   };
 }
