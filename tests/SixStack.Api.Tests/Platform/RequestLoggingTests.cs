@@ -53,4 +53,22 @@ public sealed class RequestLoggingTests(PlatformFactory factory) : IClassFixture
         Assert.Equal("(unmatched)", entry.State["Route"]);
         Assert.DoesNotContain("secret", entry.Message);
     }
+
+    // platform/event-listing-cache, observability: hit rates per route come from the request log.
+    [Fact]
+    public async Task Event_listing_requests_record_whether_the_cache_answered()
+    {
+        var client = factory.CreateHttpsClient();
+        var first = await client.GetAsync("/api/events?topics=aws&q=bedrock");
+        var second = await client.GetAsync("/api/events?topics=aws&q=bedrock");
+
+        object? Outcome(HttpResponseMessage response)
+        {
+            var id = Assert.Single(response.Headers.GetValues("X-Correlation-Id"));
+            return Assert.Single(factory.RequestLogs, e => Equals(e.State.GetValueOrDefault("CorrelationId"), id)).State.GetValueOrDefault("ListingCache");
+        }
+
+        Assert.Equal("miss", Outcome(first));
+        Assert.Equal("hit", Outcome(second));
+    }
 }

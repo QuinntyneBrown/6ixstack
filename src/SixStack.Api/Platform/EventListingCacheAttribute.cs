@@ -17,6 +17,9 @@ public sealed class EventListingCacheAttribute : Attribute, IAsyncResourceFilter
     /// <summary>Browsers and shared caches reuse a listing for 10 s and may show it a minute longer while revalidating (L2-127).</summary>
     public const string CacheControl = "public, max-age=10, stale-while-revalidate=60";
 
+    /// <summary>The <c>HttpContext.Items</c> key holding "hit" or "miss" for the request log.</summary>
+    public const string OutcomeItem = "ListingCache";
+
     public async Task OnResourceExecutionAsync(ResourceExecutingContext context, ResourceExecutionDelegate next)
     {
         var http = context.HttpContext;
@@ -24,10 +27,12 @@ public sealed class EventListingCacheAttribute : Attribute, IAsyncResourceFilter
         var key = EventListingCacheKey.For(http.Request.Path, http.Request.Query);
         if (cache.TryGet(key) is { } stored)
         {
+            http.Items[OutcomeItem] = "hit";
             await WriteAsync(http, stored.StatusCode, stored.ContentType, stored.Body, stored.ETag);
             return;
         }
 
+        http.Items[OutcomeItem] = "miss";
         var generation = cache.Generation;
         var original = http.Response.Body;
         using var buffer = new MemoryStream();
