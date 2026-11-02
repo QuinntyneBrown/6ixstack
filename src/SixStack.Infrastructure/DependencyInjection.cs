@@ -66,7 +66,15 @@ public static class DependencyInjection
         services.Configure<SubmissionChecksOptions>(configuration.GetSection(SubmissionChecksOptions.Section));
         services.AddSingleton<IGeocoder, LocalGeocoder>();
         services.Configure<GeocodingOptions>(configuration.GetSection(GeocodingOptions.Section));
-        services.AddSingleton<IVenueLocator, LocalVenueLocator>();
+        if (configuration.GetValue<string>($"{GeocodingOptions.Section}:Provider") == "Nominatim")
+        {
+            services.AddHttpClient<IVenueLocator, NominatimVenueLocator>(client => client.Timeout = NominatimVenueLocator.Timeout);
+        }
+        else
+        {
+            services.AddSingleton<IVenueLocator, LocalVenueLocator>();
+        }
+
         services.AddHostedService<VenueGeocodingJob>();
         if (configuration.GetValue<string>($"{SubmissionChecksOptions.Section}:LinkChecker") == "AssumeReachable")
         {
