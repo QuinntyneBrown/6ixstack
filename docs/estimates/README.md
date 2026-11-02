@@ -1,12 +1,12 @@
 # Estimates
 
-- Overall effort: 170 days
-- Complete: 79%
+- Overall effort: 174 days
+- Complete: 77%
 
 | Subsystem | Effort | Complete |
 |---|---|---|
 | [site](site.md) | 19 days | 76% |
-| [platform](platform.md) | 41 days | 51% |
+| [platform](platform.md) | 45 days | 46% |
 | [discovery](discovery.md) | 20 days | 94% |
 | [feeds-and-sharing](feeds-and-sharing.md) | 17 days | 92% |
 | [submissions](submissions.md) | 9 days | 85% |
@@ -26,3 +26,4 @@
 6. Notifications; submissions report-problem; directory speakers; remaining identity; site contact-form and static-pages
 7. Platform event-admin-cli
 8. Platform event-admin-api
+9. Platform event-listing-cache

@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour — Listing hit, miss and conditional request
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+participant "Browser" as br
+box "Backend — 6ixstack API application" #D1FADF
+  participant "RequestLoggingMiddleware" as log
+  participant "EventListingCacheAttribute" as filter
+  participant "EventsController" as controller
+end box
+box "Backend — 6ixstack Application and Domain" #ECFDF3
+  participant "GetUpcomingEventsQueryHandler" as handler
+end box
+box "Backend — 6ixstack Infrastructure" #FFF4E5
+  participant "MemoryEventListingCache" as cache
+  database "6ixstack database" as db
+end box
+br -> log : GET /api/events?topics=ai
+log -> filter : next
+filter -> filter : EventListingCacheKey.For(...)
+filter -> cache : TryGet(key)
+alt hit (not expired)
+  cache --> filter : CachedListing {ETag "9f2c…"}
+else miss
+  cache --> filter : null
+  filter -> cache : Generation
+  filter -> controller : run action (body buffered)
+  controller -> handler : GetUpcomingEventsQuery
+  handler -> db : Listing queries
+  db --> handler : Rows
+  handler --> controller : UpcomingEventsDto
+  controller --> filter : 200 JSON in buffer
+  filter -> filter : SHA-256 ETag
+  filter -> cache : Set(key, listing, generation)
+end
+alt If-None-Match holds the ETag
+  filter --> log : 304, ETag, Cache-Control (L2-126)
+else
+  filter --> log : 200 body, ETag, Cache-Control (L2-127)
+end
+log -> log : Log route, status, duration, ListingCache=hit|miss
+log --> br : Response
+@enduml

@@ -1,0 +1,68 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Event listing cache
+
+package "SixStack.Api" {
+  class EventListingCacheAttribute <<resource filter>> {
+    +CacheControl = "public, max-age=10, stale-while-revalidate=60"
+    +OnResourceExecutionAsync(context, next) : Task
+  }
+  class EventListingCacheKey <<static>> {
+    +For(path, query) : string
+  }
+  class EventsController {
+    +GetUpcoming(format, topics, q, page, ct)
+    +Featured(ct)
+    +Map(format, topics, q, ct)
+    +Calendar(month, format, topics, ct)
+  }
+  class RequestLoggingMiddleware
+}
+package "SixStack.Application" {
+  interface IEventListingCache {
+    +Generation : long
+    +TryGet(key) : CachedListing?
+    +Set(key, listing, generation) : void
+    +EvictAll() : void
+  }
+  class CachedListing <<record>> {
+    +StatusCode : int
+    +Body : byte[]
+    +ETag : string
+  }
+  class EventListingCacheOptions {
+    +Lifetime : TimeSpan = 5 min
+  }
+  interface IClock
+}
+package "SixStack.Infrastructure" {
+  class MemoryEventListingCache {
+    +MaxEntries = 1000
+    -entries : ConcurrentDictionary
+    -generation : long
+  }
+  class ListingChangeInterceptor <<SaveChangesInterceptor>> {
+    +SavingChanges(...)
+    +SavedChanges(...)
+    +SaveChangesFailed(...)
+  }
+}
+EventsController ..> EventListingCacheAttribute : decorated by
+EventListingCacheAttribute ..> EventListingCacheKey
+EventListingCacheAttribute ..> IEventListingCache
+EventListingCacheAttribute ..> RequestLoggingMiddleware : HttpContext.Items
+IEventListingCache ..> CachedListing
+MemoryEventListingCache ..|> IEventListingCache
+MemoryEventListingCache ..> IClock
+MemoryEventListingCache ..> EventListingCacheOptions
+ListingChangeInterceptor ..> IEventListingCache : EvictAll
+@enduml

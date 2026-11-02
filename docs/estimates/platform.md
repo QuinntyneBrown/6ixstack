@@ -5,6 +5,7 @@
 | accessibility | 5 days | 20% |
 | event-admin-api | 6 days | 100% |
 | event-admin-cli | 7 days | 100% |
+| event-listing-cache | 4 days | 0% |
 | observability | 5 days | 80% |
 | performance-budgets | 4 days | 0% |
 | privacy-and-retention | 4 days | 5% |

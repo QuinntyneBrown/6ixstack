@@ -138,6 +138,12 @@ These points were open; journey 09 decided them:
 - `L2-025` criterion 1 now uses the seed's November totals (the mock's 21 did not match its own grid).
 - The library gains `MonthGrid`, `CalendarDayList` and `ButtonGroup` (List / Month switch).
 
+### Caching
+
+`GET /api/events/calendar` is served from the API's listing cache with an `ETag` and
+short-lived `Cache-Control`, and the web app shows a saved response at once
+and refreshes it quietly (`platform/event-listing-cache`, `L2-125` to `L2-130`).
+
 ## Requirements
 
 | L2 ID | Refines (L1) | Requirement |

@@ -159,6 +159,12 @@ Open points:
 - Whether Play starts from the first day with events or from the focused day
   is `<TO SUPPLY>`. The design starts from the first day with events.
 
+### Caching
+
+`GET /api/events/map` is served from the API's listing cache with an `ETag` and
+short-lived `Cache-Control`, and the web app shows a saved response at once
+and refreshes it quietly (`platform/event-listing-cache`, `L2-125` to `L2-130`).
+
 ## Requirements
 
 | L2 ID | Refines (L1) | Requirement |
