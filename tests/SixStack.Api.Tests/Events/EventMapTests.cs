@@ -1,8 +1,11 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using SixStack.Api.Tests.Infrastructure;
+using SixStack.Application.Events;
 
 namespace SixStack.Api.Tests.Events;
 
@@ -78,6 +81,36 @@ public sealed class EventMapTests(ApiFactory factory) : IClassFixture<ApiFactory
 
         Assert.DoesNotContain(map.GetProperty("points").EnumerateArray(), p => p.GetProperty("slug").GetString() == "azure-data-ai-day-gta");
         Assert.Equal(8, map.GetProperty("points").GetArrayLength());
+    }
+
+    [Fact]
+    public async Task Locating_venues_puts_an_event_without_coordinates_on_the_map_and_keeps_existing_coordinates()
+    {
+        using var own = new ApiFactory();
+        var before = await (await own.CreateHttpsClient().GetAsync("/api/events/map")).Content.ReadFromJsonAsync<JsonElement>();
+        var kept = before.GetProperty("points").EnumerateArray().First(p => p.GetProperty("slug").GetString() != "azure-data-ai-day-gta");
+        await own.WithDbAsync(async db =>
+        {
+            var e = await db.Events.SingleAsync(x => x.Slug == "azure-data-ai-day-gta");
+            e.Venue!.Latitude = null;
+            e.Venue.Longitude = null;
+            await db.SaveChangesAsync();
+            return 0;
+        });
+
+        using (var scope = own.Services.CreateScope())
+        {
+            await scope.ServiceProvider.GetRequiredService<ISender>().Send(new LocateVenuesCommand());
+        }
+
+        var map = await (await own.CreateHttpsClient().GetAsync("/api/events/map")).Content.ReadFromJsonAsync<JsonElement>();
+        var points = map.GetProperty("points").EnumerateArray().ToList();
+        Assert.Equal(9, points.Count);
+        var located = points.Single(p => p.GetProperty("slug").GetString() == "azure-data-ai-day-gta");
+        Assert.Equal(43.589, located.GetProperty("latitude").GetDouble(), 3);
+        Assert.Equal(-79.644, located.GetProperty("longitude").GetDouble(), 3);
+        var same = points.Single(p => p.GetProperty("slug").GetString() == kept.GetProperty("slug").GetString());
+        Assert.Equal(kept.GetProperty("latitude").GetDouble(), same.GetProperty("latitude").GetDouble());
     }
 
     [Fact]

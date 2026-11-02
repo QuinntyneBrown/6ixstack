@@ -128,8 +128,18 @@ Linking between list and map (`L2-012`):
   `SourceTime`.
 - **`Event`** and **`Venue`** — domain types. This slice reads `Status`,
   `StartsAtUtc`, `Format`, `Topics`, `TimeZoneId`, `StreamOriginCity` and the
-  venue's `Latitude` and `Longitude`. Venue coordinates come from geocoding at
-  submission (`moderation/automated-checks`).
+  venue's `Latitude` and `Longitude`.
+- **`LocateVenuesCommand`** / **`VenueGeocodingJob`** — venue coordinates come
+  from geocoding (ADR 0013). The job sends the command shortly after start-up
+  and every 5 minutes; the command gives up to 50 published, not-cancelled,
+  upcoming in-person or hybrid events whose venue has no coordinates the point
+  `IVenueLocator` returns. It covers events added by the CLI or the API,
+  approved submissions, edits that move the venue (which clear the
+  coordinates) and rows that predate it. `Geocoding:Provider` `Local` places a
+  venue at its city's reference point without the network; `Nominatim`, used
+  in production, looks the address up on OpenStreetMap and falls back to the
+  city's reference point when it finds nothing. `Geocoding:Enabled` `false`
+  turns the job off for API tests and Playwright.
 - **`SystemClock`** (`IClock`) — supplies "today" in Toronto time.
 
 Open points:

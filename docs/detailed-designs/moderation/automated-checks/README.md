@@ -55,7 +55,7 @@ through the outbox, to the external services and back to the database.
 - **`VenueAddressCheck`** — applies to in-person and hybrid events. A blank
   address gives Warning "No venue address". An address that `IGeocoder` resolves
   gives Passed "Venue address found". An address it cannot resolve gives Warning
-  "Venue address not found on the map". Storing coordinates for the map arrives with the event map (journey 16).
+  "Venue address not found on the map". Coordinates for the map are stored by the event map's geocoding job (`discovery/event-map`, ADR 0013).
 - **`LinkReachabilityCheck`** — one row per link present: `TicketLink` and
   `StreamLink`. `ILinkChecker` requests the URL with a 5 s timeout. A 2xx or 3xx
   status gives Passed "Link reachable" or "Stream link reachable". Any other

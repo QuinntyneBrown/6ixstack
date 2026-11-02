@@ -16,3 +16,4 @@ Short records of choices the requirements and designs left open. One file per de
 | [0010](0010-azure-app-service-single-origin-hosting.md) | Azure App Service hosts the API and the web app on one origin |
 | [0011](0011-cli-event-administration.md) | The CLI manages events through Application handlers, as a named moderator, with guarded writes and soft delete |
 | [0012](0012-event-administration-api.md) | Events are administered over the API with personal bearer tokens issued from the CLI, stored salted and hashed, with `If-Match` concurrency |
+| [0013](0013-venue-coordinates-from-a-background-geocoding-job.md) | Venue coordinates come from a background geocoding job, with OpenStreetMap Nominatim in production |

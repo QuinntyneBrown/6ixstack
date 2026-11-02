@@ -17,3 +17,12 @@ public interface IGeocoder
 {
     Task<bool> ResolvesAsync(string address, string city, CancellationToken cancellationToken);
 }
+
+/// <summary>A place on the map, in degrees.</summary>
+public sealed record GeoPoint(double Latitude, double Longitude);
+
+/// <summary>Turns a venue address into map coordinates; <c>null</c> when it cannot answer now (ADR 0013).</summary>
+public interface IVenueLocator
+{
+    Task<GeoPoint?> LocateAsync(string address, string city, CancellationToken cancellationToken);
+}
