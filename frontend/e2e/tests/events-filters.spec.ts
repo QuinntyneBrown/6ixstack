@@ -107,4 +107,12 @@ test.describe('Events filters', () => {
       expect(await events.searchPlaceholderOverflow(), `clipped at ${width} px`).toBe(0);
     }
   });
+
+  test('on a phone the format switch sits directly under the search box', async ({ page }) => {
+    const events = new EventsPage(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await events.open();
+
+    expect(await events.spaceBelowSearch()).toBeLessThanOrEqual(16);
+  });
 });

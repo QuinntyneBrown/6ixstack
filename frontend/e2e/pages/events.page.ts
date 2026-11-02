@@ -111,6 +111,13 @@ export class EventsPage {
     });
   }
 
+  /** Pixels of space between the bottom of the search box and the top of the format switch. */
+  async spaceBelowSearch(): Promise<number> {
+    const search = await this.search.boundingBox();
+    const format = await this.formatSwitch.boundingBox();
+    return Math.round(format!.y - (search!.y + search!.height));
+  }
+
   /** Searches and returns the `q` the page sent to the API. */
   async searchAndCaptureQuery(text: string): Promise<string | null> {
     const request = this.page.waitForRequest(
